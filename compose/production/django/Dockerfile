@@ -36,6 +36,7 @@ COPY ./requirements .
 RUN pip wheel --wheel-dir /usr/src/app/wheels  \
   -r ${BUILD_ENVIRONMENT}.txt
 
+RUN /usr/local/bin/python -m pip install --upgrade pip setuptools
 
 # Python 'run' stage
 FROM python as python-run-stage
