@@ -9,7 +9,11 @@ watchgod==0.6  # https://github.com/samuelcolvin/watchgod
 # ------------------------------------------------------------------------------
 mypy==0.812  # https://github.com/python/mypy
 django-stubs==1.8.0  # https://github.com/typeddjango/django-stubs
-pytest==6.2.3  # https://github.com/pytest-dev/pytest
+
+# pytest==6.2.3  # https://github.com/pytest-dev/pytest
+# because of rdmo
+pytest~=6.1.2
+
 pytest-sugar==0.9.4  # https://github.com/Frozenball/pytest-sugar
 
 # Documentation
@@ -21,7 +25,10 @@ sphinx-autobuild==2021.3.14 # https://github.com/GaretJax/sphinx-autobuild
 # ------------------------------------------------------------------------------
 flake8==3.9.1  # https://github.com/PyCQA/flake8
 flake8-isort==4.0.0  # https://github.com/gforcada/flake8-isort
-coverage==5.5  # https://github.com/nedbat/coveragepy
+
+# 5.3 instead recent version, due to rdmo dependency
+coverage==5.3  # https://github.com/nedbat/coveragepy
+
 black==21.4b2  # https://github.com/ambv/black
 pylint-django==2.4.3  # https://github.com/PyCQA/pylint-django
 pylint-celery==0.3  # https://github.com/PyCQA/pylint-celery
@@ -34,4 +41,7 @@ factory-boy==3.2.0  # https://github.com/FactoryBoy/factory_boy
 django-debug-toolbar==3.2.1  # https://github.com/jazzband/django-debug-toolbar
 django-extensions==3.1.3  # https://github.com/django-extensions/django-extensions
 django-coverage-plugin==1.8.0  # https://github.com/nedbat/django_coverage_plugin
-pytest-django==4.2.0  # https://github.com/pytest-dev/pytest-django
+
+# because of rdmo
+pytest-django~=4.1.0  # https://github.com/pytest-dev/pytest-django
+
