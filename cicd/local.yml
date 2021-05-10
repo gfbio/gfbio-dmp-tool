@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ../compose/local/django/Dockerfile
-    image: gfbio_submissions_local_django
+    image: gfbio_dmpt_local_django
     depends_on:
       - postgres
     user: ${CURRENT_UID}
@@ -27,16 +27,17 @@ services:
     build:
       context: .
       dockerfile: ../compose/production/postgres/Dockerfile
-    image: gfbio_submissions_production_postgres
+    image: gfbio_dmpt_production_postgres
     env_file:
       - ../.envs/.local/.postgres
 
   redis:
     image: redis:5.0
+    container_name: redis
 
   celeryworker:
     <<: *django
-    image: gfbio_submissions_local_celeryworker
+    image: gfbio_dmpt_local_celeryworker
     depends_on:
       - redis
       - postgres
@@ -46,7 +47,7 @@ services:
 
   celerybeat:
     <<: *django
-    image: gfbio_submissions_local_celerybeat
+    image: gfbio_dmpt_local_celerybeat
     depends_on:
       - redis
       - postgres
@@ -56,7 +57,7 @@ services:
 
   flower:
     <<: *django
-    image: gfbio_submissions_local_flower
+    image: gfbio_dmpt_local_flower
     ports:
       - "5555:5555"
     command: /start-flower
