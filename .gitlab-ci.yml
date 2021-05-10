@@ -12,7 +12,7 @@ run_unit_tests:
   stage: unit_tests
   script:
     - rsync -a /home/cloud/.envs .
-#    - docker-compose -f local.yml build
+    - docker-compose -f local.yml build
 #    - CURRENT_UID=$(id -u):$(id -g) docker stack deploy -c cicd/local.yml ${CI_COMMIT_REF_NAME}-tests
 #    - while [[ $(docker ps -a | grep ${CI_COMMIT_REF_NAME}-tests_django | grep Exited | wc -l) == 0 ]]; do sleep 1; done
 #    - docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?)
