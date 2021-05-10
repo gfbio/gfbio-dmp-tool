@@ -95,6 +95,12 @@ EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
     default="[GFBio DMPT]",
 )
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'mail.sd-datasolutions.de'
+EMAIL_HOST_USER = 'gfbio-services'
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+
 
 # ADMIN
 # ------------------------------------------------------------------------------
