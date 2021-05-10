@@ -20,6 +20,46 @@
 
 1. create .gitlab-ci.yml file in project root
 
+5. content in .gitlab-ci.yml is default from cookie-cutter
+
+
+    stages:
+      - lint
+      - test
+    
+    variables:
+      POSTGRES_USER: 'gfbio_dmpt'
+      POSTGRES_PASSWORD: ''
+      POSTGRES_DB: 'test_gfbio_dmpt'
+      POSTGRES_HOST_AUTH_METHOD: trust
+      CELERY_BROKER_URL: 'redis://redis:6379/0'
+    
+    flake8:
+      stage: lint
+      image: python:3.9-alpine
+      before_script:
+        - pip install -q flake8
+      script:
+        - flake8
+    
+    pytest:
+      stage: test
+      image: docker/compose:latest
+      tags:
+        - docker
+      services:
+        - docker:dind
+      before_script:
+        - docker-compose -f local.yml build
+        # Ensure celerybeat does not crash due to non-existent tables
+        - docker-compose -f local.yml run --rm django python manage.py migrate
+        - docker-compose -f local.yml up -d
+      script:
+        - docker-compose -f local.yml run django pytest
+
+
+6. push branch with changes to start pipeline with this config
+
 ## in gitlab
 
 2. enable ci/cd for project
