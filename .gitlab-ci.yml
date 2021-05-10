@@ -1,29 +1,32 @@
-stages:
-  - unit_tests
-#  - create_merge_request
-#  - test
-#  - check_for_web_test
-#  - stop_web_test
-#  - build_staging
-#  - update_staging
-#  - update_production
-#  - deploy
-run_unit_tests:
-  stage: unit_tests
-  script:
-    - rsync -a /home/cloud/.envs .
-    - docker-compose -f local.yml build
-#    - CURRENT_UID=$(id -u):$(id -g) docker stack deploy -c cicd/local.yml ${CI_COMMIT_REF_NAME}-tests
-#    - while [[ $(docker ps -a | grep ${CI_COMMIT_REF_NAME}-tests_django | grep Exited | wc -l) == 0 ]]; do sleep 1; done
-#    - docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?)
-#    - if [[ $(docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?) --tail 2 2>&1 | grep FAILED | wc -l) == 1 ]]; then docker stack rm ${CI_COMMIT_REF_NAME}-tests && exit 1; fi
-#    - docker stack rm ${CI_COMMIT_REF_NAME}-tests
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-  rules:
-    - if: '$CI_COMMIT_BRANCH =~ /^\d+-/'
-  tags:
-    - dev
+#stages:
+#  - unit_tests
+##  - create_merge_request
+##  - test
+##  - check_for_web_test
+##  - stop_web_test
+##  - build_staging
+##  - update_staging
+##  - update_production
+##  - deploy
+#run_unit_tests:
+#  stage: unit_tests
+#  script:
+#    - rsync -a /home/cloud/.envs .
+#    - docker-compose -f local.yml build
+##    - CURRENT_UID=$(id -u):$(id -g) docker stack deploy -c cicd/local.yml ${CI_COMMIT_REF_NAME}-tests
+##    - while [[ $(docker ps -a | grep ${CI_COMMIT_REF_NAME}-tests_django | grep Exited | wc -l) == 0 ]]; do sleep 1; done
+##    - docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?)
+##    - if [[ $(docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?) --tail 2 2>&1 | grep FAILED | wc -l) == 1 ]]; then docker stack rm ${CI_COMMIT_REF_NAME}-tests && exit 1; fi
+##    - docker stack rm ${CI_COMMIT_REF_NAME}-tests
+#  environment:
+#    name: review/$CI_COMMIT_REF_NAME
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH =~ /^\d+-/'
+#  tags:
+#    - dev
+# --------------------------------------------------------------------------------------------------------------------
+
+
 #create_merge_request:
 #  stage: create_merge_request
 #  rules:
@@ -98,24 +101,24 @@ run_unit_tests:
 
 
 # --------------------------------------------------------------------------------------------------------------------
-#stages:
-#  - lint
+stages:
+  - lint
 #  - test
 #
-#variables:
-#  POSTGRES_USER: 'gfbio_dmpt'
-#  POSTGRES_PASSWORD: ''
-#  POSTGRES_DB: 'test_gfbio_dmpt'
-#  POSTGRES_HOST_AUTH_METHOD: trust
-#  CELERY_BROKER_URL: 'redis://redis:6379/0'
-#
-#flake8:
-#  stage: lint
-#  image: python:3.9-alpine
-#  before_script:
-#    - pip install -q flake8
-#  script:
-#    - flake8
+variables:
+  POSTGRES_USER: 'gfbio_dmpt'
+  POSTGRES_PASSWORD: ''
+  POSTGRES_DB: 'test_gfbio_dmpt'
+  POSTGRES_HOST_AUTH_METHOD: trust
+  CELERY_BROKER_URL: 'redis://redis:6379/0'
+
+flake8:
+  stage: lint
+  image: python:3.9-alpine
+  before_script:
+    - pip install -q flake8
+  script:
+    - flake8
 #
 #pytest:
 #  stage: test
