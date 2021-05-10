@@ -1,34 +1,135 @@
+
 stages:
-  - lint
+  - unit_tests
+  - create_merge_request
   - test
-
-variables:
-  POSTGRES_USER: 'gfbio_dmpt'
-  POSTGRES_PASSWORD: ''
-  POSTGRES_DB: 'test_gfbio_dmpt'
-  POSTGRES_HOST_AUTH_METHOD: trust
-  CELERY_BROKER_URL: 'redis://redis:6379/0'
-
-flake8:
-  stage: lint
-  image: python:3.9-alpine
-  before_script:
-    - pip install -q flake8
+#  - check_for_web_test
+#  - stop_web_test
+  - build_staging
+  - update_staging
+  - update_production
+  - deploy
+run_unit_tests:
+  stage: unit_tests
   script:
-    - flake8
-
-pytest:
-  stage: test
-  image: docker/compose:latest
-  tags:
-    - docker
-  services:
-    - docker:dind
-  before_script:
+    - rsync -a /home/gitlab-runner/.envs .
     - docker-compose -f local.yml build
-    # Ensure celerybeat does not crash due to non-existent tables
-    - docker-compose -f local.yml run --rm django python manage.py migrate
-    - docker-compose -f local.yml up -d
+    - CURRENT_UID=$(id -u):$(id -g) docker stack deploy -c cicd/local.yml ${CI_COMMIT_REF_NAME}-tests
+    - while [[ $(docker ps -a | grep ${CI_COMMIT_REF_NAME}-tests_django | grep Exited | wc -l) == 0 ]]; do sleep 1; done
+    - docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?)
+    - if [[ $(docker logs $(docker ps -a | grep -oP "$CI_COMMIT_REF_NAME"-tests_django.+\s?) --tail 2 2>&1 | grep FAILED | wc -l) == 1 ]]; then docker stack rm ${CI_COMMIT_REF_NAME}-tests && exit 1; fi
+    - docker stack rm ${CI_COMMIT_REF_NAME}-tests
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^\d+-/'
+  tags:
+    - dev
+create_merge_request:
+  stage: create_merge_request
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^\d+-/'
   script:
-    - docker-compose -f local.yml run django pytest
+    - HOST=${CI_PROJECT_URL} CI_PROJECT_ID=${CI_PROJECT_ID} CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME} GITLAB_USER_ID=${GITLAB_USER_ID} PRIVATE_TOKEN=${PRIVATE_TOKEN} ./cicd/autoMergeRequest.sh
+  tags:
+    - dev
+#stop_web_test:
+#  stage: stop_web_test
+#  script:
+#    - python cicd/stopDockerStack.py "${CI_COMMIT_MESSAGE}"
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /.*Merge branch.*into.*/'
+#  tags:
+#    - dev
+#check_for_web_test:
+#  stage: check_for_web_test
+#  script:
+#    - ADMIN_NICKNAME=${ADMIN_NICKNAME} ADMIN_EMAIL=${ADMIN_EMAIL} ADMIN_PASSWORD=${ADMIN_PASSWORD} HOST=${CI_PROJECT_URL} CI_PROJECT_ID=${CI_PROJECT_ID} CI_COMMIT_REF_NAME=${CI_COMMIT_REF_NAME} GITLAB_USER_ID=${GITLAB_USER_ID} PRIVATE_TOKEN=${PRIVATE_TOKEN} ./cicd/createWebTest.sh
+#  environment:
+#    name: review/$CI_COMMIT_REF_NAME
+#    url: https://$CI_COMMIT_REF_NAME.dev.submissions.gfbio.org/accounts/login
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH =~ /^\d+-/'
+#  tags:
+#    - dev
+build_staging:
+  stage: build_staging
+  script:
+    - rsync -a /home/gitlab-runner/.envs .
+    - ./cicd/traefikHostReplace.sh
+    - sed -i "s/VERSION =.*/VERSION ='$(git describe --tags | egrep -o '[0-9]+\.[0-9]+\.[0-9]+')'/g" config/settings/base.py
+    - cd userinterface && npm i && npm run collect-ci
+    - cd ../
+    - docker-compose -f production.yml build
+  environment:
+    name: staging
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  tags:
+    - gfbio-staging
+update_staging_env:
+  stage: update_staging
+  script:
+    - rsync -a /home/gitlab-runner/.envs .
+    - ./cicd/traefikHostReplace.sh
+    - ./cicd/setLogDriverTag.sh
+    - docker-compose -f production.yml up -d postgres
+    - docker-compose -f production.yml run --rm postgres backup
+    - docker-compose -f production.yml run --rm django python manage.py migrate
+    - docker-compose -f production.yml down
+    - docker-compose -f production.yml up -d
+  environment:
+    name: staging
+    url: https://stage.submissions.gfbio.org/
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  tags:
+    - gfbio-staging
+deploy_to_production:
+  stage: update_production
+  script:
+    - HOST=${CI_PROJECT_URL} CI_PROJECT_ID=${CI_PROJECT_ID} PRIVATE_TOKEN=${PRIVATE_TOKEN} cicd/tagReleaseCheck.sh
+  environment:
+    name: production
+    url: https://submissions.gfbio.org
+  rules:
+    - if: '$CI_COMMIT_TAG'
+  tags:
+    - production
 
+
+# --------------------------------------------------------------------------------------------------------------------
+#stages:
+#  - lint
+#  - test
+#
+#variables:
+#  POSTGRES_USER: 'gfbio_dmpt'
+#  POSTGRES_PASSWORD: ''
+#  POSTGRES_DB: 'test_gfbio_dmpt'
+#  POSTGRES_HOST_AUTH_METHOD: trust
+#  CELERY_BROKER_URL: 'redis://redis:6379/0'
+#
+#flake8:
+#  stage: lint
+#  image: python:3.9-alpine
+#  before_script:
+#    - pip install -q flake8
+#  script:
+#    - flake8
+#
+#pytest:
+#  stage: test
+#  image: docker/compose:latest
+#  tags:
+#    - docker
+#  services:
+#    - docker:dind
+#  before_script:
+#    - docker-compose -f local.yml build
+#    # Ensure celerybeat does not crash due to non-existent tables
+#    - docker-compose -f local.yml run --rm django python manage.py migrate
+#    - docker-compose -f local.yml up -d
+#  script:
+#    - docker-compose -f local.yml run django pytest
+#
