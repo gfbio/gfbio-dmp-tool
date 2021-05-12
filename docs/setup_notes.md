@@ -103,3 +103,11 @@
     cloud@qotsa:~$ gitlab-runner list
     Runtime platform                                    arch=amd64 os=linux pid=126850 revision=7f7a4bb0 version=13.11.0
     Listing configured runners                          ConfigFile=/home/cloud/.gitlab-runner/config.toml
+
+    cloud@qotsa:/home/gitlab-runner$ gitlab-runner --version
+    Version:      13.11.0
+    Git revision: 7f7a4bb0
+    Git branch:   13-11-stable
+    GO version:   go1.13.8
+    Built:        2021-04-20T17:02:30+0000
+    OS/Arch:      linux/amd64
