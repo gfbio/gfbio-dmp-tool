@@ -92,8 +92,8 @@ RDMO_CORE_APPS = [
 ]
 
 LOCAL_APPS = [
-    # because of rdmo
-    # "gfbio_dmpt.users.apps.UsersConfig",
+    # because of rdmo this is not set in AUTH_USER_MODEL, but we keep it here for now
+    "gfbio_dmpt.users.apps.UsersConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
