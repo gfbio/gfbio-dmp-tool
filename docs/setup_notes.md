@@ -77,21 +77,29 @@
 
 3. sudo apt install gitlab-runner
 
-4. sudo gitlab-runner register
+  - UPDATE: not the latest version here ...  
+  - sudo apt purge gitlab-runner
+  - sudo userdel gitlab-runner -r 
+  - sudo curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+  - sudo chmod +x /usr/local/bin/gitlab-runner
+  - sudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
+  - sudo gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+  - sudo gitlab-runner start
 
 
-    ERRO[0000] Docker executor: prebuilt image helpers will be loaded from /var/lib/gitlab-runner. 
-    Running in system-mode.                            
-                                                       
-    Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):
-    https://gitlab.gwdg.de/
-    Please enter the gitlab-ci token for this runner:
+4. sudo gitlab-runner register --url https://gitlab.gwdg.de/ --registration-token TOKEN
+  
+
     (...)
-    Please enter the gitlab-ci description for this runner:
-    [qotsa]: gfbio_dmpt_runner
-    Please enter the gitlab-ci tags for this runner (comma separated):
-    gfbio, dmpt, rdmo 
-    Registering runner... succeeded                     runner=8bpM8WiD
-    Please enter the executor: docker+machine, kubernetes, parallels, ssh, virtualbox, docker-ssh+machine, docker, docker-ssh, shell:
+    Enter a description for the runner:
+    [qotsa]: 
+    Enter tags for the runner (comma-separated):
+    dev
+    Registering runner... succeeded                     runner=HVAKbzAR
+    Enter an executor: custom, docker, ssh, kubernetes, docker-ssh, parallels, shell, virtualbox, docker+machine, docker-ssh+machine:
     shell
     Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded! 
+    
+    cloud@qotsa:~$ gitlab-runner list
+    Runtime platform                                    arch=amd64 os=linux pid=126850 revision=7f7a4bb0 version=13.11.0
+    Listing configured runners                          ConfigFile=/home/cloud/.gitlab-runner/config.toml
