@@ -15,7 +15,7 @@ run_unit_tests:
     - docker:dind
   before_script:
     - rsync -a /home/gitlab-runner/.envs .
-    - ./cicd/cleanup_build.sh
+    - sudo ./cicd/cleanup_build.sh
     - docker-compose -f local.yml build
     # Ensure celerybeat does not crash due to non-existent tables
     - docker-compose -f local.yml run --rm django python manage.py migrate
