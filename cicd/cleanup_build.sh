@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-rm -r docs/_build/ .pytest_cache/
+echo 'Delete docs/_build/ and ytest_cache/ ... ' && rm -r ./docs/_build/ ./pytest_cache/ && echo ' ... Done.'
