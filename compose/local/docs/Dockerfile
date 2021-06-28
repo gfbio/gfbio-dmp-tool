@@ -15,6 +15,8 @@ RUN apt-get update \
     # && apt-get install -y texlive-fonts-recommended \
     # && apt-get install -y texlive-latex-extra \
     # && apt-get install -y latexmk \
+    # FIXME: This is needed to build RMDO from git branch (AUTH_USER_MODEL ...)
+    && apt-get install -y git \
     # cleaning up unused files
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
