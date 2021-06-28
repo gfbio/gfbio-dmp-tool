@@ -28,4 +28,5 @@ django-cors-headers==3.7.0 # https://github.com/adamchainz/django-cors-headers
 
 # RDMO
 # ------------------------------------------------------------------------------
-rdmo==1.5.5  # https://github.com/rdmorganiser/rdmo
+#rdmo==1.5.5  # https://github.com/rdmorganiser/rdmo
+git+https://github.com/rdmorganiser/rdmo@custom_user_model

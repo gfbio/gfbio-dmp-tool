@@ -80,6 +80,10 @@
   - UPDATE: not the latest version here ...  
   - sudo apt purge gitlab-runner
   - sudo userdel gitlab-runner -r 
+
+follow instructions on https://gitlab.gwdg.de/gfbio/gfbio_portal_update/-/settings/ci_cd
+as described in "Runner" section under link "Show runner installation instructions"
+
   - sudo curl -L --output /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
   - sudo chmod +x /usr/local/bin/gitlab-runner
   - sudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
