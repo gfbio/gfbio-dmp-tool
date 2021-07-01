@@ -146,4 +146,13 @@ as described in "Runner" section under link "Show runner installation instructio
 
   - model 'question' of rdmo has change that is not reflected in migration file
     this prevents migrate command in ci script (... and elsewhere too)
+    
+  - sudo rm -rf docs/_build/ .pytest_cache/
+      
+  - sudo usermod -a -G sudo gitlab-runner 
+    
+        cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ groups gitlab-runner 
+        gitlab-runner : gitlab-runner sudo docker
+
+
   
