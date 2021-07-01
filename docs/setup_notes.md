@@ -154,5 +154,8 @@ as described in "Runner" section under link "Show runner installation instructio
         cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ groups gitlab-runner 
         gitlab-runner : gitlab-runner sudo docker
 
-
-  
+ - add gitlab-runner to sudoers
+       sudo chmod 640 /etc/sudoers.d/90-cloud-init-users
+        cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ sudo ls -l /etc/sudoers.d/90-cloud-init-users
+        -rw-r----- 1 root root 149 Jan 28 20:47 /etc/sudoers.d/90-cloud-init-users
+        cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ sudo vim /etc/sudoers.d/90-cloud-init-users
