@@ -143,4 +143,7 @@ as described in "Runner" section under link "Show runner installation instructio
     
   - perform docker build in gitlab runner directory ...
   - add network with mtu=1450 to production.yml
+
+  - model 'question' of rdmo has change that is not reflected in migration file
+    this prevents migrate command in ci script (... and elsewhere too)
   
