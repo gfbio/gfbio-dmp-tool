@@ -48,6 +48,8 @@ run_unit_tests:
 
 create_merge_request:
   stage: create_merge_request
+  before_script:
+    - sudo chown -R gitlab-runner:gitlab-runner .
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^\d+-/'
   script:
