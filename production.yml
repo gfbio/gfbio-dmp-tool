@@ -1,9 +1,15 @@
 version: '3'
 
 volumes:
-  production_postgres_data: {}
-  production_postgres_data_backups: {}
-  production_traefik: {}
+  production_postgres_data: { }
+  production_postgres_data_backups: { }
+  production_traefik: { }
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
 
 services:
   django: &django
@@ -17,6 +23,8 @@ services:
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
+    networks:
+      - default
     command: /start
 
   postgres:
@@ -35,6 +43,8 @@ services:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
     image: gfbio_dmpt_production_traefik
+    networks:
+      - default
     depends_on:
       - django
     volumes:
