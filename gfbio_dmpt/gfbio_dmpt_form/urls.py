@@ -7,7 +7,7 @@ app_name = "gfbio_dmpt_form"
 urlpatterns = [
     url(
         regex=r'dmpt_form/$',
-        view=views.dmpt_form_view,
+        view=views.DmptFormView.as_view(),
         name='gfbio_dmpt_form'
     ),
 
