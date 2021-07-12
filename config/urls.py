@@ -17,6 +17,10 @@ urlpatterns = [
     path("users/", include("gfbio_dmpt.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+
+    # initial url for dmpt, may move to toplevel
+    path("dmpt/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
