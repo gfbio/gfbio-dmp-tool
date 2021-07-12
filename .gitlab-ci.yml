@@ -48,6 +48,7 @@ run_unit_tests:
 
 create_merge_request:
   stage: create_merge_request
+  AFTER SCRIPT ???
   before_script:
     - sudo chown -R gitlab-runner:gitlab-runner .
   rules:
