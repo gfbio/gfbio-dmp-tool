@@ -73,6 +73,9 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     # "rdmo",
+    "compressor",
+    "rules",
+    "widget_tweaks",
 ]
 
 RDMO_CORE_APPS = [
@@ -109,6 +112,7 @@ MIGRATION_MODULES = {"sites": "gfbio_dmpt.contrib.sites.migrations"}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
+    "rules.permissions.ObjectPermissionBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
@@ -171,6 +175,8 @@ STATICFILES_DIRS = [str(APPS_DIR / "static")]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    # other finders..
+    'compressor.finders.CompressorFinder',
 ]
 
 # MEDIA

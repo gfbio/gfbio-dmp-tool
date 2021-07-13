@@ -6,11 +6,23 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from rdmo.core.views import home, about
+
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
+    # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+
+    # RDMO -----------
+
+    path('', home, name='home'),
+    path('about/', about, name='about'),
+
+    path('', include('rdmo.core.urls')),
+    path('api/v1/', include('rdmo.core.urls.v1')),
+    path('api/v1/', include('rdmo.core.urls.swagger')),
+
+    # path(
+    #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+    # ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
@@ -20,7 +32,7 @@ urlpatterns = [
 
     # initial url for dmpt, may move to toplevel
     path("dmpt/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
-    path("rdmo/", include("rdmo.core.urls.v1"))
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
