@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "compressor",
     "rules",
     "widget_tweaks",
+    "mptt",
 ]
 
 RDMO_CORE_APPS = [

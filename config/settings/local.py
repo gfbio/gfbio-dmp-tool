@@ -77,5 +77,12 @@ CELERY_TASK_EAGER_PROPAGATES = True
 #
 # ACCOUNT=False
 # VENDOR_CDN = False
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = ROOT_DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+
+THEME_DIR = os.path.join(BASE_DIR, 'theme')
+
+print('\n############################\n')
+print(PROJECT_DIR)
+print(BASE_DIR)
+print(THEME_DIR)
