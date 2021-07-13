@@ -14,6 +14,13 @@
 - docker-compose -f local.yml run --rm django python manage.py setup_groups
 - docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
+
+
+
+--------------------------------------------------------------------------------
+
+
+
 # GitLab CI 
 
 ## local

@@ -1,5 +1,8 @@
+# import default settings from rdmo
+from rdmo.core.settings import *
 from .base import *  # noqa
 from .base import env
+import os
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -70,3 +73,9 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 # rdmo
 # ------------------------------------------------------------------------------
+# TODO: keep in mind that all rdmo settings are imported above: from rdmo.core.settings import *
+#
+# ACCOUNT=False
+# VENDOR_CDN = False
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(PROJECT_DIR)

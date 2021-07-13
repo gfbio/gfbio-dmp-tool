@@ -20,6 +20,7 @@ urlpatterns = [
 
     # initial url for dmpt, may move to toplevel
     path("dmpt/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
+    path("rdmo/", include("rdmo.core.urls.v1"))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
