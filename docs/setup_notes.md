@@ -4,8 +4,12 @@
   dependencies as described
   here: https://rdmo.readthedocs.io/en/latest/installation/index.html
   
-- comment AUTH_USER_MODEL because of RMDO
+- SOLVED: comment AUTH_USER_MODEL because of RMDO
 - adapt requirements because of RMDO
+
+## Notes
+
+- import rdmo default settings in  local.py. This needs to be done in production also
   
 ## commands so far ...
 
@@ -14,7 +18,7 @@
 - docker-compose -f local.yml run --rm django python manage.py setup_groups
 - docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
-
+- docker-compose -f local.yml run --rm django python manage.py download_vendor_files 
 
 
 --------------------------------------------------------------------------------
