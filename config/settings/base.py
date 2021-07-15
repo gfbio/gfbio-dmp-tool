@@ -71,6 +71,7 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_swagger",
     "corsheaders",
     # "rdmo",
     "compressor",
@@ -93,6 +94,7 @@ RDMO_CORE_APPS = [
     'rdmo.views',
     'rdmo.projects',
     'rdmo.management',
+    'rdmo.overlays',
 ]
 
 LOCAL_APPS = [
@@ -331,9 +333,11 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
+
 # Your stuff...
 # ------------------------------------------------------------------------------

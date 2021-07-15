@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -12,13 +13,19 @@ urlpatterns = [
     # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
 
     # RDMO -----------
-    path('rdmo/', include('rdmo.core.urls')),
-    path('rdmo/api/v1/', include('rdmo.core.urls.v1')),
-    path('rdmo/api/v1/', include('rdmo.core.urls.swagger')),
-    path('rdmo/', home, name='home'),
-    path('rdmo/about/', about, name='about'),
 
+    # path('rdmo/', home, name='home'),
+    # path('rdmo/about/', about, name='about'),
+    #
+    # path('rdmo', include('rdmo.core.urls')),
+    # path('rdmo/api/v1/', include('rdmo.core.urls.v1')),
+    # path('rdmo/api/v1/', include('rdmo.core.urls.swagger')),
+    path('', home, name='home'),
+    path('about/', about, name='about'),
 
+    path('', include('rdmo.core.urls')),
+    path('api/v1/', include('rdmo.core.urls.v1')),
+    path('api/v1/', include('rdmo.core.urls.swagger')),
 
     # path(
     #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"

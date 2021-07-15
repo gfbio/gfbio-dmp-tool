@@ -1,12 +1,18 @@
 # import default settings from rdmo
+import os
+
+from django.conf.global_settings import CSRF_COOKIE_PATH, LANGUAGE_COOKIE_PATH, \
+    SESSION_COOKIE_PATH, CSRF_COOKIE_SECURE
+from django.template.defaulttags import csrf_token
 from rdmo.core.settings import *
+
 from .base import *  # noqa
 from .base import env
-import os
 
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
+
 DEBUG = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
@@ -23,6 +29,10 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "",
+    },
+    "api": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "",
     }
 }
 
@@ -30,14 +40,14 @@ CACHES = {
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+    "DJANGO_EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend"
 )
 
 # WhiteNoise
 # ------------------------------------------------------------------------------
 # http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa F405
-
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -74,15 +84,23 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # rdmo
 # ------------------------------------------------------------------------------
 # TODO: keep in mind that all rdmo settings are imported above: from rdmo.core.settings import *
-#
-# ACCOUNT=False
-# VENDOR_CDN = False
+
+# set path-dependend settings
 PROJECT_DIR = ROOT_DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+# TODO: better add app specific templates as usual for django, recommended by rdmo developers
+THEME_DIR = os.path.join(ROOT_DIR, 'theme')
+VENDOR_CDN = False
+# update STATICFILES_DIRS for the vendor directory
+STATICFILES_DIRS += [
+    os.path.join(ROOT_DIR, 'vendor/')
+]
 
-THEME_DIR = os.path.join(BASE_DIR, 'theme')
+CSRF_COOKIE_HTTPONLY = False
 
-print('\n############################\n')
-print(PROJECT_DIR)
-print(BASE_DIR)
-print(THEME_DIR)
+# add static and templates from local.THEME_DIR to STATICFILES_DIRS and TEMPLATES
+try:
+    STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
+    TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
+except NameError:
+    pass
