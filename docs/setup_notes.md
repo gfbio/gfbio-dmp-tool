@@ -19,6 +19,18 @@
 - docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
 - docker-compose -f local.yml run --rm django python manage.py download_vendor_files 
+  
+
+### database operations
+
+- docker-compose -f local.yml run --rm django python manage.py loaddata dumps/rdmo_testinstance_dump.json 
+- docker-compose -f local.yml exec postgres backup
+- docker-compose -f local.yml exec postgres backups
+- docker ps
+- docker cp b18640e7047c:/backups ./backups
+
+
+
 
 
 --------------------------------------------------------------------------------
