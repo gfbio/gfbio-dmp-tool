@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
     "rules",
     "widget_tweaks",
     "mptt",
+    "formtools",
 ]
 
 RDMO_CORE_APPS = [
