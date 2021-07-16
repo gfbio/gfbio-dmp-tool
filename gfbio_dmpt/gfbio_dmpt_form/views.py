@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from formtools.wizard.views import SessionWizardView
 
 from .forms import GFBioDmptForm, ContactForm1, ContactForm2, ContactForm4, \
-    ContactForm3
+    ContactForm3, GeneralInformationForm, DataCollectionForm, \
+    DocumentationAndMetadataForm, EthnicsAndLegalComplianceForm, \
+    PreservationAndSharingForm
 
 
 # def dmpt_form_view(request):
@@ -51,3 +53,19 @@ class ContactWizard(SessionWizardView):
         return render(self.request, 'done.html', {
             'form_data': [form.cleaned_data for form in form_list],
         })
+
+
+class DmptFormWizardView(SessionWizardView):
+    form_list = [GeneralInformationForm, DataCollectionForm,
+                 DocumentationAndMetadataForm, EthnicsAndLegalComplianceForm,
+                 PreservationAndSharingForm]
+
+    template_name = 'gfbio_dmpt_form/dmp_wizard.html'
+
+    def done(self, form_list, **kwargs):
+        # do_something_with_the_form_data(form_list)
+        print('DmptFormWizardView FORM LIST', form_list)
+        return HttpResponseRedirect('/page-to-redirect-to-when-done/')
+        # return render(self.request, 'done.html', {
+        #     'form_data': [form.cleaned_data for form in form_list],
+        # })
