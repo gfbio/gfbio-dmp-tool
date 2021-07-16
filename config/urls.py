@@ -18,8 +18,16 @@ urlpatterns = [
     path('rdmo/about/', about, name='about_rdmo'),
 
     path('rdmo/', include('rdmo.core.urls')),
-    path('rdmo/api/v1/', include('rdmo.core.urls.v1')),
-    path('rdmo/api/v1/', include('rdmo.core.urls.swagger')),
+    path('api/v1/', include('rdmo.core.urls.v1')),
+    path('api/v1/', include('rdmo.core.urls.swagger')),
+
+    # RDMO -----------
+    # path('', home, name='home_rdmo'),
+    # path('about/', about, name='about_rdmo'),
+    #
+    # path('', include('rdmo.core.urls')),
+    # path('api/v1/', include('rdmo.core.urls.v1')),
+    # path('api/v1/', include('rdmo.core.urls.swagger')),
 
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
