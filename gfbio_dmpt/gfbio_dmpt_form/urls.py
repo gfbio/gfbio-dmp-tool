@@ -10,5 +10,6 @@ urlpatterns = [
         view=views.DmptFormView.as_view(),
         name='gfbio_dmpt_form'
     ),
+    url('contact/', views.ContactWizard.as_view()),
 
 ]
