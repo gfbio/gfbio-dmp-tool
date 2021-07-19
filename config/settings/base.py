@@ -3,7 +3,10 @@ Base settings to build other settings files upon.
 """
 from pathlib import Path
 
-import environ
+import environ, os
+
+# import default settings from rdmo
+from rdmo.core.settings import *
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # gfbio_dmpt/
@@ -343,3 +346,27 @@ CORS_URLS_REGEX = r"^/api/.*$"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# rdmo
+# ------------------------------------------------------------------------------
+# TODO: keep in mind that all rdmo settings are imported above: from rdmo.core.settings import *
+
+# set path-dependend settings
+PROJECT_DIR = ROOT_DIR
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+# TODO: better add app specific templates as usual for django, recommended by rdmo developers
+THEME_DIR = os.path.join(ROOT_DIR, 'theme')
+VENDOR_CDN = False
+# update STATICFILES_DIRS for the vendor directory
+STATICFILES_DIRS += [
+    os.path.join(ROOT_DIR, 'vendor/')
+]
+
+CSRF_COOKIE_HTTPONLY = False
+
+# add static and templates from local.THEME_DIR to STATICFILES_DIRS and TEMPLATES
+try:
+    STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
+    TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
+except NameError:
+    pass
