@@ -30,13 +30,13 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.BRANCH_https.rule=Host(`BRANCH.dev.dmpt.gfbio.org`)
+      - traefik.http.routers.BRANCH_https.rule=Host(`BRANCH.dev.dmp.gfbio.org`)
       - traefik.http.routers.BRANCH_https.entrypoints=websecure
       - traefik.http.routers.BRANCH_https.tls=true
       - traefik.http.middlewares.BRANCH_extra_headers.headers.hostsproxyheaders=X-CSRFToken
       - traefik.http.services.BRANCH_https.loadbalancer.server.port=5000
       - "traefik.http.routers.BRANCH_http.entrypoints=web"
-      - "traefik.http.routers.BRANCH_http.rule=Host(`BRANCH.dev.dmpt.gfbio.org`)"
+      - "traefik.http.routers.BRANCH_http.rule=Host(`BRANCH.dev.dmp.gfbio.org`)"
       - "traefik.http.routers.BRANCH_http.middlewares=https_redirect"
       - "traefik.http.middlewares.BRANCH_https_redirect.redirectscheme.scheme=https"
     command: >
