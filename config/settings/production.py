@@ -144,7 +144,7 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         }
@@ -191,3 +191,5 @@ sentry_sdk.init(
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+# TODO: for now ...
+WHITENOISE_MANIFEST_STRICT=False
