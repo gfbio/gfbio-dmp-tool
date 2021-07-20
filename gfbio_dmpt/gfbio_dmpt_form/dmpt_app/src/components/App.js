@@ -1,22 +1,24 @@
 import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Route, Switch } from 'react-router-dom';
+import Welcome from './Welcome';
 
 // TODO: to work when served in django template this prefix has to match
 //  the urls.py + global urls.py entry -> currently (...) regex=r'submissions/ui/', (...)
-// this with django
+// TODO: use this prefix when development with django (-->  url('app/', views.DmptFrontendView.as_view()))
 // eslint-disable-next-line no-unused-vars
-const urlPrefix = '/curation/submissions/ui/';
+const urlPrefix = '/dmpt/app/';
+
 // for updateview:
 // const urlPrefix = '/curation/submissions/form/';
 
-// this with npm start
+// TODO: use this prefix when developing with npm start
 // eslint-disable-next-line no-unused-vars
 // const urlPrefix = '/';
 
 const App = () => (
     <Switch>
-        {/* <Route exact path={`${urlPrefix}`} component={SubmissionList}/> */}
+        <Route exact path={`${urlPrefix}`} component={Welcome} />
         {/* <Route path={`${urlPrefix}:brokerSubmissionId/`} */}
         {/*    component={SubmissionDetail}/> */}
         {/* <Route path={`${urlPrefix}:brokerSubmissionId/`} */}

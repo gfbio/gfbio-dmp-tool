@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from formtools.wizard.views import SessionWizardView
 
@@ -69,3 +70,8 @@ class DmptFormWizardView(SessionWizardView):
         # return render(self.request, 'done.html', {
         #     'form_data': [form.cleaned_data for form in form_list],
         # })
+
+
+# React App in this template
+class DmptFrontendView(TemplateView):
+    template_name = 'gfbio_dmpt_form/dmpt.html'
