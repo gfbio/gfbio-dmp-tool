@@ -1,4 +1,5 @@
 # according to https://gitlab.gwdg.de/gfbio/cicd -------------------------------
+# -----
 include:
   - project: gfbio/cicd
     file:
