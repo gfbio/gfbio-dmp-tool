@@ -11,8 +11,8 @@ stages:
 run_unit_tests:
   stage: unit_tests
   before_script:
-    - echo "before_script.. remove ?"
-    - sudo rm -rf .pytest_cache
+#    - echo "before_script.. remove ?"
+#    - sudo rm -rf .pytest_cache
     - rsync -a /home/gitlab-runner/.envs .
     - docker-compose -f local.yml build
     # FIXME: currently not possible due to misssing migration in rdmo questions
