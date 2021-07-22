@@ -43,6 +43,7 @@ tag_release:
   script:
     - echo "Tag release stuff here"
     - rsync -a /home/gitlab-runner/.envs .
+    - docker-compose -f production.yml down
     - docker-compose -f production.yml build
     - docker-compose -f production.yml up -d postgres
     - docker-compose -f production.yml run --rm postgres backup
