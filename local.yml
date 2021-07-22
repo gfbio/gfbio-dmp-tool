@@ -7,6 +7,8 @@ volumes:
 networks:
   local_default:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
 
 services:
   django: &django
