@@ -16,7 +16,7 @@ run_unit_tests:
   before_script:
     #    - echo "before_script.. remove ?"
     #    - sudo rm -rf .pytest_cache
-    - docker-compose -f local.yml down
+    #    - docker-compose -f local.yml down
     - rsync -a /home/gitlab-runner/.envs .
     - docker-compose -f local.yml build
     # FIXME: currently not possible due to misssing migration in rdmo questions
@@ -25,7 +25,7 @@ run_unit_tests:
     - docker-compose -f local.yml run django pytest
   after_script:
     - echo "after_script.. remove ?"
-    - docker-compose -f local.yml down
+    #    - docker-compose -f local.yml down
     - sudo rm -rf .pytest_cache
     - echo "after_script.. remove ?"
   tags:
