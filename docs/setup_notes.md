@@ -29,8 +29,15 @@
 - docker ps
 - docker cp b18640e7047c:/backups ./backups
 
+#### drop test database
 
-
+    docker exec -it postgres psql -U <LOCAL_ENV_DB_USER> -d gfbio_dmpt
+    psql (12.3 (Debian 12.3-1.pgdg100+1))
+    Type "help" for help.
+    
+    gfbio_dmpt=# DROP DATABASE test_gfbio_dmpt;
+    DROP DATABASE
+    gfbio_dmpt=# 
 
 
 --------------------------------------------------------------------------------
