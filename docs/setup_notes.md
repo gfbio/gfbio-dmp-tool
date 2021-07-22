@@ -115,3 +115,47 @@ as described in "Runner" section under link "Show runner installation instructio
     GO version:   go1.13.8
     Built:        2021-04-20T17:02:30+0000
     OS/Arch:      linux/amd64
+
+7. DEBUGGING:
+  
+  - problems deleting build files... remove by hand for debugging
+    
+        pwd
+        /home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt
+        
+        ls
+        cicd     CONTRIBUTORS.txt  LICENSE    manage.py                              pytest.ini    setup.cfg
+        compose  docs              locale     merge_production_dotenvs_in_dotenv.py  README.rst
+        config   gfbio_dmpt        local.yml  production.yml                         requirements
+
+        sudo rm -rf docs/_build/
+    
+  - re-run pipeline via git-lab webui
+    
+  - GDWG ssl bug
+    - add daemon.json in /etc/docker/
+    
+            cat /etc/docker/daemon.json 
+            {
+              "mtu": 1450
+            }
+      ==> NOT WORKING
+    
+  - perform docker build in gitlab runner directory ...
+  - add network with mtu=1450 to production.yml
+
+  - model 'question' of rdmo has change that is not reflected in migration file
+    this prevents migrate command in ci script (... and elsewhere too)
+    
+  - sudo rm -rf docs/_build/ .pytest_cache/
+      
+  - sudo usermod -a -G sudo gitlab-runner 
+    
+        cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ groups gitlab-runner 
+        gitlab-runner : gitlab-runner sudo docker
+
+ - add gitlab-runner to sudoers
+       sudo chmod 640 /etc/sudoers.d/90-cloud-init-users
+        cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ sudo ls -l /etc/sudoers.d/90-cloud-init-users
+        -rw-r----- 1 root root 149 Jan 28 20:47 /etc/sudoers.d/90-cloud-init-users
+        cloud@qotsa:/home/gitlab-runner/builds/5Num-pdU/0/gfbio/gfbio_dmpt$ sudo vim /etc/sudoers.d/90-cloud-init-users
