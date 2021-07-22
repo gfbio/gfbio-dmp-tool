@@ -39,6 +39,8 @@ services:
       - local_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
+    networks:
+      - local_default
 
   docs:
     image: gfbio_dmpt_local_docs
