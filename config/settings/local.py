@@ -86,4 +86,4 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 
-https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios
+# https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios
