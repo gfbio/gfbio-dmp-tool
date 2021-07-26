@@ -11,7 +11,8 @@ function useCatalogs() {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `${API_ROOT}questions/catalogs/`,
+                    // `${API_ROOT}questions/catalogs/`,   // cataloglist
+                    `${API_ROOT}projects/projects/4/overview/`,   // gfbio catalog
                     {
                         // token of super user (maweber)
                         headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
@@ -40,7 +41,7 @@ function Catalogs(props) {
     const [catalogs, loading] = useCatalogs();
     return (
         <div>
-            <h1>RequestLog Detail</h1>
+            <h1>Catalogs</h1>
             <p>loading: {`${loading}`}</p>
             {`${catalogs}`}
         </div>
