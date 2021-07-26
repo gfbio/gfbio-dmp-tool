@@ -16,7 +16,7 @@ run_unit_tests:
   before_script:
     #    - echo "before_script.. remove ?"
     - sudo rm -rf .pytest_cache
-    - docker-compose -f local.yml down
+    - docker-compose -f production.yml down
     - rsync -a /home/gitlab-runner/.envs .
     - docker-compose -f local.yml build
     # FIXME: currently not possible due to misssing migration in rdmo questions
