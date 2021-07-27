@@ -6,9 +6,11 @@ import { createGlobalStyle } from 'styled-components';
 
 import store from './store';
 import App from './components/App';
-import reset from './constants/css/reset';
 
-const GlobalStyle = createGlobalStyle`${reset}`;
+// import reset from './constants/css/reset';
+// const GlobalStyle = createGlobalStyle`${reset}`;
+
+const GlobalStyle = createGlobalStyle``;
 
 ReactDOM.render(
     <BrowserRouter>
