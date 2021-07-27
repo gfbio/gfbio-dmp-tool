@@ -4,12 +4,12 @@ import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 
 function useDmptStart() {
-    // const [projectResponse, setProjectResponse] = useState({});
-    const [processing, setProcessing] = useState(false);
+    const [projectResponse, setProjectResponse] = useState({});
+    const [processing, setProcessing] = useState(true);
     // const [firstSectionId, setFirstSectionId] = useState(-1);
 
     const rdmoContext = useContext(RdmoContext);
-
+    console.log('useDmpStart');
     useEffect(() => {
         async function prepareDmptStart() {
             // FIXME: better display questions first then create project as last step
@@ -133,9 +133,9 @@ function useDmptStart() {
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
     // const bsi = props.bsi || '';
-    console.log('DmptStart');
-
     const [projectResponse, processing] = useDmptStart();
+
+    console.log(`DmptStart. processing ${  processing}`);
     return (
         <div>
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart</h1>
