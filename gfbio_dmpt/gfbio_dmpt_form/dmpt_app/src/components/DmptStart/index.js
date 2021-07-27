@@ -1,21 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { nanoid } from 'nanoid';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 
 function useDmptStart() {
     const [projectResponse, setProjectResponse] = useState({});
     const [processing, setProcessing] = useState(false);
-    // const [firstSe]
+    const [firstSectionId, setFirstSectionId] = useState(-1);
 
     const rdmoContext = useContext(RdmoContext);
     console.log(rdmoContext);
     console.log('------------------');
 
     useEffect(() => {
-        async function postTmpProject() {
+        async function prepareDmptStart() {
             // FIXME: better display questions first then create project as last step
+            // PROJECT CREATE WITH AUTO_ID --------------------------------------------
             // try {
             //     console.log('post project');
             //     setProcessing(true);
@@ -40,29 +40,52 @@ function useDmptStart() {
             // } finally {
             //     setProcessing(false);
             // }
+            // ------------------------------------------------------------
 
+            const cata
+
+            /*
             try {
-                console.log('get section 1 / QS 1 ');
                 setProcessing(true);
-                const response = await axios.get(
+                const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=18`,  // section for gfbio catalog id hardcoded
                     {
                         headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
                     }
                 );
-                console.log('SECTION response');
-                console.log(response.data);
-                // let firstSectionId = response.data[0].id;
-                rdmoContext.assignSections(response.data);
+                rdmoContext.assignSections(sectionResponse.data);
+                const qsResponse = await axios.get(
+                    `${API_ROOT}questions/questionsets/?section=${sectionResponse.data[0].id}`,  // section for gfbio catalog id hardcoded
+                    {
+                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                    }
+                );
+                rdmoContext.assignQuestionSets(qsResponse.data);
+                const questions = [];
+                qsResponse.data.forEach(qs => {
+                    axios.get(
+                        `${API_ROOT}questions/questions/?questionset=${qs.id}`,  // section for gfbio catalog id hardcoded
+                        {
+                            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                        }
+                    ).then(
+                        function(response) {
+                            // console.log(response.data);
+                            questions.push(response.data);
+                        }
+                    ).catch(function(error) {
+                        console.log(error);
+                    });
+                });
+                rdmoContext.assignQuestions(questions);
             } catch (e) {
                 console.error(e);
             } finally {
                 setProcessing(false);
-            }
-
+            } */
         }
 
-        postTmpProject();
+        prepareDmptStart();
     }, []);
 
     return [projectResponse, processing];
