@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { forEach } from 'react-bootstrap/ElementChildren';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 
@@ -17,20 +16,25 @@ const fetchQuestions = async (qsResponse) => {
     return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
 };
 
-const fetchOtions = async (optionSetId) => {
+const fetchOptions = async (optionSet) => {
     return await axios.get(
-        `${API_ROOT}options/options/?optionset=${optionSetId}`,
+        `${API_ROOT}options/options/?optionset=${optionSet}`,
         {
             headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
         }
     );
+
+};
+
+const fetchAllOptions = async (optionSets) => {
+    return Promise.all(optionSets.map((o) => fetchOptions(o)));
 };
 
 function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
-    console.log('useDmpStart');
+    // console.log('useDmpStart');
     useEffect(() => {
         async function prepareDmptStart() {
             // FIXME: better display questions first then create project as last step
@@ -75,6 +79,7 @@ function useDmptStart(rdmoContext) {
                 );
                 rdmoContext.assignSections(sectionResponse.data);
                 setStage('... fetch questionsets ...');
+                // TODO: first section only here. hardcoded
                 const qsResponse = await axios.get(
                     `${API_ROOT}questions/questionsets/?section=${sectionResponse.data[0].id}`,  // section for gfbio catalog id hardcoded
                     {
@@ -83,29 +88,33 @@ function useDmptStart(rdmoContext) {
                 );
                 rdmoContext.assignQuestionSets(qsResponse.data);
                 setStage('... fetch questions ...');
+
                 fetchQuestions(qsResponse).then((res) => {
                     const tmp = [];
+                    const oSets = [];
+                    const options = [];
                     res.forEach((item) => {
                         item.data.forEach((q) => {
-                            console.log('###############');
-                            console.log(q);
                             if (q.optionsets.length > 0) {
-                                console.log(q.optionsets, ' - ', q.widget_type);
+                                // console.log('q:', q.id, 'pushing oset ', q.optionsets);
+                                q.optionsets.forEach((oSet) => {
+                                    oSets.push(oSet);
+                                });
                             }
                             tmp.push(q);
                         });
-                        // tmp.push(item.data);
-                        // console.log(item.data);
                     });
                     rdmoContext.assignQuestions(tmp);
                     setStage('... fetch options ...');
-                    // tmp.forEach((item)=>{
-                    //     console.log(item);
-                    // });
-                    setStage('... DONE ...');
-                    setProcessing(false);
+                    fetchAllOptions(oSets).then((oRes) => {
+                        oRes.forEach((o) => {
+                            options.push(o.data);
+                        });
+                        rdmoContext.assignOptions(options);
+                        setStage('... DONE ...');
+                        setProcessing(false);
+                    });
                 });
-
             } catch (e) {
                 console.error(e);
             } finally {
@@ -128,10 +137,10 @@ const iterateQuestions = (questions) => {
                     <i>{item.id}</i>:{item.text_en}
                 </label>
                 <input type={item.widget_type} className='form-control'
-                    id={`input_item_${item.id}`}
-                    placeholder='name@example.com' />
+                       id={`input_item_${item.id}`}
+                       placeholder='name@example.com' />
                 <small id={`help_item_${item.id}`}
-                    className='form-text text-muted'>
+                       className='form-text text-muted'>
                     {item.help_en}
                 </small>
             </div>
@@ -144,7 +153,7 @@ function DmptStart(props) {
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
 
-    console.log(`DmptStart. processing ${processing}`);
+    // console.log(`DmptStart. processing ${processing}`);
     const status = (
         <div>
             <h2><i>{stage}</i></h2>
@@ -152,7 +161,7 @@ function DmptStart(props) {
     );
     let formFields = <></>;
     if (!processing) {
-        console.log('no processing. proceed : ');
+        // console.log('no processing. proceed : ');
         formFields = iterateQuestions(rdmoContext.questions_data);
     }
     return (

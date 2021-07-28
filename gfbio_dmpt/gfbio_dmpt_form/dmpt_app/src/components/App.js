@@ -25,6 +25,7 @@ const App = () => {
     const [sections, setSections] = useState({});
     const [questionSets, setQuestionSets] = useState({});
     const [questions, setQuestions] = useState({});
+    const [options, setOptions] = useState({});
 
     const assignSections = (data) => {
         setSections(data);
@@ -38,13 +39,19 @@ const App = () => {
         setQuestions(data);
     };
 
+    const assignOptions = (data) => {
+        setOptions(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         question_set_data: questionSets,
         questions_data: questions,
+        options_data: options,
         assignSections,
         assignQuestionSets,
-        assignQuestions
+        assignQuestions,
+        assignOptions,
     };
 
     return (
