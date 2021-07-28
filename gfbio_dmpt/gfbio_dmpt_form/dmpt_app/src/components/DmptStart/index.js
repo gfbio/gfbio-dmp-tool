@@ -98,28 +98,103 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
+const iterateQuestions = (questions) => {
+    const tmp = [];
+    const widgetTypes = new Set();
+    questions.forEach((item) => {
+        const inputs = item.map((question) => {
+            widgetTypes.add(question.widget_type);
+            return (
+                <div className='form-group' key={question.id}>
+                    <label htmlFor={`input_question_${question.id}`}>
+                        {question.text_en}
+                    </label>
+                    <input type={question.widget_type} className='form-control'
+                           id={`input_question_${question.id}`}
+                           placeholder='name@example.com' />
+                    <small id={`help_question_${question.id}`}
+                           className='form-text text-muted'>
+                        {question.help_en}
+                    </small>
+                </div>
+            );
+        });
+        tmp.push(...inputs);
+    });
+    console.log('widgetTypes');
+    console.log(widgetTypes);
+    return tmp;
+};
+
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
 
-    // TODO: mehr feedback nach requests. z.B. 'getting sections', 'gettins sets', 'getting quesetions', 'preparing forms'
     console.log(`DmptStart. processing ${processing}`);
-    let body = (
+    const status = (
         <div>
             <h2><i>{stage}</i></h2>
         </div>
     );
-    // if (!processing) {
-    //     console.log('no processing. context: ');
-    //     body = (
-    //         <h3>Done</h3>
-    //     );
-    // }
+    let formFields = <></>;
+    if (!processing) {
+        console.log('no processing. proceed : ');
+        formFields = iterateQuestions(rdmoContext.questions_data);
+    }
     return (
         <div>
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart</h1>
-            {body}
+            {status}
+            <form>
+                {formFields}
+            </form>
+            {/* <form> */}
+            {/*    <div className='form-group'> */}
+            {/*        <label htmlFor='exampleFormControlInput1'>Email */}
+            {/*            address</label> */}
+            {/*        <input type='email' className='form-control' */}
+            {/*            id='exampleFormControlInput1' */}
+            {/*            placeholder='name@example.com' /> */}
+            {/*        <small id='passwordHelpBlock' */}
+            {/*            className='form-text text-muted'> */}
+            {/*            Your password must be 8-20 characters long, contain */}
+            {/*            letters and numbers, and must not contain spaces, */}
+            {/*            special characters, or emoji. */}
+            {/*        </small> */}
+            {/*    </div> */}
+            {/*    <div className='form-group'> */}
+            {/*        <label htmlFor='exampleFormControlSelect1'>Example */}
+            {/*            select</label> */}
+            {/*        <select className='form-control' */}
+            {/*            id='exampleFormControlSelect1'> */}
+            {/*            <option>1</option> */}
+            {/*            <option>2</option> */}
+            {/*            <option>3</option> */}
+            {/*            <option>4</option> */}
+            {/*            <option>5</option> */}
+            {/*        </select> */}
+            {/*    </div> */}
+            {/*    <div className='form-group'> */}
+            {/*        <label htmlFor='exampleFormControlSelect2'>Example multiple */}
+            {/*            select</label> */}
+            {/*        <select multiple className='form-control' */}
+            {/*            id='exampleFormControlSelect2'> */}
+            {/*            <option>1</option> */}
+            {/*            <option>2</option> */}
+            {/*            <option>3</option> */}
+            {/*            <option>4</option> */}
+            {/*            <option>5</option> */}
+            {/*        </select> */}
+            {/*    </div> */}
+            {/*    <div className='form-group'> */}
+            {/*        <label htmlFor='exampleFormControlTextarea1'>Example */}
+            {/*            textarea</label> */}
+            {/*        <textarea className='form-control' */}
+            {/*            id='exampleFormControlTextarea1' */}
+            {/*            rows='3' /> */}
+            {/*    </div> */}
+            {/* </form> */}
         </div>
     );
 }
