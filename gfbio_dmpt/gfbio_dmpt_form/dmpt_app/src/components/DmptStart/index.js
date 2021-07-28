@@ -1,8 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { map } from 'react-bootstrap/ElementChildren';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
-import { map } from 'react-bootstrap/ElementChildren';
+
+const fetchQuestion = async (q) => {
+    console.log(`fetchQuestion ${q.id}`);
+    return await axios.get(
+        `${API_ROOT}questions/questions/?questionset=${q.id}`,
+        {
+            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+        }
+    );
+};
+
+const fetchQuestions = async (qsResponse) => {
+    return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
+};
 
 function useDmptStart(rdmoContext) {
     const [projectResponse, setProjectResponse] = useState({});
@@ -45,7 +59,78 @@ function useDmptStart(rdmoContext) {
             // section for gfbio catalog id hardcoded
             const catalogId = '18';
 
-            await axios.get(
+            try {
+                const sectionResponse = await axios.get(
+                    `${API_ROOT}questions/sections/?catalog=${catalogId}`,  // section for gfbio catalog id hardcoded
+                    {
+                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                    }
+                );
+                rdmoContext.assignSections(sectionResponse.data);
+                const qsResponse = await axios.get(
+                    `${API_ROOT}questions/questionsets/?section=${sectionResponse.data[0].id}`,  // section for gfbio catalog id hardcoded
+                    {
+                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                    }
+                );
+                rdmoContext.assignQuestionSets(qsResponse.data);
+                fetchQuestions(qsResponse).then((res) => {
+                    console.log('RES');
+                    // res;
+                    // ist;
+                    // arra;
+                    // mit;
+                    // respnoses.questions;
+                    // sind in res[i].data;
+                    // hier;
+                    // kann;
+                    // jetz;
+                    // context.questiopns;
+                    // gesetzt;
+                    // werden, da;
+                    // alles;
+                    // sequenciell;
+                    // fertig;
+                    // ist;
+                    console.log(res);
+                    // rdmoContext.assignQuestions(res)
+                    const tmp = [];
+                    res.map((item) => {
+                        tmp.push(item.data);
+                        return true;
+                    });
+                    console.log(tmp);
+                    rdmoContext.assignQuestions(tmp);
+                    setProcessing(false);
+                });
+
+                // console.log(qResponse)
+                // const questions = [];
+                // qsResponse.data.forEach(qs => {
+                //     axios.get(
+                //         `${API_ROOT}questions/questions/?questionset=${qs.id}`,  // section for gfbio catalog id hardcoded
+                //         {
+                //             headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                //         }
+                //     ).then(
+                //         function(response) {
+                //             // console.log(response.data);
+                //             questions.push(response.data);
+                //         }
+                //     ).catch(function(error) {
+                //         console.log(error);
+                //     });
+                // });
+                // rdmoContext.assignQuestions(questions);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                // setProcessing(false);
+            }
+
+            // ------------------------------------------------------------
+            // FIXME: question are not waiting for finish
+            /* await axios.get(
                 `${API_ROOT}questions/sections/?catalog=${catalogId}`,
                 {
                     headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
@@ -68,7 +153,7 @@ function useDmptStart(rdmoContext) {
                         }
                     ).then(
                         function(res) {
-                            console.log("question response for "+qs.id);
+                            console.log(`question response for ${  qs.id}`);
                             console.log(typeof res.data);
                             console.log(res.data);
                             console.log('.............');
@@ -91,47 +176,10 @@ function useDmptStart(rdmoContext) {
                 // }));
             }).finally(() => {
                 setProcessing(false);
-            });
+            }); */
 
-            /*
-            try {
-                setProcessing(true);
-                const sectionResponse = await axios.get(
-                    `${API_ROOT}questions/sections/?catalog=18`,  // section for gfbio catalog id hardcoded
-                    {
-                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                    }
-                );
-                rdmoContext.assignSections(sectionResponse.data);
-                const qsResponse = await axios.get(
-                    `${API_ROOT}questions/questionsets/?section=${sectionResponse.data[0].id}`,  // section for gfbio catalog id hardcoded
-                    {
-                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                    }
-                );
-                rdmoContext.assignQuestionSets(qsResponse.data);
-                const questions = [];
-                qsResponse.data.forEach(qs => {
-                    axios.get(
-                        `${API_ROOT}questions/questions/?questionset=${qs.id}`,  // section for gfbio catalog id hardcoded
-                        {
-                            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                        }
-                    ).then(
-                        function(response) {
-                            // console.log(response.data);
-                            questions.push(response.data);
-                        }
-                    ).catch(function(error) {
-                        console.log(error);
-                    });
-                });
-                rdmoContext.assignQuestions(questions);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                setProcessing(false);
-            } */
+            // ------------------------------------------------------------
+
         }
 
         prepareDmptStart();
@@ -146,16 +194,17 @@ function DmptStart(props) {
     const rdmoContext = useContext(RdmoContext);
     const [projectResponse, processing, queRes] = useDmptStart(rdmoContext);
 
+    // TODO: mehr feedback nach requests. z.B. 'getting sections', 'gettins sets', 'getting quesetions', 'preparing forms'
     console.log(`DmptStart. processing ${processing}`);
     let body = (
         <h2><i>...processing</i></h2>
     );
     if (!processing) {
-        console.log('no processing. questions: ');
-        console.debug(rdmoContext.questions_data);
-        console.log(typeof rdmoContext.questions_data);
-        console.log(rdmoContext.questions_data.length);
-        console.warn(queRes);
+        console.log('no processing. context: ');
+        console.debug(rdmoContext);
+        // console.log(typeof rdmoContext.questions_data);
+        // console.log(rdmoContext.questions_data.length);
+        // console.warn(queRes);
         // let x = queRes.map((q, index) => {
         //     console.log(q);
         //     return <li>{q[0]}</li>;

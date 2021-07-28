@@ -15,6 +15,11 @@ export default function Welcome() {
             }}>
                 Catalogs
             </Link>
+            <Link to={{
+                pathname: 'start'
+            }}>
+                Start DMPT
+            </Link>
         </div>
     );
 };
