@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { forEach } from 'react-bootstrap/ElementChildren';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 
@@ -14,6 +15,15 @@ const fetchQuestion = async (q) => {
 
 const fetchQuestions = async (qsResponse) => {
     return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
+};
+
+const fetchOtions = async (optionSetId) => {
+    return await axios.get(
+        `${API_ROOT}options/options/?optionset=${optionSetId}`,
+        {
+            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+        }
+    );
 };
 
 function useDmptStart(rdmoContext) {
@@ -75,11 +85,23 @@ function useDmptStart(rdmoContext) {
                 setStage('... fetch questions ...');
                 fetchQuestions(qsResponse).then((res) => {
                     const tmp = [];
-                    res.map((item) => {
-                        tmp.push(item.data);
-                        return true;
+                    res.forEach((item) => {
+                        item.data.forEach((q) => {
+                            console.log('###############');
+                            console.log(q);
+                            if (q.optionsets.length > 0) {
+                                console.log(q.optionsets, ' - ', q.widget_type);
+                            }
+                            tmp.push(q);
+                        });
+                        // tmp.push(item.data);
+                        // console.log(item.data);
                     });
                     rdmoContext.assignQuestions(tmp);
+                    setStage('... fetch options ...');
+                    // tmp.forEach((item)=>{
+                    //     console.log(item);
+                    // });
                     setStage('... DONE ...');
                     setProcessing(false);
                 });
@@ -99,31 +121,22 @@ function useDmptStart(rdmoContext) {
 }
 
 const iterateQuestions = (questions) => {
-    const tmp = [];
-    const widgetTypes = new Set();
-    questions.forEach((item) => {
-        const inputs = item.map((question) => {
-            widgetTypes.add(question.widget_type);
-            return (
-                <div className='form-group' key={question.id}>
-                    <label htmlFor={`input_question_${question.id}`}>
-                        {question.text_en}
-                    </label>
-                    <input type={question.widget_type} className='form-control'
-                           id={`input_question_${question.id}`}
-                           placeholder='name@example.com' />
-                    <small id={`help_question_${question.id}`}
-                           className='form-text text-muted'>
-                        {question.help_en}
-                    </small>
-                </div>
-            );
-        });
-        tmp.push(...inputs);
+    return questions.map((item) => {
+        return (
+            <div className='form-group' key={item.id}>
+                <label htmlFor={`input_item_${item.id}`}>
+                    <i>{item.id}</i>:{item.text_en}
+                </label>
+                <input type={item.widget_type} className='form-control'
+                    id={`input_item_${item.id}`}
+                    placeholder='name@example.com' />
+                <small id={`help_item_${item.id}`}
+                    className='form-text text-muted'>
+                    {item.help_en}
+                </small>
+            </div>
+        );
     });
-    console.log('widgetTypes');
-    console.log(widgetTypes);
-    return tmp;
 };
 
 // eslint-disable-next-line no-unused-vars
