@@ -1,13 +1,12 @@
 # according to https://gitlab.gwdg.de/gfbio/cicd -------------------------------
+# TODO: unit-tests is conflicting with release, since both currently run on the same machine and cause errors when using the same docker network
+#  - unit_tests
 include:
   - project: gfbio/cicd
     file:
       - '.create_merge_request.yml'
       - '.tag_release.yml'
 
-# TODO: unit-tests is conflicting with release, since both currently run on the same machine
-#       and cause errors when using the same docker network
-#  - unit_tests
 stages:
   - create_merge_request
   - tag_release_check
