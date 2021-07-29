@@ -13,6 +13,7 @@ const fetchQuestion = async (q) => {
 };
 
 const fetchQuestions = async (qsResponse) => {
+    // FIXME: await ?
     return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
 };
 
@@ -27,6 +28,7 @@ const fetchOptions = async (optionSet) => {
 };
 
 const fetchAllOptions = async (optionSets) => {
+    // FIXME: await ?
     return Promise.all(optionSets.map((o) => fetchOptions(o)));
 };
 
@@ -106,8 +108,10 @@ function useDmptStart(rdmoContext) {
                     });
                     rdmoContext.assignQuestions(tmp);
                     setStage('... fetch options ...');
+                    // console.log(oSets);
                     fetchAllOptions(oSets).then((oRes) => {
                         oRes.forEach((o) => {
+                            // console.log(o);
                             options.push(o.data);
                         });
                         rdmoContext.assignOptions(options);
@@ -129,27 +133,98 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
-const iterateQuestions = (questions) => {
+const iterateQuestions = (questions, options) => {
     return questions.map((item) => {
+        console.log('widget_type ', item.widget_type);
+        if (item.widget_type === 'textarea') {
+            return (
+                <div className='form-group' key={item.id}>
+                    <label htmlFor={`input_item_${item.id}`}>
+                        <i>{item.id}</i>:{item.text_en}
+                    </label>
+                    <textarea className='form-control'
+                        id={`input_item_${item.id}`}
+                        rows='3' />
+                    <small id={`help_item_${item.id}`}
+                        className='form-text text-muted'>
+                        {item.help_en}
+                    </small>
+                </div>
+            );
+        }
+        if (item.widget_type === 'select') {
+            return (
+                <div className='form-group' key={item.id}>
+                    <label htmlFor={`input_item_${item.id}`}>
+                        <i>{item.id}</i>:{item.text_en}
+                    </label>
+                    <select className='form-control'>
+                        {options[item.optionsets[0]].map((i) => {
+                            return (<option key={i.id}>{i.text}</option>);
+                        })}
+                    </select>
+                    <small id={`help_item_${item.id}`}
+                        className='form-text text-muted'>
+                        {item.help_en}
+                    </small>
+                </div>
+            );
+        }
+        if (item.widget_type === 'radio') {
+            console.log(item);
+            console.log(options[item.optionsets[0]]);
+            return (
+                <>
+                    {
+                        options[item.optionsets[0]].map((i) => {
+                            return (
+                                <div className='form-check' key={i.id}>
+                                    <input className='form-check-input' type='radio'
+                                        name={`radio_name_${item.id}`} id={`radio_${item.id}_${i.id}`}
+                                        value={i.text} />
+                                    <label className='form-check-label'
+                                        htmlFor={`radio_${item.id}_${i.id}`}>
+                                        {i.text}
+                                    </label>
+                                </div>
+                            );
+                        })
+                    }
+
+                </>
+            );
+        }
         return (
             <div className='form-group' key={item.id}>
                 <label htmlFor={`input_item_${item.id}`}>
                     <i>{item.id}</i>:{item.text_en}
                 </label>
                 <input type={item.widget_type} className='form-control'
-                       id={`input_item_${item.id}`}
-                       placeholder='name@example.com' />
+                    id={`input_item_${item.id}`}
+                    placeholder='name@example.com' />
                 <small id={`help_item_${item.id}`}
-                       className='form-text text-muted'>
+                    className='form-text text-muted'>
                     {item.help_en}
                 </small>
             </div>
         );
-    });
+    }
+    );
 };
 
+const iterateOptions = (options) =>
+{
+    const res = {};
+    options.forEach((o) => {
+        res[o[0].optionset] = o;
+    });
+    return res;
+}
+;
+
 // eslint-disable-next-line no-unused-vars
-function DmptStart(props) {
+function DmptStart(props)
+{
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
 
@@ -162,7 +237,10 @@ function DmptStart(props) {
     let formFields = <></>;
     if (!processing) {
         // console.log('no processing. proceed : ');
-        formFields = iterateQuestions(rdmoContext.questions_data);
+        console.log(rdmoContext.options_data);
+        const opts = iterateOptions(rdmoContext.options_data);
+        // rdmoContext.assignOptions(opts)
+        formFields = iterateQuestions(rdmoContext.questions_data, opts);
     }
     return (
         <div>
