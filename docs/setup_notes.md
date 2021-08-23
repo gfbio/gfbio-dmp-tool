@@ -4,8 +4,12 @@
   dependencies as described
   here: https://rdmo.readthedocs.io/en/latest/installation/index.html
   
-- comment AUTH_USER_MODEL because of RMDO
+- SOLVED: comment AUTH_USER_MODEL because of RMDO
 - adapt requirements because of RMDO
+
+## Notes
+
+- import rdmo default settings in  local.py. This needs to be done in production also
   
 ## commands so far ...
 
@@ -13,6 +17,32 @@
 - docker-compose -f local.yml run --rm django python manage.py migrate
 - docker-compose -f local.yml run --rm django python manage.py setup_groups
 - docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+- docker-compose -f local.yml run --rm django python manage.py download_vendor_files 
+  
+
+### database operations
+
+- docker-compose -f local.yml run --rm django python manage.py loaddata dumps/rdmo_testinstance_dump.json 
+- docker-compose -f local.yml exec postgres backup
+- docker-compose -f local.yml exec postgres backups
+- docker ps
+- docker cp b18640e7047c:/backups ./backups
+
+#### drop test database
+
+    docker exec -it postgres psql -U <LOCAL_ENV_DB_USER> -d gfbio_dmpt
+    psql (12.3 (Debian 12.3-1.pgdg100+1))
+    Type "help" for help.
+    
+    gfbio_dmpt=# DROP DATABASE test_gfbio_dmpt;
+    DROP DATABASE
+    gfbio_dmpt=# 
+
+
+--------------------------------------------------------------------------------
+
+
 
 # GitLab CI 
 

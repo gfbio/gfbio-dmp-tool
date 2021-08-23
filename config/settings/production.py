@@ -21,12 +21,23 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["dmp.gfbio.dev"])
 # ------------------------------------------------------------------------------
 DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
-DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
+DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE",
+                                               default=60)  # noqa F405
 
 # CACHES
 # ------------------------------------------------------------------------------
 CACHES = {
     "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Mimicing memcache behavior.
+            # https://github.com/jazzband/django-redis#memcached-exceptions-behavior
+            "IGNORE_EXCEPTIONS": True,
+        },
+    },
+    "api": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": env("REDIS_URL"),
         "OPTIONS": {
@@ -101,7 +112,6 @@ EMAIL_HOST_USER = 'gfbio-services'
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 
-
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL regex.
@@ -117,7 +127,6 @@ INSTALLED_APPS += ["anymail"]  # noqa F405
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 ANYMAIL = {}
 
-
 # LOGGING
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
@@ -130,12 +139,12 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         }
@@ -148,7 +157,8 @@ LOGGING = {
             "propagate": False,
         },
         # Errors logged by the SDK itself
-        "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
+        "sentry_sdk": {"level": "ERROR", "handlers": ["console"],
+                       "propagate": False},
         "django.security.DisallowedHost": {
             "level": "ERROR",
             "handlers": ["console"],
@@ -181,3 +191,5 @@ sentry_sdk.init(
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+# TODO: for now ...
+WHITENOISE_MANIFEST_STRICT=False

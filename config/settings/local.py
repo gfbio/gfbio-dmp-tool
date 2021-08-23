@@ -1,9 +1,17 @@
+
+import os
+
+from django.conf.global_settings import CSRF_COOKIE_PATH, LANGUAGE_COOKIE_PATH, \
+    SESSION_COOKIE_PATH, CSRF_COOKIE_SECURE
+from django.template.defaulttags import csrf_token
+
 from .base import *  # noqa
 from .base import env
 
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
+
 DEBUG = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
@@ -20,6 +28,10 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "",
+    },
+    "api": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "",
     }
 }
 
@@ -27,14 +39,14 @@ CACHES = {
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+    "DJANGO_EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend"
 )
 
 # WhiteNoise
 # ------------------------------------------------------------------------------
 # http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa F405
-
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -68,5 +80,10 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-# rdmo
+# CORS Settings
 # ------------------------------------------------------------------------------
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+
+# https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios

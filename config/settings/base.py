@@ -3,7 +3,10 @@ Base settings to build other settings files upon.
 """
 from pathlib import Path
 
-import environ
+import environ, os
+
+# import default settings from rdmo
+from rdmo.core.settings import *
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # gfbio_dmpt/
@@ -71,8 +74,14 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_swagger",
     "corsheaders",
     # "rdmo",
+    "compressor",
+    "rules",
+    "widget_tweaks",
+    "mptt",
+    "formtools",
 ]
 
 RDMO_CORE_APPS = [
@@ -89,12 +98,15 @@ RDMO_CORE_APPS = [
     'rdmo.views',
     'rdmo.projects',
     'rdmo.management',
+    'rdmo.overlays',
 ]
 
 LOCAL_APPS = [
     # because of rdmo this is not set in AUTH_USER_MODEL, but we keep it here for now
     "gfbio_dmpt.users.apps.UsersConfig",
     # Your stuff: custom apps go here
+    "gfbio_dmpt.gfbio_dmpt_form.apps.GFBioDmptFormConfig",
+    "gfbio_dmpt.basic_rdmo.apps.BasicRdmoConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + RDMO_CORE_APPS + LOCAL_APPS
@@ -108,6 +120,7 @@ MIGRATION_MODULES = {"sites": "gfbio_dmpt.contrib.sites.migrations"}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
+    "rules.permissions.ObjectPermissionBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
@@ -170,6 +183,8 @@ STATICFILES_DIRS = [str(APPS_DIR / "static")]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    # other finders..
+    'compressor.finders.CompressorFinder',
 ]
 
 # MEDIA
@@ -323,9 +338,35 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
+
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# rdmo
+# ------------------------------------------------------------------------------
+# TODO: keep in mind that all rdmo settings are imported above: from rdmo.core.settings import *
+
+# set path-dependend settings
+PROJECT_DIR = ROOT_DIR
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+# TODO: better add app specific templates as usual for django, recommended by rdmo developers
+THEME_DIR = os.path.join(ROOT_DIR, 'theme')
+VENDOR_CDN = False
+# update STATICFILES_DIRS for the vendor directory
+STATICFILES_DIRS += [
+    os.path.join(ROOT_DIR, 'vendor/')
+]
+
+CSRF_COOKIE_HTTPONLY = False
+
+# add static and templates from local.THEME_DIR to STATICFILES_DIRS and TEMPLATES
+try:
+    STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
+    TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
+except NameError:
+    pass
