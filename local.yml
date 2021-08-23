@@ -4,11 +4,11 @@ volumes:
   local_postgres_data: { }
   local_postgres_data_backups: { }
 
-networks:
-  local_default:
-    driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: 1450
+#networks:
+#  local_default:
+#    driver: bridge
+#    driver_opts:
+#      com.docker.network.driver.mtu: 1450
 
 services:
   django: &django
@@ -24,8 +24,8 @@ services:
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
-    networks:
-      - local_default
+    #    networks:
+    #      - local_default
     ports:
       - "8000:8000"
     command: /start
@@ -41,8 +41,8 @@ services:
       - local_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
-    networks:
-      - local_default
+  #    networks:
+  #      - local_default
 
   docs:
     image: gfbio_dmpt_local_docs
@@ -52,8 +52,8 @@ services:
       dockerfile: ./compose/local/docs/Dockerfile
     env_file:
       - ./.envs/.local/.django
-    networks:
-      - local_default
+    #    networks:
+    #      - local_default
     volumes:
       - ./docs:/docs:z
       - ./config:/app/config:z
@@ -73,8 +73,8 @@ services:
     depends_on:
       - redis
       - postgres
-    networks:
-      - local_default
+    #    networks:
+    #      - local_default
     ports: [ ]
     command: /start-celeryworker
 
@@ -86,16 +86,16 @@ services:
       - redis
       - postgres
     ports: [ ]
-    networks:
-      - local_default
+    #    networks:
+    #      - local_default
     command: /start-celerybeat
 
   flower:
     <<: *django
     image: gfbio_dmpt_local_flower
     container_name: flower
-    networks:
-      - local_default
+    #    networks:
+    #      - local_default
     ports:
       - "5555:5555"
     command: /start-flower
