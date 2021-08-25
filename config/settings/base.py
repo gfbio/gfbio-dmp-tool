@@ -358,9 +358,9 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 THEME_DIR = os.path.join(ROOT_DIR, 'theme')
 VENDOR_CDN = True
 # update STATICFILES_DIRS for the vendor directory
-STATICFILES_DIRS += [
-    os.path.join(ROOT_DIR, 'vendor/')
-]
+# STATICFILES_DIRS += [
+#     os.path.join(ROOT_DIR, 'vendor/')
+# ]
 
 CSRF_COOKIE_HTTPONLY = False
 
