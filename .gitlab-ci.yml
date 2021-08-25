@@ -48,8 +48,8 @@ tag_release:
     - docker-compose -f production.yml run --rm postgres backup
     - docker-compose -f production.yml run --rm django python manage.py migrate
     - docker-compose -f production.yml run --rm django python manage.py collectstatic --noinput
-    - docker-compose -f production.yml run --rm django python manage.py compress --force
-    - docker-compose -f production.yml run --rm django python manage.py collectstatic --noinput
+    #    - docker-compose -f production.yml run --rm django python manage.py compress --force
+    #    - docker-compose -f production.yml run --rm django python manage.py collectstatic --noinput
     - docker-compose -f production.yml down
     - docker-compose -f production.yml up -d
   environment:
