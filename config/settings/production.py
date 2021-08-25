@@ -192,9 +192,10 @@ sentry_sdk.init(
 # Your stuff...
 # ------------------------------------------------------------------------------
 # TODO: for now ...
-WHITENOISE_MANIFEST_STRICT = False
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
+# WHITENOISE_MANIFEST_STRICT = False
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
+COMPRESS_OFFLINE = env.bool('COMPRESS_OFFLINE', default=True)
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-sass', 'django_libsass.SassCompiler'),
