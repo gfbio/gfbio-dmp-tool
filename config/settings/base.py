@@ -356,7 +356,7 @@ PROJECT_DIR = ROOT_DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 # TODO: better add app specific templates as usual for django, recommended by rdmo developers
 THEME_DIR = os.path.join(ROOT_DIR, 'theme')
-VENDOR_CDN = False
+VENDOR_CDN = True
 # update STATICFILES_DIRS for the vendor directory
 STATICFILES_DIRS += [
     os.path.join(ROOT_DIR, 'vendor/')
