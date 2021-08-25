@@ -193,5 +193,5 @@ sentry_sdk.init(
 # ------------------------------------------------------------------------------
 # TODO: for now ...
 WHITENOISE_MANIFEST_STRICT=False
-COMPRESS_ENABLED = False
+COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
