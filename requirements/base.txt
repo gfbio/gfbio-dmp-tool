@@ -38,3 +38,5 @@ django-widget-tweaks~=1.4
 django-mptt~=0.10
 
 django-formtools==2.3  # https://github.com/jazzband/django-formtools
+
+django-libsass==0.9
