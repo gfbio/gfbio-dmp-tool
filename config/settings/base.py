@@ -364,9 +364,10 @@ VENDOR_CDN = True
 
 CSRF_COOKIE_HTTPONLY = False
 
+# FIXME: remove this, remove templates dir, and do theming via app specific templates (the django way)
 # add static and templates from local.THEME_DIR to STATICFILES_DIRS and TEMPLATES
 try:
-    STATICFILES_DIRS.append(os.path.join(THEME_DIR, STATICFILES_DIRS))
+    STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
     TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
 except NameError:
     pass
