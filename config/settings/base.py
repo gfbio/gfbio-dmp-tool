@@ -366,7 +366,7 @@ CSRF_COOKIE_HTTPONLY = False
 
 # add static and templates from local.THEME_DIR to STATICFILES_DIRS and TEMPLATES
 try:
-    STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
+    STATICFILES_DIRS.append(os.path.join(THEME_DIR, STATICFILES_DIRS))
     TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
 except NameError:
     pass
