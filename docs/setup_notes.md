@@ -58,7 +58,7 @@
       - test
     
     variables:
-      POSTGRES_USER: 'gfbio_dmpt'
+      POSTGRES_USER: 'gfbio_dmpt
       POSTGRES_PASSWORD: ''
       POSTGRES_DB: 'test_gfbio_dmpt'
       POSTGRES_HOST_AUTH_METHOD: trust
