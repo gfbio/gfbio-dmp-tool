@@ -355,7 +355,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 PROJECT_DIR = ROOT_DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 # TODO: better add app specific templates as usual for django, recommended by rdmo developers
-THEME_DIR = os.path.join(ROOT_DIR, 'theme')
+# THEME_DIR = os.path.join(ROOT_DIR, 'theme')
 VENDOR_CDN = True
 # update STATICFILES_DIRS for the vendor directory
 # STATICFILES_DIRS += [
@@ -366,8 +366,8 @@ CSRF_COOKIE_HTTPONLY = False
 
 # FIXME: remove this, remove templates dir, and do theming via app specific templates (the django way)
 # add static and templates from local.THEME_DIR to STATICFILES_DIRS and TEMPLATES
-try:
-    STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
-    TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
-except NameError:
-    pass
+# try:
+#     STATICFILES_DIRS.append(os.path.join(THEME_DIR, 'static/'))
+#     TEMPLATES[0]['DIRS'].append(os.path.join(THEME_DIR, 'templates/'))
+# except NameError:
+#     pass
