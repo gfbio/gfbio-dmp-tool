@@ -171,16 +171,23 @@ const iterateQuestions = (questions, options) => {
             );
         }
         if (item.widget_type === 'radio') {
-            console.log(item);
-            console.log(options[item.optionsets[0]]);
+            // console.log('RADIO... work here');
+            // console.log(item);
+            // console.log(options[item.optionsets[0]]);
             return (
-                <>
+                <div className='form-group' key={item.id}>
+                    <label htmlFor={`input_item_${item.id}`}>
+                        <i>{item.id}</i>:{item.text_en}
+                    </label>
+
                     {
                         options[item.optionsets[0]].map((i) => {
                             return (
                                 <div className='form-check' key={i.id}>
-                                    <input className='form-check-input' type='radio'
-                                        name={`radio_name_${item.id}`} id={`radio_${item.id}_${i.id}`}
+                                    <input className='form-check-input'
+                                        type='radio'
+                                        name={`radio_name_${item.id}`}
+                                        id={`radio_${item.id}_${i.id}`}
                                         value={i.text} />
                                     <label className='form-check-label'
                                         htmlFor={`radio_${item.id}_${i.id}`}>
@@ -191,7 +198,37 @@ const iterateQuestions = (questions, options) => {
                         })
                     }
 
-                </>
+                </div>
+            );
+        }
+        if (item.widget_type === 'checkbox') {
+            console.log('CHECKBOX... work here');
+            console.log(item);
+            console.log(options[item.optionsets[0]]);
+            return (
+                <div className='form-group' key={item.id}>
+
+                    <label htmlFor={`input_item_${item.id}`}>
+                        <i>{item.id}</i>:{item.text_en}
+                    </label>
+                    {
+                        options[item.optionsets[0]].map((i) => {
+                            return (
+                                <div className='form-check' key={i.id}>
+                                    <input className="form-check-input"
+                                        type="checkbox"
+                                        name={`checkbox_name_${item.id}`}
+                                        value={i.text}
+                                        id={`checkbox_${item.id}_${i.id}`} />
+                                    <label className="form-check-label"
+                                        htmlFor={`checkbox_${item.id}_${i.id}`}>
+                                        {i.text}
+                                    </label>
+                                </div>
+                            );
+                        })
+                    }
+                </div>
             );
         }
         return (
@@ -212,8 +249,7 @@ const iterateQuestions = (questions, options) => {
     );
 };
 
-const iterateOptions = (options) =>
-{
+const iterateOptions = (options) => {
     const res = {};
     options.forEach((o) => {
         res[o[0].optionset] = o;
@@ -223,8 +259,7 @@ const iterateOptions = (options) =>
 ;
 
 // eslint-disable-next-line no-unused-vars
-function DmptStart(props)
-{
+function DmptStart(props) {
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
 
