@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
+import FormGenericInput from '../FormGenericInput';
 
 const fetchQuestion = async (q) => {
     return await axios.get(
@@ -239,18 +240,7 @@ const iterateQuestions = (questions, options) => {
             );
         }
         return (
-            <div className='form-group' key={item.id}>
-                <label htmlFor={`input_item_${item.id}`}>
-                    <i>{item.id}</i>:{item.text_en}
-                </label>
-                <input type={item.widget_type} className='form-control'
-                    id={`input_item_${item.id}`}
-                    placeholder='name@example.com' />
-                <small id={`help_item_${item.id}`}
-                    className='form-text text-muted'>
-                    {item.help_en}
-                </small>
-            </div>
+            <FormGenericInput item={item} />
         );
     }
     );
