@@ -39,7 +39,7 @@ FormRadio.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     item: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    options: PropTypes.array.isRequired,
+    options: PropTypes.object.isRequired,
 };
 
 export default FormRadio;

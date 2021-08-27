@@ -4,6 +4,7 @@ import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
+import FormSelect from '../FormSelect';
 
 const fetchQuestion = async (q) => {
     return await axios.get(
@@ -156,20 +157,7 @@ const iterateQuestions = (questions, options) => {
         }
         if (item.widget_type === 'select') {
             return (
-                <div className='form-group' key={item.id}>
-                    <label htmlFor={`input_item_${item.id}`}>
-                        <i>{item.id}</i>:{item.text_en}
-                    </label>
-                    <select className='form-control'>
-                        {options[item.optionsets[0]].map((i) => {
-                            return (<option key={i.id}>{i.text}</option>);
-                        })}
-                    </select>
-                    <small id={`help_item_${item.id}`}
-                        className='form-text text-muted'>
-                        {item.help_en}
-                    </small>
-                </div>
+                <FormSelect item={item} options={options} />
             );
         }
         if (item.widget_type === 'radio') {
