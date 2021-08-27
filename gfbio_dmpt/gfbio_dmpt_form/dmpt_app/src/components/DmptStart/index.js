@@ -5,6 +5,8 @@ import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
 import FormSelect from '../FormSelect';
+import { FormText } from 'react-bootstrap';
+import FormTextArea from '../FormTextArea';
 
 const fetchQuestion = async (q) => {
     return await axios.get(
@@ -141,18 +143,7 @@ const iterateQuestions = (questions, options) => {
         console.log('widget_type ', item.widget_type);
         if (item.widget_type === 'textarea') {
             return (
-                <div className='form-group' key={item.id}>
-                    <label htmlFor={`input_item_${item.id}`}>
-                        <i>{item.id}</i>:{item.text_en}
-                    </label>
-                    <textarea className='form-control'
-                        id={`input_item_${item.id}`}
-                        rows='3' />
-                    <small id={`help_item_${item.id}`}
-                        className='form-text text-muted'>
-                        {item.help_en}
-                    </small>
-                </div>
+                <FormTextArea item={item} />
             );
         }
         if (item.widget_type === 'select') {
