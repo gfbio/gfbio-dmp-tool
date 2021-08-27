@@ -197,14 +197,17 @@ const iterateQuestions = (questions, options) => {
                             );
                         })
                     }
-
+                    <small id={`help_item_${item.id}`}
+                        className='form-text text-muted'>
+                        {item.help_en}
+                    </small>
                 </div>
             );
         }
         if (item.widget_type === 'checkbox') {
-            console.log('CHECKBOX... work here');
-            console.log(item);
-            console.log(options[item.optionsets[0]]);
+            // console.log('CHECKBOX... work here');
+            // console.log(item);
+            // console.log(options[item.optionsets[0]]);
             return (
                 <div className='form-group' key={item.id}>
 
@@ -228,6 +231,10 @@ const iterateQuestions = (questions, options) => {
                             );
                         })
                     }
+                    <small id={`help_item_${item.id}`}
+                        className='form-text text-muted'>
+                        {item.help_en}
+                    </small>
                 </div>
             );
         }
