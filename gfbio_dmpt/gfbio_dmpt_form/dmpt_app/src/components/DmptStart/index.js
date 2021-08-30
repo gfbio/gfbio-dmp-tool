@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { FormCheck, FormText } from 'react-bootstrap';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
 import FormSelect from '../FormSelect';
-import { FormCheck, FormText } from 'react-bootstrap';
 import FormTextArea from '../FormTextArea';
 import FormCheckBox from '../FormCheckBox';
 
@@ -139,9 +139,9 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
+// TODO: refactor to component
 const iterateQuestions = (questions, options) => {
     return questions.map((item) => {
-        console.log('widget_type ', item.widget_type);
         if (item.widget_type === 'textarea') {
             return (
                 <FormTextArea item={item} />
@@ -158,38 +158,8 @@ const iterateQuestions = (questions, options) => {
             );
         }
         if (item.widget_type === 'checkbox') {
-            // console.log('CHECKBOX... work here');
-            // console.log(item);
-            // console.log(options[item.optionsets[0]]);
             return (
                 <FormCheckBox item={item} options={options} />
-                // <div className='form-group' key={item.id}>
-                //
-                //     <label htmlFor={`input_item_${item.id}`}>
-                //         <i>{item.id}</i>:{item.text_en}
-                //     </label>
-                //     {
-                //         options[item.optionsets[0]].map((i) => {
-                //             return (
-                //                 <div className='form-check' key={i.id}>
-                //                     <input className="form-check-input"
-                //                         type="checkbox"
-                //                         name={`checkbox_name_${item.id}`}
-                //                         value={i.text}
-                //                         id={`checkbox_${item.id}_${i.id}`} />
-                //                     <label className="form-check-label"
-                //                         htmlFor={`checkbox_${item.id}_${i.id}`}>
-                //                         {i.text}
-                //                     </label>
-                //                 </div>
-                //             );
-                //         })
-                //     }
-                //     <small id={`help_item_${item.id}`}
-                //         className='form-text text-muted'>
-                //         {item.help_en}
-                //     </small>
-                // </div>
             );
         }
         return (
@@ -199,6 +169,7 @@ const iterateQuestions = (questions, options) => {
     );
 };
 
+// TODO: refactor to component
 const iterateOptions = (options) => {
     const res = {};
     options.forEach((o) => {
@@ -234,52 +205,6 @@ function DmptStart(props) {
             <form>
                 {formFields}
             </form>
-            {/* <form> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlInput1'>Email */}
-            {/*            address</label> */}
-            {/*        <input type='email' className='form-control' */}
-            {/*            id='exampleFormControlInput1' */}
-            {/*            placeholder='name@example.com' /> */}
-            {/*        <small id='passwordHelpBlock' */}
-            {/*            className='form-text text-muted'> */}
-            {/*            Your password must be 8-20 characters long, contain */}
-            {/*            letters and numbers, and must not contain spaces, */}
-            {/*            special characters, or emoji. */}
-            {/*        </small> */}
-            {/*    </div> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlSelect1'>Example */}
-            {/*            select</label> */}
-            {/*        <select className='form-control' */}
-            {/*            id='exampleFormControlSelect1'> */}
-            {/*            <option>1</option> */}
-            {/*            <option>2</option> */}
-            {/*            <option>3</option> */}
-            {/*            <option>4</option> */}
-            {/*            <option>5</option> */}
-            {/*        </select> */}
-            {/*    </div> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlSelect2'>Example multiple */}
-            {/*            select</label> */}
-            {/*        <select multiple className='form-control' */}
-            {/*            id='exampleFormControlSelect2'> */}
-            {/*            <option>1</option> */}
-            {/*            <option>2</option> */}
-            {/*            <option>3</option> */}
-            {/*            <option>4</option> */}
-            {/*            <option>5</option> */}
-            {/*        </select> */}
-            {/*    </div> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlTextarea1'>Example */}
-            {/*            textarea</label> */}
-            {/*        <textarea className='form-control' */}
-            {/*            id='exampleFormControlTextarea1' */}
-            {/*            rows='3' /> */}
-            {/*    </div> */}
-            {/* </form> */}
         </div>
     );
 }
