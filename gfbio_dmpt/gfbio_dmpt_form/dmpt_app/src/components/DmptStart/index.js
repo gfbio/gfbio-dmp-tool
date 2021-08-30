@@ -1,42 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { FormCheck, FormText } from 'react-bootstrap';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
-import FormGenericInput from '../FormGenericInput';
-import FormRadio from '../FormRadio';
-import FormSelect from '../FormSelect';
-import FormTextArea from '../FormTextArea';
-import FormCheckBox from '../FormCheckBox';
-
-const fetchQuestion = async (q) => {
-    return await axios.get(
-        `${API_ROOT}questions/questions/?questionset=${q.id}`,
-        {
-            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-        }
-    );
-};
-
-const fetchQuestions = async (qsResponse) => {
-    // FIXME: await ?
-    return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
-};
-
-const fetchOptions = async (optionSet) => {
-    return await axios.get(
-        `${API_ROOT}options/options/?optionset=${optionSet}`,
-        {
-            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-        }
-    );
-
-};
-
-const fetchAllOptions = async (optionSets) => {
-    // FIXME: await ?
-    return Promise.all(optionSets.map((o) => fetchOptions(o)));
-};
+import Questions from '../Questions';
 
 function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
@@ -74,7 +40,8 @@ function useDmptStart(rdmoContext) {
             // ------------------------------------------------------------
 
             setProcessing(true);
-            // section for gfbio catalog id hardcoded
+
+            // FIXME: section for gfbio catalog id hardcoded
             const catalogId = '18';
 
             try {
@@ -86,51 +53,20 @@ function useDmptStart(rdmoContext) {
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
-                setStage('... fetch questionsets ...');
-                // TODO: first section only here. hardcoded
-                const qsResponse = await axios.get(
-                    `${API_ROOT}questions/questionsets/?section=${sectionResponse.data[0].id}`,  // section for gfbio catalog id hardcoded
-                    {
-                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                    }
-                );
-                rdmoContext.assignQuestionSets(qsResponse.data);
-                setStage('... fetch questions ...');
+                rdmoContext.assingSectionsSize(sectionResponse.data.length);
 
-                fetchQuestions(qsResponse).then((res) => {
-                    const tmp = [];
-                    const oSets = [];
-                    const options = [];
-                    res.forEach((item) => {
-                        item.data.forEach((q) => {
-                            if (q.optionsets.length > 0) {
-                                // console.log('q:', q.id, 'pushing oset ', q.optionsets);
-                                q.optionsets.forEach((oSet) => {
-                                    oSets.push(oSet);
-                                });
-                            }
-                            tmp.push(q);
-                        });
-                    });
-                    rdmoContext.assignQuestions(tmp);
-                    setStage('... fetch options ...');
-                    // console.log(oSets);
-                    fetchAllOptions(oSets).then((oRes) => {
-                        oRes.forEach((o) => {
-                            // console.log(o);
-                            options.push(o.data);
-                        });
-                        rdmoContext.assignOptions(options);
-                        setStage('... DONE ...');
-                        setProcessing(false);
-                    });
-                });
+                // console.log('------------  section response data   -------------');
+                // console.log(sectionResponse.data);
+                // console.log(sectionResponse.data.length);
+                // console.log('---------------------------------------------------');
+
+                setStage('... DONE ...');
+                setProcessing(false);
             } catch (e) {
                 console.error(e);
             } finally {
                 ;
             }
-
         }
 
         prepareDmptStart();
@@ -139,72 +75,55 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
-// TODO: refactor to component
-const iterateQuestions = (questions, options) => {
-    return questions.map((item) => {
-        if (item.widget_type === 'textarea') {
-            return (
-                <FormTextArea item={item} />
-            );
-        }
-        if (item.widget_type === 'select') {
-            return (
-                <FormSelect item={item} options={options} />
-            );
-        }
-        if (item.widget_type === 'radio') {
-            return (
-                <FormRadio item={item} options={options} />
-            );
-        }
-        if (item.widget_type === 'checkbox') {
-            return (
-                <FormCheckBox item={item} options={options} />
-            );
-        }
-        return (
-            <FormGenericInput item={item} />
-        );
+const nextSection = (context) => {
+    console.log('next section ', context.sections_index, '  ', context.sections_size);
+    if (context.sections_index < context.sections_size) {
+        context.assingSectionsIndex(context.sections_index + 1);
     }
-    );
 };
 
-// TODO: refactor to component
-const iterateOptions = (options) => {
-    const res = {};
-    options.forEach((o) => {
-        res[o[0].optionset] = o;
-    });
-    return res;
-}
-;
+const prevSection = () => {
+    console.log('prev section');
+};
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
+
+    // console.log(`DmptStart. render ....`);
+
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
 
-    // console.log(`DmptStart. processing ${processing}`);
     const status = (
         <div>
             <h2><i>{stage}</i></h2>
         </div>
     );
     let formFields = <></>;
+    let sectionControls = <></>;
     if (!processing) {
         // console.log('no processing. proceed : ');
-        console.log(rdmoContext.options_data);
-        const opts = iterateOptions(rdmoContext.options_data);
-        // rdmoContext.assignOptions(opts)
-        formFields = iterateQuestions(rdmoContext.questions_data, opts);
+        formFields = <Questions
+            section={rdmoContext.section_data[rdmoContext.sections_index]} />;
+        sectionControls = (<div className='row'>
+            <div className='col-6'>
+                <button className='btn btn-primary'
+                    onClick={prevSection}>Prev Section
+                </button>
+            </div>
+            <div className='col-6'>
+                <button className='btn btn-primary'
+                    onClick={() => nextSection(rdmoContext)}>Next Section
+                </button>
+            </div>
+        </div>);
     }
     return (
         <div>
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart</h1>
             {status}
-            <form>
-                {formFields}
-            </form>
+            {formFields}
+            {sectionControls}
         </div>
     );
 }

@@ -23,12 +23,23 @@ const App = () => {
 
     // https://www.savaslabs.com/blog/using-react-global-state-hooks-and-context
     const [sections, setSections] = useState({});
+    const [sectionsIndex, setSectionsIndex] = useState(0);
+    const [sectionsSize, setSectionsSize] = useState({});
+
     const [questionSets, setQuestionSets] = useState({});
     const [questions, setQuestions] = useState({});
     const [options, setOptions] = useState({});
 
     const assignSections = (data) => {
         setSections(data);
+    };
+
+    const assingSectionsIndex = (index) => {
+        setSectionsIndex(index);
+    };
+
+    const assingSectionsSize = (size) => {
+        setSectionsSize(size);
     };
 
     const assignQuestionSets = (data) => {
@@ -45,13 +56,17 @@ const App = () => {
 
     const rdmoContext = {
         section_data: sections,
+        sections_index: sectionsIndex,
+        sections_size: sectionsSize,
         question_set_data: questionSets,
         questions_data: questions,
         options_data: options,
         assignSections,
+        assingSectionsIndex,
+        assingSectionsSize,
         assignQuestionSets,
         assignQuestions,
-        assignOptions,
+        assignOptions
     };
 
     return (
