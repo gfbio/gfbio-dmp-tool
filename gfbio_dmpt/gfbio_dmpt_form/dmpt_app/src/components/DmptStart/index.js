@@ -5,8 +5,9 @@ import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
 import FormSelect from '../FormSelect';
-import { FormText } from 'react-bootstrap';
+import { FormCheck, FormText } from 'react-bootstrap';
 import FormTextArea from '../FormTextArea';
+import FormCheckBox from '../FormCheckBox';
 
 const fetchQuestion = async (q) => {
     return await axios.get(
@@ -161,33 +162,34 @@ const iterateQuestions = (questions, options) => {
             // console.log(item);
             // console.log(options[item.optionsets[0]]);
             return (
-                <div className='form-group' key={item.id}>
-
-                    <label htmlFor={`input_item_${item.id}`}>
-                        <i>{item.id}</i>:{item.text_en}
-                    </label>
-                    {
-                        options[item.optionsets[0]].map((i) => {
-                            return (
-                                <div className='form-check' key={i.id}>
-                                    <input className="form-check-input"
-                                        type="checkbox"
-                                        name={`checkbox_name_${item.id}`}
-                                        value={i.text}
-                                        id={`checkbox_${item.id}_${i.id}`} />
-                                    <label className="form-check-label"
-                                        htmlFor={`checkbox_${item.id}_${i.id}`}>
-                                        {i.text}
-                                    </label>
-                                </div>
-                            );
-                        })
-                    }
-                    <small id={`help_item_${item.id}`}
-                        className='form-text text-muted'>
-                        {item.help_en}
-                    </small>
-                </div>
+                <FormCheckBox item={item} options={options} />
+                // <div className='form-group' key={item.id}>
+                //
+                //     <label htmlFor={`input_item_${item.id}`}>
+                //         <i>{item.id}</i>:{item.text_en}
+                //     </label>
+                //     {
+                //         options[item.optionsets[0]].map((i) => {
+                //             return (
+                //                 <div className='form-check' key={i.id}>
+                //                     <input className="form-check-input"
+                //                         type="checkbox"
+                //                         name={`checkbox_name_${item.id}`}
+                //                         value={i.text}
+                //                         id={`checkbox_${item.id}_${i.id}`} />
+                //                     <label className="form-check-label"
+                //                         htmlFor={`checkbox_${item.id}_${i.id}`}>
+                //                         {i.text}
+                //                     </label>
+                //                 </div>
+                //             );
+                //         })
+                //     }
+                //     <small id={`help_item_${item.id}`}
+                //         className='form-text text-muted'>
+                //         {item.help_en}
+                //     </small>
+                // </div>
             );
         }
         return (
