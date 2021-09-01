@@ -89,7 +89,7 @@ const prevSection = () => {
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
 
-    // console.log(`DmptStart. render ....`);
+    console.log(`DmptStart. render ....`);
 
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
@@ -103,8 +103,11 @@ function DmptStart(props) {
     let sectionControls = <></>;
     if (!processing) {
         // console.log('no processing. proceed : ');
+        // console.log(rdmoContext.sections_index);
+        // console.log(rdmoContext.section_data[rdmoContext.sections_index]);
         formFields = <Questions
-            section={rdmoContext.section_data[rdmoContext.sections_index]} />;
+            sectionIndex={rdmoContext.sections_index} />;
+
         sectionControls = (<div className='row'>
             <div className='col-6'>
                 <button className='btn btn-primary'

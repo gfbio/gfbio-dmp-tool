@@ -77,10 +77,14 @@ const iterateOptions = (options) => {
     return res;
 };
 
-function useQuestions(rdmoContext, section) {
+function useQuestions(rdmoContext, sectionIndex) {
 
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
+
+    console.log('useQuestions section');
+    console.log(sectionIndex);
+    const section = rdmoContext.section_data[sectionIndex];
 
     useEffect(() => {
         async function prepareQuestions() {
@@ -95,9 +99,9 @@ function useQuestions(rdmoContext, section) {
                 );
                 rdmoContext.assignQuestionSets(qsResponse.data);
 
-                console.log('------------  questionsets data   -------------');
-                console.log(qsResponse.data);
-                console.log('---------------------------------------------------');
+                // console.log('------------  questionsets data   -------------');
+                // console.log(qsResponse.data);
+                // console.log('---------------------------------------------------');
 
                 setStage('... fetch questions ...');
                 fetchQuestions(qsResponse).then((res) => {
@@ -134,18 +138,21 @@ function useQuestions(rdmoContext, section) {
                 ;
             }
         }
+
         prepareQuestions();
-    }, []);
+    }, [sectionIndex]);
     return [processing, stage];
 }
 
 // eslint-disable-next-line no-unused-vars
 function Questions(props) {
 
-    console.log(`Questions. render ....`);
-    const { section } = props;
+    console.log('Questions. render ------------');
+    const { sectionIndex } = props;
     const rdmoContext = useContext(RdmoContext);
-    const [processing, stage] = useQuestions(rdmoContext, section);
+
+    const [processing, stage] = useQuestions(rdmoContext, sectionIndex);
+    console.log(processing);
 
     const status = (
         <div>
@@ -154,9 +161,9 @@ function Questions(props) {
     );
     let formFields = <></>;
     if (!processing) {
-        console.log('no processing. proceed : ');
-        console.log(rdmoContext.questions_data);
-        console.log(rdmoContext.options_data);
+        // console.log('no processing. proceed : ');
+        // console.log(rdmoContext.questions_data);
+        // console.log(rdmoContext.options_data);
         //     console.log('sectionIndex', rdmoContext.sections_index);
         const opts = iterateOptions(rdmoContext.options_data);
 
@@ -176,8 +183,7 @@ function Questions(props) {
 }
 
 Questions.propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
-    section: PropTypes.object.isRequired
+    sectionIndex: PropTypes.number.isRequired
 };
 
 export default Questions;
