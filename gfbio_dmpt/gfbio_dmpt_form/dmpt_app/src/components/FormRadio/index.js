@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function FormRadio(props) {
-    const { item, options } = props;
+    const { item, options, handleChange } = props;
     return (
         <div className='form-group' key={item.id}>
             <label htmlFor={`input_item_${item.id}`}>
@@ -40,6 +40,7 @@ FormRadio.propTypes = {
     item: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     options: PropTypes.object.isRequired,
+    handleChange: PropTypes.func.isRequired
 };
 
 export default FormRadio;

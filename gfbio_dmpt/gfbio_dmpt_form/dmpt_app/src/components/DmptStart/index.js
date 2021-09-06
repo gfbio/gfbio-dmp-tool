@@ -77,13 +77,16 @@ function useDmptStart(rdmoContext) {
 
 const nextSection = (context) => {
     console.log('next section ', context.sections_index, '  ', context.sections_size);
-    if (context.sections_index < context.sections_size) {
+    if (context.sections_index < context.sections_size - 1) {
         context.assingSectionsIndex(context.sections_index + 1);
     }
 };
 
-const prevSection = () => {
-    console.log('prev section');
+const prevSection = (context) => {
+    console.log('prev section ', context.sections_index, '  ', context.sections_size);
+    if (context.sections_index > 0) {
+        context.assingSectionsIndex(context.sections_index - 1);
+    }
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -111,11 +114,11 @@ function DmptStart(props) {
         sectionControls = (<div className='row'>
             <div className='col-6'>
                 <button className='btn btn-primary'
-                    onClick={prevSection}>Prev Section
+                    onClick={() => prevSection(rdmoContext)}>Prev Section
                 </button>
             </div>
             <div className='col-6'>
-                <button className='btn btn-primary'
+                <button type='submit' className='btn btn-primary'
                     onClick={() => nextSection(rdmoContext)}>Next Section
                 </button>
             </div>
@@ -125,8 +128,12 @@ function DmptStart(props) {
         <div>
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart</h1>
             {status}
+            {/* <form id={`section_${rdmoContext.sections_index}`} onSubmit={e => { */}
+            {/*    e.preventDefault(); */}
+            {/* }}> */}
             {formFields}
             {sectionControls}
+            {/* </form> */}
         </div>
     );
 }

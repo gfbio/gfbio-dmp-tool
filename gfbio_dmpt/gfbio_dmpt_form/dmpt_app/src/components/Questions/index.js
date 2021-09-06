@@ -39,32 +39,34 @@ const fetchAllOptions = async (optionSets) => {
 };
 
 // TODO: refactor to component
-const iterateQuestions = (questions, options) => {
+const iterateQuestions = (questions, options, handleChange) => {
     return questions.map((item) => {
-        if (item.widget_type === 'textarea') {
+            if (item.widget_type === 'textarea') {
+                return (
+                    <FormTextArea item={item} handleChange={handleChange} />
+                );
+            }
+            if (item.widget_type === 'select') {
+                return (
+                    <FormSelect item={item} options={options}
+                                handleChange={handleChange} />
+                );
+            }
+            if (item.widget_type === 'radio') {
+                return (
+                    <FormRadio item={item} options={options} />
+                );
+            }
+            if (item.widget_type === 'checkbox') {
+                return (
+                    <FormCheckBox item={item} options={options}
+                                  handleChange={handleChange} />
+                );
+            }
             return (
-                <FormTextArea item={item} />
+                <FormGenericInput item={item} handleChange={handleChange} />
             );
         }
-        if (item.widget_type === 'select') {
-            return (
-                <FormSelect item={item} options={options} />
-            );
-        }
-        if (item.widget_type === 'radio') {
-            return (
-                <FormRadio item={item} options={options} />
-            );
-        }
-        if (item.widget_type === 'checkbox') {
-            return (
-                <FormCheckBox item={item} options={options} />
-            );
-        }
-        return (
-            <FormGenericInput item={item} />
-        );
-    }
     );
 };
 
@@ -77,13 +79,28 @@ const iterateOptions = (options) => {
     return res;
 };
 
+// const handleChange = (e) => {
+//     updateFormData({
+//         ...formData,
+//
+//         // Trimming any whitespace
+//         [e.target.name]: e.target.value.trim()
+//     });
+// };
+//
+// const handleSubmit = (e) => {
+//     e.preventDefault()
+//     console.log(formData);
+//     // ... submit to API or something
+// };
+
 function useQuestions(rdmoContext, sectionIndex) {
 
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
-    console.log('useQuestions section');
-    console.log(sectionIndex);
+    // console.log('useQuestions section');
+    // console.log(sectionIndex);
     const section = rdmoContext.section_data[sectionIndex];
 
     useEffect(() => {
@@ -154,6 +171,35 @@ function Questions(props) {
     const [processing, stage] = useQuestions(rdmoContext, sectionIndex);
     console.log(processing);
 
+    const [formData, updateFormData] = React.useState({});
+
+    const handleChange = (e) => {
+        console.log('CHANGE');
+        // console.log(formData);
+        console.log(e.target.name);
+        console.log(e.target.value);
+        // eslint-disable-next-line no-prototype-builtins
+        if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
+            console.log('checkbox key already there');
+            delete formData[e.target.name];
+            console.log(formData);
+            updateFormData(formData);
+        } else {
+            updateFormData({
+                ...formData,
+
+                // Trimming any whitespace
+                [e.target.name]: e.target.value.trim()
+            });
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+        // ... submit to API or something
+    };
+
     const status = (
         <div>
             <h4>Questions: <i>{stage}</i></h4>
@@ -170,14 +216,15 @@ function Questions(props) {
         // FIXME: no global options needed ?
         // rdmoContext.assignOptions(opts);
 
-        formFields = iterateQuestions(rdmoContext.questions_data, opts);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, handleChange);
     }
     return (
         <div>
             {status}
-            <form>
+            <form id={`section_${rdmoContext.sections_index}`}>
                 {formFields}
             </form>
+            <button onClick={handleSubmit}>Submit</button>
         </div>
     );
 }
