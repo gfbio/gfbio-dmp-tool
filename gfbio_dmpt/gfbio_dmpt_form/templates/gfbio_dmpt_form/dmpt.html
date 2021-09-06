@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12">
+            <div id='root'>
+                <p>dmpt app ? ....</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block thirdPartyJavaScript %}
+    <script src="{% static 'js/gfbio_dmpt_form/main.28f77ad4e68c5f9b5b8b.js' %}"></script>
+{% endblock thirdPartyJavaScript %}

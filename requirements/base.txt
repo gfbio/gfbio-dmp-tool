@@ -31,3 +31,12 @@ django-cors-headers==3.7.0 # https://github.com/adamchainz/django-cors-headers
 # ------------------------------------------------------------------------------
 #rdmo==1.5.5  # https://github.com/rdmorganiser/rdmo
 git+https://github.com/rdmorganiser/rdmo@9e66c1b3ff125d4617fad6a1b093088b8a4e537d
+
+rules~=2.0
+django-compressor==2.4   # https://django-compressor.readthedocs.io/en/latest/
+django-widget-tweaks~=1.4
+django-mptt~=0.10
+
+django-formtools==2.3  # https://github.com/jazzband/django-formtools
+
+django-libsass==0.8
