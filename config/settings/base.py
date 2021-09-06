@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "rest_framework_swagger",
     "corsheaders",
+    "mozilla_django_oidc",
     # "rdmo",
     "compressor",
     "rules",
@@ -86,19 +87,19 @@ THIRD_PARTY_APPS = [
 
 RDMO_CORE_APPS = [
     # rdmo modules
-    'rdmo',
-    'rdmo.core',
-    'rdmo.accounts',
-    'rdmo.services',
-    'rdmo.domain',
-    'rdmo.options',
-    'rdmo.conditions',
-    'rdmo.questions',
-    'rdmo.tasks',
-    'rdmo.views',
-    'rdmo.projects',
-    'rdmo.management',
-    'rdmo.overlays',
+    "rdmo",
+    "rdmo.core",
+    "rdmo.accounts",
+    "rdmo.services",
+    "rdmo.domain",
+    "rdmo.options",
+    "rdmo.conditions",
+    "rdmo.questions",
+    "rdmo.tasks",
+    "rdmo.views",
+    "rdmo.projects",
+    "rdmo.management",
+    "rdmo.overlays",
 ]
 
 LOCAL_APPS = [
@@ -123,6 +124,7 @@ AUTHENTICATION_BACKENDS = [
     "rules.permissions.ObjectPermissionBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+    "mozilla_django_oidc.auth.OIDCAuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 # because of rdmo
@@ -150,8 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # MIDDLEWARE
@@ -184,7 +185,7 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     # other finders..
-    'compressor.finders.CompressorFinder',
+    "compressor.finders.CompressorFinder",
 ]
 
 # MEDIA
@@ -278,7 +279,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+            "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
@@ -336,9 +337,8 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",),
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -346,6 +346,21 @@ CORS_URLS_REGEX = r"^/api/.*$"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# gfbio SSO
+OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID", default="no_oidc_cl_id")
+OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET", default="no_oidc_cl_secret")
+OIDC_RP_SIGN_ALGO = env("OIDC_RP_SIGN_ALGO", default="HS256")
+OIDC_OP_JWKS_ENDPOINT = env("OIDC_OP_JWKS_ENDPOINT", default="no_jwks_url")
+OIDC_OP_AUTHORIZATION_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/GFBio/protocol/openid-connect/auth"
+)
+OIDC_OP_TOKEN_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/GFBio/protocol/openid-connect/token"
+)
+OIDC_OP_USER_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/GFBio/protocol/openid-connect/userinfo"
+)
 
 # rdmo
 # ------------------------------------------------------------------------------
