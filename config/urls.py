@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from rdmo.core.views import home, about
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -11,6 +12,19 @@ urlpatterns = [
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
+    # RDMO -----------
+    path("rdmo/", home, name="home_rdmo"),
+    path("rdmo/about/", about, name="about_rdmo"),
+    path("rdmo/", include("rdmo.core.urls")),
+    path("api/v1/", include("rdmo.core.urls.v1")),
+    path("api/v1/", include("rdmo.core.urls.swagger")),
+    # RDMO -----------
+    # path('', home, name='home_rdmo'),
+    # path('about/', about, name='about_rdmo'),
+    #
+    # path('', include('rdmo.core.urls')),
+    # path('api/v1/', include('rdmo.core.urls.v1')),
+    # path('api/v1/', include('rdmo.core.urls.swagger')),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
@@ -18,6 +32,8 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path("oidc/", include("mozilla_django_oidc.urls")),
+    # initial url for dmpt, may move to toplevel
+    path("dmpt/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS

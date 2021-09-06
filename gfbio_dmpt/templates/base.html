@@ -74,6 +74,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home_rdmo' %}">RDMO</a>
+                </li>
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         {# URL provided by django-allauth/account/urls.py #}
@@ -117,14 +120,14 @@
 
     {% block content %}
         <p>Use this document as a way to quick start any new project.</p>
-        <p>(..........)</p>
-        <p>(..........)</p>
-        <p>(..........)</p>
     {% endblock content %}
 
 </div> <!-- /container -->
 
 {% block modal %}{% endblock modal %}
+
+{% block thirdPartyJavaScript %}
+{% endblock thirdPartyJavaScript %}
 
 {% block inline_javascript %}
     {# Script tags with only code, no src (defer by default) #}
