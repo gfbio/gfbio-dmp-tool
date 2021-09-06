@@ -8,6 +8,7 @@ hiredis==1.1.0  # https://github.com/redis/hiredis-py
 celery==4.4.6  # pyup: < 5.0,!=4.4.7  # https://github.com/celery/celery
 django-celery-beat==2.2.0  # https://github.com/celery/django-celery-beat
 flower==0.9.7  # https://github.com/mher/flower
+mozilla-django-oidc==1.2.4
 
 # Django
 # ------------------------------------------------------------------------------
@@ -21,7 +22,6 @@ django-allauth==0.44.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.11.2  # https://github.com/django-crispy-forms/django-crispy-forms
 django-redis==4.12.1  # https://github.com/jazzband/django-redis
 
-
 # Django REST Framework
 # ------------------------------------------------------------------------------
 djangorestframework==3.12.4  # https://github.com/encode/django-rest-framework
@@ -29,7 +29,7 @@ django-cors-headers==3.7.0 # https://github.com/adamchainz/django-cors-headers
 
 # RDMO
 # ------------------------------------------------------------------------------
-# rdmo==1.5.5  # https://github.com/rdmorganiser/rdmo
+#rdmo==1.5.5  # https://github.com/rdmorganiser/rdmo
 git+https://github.com/rdmorganiser/rdmo@9e66c1b3ff125d4617fad6a1b093088b8a4e537d
 
 rules~=2.0
