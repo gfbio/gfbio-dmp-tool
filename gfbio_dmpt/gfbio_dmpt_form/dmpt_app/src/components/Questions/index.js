@@ -41,32 +41,32 @@ const fetchAllOptions = async (optionSets) => {
 // TODO: refactor to component
 const iterateQuestions = (questions, options, handleChange) => {
     return questions.map((item) => {
-            if (item.widget_type === 'textarea') {
-                return (
-                    <FormTextArea item={item} handleChange={handleChange} />
-                );
-            }
-            if (item.widget_type === 'select') {
-                return (
-                    <FormSelect item={item} options={options}
-                                handleChange={handleChange} />
-                );
-            }
-            if (item.widget_type === 'radio') {
-                return (
-                    <FormRadio item={item} options={options} />
-                );
-            }
-            if (item.widget_type === 'checkbox') {
-                return (
-                    <FormCheckBox item={item} options={options}
-                                  handleChange={handleChange} />
-                );
-            }
+        if (item.widget_type === 'textarea') {
             return (
-                <FormGenericInput item={item} handleChange={handleChange} />
+                <FormTextArea item={item} handleChange={handleChange} />
             );
         }
+        if (item.widget_type === 'select') {
+            return (
+                <FormSelect item={item} options={options}
+                    handleChange={handleChange} />
+            );
+        }
+        if (item.widget_type === 'radio') {
+            return (
+                <FormRadio item={item} options={options} handleChange={handleChange} />
+            );
+        }
+        if (item.widget_type === 'checkbox') {
+            return (
+                <FormCheckBox item={item} options={options}
+                    handleChange={handleChange} />
+            );
+        }
+        return (
+            <FormGenericInput item={item} handleChange={handleChange} />
+        );
+    }
     );
 };
 
@@ -176,13 +176,16 @@ function Questions(props) {
     const handleChange = (e) => {
         console.log('CHANGE');
         // console.log(formData);
-        console.log(e.target.name);
-        console.log(e.target.value);
+        // console.log(e.target.name);
+        // console.log(e.target.value);
+
+        // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
+        // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
         if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
-            console.log('checkbox key already there');
+            // console.log('checkbox key already there');
             delete formData[e.target.name];
-            console.log(formData);
+            // console.log(formData);
             updateFormData(formData);
         } else {
             updateFormData({
@@ -196,6 +199,7 @@ function Questions(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log('SUBMIT');
         console.log(formData);
         // ... submit to API or something
     };

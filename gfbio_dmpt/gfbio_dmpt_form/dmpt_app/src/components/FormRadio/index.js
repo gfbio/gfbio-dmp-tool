@@ -6,7 +6,7 @@ function FormRadio(props) {
     const { item, options, handleChange } = props;
     return (
         <div className='form-group' key={item.id}>
-            <label htmlFor={`input_item_${item.id}`}>
+            <label htmlFor={item.key}>
                 <i>{item.id}</i>:{item.text_en}
             </label>
 
@@ -16,11 +16,14 @@ function FormRadio(props) {
                         <div className='form-check' key={i.id}>
                             <input className='form-check-input'
                                 type='radio'
-                                name={`radio_name_${item.id}`}
-                                id={`radio_${item.id}_${i.id}`}
-                                value={i.text} />
+                                // name={`radio_name_${item.id}`}
+                                name={item.key}
+                                id={`${item.key}_${i.id}`}
+                                value={i.text}
+                                onChange={handleChange}
+                            />
                             <label className='form-check-label'
-                                htmlFor={`radio_${item.id}_${i.id}`}>
+                                htmlFor={`${item.key}_${i.id}`}>
                                 {i.text}
                             </label>
                         </div>
