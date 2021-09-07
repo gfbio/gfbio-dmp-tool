@@ -54,7 +54,8 @@ const iterateQuestions = (questions, options, handleChange) => {
         }
         if (item.widget_type === 'radio') {
             return (
-                <FormRadio item={item} options={options} handleChange={handleChange} />
+                <FormRadio item={item} options={options}
+                    handleChange={handleChange} />
             );
         }
         if (item.widget_type === 'checkbox') {
@@ -94,7 +95,7 @@ const iterateOptions = (options) => {
 //     // ... submit to API or something
 // };
 
-function useQuestions(rdmoContext, sectionIndex) {
+function useQuestions(rdmoContext, sectionIndex, formData) {
 
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
@@ -105,7 +106,11 @@ function useQuestions(rdmoContext, sectionIndex) {
 
     useEffect(() => {
         async function prepareQuestions() {
+            console.log('PREPARE QUESTIONS use Effetct | deps is sectionIndex ... ');
+            console.log(formData);
             setProcessing(true);
+            // rdmoContext.assignFormData(formData);
+            console.log(rdmoContext.form_data);
             try {
                 setStage('... fetch questionsets ...');
                 const qsResponse = await axios.get(
@@ -161,20 +166,36 @@ function useQuestions(rdmoContext, sectionIndex) {
     return [processing, stage];
 }
 
+const nextSection = (context, formData) => {
+    console.log('next section ', context.sections_index, '  ', context.sections_size);
+    if (context.sections_index < context.sections_size - 1) {
+        context.assingSectionsIndex(context.sections_index + 1);
+    }
+    context.assignFormData(formData);
+};
+
+const prevSection = (context, formData) => {
+    console.log('prev section ', context.sections_index, '  ', context.sections_size);
+    if (context.sections_index > 0) {
+        context.assingSectionsIndex(context.sections_index - 1);
+    }
+    context.assignFormData(formData);
+};
+
 // eslint-disable-next-line no-unused-vars
 function Questions(props) {
 
-    console.log('Questions. render ------------');
+    // console.log('Questions. render ------------');
     const { sectionIndex } = props;
     const rdmoContext = useContext(RdmoContext);
 
-    const [processing, stage] = useQuestions(rdmoContext, sectionIndex);
-    console.log(processing);
-
     const [formData, updateFormData] = React.useState({});
 
+    const [processing, stage] = useQuestions(rdmoContext, sectionIndex, formData);
+    // console.log(processing);
+
     const handleChange = (e) => {
-        console.log('CHANGE');
+        // console.log('CHANGE');
         // console.log(formData);
         // console.log(e.target.name);
         // console.log(e.target.value);
@@ -187,6 +208,7 @@ function Questions(props) {
             delete formData[e.target.name];
             // console.log(formData);
             updateFormData(formData);
+            // rdmoContext.assignFormData(formData);
         } else {
             updateFormData({
                 ...formData,
@@ -194,15 +216,21 @@ function Questions(props) {
                 // Trimming any whitespace
                 [e.target.name]: e.target.value.trim()
             });
+            // rdmoContext.assignFormData({
+            //     ...formData,
+            //
+            //     // Trimming any whitespace
+            //     [e.target.name]: e.target.value.trim()
+            // });
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('SUBMIT');
-        console.log(formData);
-        // ... submit to API or something
-    };
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     // console.log('SUBMIT');
+    //     // console.log(formData);
+    //     // ... submit to API or something
+    // };
 
     const status = (
         <div>
@@ -210,6 +238,7 @@ function Questions(props) {
         </div>
     );
     let formFields = <></>;
+    let sectionControls = <></>;
     if (!processing) {
         // console.log('no processing. proceed : ');
         // console.log(rdmoContext.questions_data);
@@ -221,6 +250,18 @@ function Questions(props) {
         // rdmoContext.assignOptions(opts);
 
         formFields = iterateQuestions(rdmoContext.questions_data, opts, handleChange);
+        sectionControls = (<div className='row'>
+            <div className='col-6'>
+                <button className='btn btn-primary'
+                    onClick={() => prevSection(rdmoContext, formData)}>Prev Section
+                </button>
+            </div>
+            <div className='col-6'>
+                <button type='submit' className='btn btn-primary'
+                    onClick={() => nextSection(rdmoContext, formData)}>Next Section
+                </button>
+            </div>
+        </div>);
     }
     return (
         <div>
@@ -228,7 +269,8 @@ function Questions(props) {
             <form id={`section_${rdmoContext.sections_index}`}>
                 {formFields}
             </form>
-            <button onClick={handleSubmit}>Submit</button>
+            {sectionControls}
+            {/* <button onClick={handleSubmit}>Submit</button> */}
         </div>
     );
 }

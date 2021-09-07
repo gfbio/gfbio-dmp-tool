@@ -75,19 +75,19 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
-const nextSection = (context) => {
-    console.log('next section ', context.sections_index, '  ', context.sections_size);
-    if (context.sections_index < context.sections_size - 1) {
-        context.assingSectionsIndex(context.sections_index + 1);
-    }
-};
+// const nextSection = (context) => {
+//     console.log('next section ', context.sections_index, '  ', context.sections_size);
+//     if (context.sections_index < context.sections_size - 1) {
+//         context.assingSectionsIndex(context.sections_index + 1);
+//     }
+// };
 
-const prevSection = (context) => {
-    console.log('prev section ', context.sections_index, '  ', context.sections_size);
-    if (context.sections_index > 0) {
-        context.assingSectionsIndex(context.sections_index - 1);
-    }
-};
+// const prevSection = (context) => {
+//     console.log('prev section ', context.sections_index, '  ', context.sections_size);
+//     if (context.sections_index > 0) {
+//         context.assingSectionsIndex(context.sections_index - 1);
+//     }
+// };
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
@@ -103,7 +103,7 @@ function DmptStart(props) {
         </div>
     );
     let formFields = <></>;
-    let sectionControls = <></>;
+    // let sectionControls = <></>;
     if (!processing) {
         // console.log('no processing. proceed : ');
         // console.log(rdmoContext.sections_index);
@@ -111,18 +111,18 @@ function DmptStart(props) {
         formFields = <Questions
             sectionIndex={rdmoContext.sections_index} />;
 
-        sectionControls = (<div className='row'>
-            <div className='col-6'>
-                <button className='btn btn-primary'
-                    onClick={() => prevSection(rdmoContext)}>Prev Section
-                </button>
-            </div>
-            <div className='col-6'>
-                <button type='submit' className='btn btn-primary'
-                    onClick={() => nextSection(rdmoContext)}>Next Section
-                </button>
-            </div>
-        </div>);
+        // sectionControls = (<div className='row'>
+        //     <div className='col-6'>
+        //         <button className='btn btn-primary'
+        //             onClick={() => prevSection(rdmoContext)}>Prev Section
+        //         </button>
+        //     </div>
+        //     {/* <div className='col-6'> */}
+        //     {/*    <button type='submit' className='btn btn-primary' */}
+        //     {/*        onClick={() => nextSection(rdmoContext)}>Next Section */}
+        //     {/*    </button> */}
+        //     {/* </div> */}
+        // </div>);
     }
     return (
         <div>
@@ -132,7 +132,7 @@ function DmptStart(props) {
             {/*    e.preventDefault(); */}
             {/* }}> */}
             {formFields}
-            {sectionControls}
+            {/*{sectionControls}*/}
             {/* </form> */}
         </div>
     );

@@ -30,6 +30,8 @@ const App = () => {
     const [questions, setQuestions] = useState({});
     const [options, setOptions] = useState({});
 
+    const [formData, setFormData] = useState({});
+
     const assignSections = (data) => {
         setSections(data);
     };
@@ -54,6 +56,10 @@ const App = () => {
         setOptions(data);
     };
 
+    const assignFormData = (data) => {
+        setFormData(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         sections_index: sectionsIndex,
@@ -61,12 +67,14 @@ const App = () => {
         question_set_data: questionSets,
         questions_data: questions,
         options_data: options,
+        form_data: formData,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
         assignQuestionSets,
         assignQuestions,
-        assignOptions
+        assignOptions,
+        assignFormData,
     };
 
     return (
