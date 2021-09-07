@@ -10,13 +10,5 @@ REDIS_URL=redis://redis:6379/0
 # ------------------------------------------------------------------------------
 
 # Flower
-CELERY_FLOWER_USER=PsnSPBJqPzSLPDQQJHBjfxuABciZAKyB
-CELERY_FLOWER_PASSWORD=rxYoE0ROIgorzRuBzmtd1n0lceetX9CsbxNuIPB9RkEYAXKA2tLrSPOEGUClvC1k
-
-
-# oidc settings
-# ------------------------------------------------------------------------------
-OIDC_RP_CLIENT_ID="dmp-gfbio-dev"
-OIDC_RP_CLIENT_SECRET="59a956d5-cd05-4138-867d-5ed06cf0221a"
-OIDC_RP_SIGN_ALGO=RS256
-OIDC_OP_JWKS_ENDPOINT=https://keycloak.sso.gwdg.de/auth/realms/GFBio/protocol/openid-connect/certs
+CELERY_FLOWER_USER=
+CELERY_FLOWER_PASSWORD=
