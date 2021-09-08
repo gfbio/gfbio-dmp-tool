@@ -3,7 +3,8 @@
 include:
   - project: gfbio/cicd
     file:
-      - '.create_merge_request.yml'
+      - '.create_merge_request_v2.yml'
+#      - '.create_merge_request.yml'
       - '.tag_release.yml'
 
 # TODO: unit-tests is conflicting with release, since both currently run on the same machine and cause errors when using the same docker network
