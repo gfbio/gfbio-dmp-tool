@@ -39,11 +39,22 @@ const fetchAllOptions = async (optionSets) => {
 };
 
 // TODO: refactor to component
-const iterateQuestions = (questions, options, handleChange) => {
+const iterateQuestions = (questions, options, formData, handleChange) => {
+
     return questions.map((item) => {
+        console.log('map formdata');
+        console.log(formData);
+        console.log(item.key);
+        // let initialValulue;
+        // if (item.key in formData) {
+        //     console.log('IFFF');
+        //     initialValulue = formData[item.key];
+        // }
+        // console.log('initialValue: ', initialValulue);
         if (item.widget_type === 'textarea') {
             return (
-                <FormTextArea item={item} handleChange={handleChange} />
+                // <FormTextArea item={item} handleChange={handleChange} initialValue={initialValulue} />
+                <FormTextArea item={item} handleChange={handleChange}  />
             );
         }
         if (item.widget_type === 'select') {
@@ -249,16 +260,18 @@ function Questions(props) {
         // FIXME: no global options needed ?
         // rdmoContext.assignOptions(opts);
 
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, handleChange);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.form_data, handleChange);
         sectionControls = (<div className='row'>
             <div className='col-6'>
                 <button className='btn btn-primary'
-                    onClick={() => prevSection(rdmoContext, formData)}>Prev Section
+                    onClick={() => prevSection(rdmoContext, formData)}>Prev
+                    Section
                 </button>
             </div>
             <div className='col-6'>
                 <button type='submit' className='btn btn-primary'
-                    onClick={() => nextSection(rdmoContext, formData)}>Next Section
+                    onClick={() => nextSection(rdmoContext, formData)}>Next
+                    Section
                 </button>
             </div>
         </div>);
