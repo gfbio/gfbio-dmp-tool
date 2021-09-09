@@ -42,18 +42,8 @@ const fetchAllOptions = async (optionSets) => {
 const iterateQuestions = (questions, options, handleChange) => {
 
     return questions.map((item) => {
-        // console.log('map formdata');
-        // console.log(formData);
-        // console.log(item.key);
-        // let initialValulue;
-        // if (item.key in formData) {
-        //     console.log('IFFF');
-        //     initialValulue = formData[item.key];
-        // }
-        // console.log('initialValue: ', initialValulue);
         if (item.widget_type === 'textarea') {
             return (
-            // <FormTextArea item={item} handleChange={handleChange} initialValue={initialValulue} />
                 <FormTextArea item={item} handleChange={handleChange} />
             );
         }
@@ -91,37 +81,16 @@ const iterateOptions = (options) => {
     return res;
 };
 
-// const handleChange = (e) => {
-//     updateFormData({
-//         ...formData,
-//
-//         // Trimming any whitespace
-//         [e.target.name]: e.target.value.trim()
-//     });
-// };
-//
-// const handleSubmit = (e) => {
-//     e.preventDefault()
-//     console.log(formData);
-//     // ... submit to API or something
-// };
-
 function useQuestions(rdmoContext, sectionIndex) {
 
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
-    // console.log('useQuestions section');
-    // console.log(sectionIndex);
     const section = rdmoContext.section_data[sectionIndex];
 
     useEffect(() => {
         async function prepareQuestions() {
-            console.log('PREPARE QUESTIONS use Effetct | deps is sectionIndex ... ', sectionIndex);
-            // console.log(formData);
             setProcessing(true);
-            // rdmoContext.assignFormData(formData);
-            // console.log(rdmoContext.form_data);
             try {
                 setStage('... fetch questionsets ...');
                 const qsResponse = await axios.get(
@@ -130,12 +99,6 @@ function useQuestions(rdmoContext, sectionIndex) {
                         headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
                     }
                 );
-                // TODO: is this needed in context ? no ?
-                // rdmoContext.assignQuestionSets(qsResponse.data);
-
-                // console.log('------------  questionsets data   -------------');
-                // console.log(qsResponse.data);
-                // console.log('---------------------------------------------------');
 
                 setStage('... fetch questions ...');
                 fetchQuestions(qsResponse).then((res) => {
@@ -145,7 +108,6 @@ function useQuestions(rdmoContext, sectionIndex) {
                     res.forEach((item) => {
                         item.data.forEach((q) => {
                             if (q.optionsets.length > 0) {
-                                // console.log('q:', q.id, 'pushing oset ', q.optionsets);
                                 q.optionsets.forEach((oSet) => {
                                     oSets.push(oSet);
                                 });
@@ -156,10 +118,8 @@ function useQuestions(rdmoContext, sectionIndex) {
                     // TODO: this is needed in context !
                     rdmoContext.assignQuestions(tmp);
                     setStage('... fetch options ...');
-                    // console.log(oSets);
                     fetchAllOptions(oSets).then((oRes) => {
                         oRes.forEach((o) => {
-                            // console.log(o);
                             options.push(o.data);
                         });
                         // TODO: this is needed in context !
@@ -180,23 +140,6 @@ function useQuestions(rdmoContext, sectionIndex) {
     return [processing, stage];
 }
 
-// const nextSection = (context, formData) => {
-//     console.log('next section ', context.sections_index, '  ', context.sections_size);
-//     if (context.sections_index < context.sections_size - 1) {
-//         context.assingSectionsIndex(context.sections_index + 1);
-//     }
-//     context.assignFormData(formData);
-// };
-//
-// const prevSection = (context, formData) => {
-//     console.log('prev section ', context.sections_index, '  ', context.sections_size);
-//     // console.log(event);
-//     if (context.sections_index > 0) {
-//         context.assingSectionsIndex(context.sections_index - 1);
-//     }
-//     context.assignFormData(formData);
-// };
-
 // eslint-disable-next-line no-unused-vars
 function Questions(props) {
 
@@ -204,50 +147,7 @@ function Questions(props) {
     const { sectionIndex, handleFormChange, nextSection, prevSection } = props;
     const rdmoContext = useContext(RdmoContext);
 
-    // const [formData, updateFormData] = React.useState({});
-
-    // const [nextText, setNextText] = React.useState('Next Section');
-
     const [processing, stage] = useQuestions(rdmoContext, sectionIndex);
-    // console.log(processing);
-
-    // const handleFormChange = (e) => {
-    //     // console.log('CHANGE');
-    //     // console.log(formData);
-    //     // console.log(e.target.name);
-    //     // console.log(e.target.value);
-    //
-    //     // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
-    //     // TODO: maybe refactor to list of values for specific question
-    //     // eslint-disable-next-line no-prototype-builtins
-    //     if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
-    //         // console.log('checkbox key already there');
-    //         delete formData[e.target.name];
-    //         // console.log(formData);
-    //         updateFormData(formData);
-    //         // rdmoContext.assignFormData(formData);
-    //     } else {
-    //         updateFormData({
-    //             ...formData,
-    //
-    //             // Trimming any whitespace
-    //             [e.target.name]: e.target.value.trim()
-    //         });
-    //         // rdmoContext.assignFormData({
-    //         //     ...formData,
-    //         //
-    //         //     // Trimming any whitespace
-    //         //     [e.target.name]: e.target.value.trim()
-    //         // });
-    //     }
-    // };
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log('SUBMIT');
-    //     console.log(formData);
-    //     // ... submit to API or something
-    // };
 
     const status = (
         <div>
@@ -257,15 +157,7 @@ function Questions(props) {
     let formFields = <></>;
     let sectionControls = <></>;
     if (!processing) {
-        // console.log('no processing. proceed : ');
-        // console.log(rdmoContext.questions_data);
-        // console.log(rdmoContext.options_data);
-        //     console.log('sectionIndex', rdmoContext.sections_index);
         const opts = iterateOptions(rdmoContext.options_data);
-
-        // FIXME: no global options needed ?
-        // rdmoContext.assignOptions(opts);
-
         formFields = iterateQuestions(rdmoContext.questions_data, opts, handleFormChange);
         sectionControls = (<div className='row'>
             <div className='col-6'>
@@ -288,7 +180,6 @@ function Questions(props) {
                 {formFields}
             </form>
             {sectionControls}
-            {/* <button onClick={handleSubmit}>Submit</button> */}
         </div>
     );
 }
@@ -297,7 +188,7 @@ Questions.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     handleFormChange: PropTypes.func.isRequired,
     nextSection: PropTypes.func.isRequired,
-    prevSection: PropTypes.func.isRequired,
+    prevSection: PropTypes.func.isRequired
 };
 
 export default Questions;

@@ -8,7 +8,6 @@ function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
-    // console.log('useDmpStart');
     useEffect(() => {
         async function prepareDmptStart() {
             // FIXME: better display questions first then create project as last step
@@ -55,11 +54,6 @@ function useDmptStart(rdmoContext) {
                 rdmoContext.assignSections(sectionResponse.data);
                 rdmoContext.assingSectionsSize(sectionResponse.data.length);
 
-                console.log('------------  section response data   -------------');
-                console.log(sectionResponse.data);
-                console.log(sectionResponse.data.length);
-                console.log('---------------------------------------------------');
-
                 setStage('... DONE ...');
                 setProcessing(false);
             } catch (e) {
@@ -74,20 +68,6 @@ function useDmptStart(rdmoContext) {
 
     return [processing, stage];
 }
-
-// const nextSection = (context) => {
-//     console.log('next section ', context.sections_index, '  ', context.sections_size);
-//     if (context.sections_index < context.sections_size - 1) {
-//         context.assingSectionsIndex(context.sections_index + 1);
-//     }
-// };
-
-// const prevSection = (context) => {
-//     console.log('prev section ', context.sections_index, '  ', context.sections_size);
-//     if (context.sections_index > 0) {
-//         context.assingSectionsIndex(context.sections_index - 1);
-//     }
-// };
 
 const nextSection = (context) => {
     console.log('next section ', context.sections_index, '  ', context.sections_size);
@@ -115,8 +95,6 @@ function DmptStart(props) {
     console.log('context form data');
     console.log(rdmoContext.form_data);
 
-    // const [formData, updateFormData] = React.useState({});
-
     const handleFormChange = (e) => {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
@@ -124,24 +102,14 @@ function DmptStart(props) {
         let formData = rdmoContext.form_data;
         if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
             delete formData[e.target.name];
-            // updateFormData(formData);
-            // rdmoContext.assignFormData(formData);
         } else {
             formData = ({
                 ...formData,
                 // Trimming any whitespace
                 [e.target.name]: e.target.value.trim()
             });
-            // rdmoContext.assignFormData({
-            //     ...formData,
-            //
-            //     // Trimming any whitespace
-            //     [e.target.name]: e.target.value.trim()
-            // });
         }
         rdmoContext.assignFormData(formData);
-        // console.log('handleFormChange ');
-        // console.log(formData);
     };
 
     const status = (
@@ -150,11 +118,7 @@ function DmptStart(props) {
         </div>
     );
     let formFields = <></>;
-    // let sectionControls = <></>;
     if (!processing) {
-        // console.log('no processing. proceed : ');
-        // console.log(rdmoContext.sections_index);
-        // console.log(rdmoContext.section_data[rdmoContext.sections_index]);
         formFields = <Questions
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
@@ -162,29 +126,12 @@ function DmptStart(props) {
             prevSection={prevSection}
         />;
 
-        // sectionControls = (<div className='row'>
-        //     <div className='col-6'>
-        //         <button className='btn btn-primary'
-        //             onClick={() => prevSection(rdmoContext)}>Prev Section
-        //         </button>
-        //     </div>
-        //     {/* <div className='col-6'> */}
-        //     {/*    <button type='submit' className='btn btn-primary' */}
-        //     {/*        onClick={() => nextSection(rdmoContext)}>Next Section */}
-        //     {/*    </button> */}
-        //     {/* </div> */}
-        // </div>);
     }
     return (
         <div>
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart</h1>
             {status}
-            {/* <form id={`section_${rdmoContext.sections_index}`} onSubmit={e => { */}
-            {/*    e.preventDefault(); */}
-            {/* }}> */}
             {formFields}
-            {/* {sectionControls} */}
-            {/* </form> */}
         </div>
     );
 }
