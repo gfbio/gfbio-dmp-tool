@@ -106,7 +106,7 @@ const iterateOptions = (options) => {
 //     // ... submit to API or something
 // };
 
-function useQuestions(rdmoContext, sectionIndex, formData) {
+function useQuestions(rdmoContext, sectionIndex) {
 
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
@@ -118,10 +118,10 @@ function useQuestions(rdmoContext, sectionIndex, formData) {
     useEffect(() => {
         async function prepareQuestions() {
             console.log('PREPARE QUESTIONS use Effetct | deps is sectionIndex ... ', sectionIndex);
-            console.log(formData);
+            // console.log(formData);
             setProcessing(true);
             // rdmoContext.assignFormData(formData);
-            console.log(rdmoContext.form_data);
+            // console.log(rdmoContext.form_data);
             try {
                 setStage('... fetch questionsets ...');
                 const qsResponse = await axios.get(
@@ -180,65 +180,67 @@ function useQuestions(rdmoContext, sectionIndex, formData) {
     return [processing, stage];
 }
 
-const nextSection = (context, formData) => {
-    console.log('next section ', context.sections_index, '  ', context.sections_size);
-    if (context.sections_index < context.sections_size - 1) {
-        context.assingSectionsIndex(context.sections_index + 1);
-    }
-    context.assignFormData(formData);
-};
-
-const prevSection = (context, formData) => {
-    console.log('prev section ', context.sections_index, '  ', context.sections_size);
-    // console.log(event);
-    if (context.sections_index > 0) {
-        context.assingSectionsIndex(context.sections_index - 1);
-    }
-    context.assignFormData(formData);
-};
+// const nextSection = (context, formData) => {
+//     console.log('next section ', context.sections_index, '  ', context.sections_size);
+//     if (context.sections_index < context.sections_size - 1) {
+//         context.assingSectionsIndex(context.sections_index + 1);
+//     }
+//     context.assignFormData(formData);
+// };
+//
+// const prevSection = (context, formData) => {
+//     console.log('prev section ', context.sections_index, '  ', context.sections_size);
+//     // console.log(event);
+//     if (context.sections_index > 0) {
+//         context.assingSectionsIndex(context.sections_index - 1);
+//     }
+//     context.assignFormData(formData);
+// };
 
 // eslint-disable-next-line no-unused-vars
 function Questions(props) {
 
-    // console.log('Questions. render ------------');
-    const { sectionIndex } = props;
+    console.log('Questions. render ------------');
+    const { sectionIndex, handleFormChange, nextSection, prevSection } = props;
     const rdmoContext = useContext(RdmoContext);
 
-    const [formData, updateFormData] = React.useState({});
+    // const [formData, updateFormData] = React.useState({});
 
-    const [processing, stage] = useQuestions(rdmoContext, sectionIndex, formData);
+    // const [nextText, setNextText] = React.useState('Next Section');
+
+    const [processing, stage] = useQuestions(rdmoContext, sectionIndex);
     // console.log(processing);
 
-    const handleChange = (e) => {
-        // console.log('CHANGE');
-        // console.log(formData);
-        // console.log(e.target.name);
-        // console.log(e.target.value);
-
-        // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
-        // TODO: maybe refactor to list of values for specific question
-        // eslint-disable-next-line no-prototype-builtins
-        if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
-            // console.log('checkbox key already there');
-            delete formData[e.target.name];
-            // console.log(formData);
-            updateFormData(formData);
-            // rdmoContext.assignFormData(formData);
-        } else {
-            updateFormData({
-                ...formData,
-
-                // Trimming any whitespace
-                [e.target.name]: e.target.value.trim()
-            });
-            // rdmoContext.assignFormData({
-            //     ...formData,
-            //
-            //     // Trimming any whitespace
-            //     [e.target.name]: e.target.value.trim()
-            // });
-        }
-    };
+    // const handleFormChange = (e) => {
+    //     // console.log('CHANGE');
+    //     // console.log(formData);
+    //     // console.log(e.target.name);
+    //     // console.log(e.target.value);
+    //
+    //     // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
+    //     // TODO: maybe refactor to list of values for specific question
+    //     // eslint-disable-next-line no-prototype-builtins
+    //     if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
+    //         // console.log('checkbox key already there');
+    //         delete formData[e.target.name];
+    //         // console.log(formData);
+    //         updateFormData(formData);
+    //         // rdmoContext.assignFormData(formData);
+    //     } else {
+    //         updateFormData({
+    //             ...formData,
+    //
+    //             // Trimming any whitespace
+    //             [e.target.name]: e.target.value.trim()
+    //         });
+    //         // rdmoContext.assignFormData({
+    //         //     ...formData,
+    //         //
+    //         //     // Trimming any whitespace
+    //         //     [e.target.name]: e.target.value.trim()
+    //         // });
+    //     }
+    // };
 
     // const handleSubmit = (e) => {
     //     e.preventDefault();
@@ -264,18 +266,17 @@ function Questions(props) {
         // FIXME: no global options needed ?
         // rdmoContext.assignOptions(opts);
 
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, handleChange);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, handleFormChange);
         sectionControls = (<div className='row'>
             <div className='col-6'>
                 <button className='btn btn-primary'
-                    onClick={() => prevSection(rdmoContext, formData)}>Prev
+                    onClick={() => prevSection(rdmoContext)}>Prev
                     Section
                 </button>
             </div>
             <div className='col-6'>
                 <button type='submit' className='btn btn-primary'
-                    onClick={() => nextSection(rdmoContext, formData)}>Next
-                    Section
+                    onClick={() => nextSection(rdmoContext)}> Next Section
                 </button>
             </div>
         </div>);
@@ -293,7 +294,10 @@ function Questions(props) {
 }
 
 Questions.propTypes = {
-    sectionIndex: PropTypes.number.isRequired
+    sectionIndex: PropTypes.number.isRequired,
+    handleFormChange: PropTypes.func.isRequired,
+    nextSection: PropTypes.func.isRequired,
+    prevSection: PropTypes.func.isRequired,
 };
 
 export default Questions;

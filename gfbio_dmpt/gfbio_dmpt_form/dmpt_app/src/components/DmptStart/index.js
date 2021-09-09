@@ -89,6 +89,21 @@ function useDmptStart(rdmoContext) {
 //     }
 // };
 
+const nextSection = (context) => {
+    console.log('next section ', context.sections_index, '  ', context.sections_size);
+    if (context.sections_index < context.sections_size - 1) {
+        context.assingSectionsIndex(context.sections_index + 1);
+    }
+};
+
+const prevSection = (context) => {
+    console.log('prev section ', context.sections_index, '  ', context.sections_size);
+    // console.log(event);
+    if (context.sections_index > 0) {
+        context.assingSectionsIndex(context.sections_index - 1);
+    }
+};
+
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
 
@@ -96,6 +111,38 @@ function DmptStart(props) {
 
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
+
+    console.log('context form data');
+    console.log(rdmoContext.form_data);
+
+    // const [formData, updateFormData] = React.useState({});
+
+    const handleFormChange = (e) => {
+        // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
+        // TODO: maybe refactor to list of values for specific question
+        // eslint-disable-next-line no-prototype-builtins
+        let formData = rdmoContext.form_data;
+        if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
+            delete formData[e.target.name];
+            // updateFormData(formData);
+            // rdmoContext.assignFormData(formData);
+        } else {
+            formData = ({
+                ...formData,
+                // Trimming any whitespace
+                [e.target.name]: e.target.value.trim()
+            });
+            // rdmoContext.assignFormData({
+            //     ...formData,
+            //
+            //     // Trimming any whitespace
+            //     [e.target.name]: e.target.value.trim()
+            // });
+        }
+        rdmoContext.assignFormData(formData);
+        // console.log('handleFormChange ');
+        // console.log(formData);
+    };
 
     const status = (
         <div>
@@ -109,7 +156,11 @@ function DmptStart(props) {
         // console.log(rdmoContext.sections_index);
         // console.log(rdmoContext.section_data[rdmoContext.sections_index]);
         formFields = <Questions
-            sectionIndex={rdmoContext.sections_index} />;
+            sectionIndex={rdmoContext.sections_index}
+            handleFormChange={handleFormChange}
+            nextSection={nextSection}
+            prevSection={prevSection}
+        />;
 
         // sectionControls = (<div className='row'>
         //     <div className='col-6'>
@@ -132,7 +183,7 @@ function DmptStart(props) {
             {/*    e.preventDefault(); */}
             {/* }}> */}
             {formFields}
-            {/*{sectionControls}*/}
+            {/* {sectionControls} */}
             {/* </form> */}
         </div>
     );
