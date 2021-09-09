@@ -102,6 +102,7 @@ function DmptStart(props) {
         }
         if (rdmoContext.sections_index <= rdmoContext.sections_size - 1) {
             setNextText('Next Section');
+            setSubmitOnNext(false);
         }
     };
 
