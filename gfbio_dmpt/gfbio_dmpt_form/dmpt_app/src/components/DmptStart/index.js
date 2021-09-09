@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
+import ActionButton from '../ActionButton';
 
 function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
@@ -69,21 +70,6 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
-const nextSection = (context) => {
-    console.log('next section ', context.sections_index, '  ', context.sections_size);
-    if (context.sections_index < context.sections_size - 1) {
-        context.assingSectionsIndex(context.sections_index + 1);
-    }
-};
-
-const prevSection = (context) => {
-    console.log('prev section ', context.sections_index, '  ', context.sections_size);
-    // console.log(event);
-    if (context.sections_index > 0) {
-        context.assingSectionsIndex(context.sections_index - 1);
-    }
-};
-
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
 
@@ -91,6 +77,29 @@ function DmptStart(props) {
 
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
+
+    const [nextText, setNextText] = useState('Next Section');
+    const [prevText, setPrevText] = useState('Previous Section');
+
+    const nextSectionHandler = () => {
+        if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
+            rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
+            setNextText('Next Section');
+        }
+        console.log('next ', rdmoContext.sections_index, ' ', (rdmoContext.sections_index + 1), ' ', rdmoContext.sections_size);
+        if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
+            setNextText('Finish');
+        }
+    };
+
+    const prevSectionHandler = () => {
+        if (rdmoContext.sections_index > 0) {
+            rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
+        }
+        if (rdmoContext.sections_index <= rdmoContext.sections_size - 1) {
+            setNextText('Next Section');
+        }
+    };
 
     console.log('context form data');
     console.log(rdmoContext.form_data);
@@ -119,11 +128,14 @@ function DmptStart(props) {
     );
     let formFields = <></>;
     if (!processing) {
+
         formFields = <Questions
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
-            nextSection={nextSection}
-            prevSection={prevSection}
+            nextSection={<ActionButton text={nextText}
+                                       onClickHandler={nextSectionHandler} />}
+            prevSection={<ActionButton text={prevText}
+                                       onClickHandler={prevSectionHandler} />}
         />;
 
     }

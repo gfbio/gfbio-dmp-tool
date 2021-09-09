@@ -160,17 +160,19 @@ function Questions(props) {
         const opts = iterateOptions(rdmoContext.options_data);
         formFields = iterateQuestions(rdmoContext.questions_data, opts, handleFormChange);
         sectionControls = (<div className='row'>
-            <div className='col-6'>
-                <button className='btn btn-primary'
-                    onClick={() => prevSection(rdmoContext)}>Prev
-                    Section
-                </button>
-            </div>
-            <div className='col-6'>
-                <button type='submit' className='btn btn-primary'
-                    onClick={() => nextSection(rdmoContext)}> Next Section
-                </button>
-            </div>
+            {prevSection}
+            {nextSection}
+            {/* <div className='col-6'> */}
+            {/*    <button className='btn btn-primary' */}
+            {/*        onClick={() => prevSection(rdmoContext)}>Prev */}
+            {/*        Section */}
+            {/*    </button> */}
+            {/* </div> */}
+            {/* <div className='col-6'> */}
+            {/*    <button type='submit' className='btn btn-primary' */}
+            {/*        onClick={() => nextSection(rdmoContext)}> Next Section */}
+            {/*    </button> */}
+            {/* </div> */}
         </div>);
     }
     return (
@@ -187,8 +189,8 @@ function Questions(props) {
 Questions.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     handleFormChange: PropTypes.func.isRequired,
-    nextSection: PropTypes.func.isRequired,
-    prevSection: PropTypes.func.isRequired
+    nextSection: PropTypes.element.isRequired,
+    prevSection: PropTypes.element.isRequired
 };
 
 export default Questions;
