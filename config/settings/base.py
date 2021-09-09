@@ -134,8 +134,8 @@ AUTH_USER_MODEL = "users.User"
 
 # NOTE: dynamic redirect seem to break the gwdg sso login.
 #  LOGIN_REDIRECT_URL = "users:redirect"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
