@@ -55,10 +55,10 @@ function useDmptStart(rdmoContext) {
                 rdmoContext.assignSections(sectionResponse.data);
                 rdmoContext.assingSectionsSize(sectionResponse.data.length);
 
-                // console.log('------------  section response data   -------------');
-                // console.log(sectionResponse.data);
-                // console.log(sectionResponse.data.length);
-                // console.log('---------------------------------------------------');
+                console.log('------------  section response data   -------------');
+                console.log(sectionResponse.data);
+                console.log(sectionResponse.data.length);
+                console.log('---------------------------------------------------');
 
                 setStage('... DONE ...');
                 setProcessing(false);

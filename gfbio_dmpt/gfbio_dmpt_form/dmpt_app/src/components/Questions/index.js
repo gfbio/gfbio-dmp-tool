@@ -39,12 +39,12 @@ const fetchAllOptions = async (optionSets) => {
 };
 
 // TODO: refactor to component
-const iterateQuestions = (questions, options, formData, handleChange) => {
+const iterateQuestions = (questions, options, handleChange) => {
 
     return questions.map((item) => {
-        console.log('map formdata');
-        console.log(formData);
-        console.log(item.key);
+        // console.log('map formdata');
+        // console.log(formData);
+        // console.log(item.key);
         // let initialValulue;
         // if (item.key in formData) {
         //     console.log('IFFF');
@@ -53,8 +53,8 @@ const iterateQuestions = (questions, options, formData, handleChange) => {
         // console.log('initialValue: ', initialValulue);
         if (item.widget_type === 'textarea') {
             return (
-                // <FormTextArea item={item} handleChange={handleChange} initialValue={initialValulue} />
-                <FormTextArea item={item} handleChange={handleChange}  />
+            // <FormTextArea item={item} handleChange={handleChange} initialValue={initialValulue} />
+                <FormTextArea item={item} handleChange={handleChange} />
             );
         }
         if (item.widget_type === 'select') {
@@ -117,7 +117,7 @@ function useQuestions(rdmoContext, sectionIndex, formData) {
 
     useEffect(() => {
         async function prepareQuestions() {
-            console.log('PREPARE QUESTIONS use Effetct | deps is sectionIndex ... ');
+            console.log('PREPARE QUESTIONS use Effetct | deps is sectionIndex ... ', sectionIndex);
             console.log(formData);
             setProcessing(true);
             // rdmoContext.assignFormData(formData);
@@ -130,7 +130,8 @@ function useQuestions(rdmoContext, sectionIndex, formData) {
                         headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
                     }
                 );
-                rdmoContext.assignQuestionSets(qsResponse.data);
+                // TODO: is this needed in context ? no ?
+                // rdmoContext.assignQuestionSets(qsResponse.data);
 
                 // console.log('------------  questionsets data   -------------');
                 // console.log(qsResponse.data);
@@ -152,6 +153,7 @@ function useQuestions(rdmoContext, sectionIndex, formData) {
                             tmp.push(q);
                         });
                     });
+                    // TODO: this is needed in context !
                     rdmoContext.assignQuestions(tmp);
                     setStage('... fetch options ...');
                     // console.log(oSets);
@@ -160,6 +162,7 @@ function useQuestions(rdmoContext, sectionIndex, formData) {
                             // console.log(o);
                             options.push(o.data);
                         });
+                        // TODO: this is needed in context !
                         rdmoContext.assignOptions(options);
                         setStage('... DONE ...');
                         setProcessing(false);
@@ -187,6 +190,7 @@ const nextSection = (context, formData) => {
 
 const prevSection = (context, formData) => {
     console.log('prev section ', context.sections_index, '  ', context.sections_size);
+    // console.log(event);
     if (context.sections_index > 0) {
         context.assingSectionsIndex(context.sections_index - 1);
     }
@@ -238,8 +242,8 @@ function Questions(props) {
 
     // const handleSubmit = (e) => {
     //     e.preventDefault();
-    //     // console.log('SUBMIT');
-    //     // console.log(formData);
+    //     console.log('SUBMIT');
+    //     console.log(formData);
     //     // ... submit to API or something
     // };
 
@@ -260,7 +264,7 @@ function Questions(props) {
         // FIXME: no global options needed ?
         // rdmoContext.assignOptions(opts);
 
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.form_data, handleChange);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, handleChange);
         sectionControls = (<div className='row'>
             <div className='col-6'>
                 <button className='btn btn-primary'
