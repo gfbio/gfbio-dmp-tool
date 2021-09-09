@@ -81,14 +81,18 @@ function DmptStart(props) {
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');
 
+    const [submitOnNext, setSubmitOnNext] = useState(false);
+
     const nextSectionHandler = () => {
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
             setNextText('Next Section');
+            setSubmitOnNext(false);
         }
         console.log('next ', rdmoContext.sections_index, ' ', (rdmoContext.sections_index + 1), ' ', rdmoContext.sections_size);
         if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
             setNextText('Finish');
+            setSubmitOnNext(true);
         }
     };
 
@@ -99,6 +103,12 @@ function DmptStart(props) {
         if (rdmoContext.sections_index <= rdmoContext.sections_size - 1) {
             setNextText('Next Section');
         }
+    };
+
+    const submitAllHandler = () => {
+        console.log('submitAllHandler');
+        console.log(rdmoContext.form_data);
+        console.log('----------------------');
     };
 
     console.log('context form data');
@@ -129,13 +139,16 @@ function DmptStart(props) {
     let formFields = <></>;
     if (!processing) {
 
+        const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+
         formFields = <Questions
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
-                                       onClickHandler={nextSectionHandler} />}
+                onClickHandler={nextHandler} />}
+
             prevSection={<ActionButton text={prevText}
-                                       onClickHandler={prevSectionHandler} />}
+                onClickHandler={prevSectionHandler} />}
         />;
 
     }
