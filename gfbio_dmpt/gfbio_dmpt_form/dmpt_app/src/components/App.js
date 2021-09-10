@@ -32,6 +32,8 @@ const App = () => {
 
     const [formData, setFormData] = useState({});
 
+    const [projectId, setProjectId] = useState(-1);
+
     const assignSections = (data) => {
         setSections(data);
     };
@@ -60,6 +62,10 @@ const App = () => {
         setFormData(data);
     };
 
+    const assignProjectId = (data) => {
+        setProjectId(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         sections_index: sectionsIndex,
@@ -68,6 +74,7 @@ const App = () => {
         questions_data: questions,
         options_data: options,
         form_data: formData,
+        project_id: projectId,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -75,6 +82,7 @@ const App = () => {
         assignQuestions,
         assignOptions,
         assignFormData,
+        assignProjectId,
     };
 
     return (

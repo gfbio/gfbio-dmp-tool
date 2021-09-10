@@ -1,9 +1,37 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
+
+const createProject = async () => {
+    try {
+        // console.log('post project');
+        // setProcessing(true);
+        const response = await axios.post(
+            `${API_ROOT}projects/projects/`,
+            {
+                'title': `tmp_${nanoid()}`,
+                'description': `tmp_${nanoid()} temporary project`,
+                'catalog': 18   // FIXME: gfbio catalog id hardcoded --> 18
+                // "parent": "string"
+            },
+            {
+                // token of super user (maweber)
+                headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            }
+        );
+        // console.log('response');
+        // console.log(response.data);
+        // setProjectResponse(response.data);
+        return response;
+    } catch (e) {
+        console.error(e);
+        return e;
+    }
+};
 
 function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
@@ -37,11 +65,12 @@ function useDmptStart(rdmoContext) {
             // } finally {
             //     setProcessing(false);
             // }
+
             // ------------------------------------------------------------
 
             setProcessing(true);
 
-            // FIXME: section for gfbio catalog id hardcoded
+            // FIXME: section for gfbio catalog id hardcoded --> 18
             const catalogId = '18';
 
             try {
@@ -54,6 +83,9 @@ function useDmptStart(rdmoContext) {
                 );
                 rdmoContext.assignSections(sectionResponse.data);
                 rdmoContext.assingSectionsSize(sectionResponse.data.length);
+
+                console.log('SECTIONS');
+                console.log(sectionResponse.data);
 
                 setStage('... DONE ...');
                 setProcessing(false);
@@ -73,7 +105,7 @@ function useDmptStart(rdmoContext) {
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
 
-    console.log(`DmptStart. render ....`);
+    // console.log(`DmptStart. render ....`);
 
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
@@ -89,7 +121,7 @@ function DmptStart(props) {
             setNextText('Next Section');
             setSubmitOnNext(false);
         }
-        console.log('next ', rdmoContext.sections_index, ' ', (rdmoContext.sections_index + 1), ' ', rdmoContext.sections_size);
+        // console.log('next ', rdmoContext.sections_index, ' ', (rdmoContext.sections_index + 1), ' ', rdmoContext.sections_size);
         if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
             setNextText('Finish');
             setSubmitOnNext(true);
@@ -110,10 +142,25 @@ function DmptStart(props) {
         console.log('submitAllHandler');
         console.log(rdmoContext.form_data);
         console.log('----------------------');
+        console.log('CREATE PROJECT | project id in context ', rdmoContext.project_id);
+        let projectId = rdmoContext.project_id;
+        if (projectId < 0) {
+            createProject().then((res) => {
+                console.log('RES ...');
+                console.log(res.data.id);
+                projectId = res.data.id;
+                rdmoContext.assignProjectId(projectId);
+                // TODO: set project id, if available do not create a new one
+                // TODO: post answers to project
+                // TODO: redirect to rdmo overview
+            });
+        }
+        console.log('after if pid ', projectId);
+        console.log('----------------------');
     };
 
-    console.log('context form data');
-    console.log(rdmoContext.form_data);
+    // console.log('context form data');
+    // console.log(rdmoContext.form_data);
 
     const handleFormChange = (e) => {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...

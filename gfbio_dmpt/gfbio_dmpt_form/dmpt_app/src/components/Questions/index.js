@@ -100,6 +100,9 @@ function useQuestions(rdmoContext, sectionIndex) {
                     }
                 );
 
+                console.log('QUESTION_SETS');
+                console.log(qsResponse.data);
+
                 setStage('... fetch questions ...');
                 fetchQuestions(qsResponse).then((res) => {
                     const tmp = [];
@@ -117,6 +120,10 @@ function useQuestions(rdmoContext, sectionIndex) {
                     });
                     // TODO: this is needed in context !
                     rdmoContext.assignQuestions(tmp);
+
+                    console.log('QUESTIONS (processed)');
+                    console.log(tmp);
+
                     setStage('... fetch options ...');
                     fetchAllOptions(oSets).then((oRes) => {
                         oRes.forEach((o) => {
@@ -124,6 +131,10 @@ function useQuestions(rdmoContext, sectionIndex) {
                         });
                         // TODO: this is needed in context !
                         rdmoContext.assignOptions(options);
+
+                        console.log('OPTIONS (processed)');
+                        console.log(options);
+
                         setStage('... DONE ...');
                         setProcessing(false);
                     });
@@ -143,7 +154,7 @@ function useQuestions(rdmoContext, sectionIndex) {
 // eslint-disable-next-line no-unused-vars
 function Questions(props) {
 
-    console.log('Questions. render ------------');
+    // console.log('Questions. render ------------');
     const { sectionIndex, handleFormChange, nextSection, prevSection } = props;
     const rdmoContext = useContext(RdmoContext);
 
