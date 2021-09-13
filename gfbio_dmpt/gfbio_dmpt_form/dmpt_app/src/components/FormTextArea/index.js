@@ -7,7 +7,7 @@ function FormTextArea(props) {
     const { item, handleChange } = props;
     // const rdmoContext = useContext(RdmoContext);
     // console.log('FORM TEXT AREA ');
-    // console.log(item.key);
+    // console.log(item);
 
     // let elem = (<textarea name={item.key} id={item.key} className='form-control'
     //     rows='3' onChange={handleChange} />);
@@ -22,7 +22,7 @@ function FormTextArea(props) {
                 <i>{item.id}</i>:{item.text_en}
             </label>
             <textarea name={item.key} id={item.key} className='form-control'
-                rows='3' onChange={handleChange} />
+                rows='3' onChange={(e) => handleChange(e, item)} />
             {/* {elem} */}
             <small id={`help_${item.key}`}
                 className='form-text text-muted'>

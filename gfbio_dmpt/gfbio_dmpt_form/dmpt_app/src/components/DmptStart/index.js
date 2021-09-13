@@ -33,6 +33,44 @@ const createProject = async () => {
     }
 };
 
+const postValue = (projectId, formItem) => {
+    console.log('\tpost value');
+    console.log(formItem);
+    return axios.post(
+        // `${API_ROOT}projects/projects/${projectId}/values/?attribute=${attributeId}`,
+        `${API_ROOT}projects/projects/${projectId}/values/`,
+        {
+            'attribute': formItem.question.attribute,
+            // 'set_index': 0,
+            // 'collection_index': 0,
+            'text': formItem.value,
+            // 'option': 0,
+            'value_type': formItem.question.value_type,
+            'unit': formItem.question.unit
+        },
+        {
+            // token of super user (maweber)
+            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+        }
+    );
+};
+
+const postValues = async (projectId, formData) => {
+    console.log('POST VALUES');
+    try {
+        // eslint-disable-next-line guard-for-in,no-restricted-syntax
+        for(const f in formData) {
+            const res = await postValue(projectId, formData[f]);
+            console.log(res);
+        }
+    } catch (e) {
+        console.error(e);
+    } finally {
+        ;
+    }
+    console.log('################################');
+};
+
 function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
@@ -153,6 +191,14 @@ function DmptStart(props) {
                 // TODO: set project id, if available do not create a new one
                 // TODO: post answers to project
                 // TODO: redirect to rdmo overview
+
+                // -------------------------------------------------------------
+                postValues(projectId, rdmoContext.form_data).then((res) => {
+                    console.log(res);
+                }
+                );
+                // -------------------------------------------------------------
+
             });
         }
         console.log('after if pid ', projectId);
@@ -162,7 +208,13 @@ function DmptStart(props) {
     // console.log('context form data');
     // console.log(rdmoContext.form_data);
 
-    const handleFormChange = (e) => {
+    const handleFormChange = (e, item) => {
+        // console.log('FORMCHANGE');
+        // item['form_value'] = e.target.value.trim();
+
+        // console.log(item);
+        // console.log(e.target.value);
+        // console.log('---------------------');
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
@@ -173,7 +225,10 @@ function DmptStart(props) {
             formData = ({
                 ...formData,
                 // Trimming any whitespace
-                [e.target.name]: e.target.value.trim()
+                [e.target.name]: {
+                    'value': e.target.value.trim(),
+                    'question': item
+                }
             });
         }
         rdmoContext.assignFormData(formData);
