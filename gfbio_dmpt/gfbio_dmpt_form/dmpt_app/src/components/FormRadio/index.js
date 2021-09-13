@@ -20,7 +20,7 @@ function FormRadio(props) {
                                 name={item.key}
                                 id={`${item.key}_${i.id}`}
                                 value={i.text}
-                                onChange={handleChange}
+                                onChange={(e) => handleChange(e, item)}
                             />
                             <label className='form-check-label'
                                 htmlFor={`${item.key}_${i.id}`}>

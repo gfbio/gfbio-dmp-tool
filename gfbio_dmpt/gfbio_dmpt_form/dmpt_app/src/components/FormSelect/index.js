@@ -11,7 +11,7 @@ function FormSelect(props) {
             <label htmlFor={item.key}>
                 <i>{item.id}</i>:{item.text_en}
             </label>
-            <select name={item.key} id={item.key} onChange={handleChange} className='form-control'>
+            <select name={item.key} id={item.key} onChange={(e) => handleChange(e, item)} className='form-control'>
                 {options[item.optionsets[0]].map((i) => {
                     return (<option key={i.id}>{i.text}</option>);
                 })}

@@ -17,7 +17,7 @@ function FormCheckBox(props) {
                             <input className='form-check-input' type='checkbox'
                                 name={`checkbox_${item.key}_${i.id}`}
                                 value={i.text}
-                                onChange={handleChange}
+                                onChange={(e) => handleChange(e, item)}
                                 id={`${item.key}_${i.id}`} />
                             <label className='form-check-label'
                                 htmlFor={`checkbox_${item.key}_${i.id}`}>

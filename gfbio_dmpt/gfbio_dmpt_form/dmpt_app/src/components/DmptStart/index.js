@@ -58,10 +58,16 @@ const postValue = (projectId, formItem) => {
 const postValues = async (projectId, formData) => {
     console.log('POST VALUES');
     try {
-        // eslint-disable-next-line guard-for-in,no-restricted-syntax
+        // eslint-disable-next-line no-restricted-syntax
         for(const f in formData) {
-            const res = await postValue(projectId, formData[f]);
-            console.log(res);
+            if (formData[f] !== undefined) {
+                // eslint-disable-next-line no-await-in-loop
+                await postValue(projectId, formData[f]).then((res)=>{
+                    console.log('\tpost value res ');
+                    console.log(res);
+                });
+
+            }
         }
     } catch (e) {
         console.error(e);
@@ -176,6 +182,8 @@ function DmptStart(props) {
         }
     };
 
+    // TODO: refactor to own compononent
+    // TODO: add to component hook
     const submitAllHandler = () => {
         console.log('submitAllHandler');
         console.log(rdmoContext.form_data);

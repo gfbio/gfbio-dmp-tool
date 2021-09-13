@@ -12,7 +12,7 @@ function FormGenericInput(props) {
             <input type={item.widget_type} className='form-control'
                 name={item.key}
                 id={item.key}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, item)}
                 placeholder='name@example.com' />
             <small id={`help_${item.key}`}
                 className='form-text text-muted'>
