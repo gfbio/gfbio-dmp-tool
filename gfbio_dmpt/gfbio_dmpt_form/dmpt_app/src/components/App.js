@@ -10,14 +10,14 @@ import RdmoContext from './RdmoContext';
 //  the urls.py + global urls.py entry -> currently (...) regex=r'submissions/ui/', (...)
 // TODO: use this prefix when development with django (-->  url('app/', views.DmptFrontendView.as_view()))
 // eslint-disable-next-line no-unused-vars
-// const urlPrefix = '/dmpt/app/';
+const urlPrefix = '/dmpt/app/';
 
 // for updateview:
 // const urlPrefix = '/curation/submissions/form/';
 
 // TODO: use this prefix when developing with npm start
 // eslint-disable-next-line no-unused-vars
-const urlPrefix = '/';
+// const urlPrefix = '/';
 
 const App = () => {
 
