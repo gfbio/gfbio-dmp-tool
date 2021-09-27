@@ -1,12 +1,15 @@
+# python version as variable
 ARG PYTHON_VERSION=3.9-slim-buster
 
-# define an alias for the specfic python version used in this file.
+# alias for the image 
 FROM python:${PYTHON_VERSION} as python
 
-# Python build stage
+# python build stage
 FROM python as python-build-stage
 
+# set build environment
 ARG BUILD_ENVIRONMENT=local
+
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -18,13 +21,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libxml2-dev \
   libxslt-dev \
   zlib1g-dev \
-  git \
-  pandoc \
-  # rdmo optional dependencies
-  texlive \
-  texlive-xetex \
-  lmodern \
-  librsvg2-bin
+  git
 
 
 # Requirements are installed here to ensure they will be cached.
@@ -53,6 +50,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  # rdmo export dependencies
+  pandoc \
+  texlive \
+  texlive-xetex \
+  lmodern \
+  librsvg2-bin \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
@@ -63,7 +66,7 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 
 # use wheels to install python dependencies
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-	&& rm -rf /wheels/
+  && rm -rf /wheels/
 
 RUN /usr/local/bin/python -m pip install --upgrade pip setuptools
 
