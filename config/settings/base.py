@@ -61,7 +61,6 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
@@ -192,7 +191,6 @@ STATICFILES_FINDERS = [
     # other finders..
     "compressor.finders.CompressorFinder",
 ]
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # MEDIA
 # ------------------------------------------------------------------------------
