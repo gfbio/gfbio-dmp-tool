@@ -1,11 +1,10 @@
-
-
+# image version as variable
 ARG PYTHON_VERSION=3.9-slim-buster
 
-# define an alias for the specfic python version used in this file.
+# alias for image 
 FROM python:${PYTHON_VERSION} as python
 
-# Python build stage
+# python build stage
 FROM python as python-build-stage
 
 ARG BUILD_ENVIRONMENT=production
@@ -20,13 +19,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libxml2-dev \
   libxslt-dev \
   zlib1g-dev \
-  git \
-  pandoc \
-  # rdmo optional dependencies
-  texlive \
-  texlive-xetex \
-  lmodern \
-  librsvg2-bin
+  git
 
 
 # Requirements are installed here to ensure they will be cached.
@@ -51,7 +44,7 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 WORKDIR ${APP_HOME}
 
 RUN addgroup --system django \
-    && adduser --system --ingroup django django
+  && adduser --system --ingroup django django
 
 
 # Install required system dependencies
@@ -60,8 +53,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  # rdmo export dependencies
+  pandoc \
+  texlive \
+  texlive-xetex \
+  lmodern \
+  librsvg2-bin
+# cleaning up unused files
+&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
