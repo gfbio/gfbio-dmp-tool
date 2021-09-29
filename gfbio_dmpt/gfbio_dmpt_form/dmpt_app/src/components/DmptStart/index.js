@@ -1,42 +1,86 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
+import Questions from '../Questions';
+import ActionButton from '../ActionButton';
 
-const fetchQuestion = async (q) => {
-    return await axios.get(
-        `${API_ROOT}questions/questions/?questionset=${q.id}`,
+const createProject = async () => {
+    try {
+        // console.log('post project');
+        // setProcessing(true);
+        const response = await axios.post(
+            `${API_ROOT}projects/projects/`,
+            {
+                'title': `tmp_${nanoid()}`,
+                'description': `tmp_${nanoid()} temporary project`,
+                'catalog': 18   // FIXME: gfbio catalog id hardcoded --> 18
+                // "parent": "string"
+            },
+            {
+                // token of super user (maweber)
+                headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            }
+        );
+        // console.log('response');
+        // console.log(response.data);
+        // setProjectResponse(response.data);
+        return response;
+    } catch (e) {
+        console.error(e);
+        return e;
+    }
+};
+
+const postValue = (projectId, formItem) => {
+    console.log('\tpost value');
+    console.log(formItem);
+    return axios.post(
+        // `${API_ROOT}projects/projects/${projectId}/values/?attribute=${attributeId}`,
+        `${API_ROOT}projects/projects/${projectId}/values/`,
         {
+            'attribute': formItem.question.attribute,
+            // 'set_index': 0,
+            // 'collection_index': 0,
+            'text': formItem.value,
+            // 'option': 0,
+            'value_type': formItem.question.value_type,
+            'unit': formItem.question.unit
+        },
+        {
+            // token of super user (maweber)
             headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
         }
     );
 };
 
-const fetchQuestions = async (qsResponse) => {
-    // FIXME: await ?
-    return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
-};
+const postValues = async (projectId, formData) => {
+    console.log('POST VALUES');
+    try {
+        // eslint-disable-next-line no-restricted-syntax
+        for(const f in formData) {
+            if (formData[f] !== undefined) {
+                // eslint-disable-next-line no-await-in-loop
+                await postValue(projectId, formData[f]).then((res)=>{
+                    console.log('\tpost value res ');
+                    console.log(res);
+                });
 
-const fetchOptions = async (optionSet) => {
-    return await axios.get(
-        `${API_ROOT}options/options/?optionset=${optionSet}`,
-        {
-            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            }
         }
-    );
-
-};
-
-const fetchAllOptions = async (optionSets) => {
-    // FIXME: await ?
-    return Promise.all(optionSets.map((o) => fetchOptions(o)));
+    } catch (e) {
+        console.error(e);
+    } finally {
+        ;
+    }
+    console.log('################################');
 };
 
 function useDmptStart(rdmoContext) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
-    // console.log('useDmpStart');
     useEffect(() => {
         async function prepareDmptStart() {
             // FIXME: better display questions first then create project as last step
@@ -65,10 +109,12 @@ function useDmptStart(rdmoContext) {
             // } finally {
             //     setProcessing(false);
             // }
+
             // ------------------------------------------------------------
 
             setProcessing(true);
-            // section for gfbio catalog id hardcoded
+
+            // FIXME: section for gfbio catalog id hardcoded --> 18
             const catalogId = '18';
 
             try {
@@ -80,51 +126,18 @@ function useDmptStart(rdmoContext) {
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
-                setStage('... fetch questionsets ...');
-                // TODO: first section only here. hardcoded
-                const qsResponse = await axios.get(
-                    `${API_ROOT}questions/questionsets/?section=${sectionResponse.data[0].id}`,  // section for gfbio catalog id hardcoded
-                    {
-                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                    }
-                );
-                rdmoContext.assignQuestionSets(qsResponse.data);
-                setStage('... fetch questions ...');
+                rdmoContext.assingSectionsSize(sectionResponse.data.length);
 
-                fetchQuestions(qsResponse).then((res) => {
-                    const tmp = [];
-                    const oSets = [];
-                    const options = [];
-                    res.forEach((item) => {
-                        item.data.forEach((q) => {
-                            if (q.optionsets.length > 0) {
-                                // console.log('q:', q.id, 'pushing oset ', q.optionsets);
-                                q.optionsets.forEach((oSet) => {
-                                    oSets.push(oSet);
-                                });
-                            }
-                            tmp.push(q);
-                        });
-                    });
-                    rdmoContext.assignQuestions(tmp);
-                    setStage('... fetch options ...');
-                    // console.log(oSets);
-                    fetchAllOptions(oSets).then((oRes) => {
-                        oRes.forEach((o) => {
-                            // console.log(o);
-                            options.push(o.data);
-                        });
-                        rdmoContext.assignOptions(options);
-                        setStage('... DONE ...');
-                        setProcessing(false);
-                    });
-                });
+                console.log('SECTIONS');
+                console.log(sectionResponse.data);
+
+                setStage('... DONE ...');
+                setProcessing(false);
             } catch (e) {
                 console.error(e);
             } finally {
                 ;
             }
-
         }
 
         prepareDmptStart();
@@ -133,102 +146,102 @@ function useDmptStart(rdmoContext) {
     return [processing, stage];
 }
 
-const iterateQuestions = (questions, options) => {
-    return questions.map((item) => {
-        console.log('widget_type ', item.widget_type);
-        if (item.widget_type === 'textarea') {
-            return (
-                <div className='form-group' key={item.id}>
-                    <label htmlFor={`input_item_${item.id}`}>
-                        <i>{item.id}</i>:{item.text_en}
-                    </label>
-                    <textarea className='form-control'
-                        id={`input_item_${item.id}`}
-                        rows='3' />
-                    <small id={`help_item_${item.id}`}
-                        className='form-text text-muted'>
-                        {item.help_en}
-                    </small>
-                </div>
-            );
-        }
-        if (item.widget_type === 'select') {
-            return (
-                <div className='form-group' key={item.id}>
-                    <label htmlFor={`input_item_${item.id}`}>
-                        <i>{item.id}</i>:{item.text_en}
-                    </label>
-                    <select className='form-control'>
-                        {options[item.optionsets[0]].map((i) => {
-                            return (<option key={i.id}>{i.text}</option>);
-                        })}
-                    </select>
-                    <small id={`help_item_${item.id}`}
-                        className='form-text text-muted'>
-                        {item.help_en}
-                    </small>
-                </div>
-            );
-        }
-        if (item.widget_type === 'radio') {
-            console.log(item);
-            console.log(options[item.optionsets[0]]);
-            return (
-                <>
-                    {
-                        options[item.optionsets[0]].map((i) => {
-                            return (
-                                <div className='form-check' key={i.id}>
-                                    <input className='form-check-input' type='radio'
-                                        name={`radio_name_${item.id}`} id={`radio_${item.id}_${i.id}`}
-                                        value={i.text} />
-                                    <label className='form-check-label'
-                                        htmlFor={`radio_${item.id}_${i.id}`}>
-                                        {i.text}
-                                    </label>
-                                </div>
-                            );
-                        })
-                    }
-
-                </>
-            );
-        }
-        return (
-            <div className='form-group' key={item.id}>
-                <label htmlFor={`input_item_${item.id}`}>
-                    <i>{item.id}</i>:{item.text_en}
-                </label>
-                <input type={item.widget_type} className='form-control'
-                    id={`input_item_${item.id}`}
-                    placeholder='name@example.com' />
-                <small id={`help_item_${item.id}`}
-                    className='form-text text-muted'>
-                    {item.help_en}
-                </small>
-            </div>
-        );
-    }
-    );
-};
-
-const iterateOptions = (options) =>
-{
-    const res = {};
-    options.forEach((o) => {
-        res[o[0].optionset] = o;
-    });
-    return res;
-}
-;
-
 // eslint-disable-next-line no-unused-vars
-function DmptStart(props)
-{
+function DmptStart(props) {
+
+    // console.log(`DmptStart. render ....`);
+
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext);
 
-    // console.log(`DmptStart. processing ${processing}`);
+    const [nextText, setNextText] = useState('Next Section');
+    const [prevText, setPrevText] = useState('Previous Section');
+
+    const [submitOnNext, setSubmitOnNext] = useState(false);
+
+    const nextSectionHandler = () => {
+        if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
+            rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
+            setNextText('Next Section');
+            setSubmitOnNext(false);
+        }
+        // console.log('next ', rdmoContext.sections_index, ' ', (rdmoContext.sections_index + 1), ' ', rdmoContext.sections_size);
+        if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
+            setNextText('Finish');
+            setSubmitOnNext(true);
+        }
+    };
+
+    const prevSectionHandler = () => {
+        if (rdmoContext.sections_index > 0) {
+            rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
+        }
+        if (rdmoContext.sections_index <= rdmoContext.sections_size - 1) {
+            setNextText('Next Section');
+            setSubmitOnNext(false);
+        }
+    };
+
+    // TODO: refactor to own compononent
+    // TODO: add to component hook
+    const submitAllHandler = () => {
+        console.log('submitAllHandler');
+        console.log(rdmoContext.form_data);
+        console.log('----------------------');
+        console.log('CREATE PROJECT | project id in context ', rdmoContext.project_id);
+        let projectId = rdmoContext.project_id;
+        if (projectId < 0) {
+            createProject().then((res) => {
+                console.log('RES ...');
+                console.log(res.data.id);
+                projectId = res.data.id;
+                rdmoContext.assignProjectId(projectId);
+                // TODO: set project id, if available do not create a new one
+                // TODO: post answers to project
+                // TODO: redirect to rdmo overview
+
+                // -------------------------------------------------------------
+                postValues(projectId, rdmoContext.form_data).then((res) => {
+                    console.log(res);
+                }
+                );
+                // -------------------------------------------------------------
+
+            });
+        }
+        console.log('after if pid ', projectId);
+        console.log('----------------------');
+    };
+
+    // console.log('context form data');
+    // console.log(rdmoContext.form_data);
+
+    const handleFormChange = (e, item) => {
+        // console.log('FORMCHANGE');
+        // item['form_value'] = e.target.value.trim();
+
+        // console.log(item);
+        // console.log(e.target.value);
+        // console.log('---------------------');
+        // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
+        // TODO: maybe refactor to list of values for specific question
+        // eslint-disable-next-line no-prototype-builtins
+        let formData = rdmoContext.form_data;
+        if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
+            delete formData[e.target.name];
+        } else {
+            formData = ({
+                ...formData,
+                // Trimming any whitespace
+                [e.target.name]: {
+                    'value': e.target.value.trim(),
+                    'question': item
+                }
+            });
+        }
+        rdmoContext.assignFormData(formData);
+    };
+
     const status = (
         <div>
             <h2><i>{stage}</i></h2>
@@ -236,65 +249,25 @@ function DmptStart(props)
     );
     let formFields = <></>;
     if (!processing) {
-        // console.log('no processing. proceed : ');
-        console.log(rdmoContext.options_data);
-        const opts = iterateOptions(rdmoContext.options_data);
-        // rdmoContext.assignOptions(opts)
-        formFields = iterateQuestions(rdmoContext.questions_data, opts);
+
+        const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+
+        formFields = <Questions
+            sectionIndex={rdmoContext.sections_index}
+            handleFormChange={handleFormChange}
+            nextSection={<ActionButton text={nextText}
+                onClickHandler={nextHandler} />}
+
+            prevSection={<ActionButton text={prevText}
+                onClickHandler={prevSectionHandler} />}
+        />;
+
     }
     return (
         <div>
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart</h1>
             {status}
-            <form>
-                {formFields}
-            </form>
-            {/* <form> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlInput1'>Email */}
-            {/*            address</label> */}
-            {/*        <input type='email' className='form-control' */}
-            {/*            id='exampleFormControlInput1' */}
-            {/*            placeholder='name@example.com' /> */}
-            {/*        <small id='passwordHelpBlock' */}
-            {/*            className='form-text text-muted'> */}
-            {/*            Your password must be 8-20 characters long, contain */}
-            {/*            letters and numbers, and must not contain spaces, */}
-            {/*            special characters, or emoji. */}
-            {/*        </small> */}
-            {/*    </div> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlSelect1'>Example */}
-            {/*            select</label> */}
-            {/*        <select className='form-control' */}
-            {/*            id='exampleFormControlSelect1'> */}
-            {/*            <option>1</option> */}
-            {/*            <option>2</option> */}
-            {/*            <option>3</option> */}
-            {/*            <option>4</option> */}
-            {/*            <option>5</option> */}
-            {/*        </select> */}
-            {/*    </div> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlSelect2'>Example multiple */}
-            {/*            select</label> */}
-            {/*        <select multiple className='form-control' */}
-            {/*            id='exampleFormControlSelect2'> */}
-            {/*            <option>1</option> */}
-            {/*            <option>2</option> */}
-            {/*            <option>3</option> */}
-            {/*            <option>4</option> */}
-            {/*            <option>5</option> */}
-            {/*        </select> */}
-            {/*    </div> */}
-            {/*    <div className='form-group'> */}
-            {/*        <label htmlFor='exampleFormControlTextarea1'>Example */}
-            {/*            textarea</label> */}
-            {/*        <textarea className='form-control' */}
-            {/*            id='exampleFormControlTextarea1' */}
-            {/*            rows='3' /> */}
-            {/*    </div> */}
-            {/* </form> */}
+            {formFields}
         </div>
     );
 }

@@ -10,25 +10,40 @@ import RdmoContext from './RdmoContext';
 //  the urls.py + global urls.py entry -> currently (...) regex=r'submissions/ui/', (...)
 // TODO: use this prefix when development with django (-->  url('app/', views.DmptFrontendView.as_view()))
 // eslint-disable-next-line no-unused-vars
-// const urlPrefix = '/dmpt/app/';
+const urlPrefix = '/dmpt/app/';
 
 // for updateview:
 // const urlPrefix = '/curation/submissions/form/';
 
 // TODO: use this prefix when developing with npm start
 // eslint-disable-next-line no-unused-vars
-const urlPrefix = '/';
+// const urlPrefix = '/';
 
 const App = () => {
 
     // https://www.savaslabs.com/blog/using-react-global-state-hooks-and-context
     const [sections, setSections] = useState({});
+    const [sectionsIndex, setSectionsIndex] = useState(0);
+    const [sectionsSize, setSectionsSize] = useState({});
+
     const [questionSets, setQuestionSets] = useState({});
     const [questions, setQuestions] = useState({});
     const [options, setOptions] = useState({});
 
+    const [formData, setFormData] = useState({});
+
+    const [projectId, setProjectId] = useState(-1);
+
     const assignSections = (data) => {
         setSections(data);
+    };
+
+    const assingSectionsIndex = (index) => {
+        setSectionsIndex(index);
+    };
+
+    const assingSectionsSize = (size) => {
+        setSectionsSize(size);
     };
 
     const assignQuestionSets = (data) => {
@@ -43,15 +58,31 @@ const App = () => {
         setOptions(data);
     };
 
+    const assignFormData = (data) => {
+        setFormData(data);
+    };
+
+    const assignProjectId = (data) => {
+        setProjectId(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
+        sections_index: sectionsIndex,
+        sections_size: sectionsSize,
         question_set_data: questionSets,
         questions_data: questions,
         options_data: options,
+        form_data: formData,
+        project_id: projectId,
         assignSections,
+        assingSectionsIndex,
+        assingSectionsSize,
         assignQuestionSets,
         assignQuestions,
         assignOptions,
+        assignFormData,
+        assignProjectId,
     };
 
     return (
