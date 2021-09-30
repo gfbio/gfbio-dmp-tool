@@ -72,17 +72,19 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_celery_beat",
-    "rest_framework",
-    "rest_framework.authtoken",
-    "rest_framework_swagger",
-    "corsheaders",
-    "mozilla_django_oidc",
-    # "rdmo",
-    "compressor",
-    "rules",
-    "widget_tweaks",
-    "mptt",
-    "formtools",
+    'rest_framework',
+    'rest_framework.authtoken',
+    'widget_tweaks',
+    'markdown',
+    'compressor',
+    'django_cleanup',
+    'django_extensions',
+    'django_filters',
+    'mathfilters',
+    'mptt',
+    'rules',
+    # openapi specification tools
+    'rest_framework_swagger'
 ]
 
 RDMO_CORE_APPS = [
@@ -156,7 +158,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # MIDDLEWARE
@@ -228,8 +231,8 @@ TEMPLATES = [
                 "gfbio_dmpt.utils.context_processors.settings_context",
             ],
             'libraries': {
-                    'staticfiles': 'django.templatetags.static',
-                 },
+                'staticfiles': 'django.templatetags.static',
+            },
         },
     }
 ]
@@ -286,7 +289,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
@@ -344,7 +347,8 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
@@ -356,7 +360,8 @@ CORS_URLS_REGEX = r"^/api/.*$"
 
 # gfbio SSO
 OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID", default="no_oidc_cl_id")
-OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET", default="no_oidc_cl_secret")
+OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET",
+                            default="no_oidc_cl_secret")
 OIDC_RP_SIGN_ALGO = env("OIDC_RP_SIGN_ALGO", default="HS256")
 OIDC_OP_JWKS_ENDPOINT = env("OIDC_OP_JWKS_ENDPOINT", default="no_jwks_url")
 OIDC_OP_AUTHORIZATION_ENDPOINT = (
