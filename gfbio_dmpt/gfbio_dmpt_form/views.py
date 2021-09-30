@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
-from formtools.wizard.views import SessionWizardView
+# from formtools.wizard.views import SessionWizardView
 
 from .forms import GFBioDmptForm, ContactForm1, ContactForm2, ContactForm4, \
     ContactForm3, GeneralInformationForm, DataCollectionForm, \
@@ -44,32 +44,32 @@ class DmptFormView(FormView):
 
 
 # https://django-formtools.readthedocs.io/en/latest/wizard.html#wizard-template-for-each-form
-class ContactWizard(SessionWizardView):
-    form_list = [ContactForm1, ContactForm2, ContactForm3, ContactForm4]
-
-    def done(self, form_list, **kwargs):
-        # do_something_with_the_form_data(form_list)
-        print('CONTACT WIZARD FORM LIST', form_list)
-        # return HttpResponseRedirect('/page-to-redirect-to-when-done/')
-        return render(self.request, 'done.html', {
-            'form_data': [form.cleaned_data for form in form_list],
-        })
-
-
-class DmptFormWizardView(SessionWizardView):
-    form_list = [GeneralInformationForm, DataCollectionForm,
-                 DocumentationAndMetadataForm, EthnicsAndLegalComplianceForm,
-                 PreservationAndSharingForm]
-
-    template_name = 'gfbio_dmpt_form/dmp_wizard.html'
-
-    def done(self, form_list, **kwargs):
-        # do_something_with_the_form_data(form_list)
-        print('DmptFormWizardView FORM LIST', form_list)
-        return HttpResponseRedirect('/page-to-redirect-to-when-done/')
-        # return render(self.request, 'done.html', {
-        #     'form_data': [form.cleaned_data for form in form_list],
-        # })
+# class ContactWizard(SessionWizardView):
+#     form_list = [ContactForm1, ContactForm2, ContactForm3, ContactForm4]
+#
+#     def done(self, form_list, **kwargs):
+#         # do_something_with_the_form_data(form_list)
+#         print('CONTACT WIZARD FORM LIST', form_list)
+#         # return HttpResponseRedirect('/page-to-redirect-to-when-done/')
+#         return render(self.request, 'done.html', {
+#             'form_data': [form.cleaned_data for form in form_list],
+#         })
+#
+#
+# class DmptFormWizardView(SessionWizardView):
+#     form_list = [GeneralInformationForm, DataCollectionForm,
+#                  DocumentationAndMetadataForm, EthnicsAndLegalComplianceForm,
+#                  PreservationAndSharingForm]
+#
+#     template_name = 'gfbio_dmpt_form/dmp_wizard.html'
+#
+#     def done(self, form_list, **kwargs):
+#         # do_something_with_the_form_data(form_list)
+#         print('DmptFormWizardView FORM LIST', form_list)
+#         return HttpResponseRedirect('/page-to-redirect-to-when-done/')
+#         # return render(self.request, 'done.html', {
+#         #     'form_data': [form.cleaned_data for form in form_list],
+#         # })
 
 
 # React App in this template
