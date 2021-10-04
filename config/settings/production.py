@@ -196,16 +196,28 @@ sentry_sdk.init(
 # TODO: for now ...
 # WHITENOISE_MANIFEST_STRICT = False
 
-# COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
-# COMPRESS_ENABLED = False
+COMPRESS_FILTERS = {
+    "css": [
+        "compressor.filters.css_default.CssAbsoluteFilter",
+        "compressor.filters.cssmin.rCSSMinFilter",
+    ],
+    "js": ["compressor.filters.jsmin.JSMinFilter"],
+}
+# Collectfast
+# ------------------------------------------------------------------------------
+# https://github.com/antonagestam/collectfast#installation
+INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
+
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+COMPRESS_ENABLED = True
 
 
-# COMPRESS_PRECOMPILERS = (
-#     ('text/x-scss', 'django_libsass.SassCompiler'),
-# )
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 
-# COMPRESS_URL = STATIC_URL
+COMPRESS_URL = STATIC_URL
 # COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
 # COMPRESS_OFFLINE = env.bool('COMPRESS_OFFLINE', default=True)
 #
