@@ -78,7 +78,6 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'widget_tweaks',
     'markdown',
-    'compressor',
     'django_cleanup',
     'django_filters',
     'mathfilters',
@@ -193,7 +192,6 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     # other finders..
-    "compressor.finders.CompressorFinder",
 ]
 
 # MEDIA
@@ -339,6 +337,12 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_ADAPTER = "gfbio_dmpt.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "gfbio_dmpt.users.adapters.SocialAccountAdapter"
+
+# django-compressor
+# ------------------------------------------------------------------------------
+# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
+INSTALLED_APPS += ["compressor"]
+STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
