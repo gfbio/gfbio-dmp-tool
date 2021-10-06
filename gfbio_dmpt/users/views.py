@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
 
+from rdmo.projects.models import Project
+
 User = get_user_model()
 
 
@@ -13,6 +15,12 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
+
+    def get_context_data(self, **kwargs):
+        kontext = super().get_context_data(**kwargs)
+        user_dmps = Project.objects.filter(user__username=self.kwargs.get("username"))
+        kontext["dmps"] = user_dmps
+        return kontext
 
 
 user_detail_view = UserDetailView.as_view()
@@ -43,3 +51,6 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+

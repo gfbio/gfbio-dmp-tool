@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
+from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 # from formtools.wizard.views import SessionWizardView
 
@@ -10,6 +11,12 @@ from .forms import GFBioDmptForm, ContactForm1, ContactForm2, ContactForm4, \
     DocumentationAndMetadataForm, EthnicsAndLegalComplianceForm, \
     PreservationAndSharingForm
 
+# rdmo model import
+from rdmo.projects.models import Project
+from rdmo.projects.views import ProjectAnswersExportView
+from rdmo.projects.views import ProjectAnswersView
+
+from rdmo.core.utils import render_to_format
 
 # def dmpt_form_view(request):
 #     if request.method == 'POST':
@@ -75,3 +82,16 @@ class DmptFormView(FormView):
 # React App in this template
 class DmptFrontendView(TemplateView):
     template_name = 'gfbio_dmpt_form/dmpt.html'
+
+
+# This exports a GFBio branded DMP PDF 
+class DmpExportView(ProjectAnswersView):
+    model = Project
+    template_name = "gfbio_dmpt_export/dmp_export.html"
+
+    def render_to_response(self, context, **response_kwargs):
+        #  return render_to_format(self.request, context['format'], context['title'], 'projects/project_view_export.html', context)
+        return render_to_format(self.request, 'pdf', 'title', 'gfbio_dmpt_export/dmp_export.html', context)
+
+
+

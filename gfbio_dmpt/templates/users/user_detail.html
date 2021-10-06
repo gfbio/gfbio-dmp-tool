@@ -4,31 +4,80 @@
 {% block title %}User: {{ object.username }}{% endblock %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
 
-  <div class="row">
-    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
 
-      <h2>{{ object.username }}</h2>
-      {% if object.name %}
-        <p>{{ object.name }}</p>
-      {% endif %}
+                <h2>{{ object.username }}</h2>
+                {% if object.name %}
+                    <p>{{ object.name }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if object == request.user %}
+            <!-- Action buttons -->
+            <div class="row">
+
+                <div class="col-sm-12">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#profile">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#dmps">DMPs</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane container fade" id="profile">
+
+                            <div class="pt-4">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
+                                    <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
+                                    <!-- Your Stuff: Custom user template urls -->
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane container active" id="dmps">
+                            <div class="pt-4">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Project</th>
+                                            <th scope="col">Catalog</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for dmp in dmps %}
+                                            <tr>
+                                                <td class="align-middle">
+                                                    {{dmp}}
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{dmp.catalog}}
+                                                </td>
+                                                <td class="align-middle">
+                                                    <a class="btn btn-sm btn-outline-primary" href="/dmpt/export/{{ dmp.id }}" target="_blank">Download PDF</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Action buttons -->
+        {% endif %}
+
     </div>
-  </div>
-
-{% if object == request.user %}
-<!-- Action buttons -->
-<div class="row">
-
-  <div class="col-sm-12">
-    <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
-    <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
-    <!-- Your Stuff: Custom user template urls -->
-  </div>
-
-</div>
-<!-- End Action buttons -->
-{% endif %}
-
-</div>
 {% endblock content %}
