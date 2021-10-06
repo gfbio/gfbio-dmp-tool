@@ -157,37 +157,52 @@ COMPRESS_FILTERS = {
 
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": True,
+    "disable_existing_loggers": False,  # was True
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+            "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
         "console": {
-            "level": "INFO",
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
+            "stream": sys.stdout,
         }
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
+    "root": {"level": "DEBUG", "handlers": ["console"]},  # was INFO
     "loggers": {
         "django.db.backends": {
-            "level": "ERROR",
+            "level": "DEBUG",  # was ERROR
             "handlers": ["console"],
-            "propagate": False,
+            "propagate": True,  # Was false
         },
         # Errors logged by the SDK itself
-        "sentry_sdk": {"level": "ERROR", "handlers": ["console"],
-                       "propagate": False},
+        "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
         "django.security.DisallowedHost": {
-            "level": "ERROR",
+            "level": "DEBUG",  # was ERROR
             "handlers": ["console"],
-            "propagate": False,
+            "propagate": True,  # was False
+        },
+        # ---------
+        "django.request": {
+            "level": "DEBUG",  # was ERROR
+            "handlers": ["console"],
+            "propagate": True,  # Was false
+        },
+        "django.server": {
+            "level": "DEBUG",  # was ERROR
+            "handlers": ["console"],
+            "propagate": True,  # Was false
         },
     },
-}
+ 
+
+
+
+
 
 # Sentry
 # ------------------------------------------------------------------------------
