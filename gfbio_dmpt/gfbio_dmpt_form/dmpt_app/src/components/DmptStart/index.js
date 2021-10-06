@@ -6,10 +6,30 @@ import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 
+// FIXME: refactor move to general module
+function getCookie(name) {
+    // from https://docs.djangoproject.com/en/stable/ref/csrf/
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i += 1) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (`${name}=`)) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 const createProject = async () => {
     try {
         // console.log('post project');
         // setProcessing(true);
+        // FIXME: refactor to use only once
+        const csrftoken = getCookie('csrftoken');
         const response = await axios.post(
             `${API_ROOT}projects/projects/`,
             {
@@ -20,7 +40,10 @@ const createProject = async () => {
             },
             {
                 // token of super user (maweber)
-                headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                headers: {
+                    'Authorization': 'Token a801025296b509457327cac484513e62592167a8',
+                    'X-CSRFToken': csrftoken
+                }
             }
         );
         // console.log('response');
@@ -36,6 +59,8 @@ const createProject = async () => {
 const postValue = (projectId, formItem) => {
     console.log('\tpost value');
     console.log(formItem);
+    // FIXME: refactor to use only once
+    const csrftoken = getCookie('csrftoken');
     return axios.post(
         // `${API_ROOT}projects/projects/${projectId}/values/?attribute=${attributeId}`,
         `${API_ROOT}projects/projects/${projectId}/values/`,
@@ -50,7 +75,10 @@ const postValue = (projectId, formItem) => {
         },
         {
             // token of super user (maweber)
-            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            headers: {
+                'Authorization': 'Token a801025296b509457327cac484513e62592167a8',
+                'X-CSRFToken': csrftoken
+            }
         }
     );
 };
@@ -59,10 +87,10 @@ const postValues = async (projectId, formData) => {
     console.log('POST VALUES');
     try {
         // eslint-disable-next-line no-restricted-syntax
-        for(const f in formData) {
+        for (const f in formData) {
             if (formData[f] !== undefined) {
                 // eslint-disable-next-line no-await-in-loop
-                await postValue(projectId, formData[f]).then((res)=>{
+                await postValue(projectId, formData[f]).then((res) => {
                     console.log('\tpost value res ');
                     console.log(res);
                 });

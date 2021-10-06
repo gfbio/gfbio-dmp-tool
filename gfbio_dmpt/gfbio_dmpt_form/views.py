@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.generic import TemplateView
+
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView, DetailView
@@ -6,11 +12,16 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 # from formtools.wizard.views import SessionWizardView
 
-from .forms import GFBioDmptForm, ContactForm1, ContactForm2, ContactForm4, \
-    ContactForm3, GeneralInformationForm, DataCollectionForm, \
-    DocumentationAndMetadataForm, EthnicsAndLegalComplianceForm, \
-    PreservationAndSharingForm
 
+class CSRFViewMixin(View):
+
+    @method_decorator(ensure_csrf_cookie)
+    def get(self, request, *args, **kwargs):
+        return super().get(self, request, *args, **kwargs)
+
+# React App in this template
+class DmptFrontendView(CSRFViewMixin, TemplateView):
+    template_name = 'gfbio_dmpt_form/dmpt.html'
 # rdmo model import
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersExportView
@@ -30,24 +41,24 @@ from rdmo.core.utils import render_to_format
 #     return render(request, 'gfbio_dmpt_form/dmpt_form.html', {'form': form})
 
 
-class DmptFormView(FormView):
-    template_name = 'gfbio_dmpt_form/dmpt_form.html'
-    form_class = GFBioDmptForm
-    success_url = '/thanks/'
-
-    # TODO: new tmp project on blank form
-    # TODO: check for existing temp project
-    # TODO: delete old temp projects
-    def get(self, request, *args, **kwargs):
-        print('CUSTOM_GET')
-        return super().get(self, request, *args, **kwargs)
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-
-        # form.send_email()
-        return super().form_valid(form)
+# class DmptFormView(FormView):
+#     template_name = 'gfbio_dmpt_form/dmpt_form.html'
+#     form_class = GFBioDmptForm
+#     success_url = '/thanks/'
+#
+#     # TODO: new tmp project on blank form
+#     # TODO: check for existing temp project
+#     # TODO: delete old temp projects
+#     def get(self, request, *args, **kwargs):
+#         print('CUSTOM_GET')
+#         return super().get(self, request, *args, **kwargs)
+#
+#     def form_valid(self, form):
+#         # This method is called when valid form data has been POSTed.
+#         # It should return an HttpResponse.
+#
+#         # form.send_email()
+#         return super().form_valid(form)
 
 
 # https://django-formtools.readthedocs.io/en/latest/wizard.html#wizard-template-for-each-form
@@ -84,7 +95,7 @@ class DmptFrontendView(TemplateView):
     template_name = 'gfbio_dmpt_form/dmpt.html'
 
 
-# This exports a GFBio branded DMP PDF 
+# This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
     model = Project
     template_name = "gfbio_dmpt_export/dmp_export.html"
