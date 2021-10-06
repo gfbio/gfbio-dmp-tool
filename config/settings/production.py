@@ -9,6 +9,7 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .base import *  # noqa
 from .base import env
+import sys
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -198,7 +199,7 @@ LOGGING = {
             "propagate": True,  # Was false
         },
     },
- 
+}
 
 
 
