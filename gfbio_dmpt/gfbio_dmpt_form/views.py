@@ -90,7 +90,7 @@ class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
 
     def render_to_response(self, context, **response_kwargs):
-        #  return render_to_format(self.request, context['format'], context['title'], 'projects/project_view_export.html', context)
+        #return render_to_format(self.request, context['format'], context['title'], 'projects/project_view_export.html', context)
         return render_to_format(self.request, 'pdf', 'title', 'gfbio_dmpt_export/dmp_export.html', context)
 
 

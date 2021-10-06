@@ -46,6 +46,8 @@ WORKDIR ${APP_HOME}
 RUN addgroup --system django \
   && adduser --system --ingroup django django
 
+RUN mkdir -p /static/images
+COPY /gfbio_dmpt/static/images/gfbio_logo.png /static/images/
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
