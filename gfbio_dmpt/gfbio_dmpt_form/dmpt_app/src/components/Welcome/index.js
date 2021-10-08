@@ -20,6 +20,11 @@ export default function Welcome() {
             }}>
                 Start DMPT
             </Link>
+            <Link to={{
+                pathname: 'projects'
+            }}>
+                Projects
+            </Link>
         </div>
     );
 };
