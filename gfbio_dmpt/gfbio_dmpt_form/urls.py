@@ -15,5 +15,5 @@ urlpatterns = [
     # url('contact/', views.ContactWizard.as_view()),
     # url('dmp/', views.DmptFormWizardView.as_view()),
     url('app/', views.DmptFrontendView.as_view()),
-    path('export/<int:pk>', views.DmpExportView.as_view(), name='dmp-detail'),
+    path('export/<int:pk>/<str:format>', views.DmpExportView.as_view(), name='dmp-detail'),
 ]

@@ -46,8 +46,8 @@ WORKDIR ${APP_HOME}
 RUN addgroup --system django \
   && adduser --system --ingroup django django
 
-# NOTE:  <06-10-21, Claas> # 
-# Please keep that as it enables pandoc to find the logo for pdf export
+# NOTE:  <06-10-21, Claas> 
+# Please keep that as it enables pandoc to find the logo for the dmp export 
 RUN mkdir -p /static/images
 COPY /gfbio_dmpt/static/images/gfbio_logo.png /static/images/
 
