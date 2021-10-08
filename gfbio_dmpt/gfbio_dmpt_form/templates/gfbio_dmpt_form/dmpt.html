@@ -4,6 +4,9 @@
 {% block content %}
 
     {% csrf_token %}
+    <script>
+        window.props = {{ backend|safe }};
+    </script>
     <div class="row">
         <div class="col-12">
             <div id='root'>
@@ -15,5 +18,6 @@
 {% endblock content %}
 
 {% block thirdPartyJavaScript %}
-    <script src="{% static 'js/gfbio_dmpt_form/main.46334129d484f2c4b3cc.js' %}"></script>
+    {#    <script src="{% static 'js/gfbio_dmpt_form/main.64ac43242a63c308c37b.js' %}"></script>#}
+    <script src="{% static 'js/gfbio_dmpt_form/main.js' %}"></script>
 {% endblock thirdPartyJavaScript %}

@@ -2,7 +2,7 @@
 
 from django import forms
 
-
+# TODO: not needed since react app for forms is developed. remove.
 # gfbio dmpt forms -------------------------------------
 
 class GeneralInformationForm(forms.Form):
@@ -93,7 +93,7 @@ class EthnicsAndLegalComplianceForm(forms.Form):
 class PreservationAndSharingForm(forms.Form):
     pass_preservation_form = forms.BooleanField(required=False)
 
-
+# TODO: remove
 # tesing -------------------------------------------------
 
 class GFBioDmptForm(forms.Form):
@@ -101,6 +101,7 @@ class GFBioDmptForm(forms.Form):
     description = forms.CharField(required=True, widget=forms.Textarea)
 
 
+# TODO: remove
 # testing multi-forms ----------------
 
 class ContactForm1(forms.Form):

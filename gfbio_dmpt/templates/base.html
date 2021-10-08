@@ -84,6 +84,10 @@
                   <a class="nav-link" href="{{ url }}">RDMO</a>
                 </li>
 
+                <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
+                  <a class="nav-link" href="/dmpt/app/">DMP App</a>
+                </li>
+
                 {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         {# URL provided by django-allauth/account/urls.py #}

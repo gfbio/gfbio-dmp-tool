@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import rdmo.projects.models
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -6,6 +7,9 @@ from django.views.generic import TemplateView
 from rdmo.core.utils import render_to_format
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
+from rest_framework import generics, mixins, permissions
+from rest_framework.authentication import TokenAuthentication, \
+    BasicAuthentication
 
 
 class CSRFViewMixin(View):
@@ -14,15 +18,24 @@ class CSRFViewMixin(View):
     def get(self, request, *args, **kwargs):
         return super().get(self, request, *args, **kwargs)
 
+# class DmptProjectsView(mixins.ListModelMixin,):
+#     queryset = rdmo.projects.models.Project.objects.all()
+#     authentication_classes = (TokenAuthentication, BasicAuthentication)
+#     permission_classes = (permissions.IsAuthenticated,)
+#                           # IsOwnerOrReadOnly)
 
 # React App in this template
 class DmptFrontendView(CSRFViewMixin, TemplateView):
     template_name = 'gfbio_dmpt_form/dmpt.html'
 
-
-# React App in this template
-class DmptFrontendView(TemplateView):
-    template_name = 'gfbio_dmpt_form/dmpt.html'
+    def get(self, request, *args, **kwargs):
+        print('DMPTFRONTENDVIEW user logged in ', request.user.is_anonymous)
+        print(request.user.is_authenticated)
+        context = self.get_context_data(**kwargs)
+        context['backend'] = {
+            'isLoggedIn': '{}'.format(request.user.is_authenticated).lower(),
+        }
+        return self.render_to_response(context)
 
 
 # This exports a GFBio branded DMP PDF
