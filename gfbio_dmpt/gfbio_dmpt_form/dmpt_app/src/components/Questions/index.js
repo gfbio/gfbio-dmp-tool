@@ -13,7 +13,8 @@ const fetchQuestion = async (q) => {
     return await axios.get(
         `${API_ROOT}questions/questions/?questionset=${q.id}`,
         {
-            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
         }
     );
 };
@@ -27,7 +28,8 @@ const fetchOptions = async (optionSet) => {
     return await axios.get(
         `${API_ROOT}options/options/?optionset=${optionSet}`,
         {
-            headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+            headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
         }
     );
 
@@ -96,7 +98,8 @@ function useQuestions(rdmoContext, sectionIndex) {
                 const qsResponse = await axios.get(
                     `${API_ROOT}questions/questionsets/?section=${section.id}`,
                     {
-                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                        // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                        headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
                     }
                 );
 

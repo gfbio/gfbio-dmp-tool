@@ -108,7 +108,11 @@ function useDmptStart(rdmoContext) {
                 const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=${catalogId}`,  // section for gfbio catalog id hardcoded
                     {
-                        headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                        // FIXME: rdmo seems to allow only authenticated requests. solutions is to provide token of user or playground user
+                        // local
+                        // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
+                        // prod
+                        headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
