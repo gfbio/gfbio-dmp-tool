@@ -3,7 +3,6 @@ Base settings to build other settings files upon.
 """
 from pathlib import Path
 
-
 from django.utils.translation import gettext_lazy as _
 import environ, os
 
@@ -365,6 +364,11 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # ------------------------------------------------------------------------------
 
 # gfbio SSO
+# ------------------------------------------------------------------------------
+ANONYMOUS_PASS = env("ANONYMOUS_PASS")
+
+# gfbio SSO
+# ------------------------------------------------------------------------------
 OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID", default="no_oidc_cl_id")
 OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET",
                             default="no_oidc_cl_secret")
@@ -632,11 +636,6 @@ VENDOR = {
         ]
     }
 }
-
-# COMPRESS_PRECOMPILERS = (
-#     ('text/x-scss', 'django_libsass.SassCompiler'),
-# )
-
 
 # necessary since django 3.2, explicitly set primary key type to avaoid warnings
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

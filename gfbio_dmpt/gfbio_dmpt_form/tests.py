@@ -28,3 +28,25 @@ class RdmoRequestTest(TestCase):
         print(response.status_code)
         content = json.loads(response.content)
         pp(content)
+
+
+class TestDmptFrontendView(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.std_user = User.objects.create_user(
+            username='john', email='john@doe.de', password='secret',
+            is_staff=False, is_superuser=False)
+
+    def test_get_not_logged_in(self):
+        response = self.client.get('/dmpt/app/')
+        self.assertEqual(200, response.status_code)
+        self.assertIn(b'{\'isLoggedIn\': \'false\', \'token\':',
+                      response.content)
+
+    def test_get_logged_in(self):
+        self.client.login(username='john', password='secret')
+        response = self.client.get('/dmpt/app/')
+        self.assertEqual(200, response.status_code)
+        self.assertIn(b'{\'isLoggedIn\': \'true\', \'token\':',
+                      response.content)
