@@ -127,7 +127,7 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
     #  "mozilla_django_oidc.auth.OIDCAuthenticationBackend",
-    "gfbio_dmpt.authentication.auth_backends.GFBioAuthenticationBackend"
+    "gfbio_dmpt.authentication.auth_backends.GFBioAuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 # because of rdmo
