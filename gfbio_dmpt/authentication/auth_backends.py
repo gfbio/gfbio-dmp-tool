@@ -4,8 +4,6 @@ import unicodedata
 
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
-#  from gfbio_submissions.generic.models import SiteConfiguration
-
 logger = logging.getLogger(__name__)
 
 
@@ -19,11 +17,6 @@ class GFBioAuthenticationBackend(OIDCAuthenticationBackend):
         return verified
 
     def get_username(self, claims):
-        # TODO: gdwg sso only provides cryptic user names
-        # username = claims.get(
-        #     'preferred_username',
-        #     claims.get('email')
-        # )
         username = claims.get("email")
 
         logger.info(
@@ -46,15 +39,9 @@ class GFBioAuthenticationBackend(OIDCAuthenticationBackend):
         ).strip()
         user.email = claims.get("email", "")
 
-        # user.external_user_id = claims.get('goe_id', '')
         user.update_or_create_external_user_id(
             external_id=claims.get("goe_id", ""), provider="goe_id"
         )
-        #  user.site_configuration = (
-            #  SiteConfiguration.objects.get_hosting_site_configuration()
-        #  )
-
-        # TODO: via #552 tos&privacy-policy. If available, take from claims
         user.agreed_to_terms = True
         user.agreed_to_privacy = True
         user.save()
@@ -90,11 +77,7 @@ class GFBioAuthenticationBackend(OIDCAuthenticationBackend):
         user.update_or_create_external_user_id(
             external_id=claims.get("goe_id", ""), provider="goe_id"
         )
-        #  user.site_configuration = (
-            #  SiteConfiguration.objects.get_hosting_site_configuration()
-        #  )
 
-        # TODO: via #552 tos&privacy-policy. If available, take from claims
         user.agreed_to_terms = True
         user.agreed_to_privacy = True
 
