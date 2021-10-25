@@ -46,10 +46,12 @@ WORKDIR ${APP_HOME}
 RUN addgroup --system django \
   && adduser --system --ingroup django django
 
-# NOTE:  <06-10-21, Claas> 
-# Please keep that as it enables pandoc to find the logo for the dmp export 
+# NOTE:  <06-10-21, Claas> # 
+# Please keep that as it enables pandoc to find the logo and extra style for dmp export
 RUN mkdir -p /static/images
-COPY /gfbio_dmpt/static/images/gfbio_logo.png /static/images/
+COPY ./gfbio_dmpt/static/images/gfbio_logo.png /static/images/
+COPY ./gfbio_dmpt/static/export_config/template.latex /static/export_config/
+COPY ./gfbio_dmpt/static/export_config/ost.cls /static/export_config/
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -60,6 +62,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # rdmo export dependencies
   pandoc \
   texlive \
+  texlive-generic-extra \
   texlive-xetex \
   lmodern \
   librsvg2-bin \
