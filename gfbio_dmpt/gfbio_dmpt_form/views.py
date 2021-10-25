@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-import rdmo.projects.models
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-from rdmo.core.utils import render_to_format
+#  from rdmo.core.utils import render_to_format
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework import generics, mixins, permissions
 from rest_framework.authentication import TokenAuthentication, \
     BasicAuthentication
 
+from gfbio_dmpt.utils.dmp_export import render_to_format
 
 class CSRFViewMixin(View):
 
@@ -36,7 +36,6 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             'isLoggedIn': '{}'.format(request.user.is_authenticated).lower(),
         }
         return self.render_to_response(context)
-
 
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
