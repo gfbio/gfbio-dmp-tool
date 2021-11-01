@@ -8,6 +8,7 @@ from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework.authtoken.models import Token
 
+from django.contrib.auth.models import Group
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.users.models import User
 
@@ -41,6 +42,8 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
                     'username': 'anonymous',
                     'password': ANONYMOUS_PASS
                 })
+            api_group = Group.objects.get(name='api')
+            api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
 
         context = self.get_context_data(**kwargs)
