@@ -33,6 +33,8 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if not request.user.is_authenticated:
+            # TODO: annonymous need to be/have permission:
+            #   (rdmo) group: api
             user, created = User.objects.get_or_create(
                 username='anonymous',
                 defaults={

@@ -9,35 +9,33 @@ import FormSelect from '../FormSelect';
 import FormTextArea from '../FormTextArea';
 import FormCheckBox from '../FormCheckBox';
 
-const fetchQuestion = async (q) => {
+const fetchQuestion = async (q, token) => {
     return await axios.get(
         `${API_ROOT}questions/questions/?questionset=${q.id}`,
         {
-            // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-            headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+            headers: { 'Authorization': `Token ${token}` }
         }
     );
 };
 
-const fetchQuestions = async (qsResponse) => {
+const fetchQuestions = async (qsResponse, token) => {
     // FIXME: await ?
-    return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs)));
+    return Promise.all(qsResponse.data.map((qs) => fetchQuestion(qs, token)));
 };
 
-const fetchOptions = async (optionSet) => {
+const fetchOptions = async (optionSet, token) => {
     return await axios.get(
         `${API_ROOT}options/options/?optionset=${optionSet}`,
         {
-            // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-            headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+            headers: { 'Authorization': `Token ${token}` }
         }
     );
 
 };
 
-const fetchAllOptions = async (optionSets) => {
+const fetchAllOptions = async (optionSets, token) => {
     // FIXME: await ?
-    return Promise.all(optionSets.map((o) => fetchOptions(o)));
+    return Promise.all(optionSets.map((o) => fetchOptions(o, token)));
 };
 
 // TODO: refactor to component
@@ -83,7 +81,7 @@ const iterateOptions = (options) => {
     return res;
 };
 
-function useQuestions(rdmoContext, sectionIndex) {
+function useQuestions(rdmoContext, sectionIndex, token) {
 
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
@@ -98,8 +96,7 @@ function useQuestions(rdmoContext, sectionIndex) {
                 const qsResponse = await axios.get(
                     `${API_ROOT}questions/questionsets/?section=${section.id}`,
                     {
-                        // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                        headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+                        headers: { 'Authorization': `Token ${token}` }
                     }
                 );
 
@@ -107,7 +104,7 @@ function useQuestions(rdmoContext, sectionIndex) {
                 console.log(qsResponse.data);
 
                 setStage('... fetch questions ...');
-                fetchQuestions(qsResponse).then((res) => {
+                fetchQuestions(qsResponse, token).then((res) => {
                     const tmp = [];
                     const oSets = [];
                     const options = [];
@@ -128,7 +125,7 @@ function useQuestions(rdmoContext, sectionIndex) {
                     console.log(tmp);
 
                     setStage('... fetch options ...');
-                    fetchAllOptions(oSets).then((oRes) => {
+                    fetchAllOptions(oSets, token).then((oRes) => {
                         oRes.forEach((o) => {
                             options.push(o.data);
                         });
@@ -158,10 +155,10 @@ function useQuestions(rdmoContext, sectionIndex) {
 function Questions(props) {
 
     // console.log('Questions. render ------------');
-    const { sectionIndex, handleFormChange, nextSection, prevSection } = props;
+    const { sectionIndex, handleFormChange, nextSection, prevSection, userToken } = props;
     const rdmoContext = useContext(RdmoContext);
 
-    const [processing, stage] = useQuestions(rdmoContext, sectionIndex);
+    const [processing, stage] = useQuestions(rdmoContext, sectionIndex, userToken);
 
     const status = (
         <div>
@@ -204,7 +201,8 @@ Questions.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     handleFormChange: PropTypes.func.isRequired,
     nextSection: PropTypes.element.isRequired,
-    prevSection: PropTypes.element.isRequired
+    prevSection: PropTypes.element.isRequired,
+    userToken: PropTypes.string.isRequired,
 };
 
 export default Questions;

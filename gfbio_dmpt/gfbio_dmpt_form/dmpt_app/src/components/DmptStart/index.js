@@ -92,7 +92,7 @@ const postValues = async (projectId, formData) => {
     }
 };
 
-function useDmptStart(rdmoContext) {
+function useDmptStart(rdmoContext, token) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
@@ -112,7 +112,8 @@ function useDmptStart(rdmoContext) {
                         // local
                         // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
                         // prod
-                        headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+                        // headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+                        headers: { 'Authorization': `Token ${token}` }
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -135,9 +136,9 @@ function useDmptStart(rdmoContext) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
-    const {isLoggedIn} = props;
+    const {isLoggedIn, userToken} = props;
     const rdmoContext = useContext(RdmoContext);
-    const [processing, stage] = useDmptStart(rdmoContext);
+    const [processing, stage] = useDmptStart(rdmoContext, userToken);
 
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');
@@ -219,6 +220,7 @@ function DmptStart(props) {
         const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
         formFields = <Questions
+            userToken={userToken}
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
@@ -242,6 +244,7 @@ function DmptStart(props) {
 // TODO: housekeeping/delete strategy for unused/empty projects
 DmptStart.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
+    userToken: PropTypes.string.isRequired,
 };
 
 export default DmptStart;

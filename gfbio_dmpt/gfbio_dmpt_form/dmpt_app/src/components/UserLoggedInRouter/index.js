@@ -3,14 +3,16 @@ import ProjectList from '../ProjectList';
 import DmptStart from '../DmptStart';
 
 function UserLoggedInRouter() {
-    console.log('USerloggedIn');
+    console.log('USerloggedInRouter');
     let backend = {};
     if (window.props !== undefined) {
         backend = window.props;
     }
-    console.log(backend.isLoggedIn);
+    console.log('backend context:');
+    console.log(backend);
     if (backend.isLoggedIn === 'false') {
-        return (<DmptStart isLoggedIn={backend.isLoggedIn} />);
+        return (<DmptStart isLoggedIn={backend.isLoggedIn}
+            userToken={backend.token} />);
     }
     return (
         <ProjectList />
