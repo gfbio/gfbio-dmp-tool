@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import Group
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-#  from rdmo.core.utils import render_to_format
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework.authtoken.models import Token
 
-from django.contrib.auth.models import Group
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.users.models import User
-
 from gfbio_dmpt.utils.dmp_export import render_to_format
+
 
 class CSRFViewMixin(View):
 
@@ -52,6 +51,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             'token': str(token),
         }
         return self.render_to_response(context)
+
 
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):

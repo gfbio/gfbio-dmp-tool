@@ -2,6 +2,7 @@
 import json
 from pprint import pp
 
+from django.contrib.auth.models import Group
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
@@ -34,6 +35,7 @@ class TestDmptFrontendView(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        Group.objects.create(name='api')
         cls.std_user = User.objects.create_user(
             username='john', email='john@doe.de', password='secret',
             is_staff=False, is_superuser=False)
