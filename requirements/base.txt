@@ -54,4 +54,4 @@ pytest-mock~=3.6.1
 pytest-pythonpath~=0.7.3
 rules==3.0
 
-rdmo==1.6
+rdmo~=1.6

@@ -25,7 +25,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const createProject = async () => {
+const createProject = async (token) => {
     try {
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
@@ -39,7 +39,7 @@ const createProject = async () => {
             {
                 // token of super user (maweber)
                 headers: {
-                    'Authorization': 'Token a801025296b509457327cac484513e62592167a8',
+                    'Authorization': `Token ${token}`,
                     'X-CSRFToken': csrftoken
                 }
             }
@@ -51,7 +51,7 @@ const createProject = async () => {
     }
 };
 
-const postValue = (projectId, formItem) => {
+const postValue = (projectId, formItem, token) => {
     // FIXME: refactor to use only once
     const csrftoken = getCookie('csrftoken');
     return axios.post(
@@ -65,20 +65,20 @@ const postValue = (projectId, formItem) => {
         {
             // token of super user (maweber)
             headers: {
-                'Authorization': 'Token a801025296b509457327cac484513e62592167a8',
+                'Authorization': `Token ${token}`,
                 'X-CSRFToken': csrftoken
             }
         }
     );
 };
 
-const postValues = async (projectId, formData) => {
+const postValues = async (projectId, formData, token) => {
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in formData) {
             if (formData[f] !== undefined) {
                 // eslint-disable-next-line no-await-in-loop
-                await postValue(projectId, formData[f]).then((res) => {
+                await postValue(projectId, formData[f], token).then((res) => {
                     console.log('\tpost value res ');
                     console.log(res);
                 });
@@ -172,7 +172,7 @@ function DmptStart(props) {
     const submitAllHandler = () => {
         let projectId = rdmoContext.project_id;
         if (projectId < 0) {
-            createProject().then((createResult) => {
+            createProject(userToken).then((createResult) => {
                 projectId = createResult.data.id;
                 rdmoContext.assignProjectId(projectId);
                 // TODO: set project id, if available do not create a new one
@@ -180,7 +180,7 @@ function DmptStart(props) {
                 // TODO: redirect to rdmo overview
 
                 // -------------------------------------------------------------
-                postValues(projectId, rdmoContext.form_data).then((valueResult) => {
+                postValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
                     console.log(valueResult);
                 }
                 );
