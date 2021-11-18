@@ -53,13 +53,13 @@ const iterateQuestions = (questions, options, values, handleChange) => {
     console.log('Values');
     console.log(values);
     return questions.map((item) => {
-        console.log('item ', item.attribute);
-        console.log(values[item.attribute]);
+        // console.log('item ', item.attribute);
+        // console.log(values[item.attribute]);
         let value = '';
         if (values[item.attribute] !== undefined) {
             value = values[item.attribute].text;
         }
-        console.log(' --- value: ', value);
+        // console.log(' --- value: ', value);
 
         if (item.widget_type === 'textarea') {
             return (
@@ -68,7 +68,7 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         }
         if (item.widget_type === 'select') {
             return (
-                <FormSelect item={item} options={options}
+                <FormSelect item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
         }
