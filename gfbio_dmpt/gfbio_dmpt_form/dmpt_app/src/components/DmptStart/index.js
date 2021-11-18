@@ -6,6 +6,7 @@ import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
+import { Formik, Field, Form } from 'formik';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -136,6 +137,11 @@ function useDmptStart(rdmoContext, token) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
+    console.log('DMPT start ', props);
+    console.log('-----------------------------');
+    console.log('');
+    console.log(props.match.params.projectId);
+    console.log('-----------------------------');
     const {isLoggedIn, userToken} = props;
     const rdmoContext = useContext(RdmoContext);
     const [processing, stage] = useDmptStart(rdmoContext, userToken);
@@ -193,6 +199,8 @@ function DmptStart(props) {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
+        console.log('habdleChange: ');
+        console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
         if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
             delete formData[e.target.name];
@@ -201,7 +209,7 @@ function DmptStart(props) {
                 ...formData,
                 // Trimming any whitespace
                 [e.target.name]: {
-                    'value': e.target.value.trim(),
+                    'value': e.target.value,  // .trim(),
                     'question': item
                 }
             });
@@ -218,6 +226,7 @@ function DmptStart(props) {
     if (!processing) {
 
         const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+
 
         formFields = <Questions
             userToken={userToken}
@@ -236,7 +245,10 @@ function DmptStart(props) {
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user
                 logged in: {isLoggedIn}</small></h1>
             {status}
-            {formFields}
+            {/*<Formik>*/}
+
+                {formFields}
+            {/*</Formik>*/}
         </div>
     );
 }
@@ -245,6 +257,7 @@ function DmptStart(props) {
 DmptStart.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
     userToken: PropTypes.string.isRequired,
+    // projectId: PropTypes.string,
 };
 
 export default DmptStart;

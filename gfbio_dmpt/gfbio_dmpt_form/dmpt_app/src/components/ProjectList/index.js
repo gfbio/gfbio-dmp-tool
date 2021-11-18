@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_ROOT } from '../../constants/api/api_constants';
+import { Link } from 'react-router-dom';
+import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
+
 
 function useProjectList() {
     console.log('-useProjectList Hook');
@@ -45,7 +47,7 @@ function ProjectList() {
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {
-            return (<li id={index}>{item.title}</li>);
+            return (<Link id={index} to={`${URL_PREFIX}start/${item.id}`}>{item.title}</Link>);
         });
     }
 

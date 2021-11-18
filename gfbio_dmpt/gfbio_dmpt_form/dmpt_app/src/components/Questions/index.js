@@ -43,27 +43,31 @@ const iterateQuestions = (questions, options, handleChange) => {
 
     return questions.map((item) => {
         if (item.widget_type === 'textarea') {
-            return (
-                <FormTextArea item={item} handleChange={handleChange} />
-            );
+            // return (
+            //     <FormTextArea item={item} handleChange={handleChange} />
+            // );
+            return;
         }
         if (item.widget_type === 'select') {
-            return (
-                <FormSelect item={item} options={options}
-                    handleChange={handleChange} />
-            );
+            // return (
+            //     <FormSelect item={item} options={options}
+            //         handleChange={handleChange} />
+            // );
+            return;
         }
         if (item.widget_type === 'radio') {
-            return (
-                <FormRadio item={item} options={options}
-                    handleChange={handleChange} />
-            );
+            // return (
+            //     <FormRadio item={item} options={options}
+            //         handleChange={handleChange} />
+            // );
+            return;
         }
         if (item.widget_type === 'checkbox') {
-            return (
-                <FormCheckBox item={item} options={options}
-                    handleChange={handleChange} />
-            );
+            // return (
+            //     <FormCheckBox item={item} options={options}
+            //         handleChange={handleChange} />
+            // );
+            return;
         }
         return (
             <FormGenericInput item={item} handleChange={handleChange} />
@@ -155,7 +159,13 @@ function useQuestions(rdmoContext, sectionIndex, token) {
 function Questions(props) {
 
     // console.log('Questions. render ------------');
-    const { sectionIndex, handleFormChange, nextSection, prevSection, userToken } = props;
+    const {
+        sectionIndex,
+        handleFormChange,
+        nextSection,
+        prevSection,
+        userToken
+    } = props;
     const rdmoContext = useContext(RdmoContext);
 
     const [processing, stage] = useQuestions(rdmoContext, sectionIndex, userToken);
@@ -202,7 +212,7 @@ Questions.propTypes = {
     handleFormChange: PropTypes.func.isRequired,
     nextSection: PropTypes.element.isRequired,
     prevSection: PropTypes.element.isRequired,
-    userToken: PropTypes.string.isRequired,
+    userToken: PropTypes.string.isRequired
 };
 
 export default Questions;
