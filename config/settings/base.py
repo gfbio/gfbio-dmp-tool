@@ -688,3 +688,9 @@ SETTINGS_EXPORT = [
     'PROJECT_QUESTIONS_AUTOSAVE',
     'NESTED_PROJECTS'
 ]
+
+# jira integration 
+JIRA_URL = env("JIRA_URL", default="http://helpdesk.gfbio.org")
+JIRA_ENV = env("JIRA_ENV", default = "SAND")
+JIRA_USERNAME = env("JIRA_USERNAME")
+JIRA_PASS = env("JIRA_PASS")
