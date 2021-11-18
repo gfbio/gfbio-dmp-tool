@@ -74,13 +74,13 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         }
         if (item.widget_type === 'radio') {
             return (
-                <FormRadio item={item} options={options}
+                <FormRadio item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
         }
         if (item.widget_type === 'checkbox') {
             return (
-                <FormCheckBox item={item} options={options}
+                <FormCheckBox item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
         }

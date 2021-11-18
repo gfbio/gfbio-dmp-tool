@@ -6,15 +6,15 @@ import RdmoContext from '../RdmoContext';
 function FormSelect(props) {
     const { item, options, value, handleChange } = props;
     const rdmoContext = useContext(RdmoContext);
-    console.log('FORM SELECT');
-    console.log(item);
-    console.log(options)
+    // console.log('FORM SELECT');
+    // console.log(item);
+    // console.log(options)
     // FIXME: quick and dirty
     let val = value;
     if (rdmoContext.form_data[item.key] !== undefined) {
         val = rdmoContext.form_data[item.key].value;
     }
-    console.log('val ', val);
+    // console.log('val ', val);
     return (
         <div className='form-group' key={item.id}>
             <label htmlFor={item.key}>
@@ -25,7 +25,7 @@ function FormSelect(props) {
                 className='form-control'>
                 {options[item.optionsets[0]].map((i) => {
 
-                    console.log(' --- ', i.text );
+                    // console.log(' --- ', i.text );
                     if(i.text === val){
                         return (<option key={i.id} selected>{i.text}</option>);
                     }
