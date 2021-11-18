@@ -3,11 +3,11 @@ import RdmoContext from '../RdmoContext';
 import PropTypes from 'prop-types';
 
 function FormGenericInput(props) {
-    const { item, handleChange} = props;
+    const { item, value, handleChange } = props;
     const rdmoContext = useContext(RdmoContext);
 
     // FIXME: quick and dirty
-    let val = '';
+    let val = value;
     if (rdmoContext.form_data[item.key] !== undefined) {
         val = rdmoContext.form_data[item.key].value;
     }
@@ -27,17 +27,22 @@ function FormGenericInput(props) {
                 value={val}
             />
             <small id={`help_${item.key}`}
-                className='form-text text-muted'>
+                   className='form-text text-muted'>
                 {item.help_en}
             </small>
         </div>
     );
 }
 
+FormGenericInput.defaultProps = {
+    value: '',
+};
+
 FormGenericInput.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     item: PropTypes.object.isRequired,
-    handleChange: PropTypes.func.isRequired,
+    value: PropTypes.string,
+    handleChange: PropTypes.func.isRequired
 
 };
 

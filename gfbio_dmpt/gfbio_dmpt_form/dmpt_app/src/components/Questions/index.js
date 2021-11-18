@@ -33,44 +33,59 @@ const fetchOptions = async (optionSet, token) => {
 
 };
 
+const fetchProjectValues = async (projectId, token) => {
+    return await axios.get(
+        `${API_ROOT}projects/values/?project=${projectId}`,
+        {
+            headers: { 'Authorization': `Token ${token}` }
+        }
+    );
+};
+
 const fetchAllOptions = async (optionSets, token) => {
     // FIXME: await ?
     return Promise.all(optionSets.map((o) => fetchOptions(o, token)));
 };
 
 // TODO: refactor to component
-const iterateQuestions = (questions, options, handleChange) => {
-
+const iterateQuestions = (questions, options, values, handleChange) => {
+    console.log('ITERATE QUESTIONS ');
+    console.log('Values');
+    console.log(values);
     return questions.map((item) => {
+        console.log('item ', item.attribute);
+        console.log(values[item.attribute]);
+        let value = '';
+        if (values[item.attribute] !== undefined) {
+            value = values[item.attribute].text;
+        }
+        console.log(' --- value: ', value);
+
         if (item.widget_type === 'textarea') {
-            // return (
-            //     <FormTextArea item={item} handleChange={handleChange} />
-            // );
-            return;
+            return (
+                <FormTextArea item={item} value={value} handleChange={handleChange} />
+            );
         }
         if (item.widget_type === 'select') {
-            // return (
-            //     <FormSelect item={item} options={options}
-            //         handleChange={handleChange} />
-            // );
-            return;
+            return (
+                <FormSelect item={item} options={options}
+                    handleChange={handleChange} />
+            );
         }
         if (item.widget_type === 'radio') {
-            // return (
-            //     <FormRadio item={item} options={options}
-            //         handleChange={handleChange} />
-            // );
-            return;
+            return (
+                <FormRadio item={item} options={options}
+                    handleChange={handleChange} />
+            );
         }
         if (item.widget_type === 'checkbox') {
-            // return (
-            //     <FormCheckBox item={item} options={options}
-            //         handleChange={handleChange} />
-            // );
-            return;
+            return (
+                <FormCheckBox item={item} options={options}
+                    handleChange={handleChange} />
+            );
         }
         return (
-            <FormGenericInput item={item} handleChange={handleChange} />
+            <FormGenericInput item={item} value={value} handleChange={handleChange} />
         );
     }
     );
@@ -142,7 +157,22 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         setStage('... DONE ...');
                         setProcessing(false);
                     });
+                }).then(() => {
+                    if (rdmoContext.project_id && rdmoContext.project_id > 0) {
+                        setStage('... fetch project value  ...', rdmoContext.project_id);
+                        const projectValues = {};
+                        fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {
+                            console.log('project values response');
+                            console.log(pRes.data);
+
+                            pRes.data.forEach((v) => {
+                                projectValues[v.attribute] = v;
+                            });
+                            rdmoContext.assignProjectValues(projectValues);
+                        });
+                    }
                 });
+
             } catch (e) {
                 console.error(e);
             } finally {
@@ -178,8 +208,20 @@ function Questions(props) {
     let formFields = <></>;
     let sectionControls = <></>;
     if (!processing) {
+
+        // if (rdmoContext.project_id && rdmoContext.project_id > 0) {
+        //     fetchProjectValues(rdmoContext.project_id, userToken).then((pRes)=>{
+        //         console.log('project values response');
+        //         console.log(pRes.data);
+        //         console.log('questions from context');
+        //         console.log(rdmoContext.questions_data);
+        //         console.log('formdata in context ');
+        //         console.log(rdmoContext.form_data);
+        //     });
+        // }
+
         const opts = iterateOptions(rdmoContext.options_data);
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, handleFormChange);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleFormChange);
         sectionControls = (<div className='row'>
             {prevSection}
             {nextSection}

@@ -23,6 +23,8 @@ const App = () => {
 
     const [projectId, setProjectId] = useState(-1);
 
+    const [projectValues, setProjectValues] = useState({});
+
     const assignSections = (data) => {
         setSections(data);
     };
@@ -55,6 +57,10 @@ const App = () => {
         setProjectId(data);
     };
 
+    const assignProjectValues = (data) => {
+        setProjectValues(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         sections_index: sectionsIndex,
@@ -64,6 +70,7 @@ const App = () => {
         options_data: options,
         form_data: formData,
         project_id: projectId,
+        project_values: projectValues,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -71,7 +78,8 @@ const App = () => {
         assignQuestions,
         assignOptions,
         assignFormData,
-        assignProjectId
+        assignProjectId,
+        assignProjectValues
     };
 
     return (
@@ -80,8 +88,10 @@ const App = () => {
                 <Route exact path={`${URL_PREFIX}`}
                     component={UserLoggedInRouter} />
                 <Route path={`${URL_PREFIX}catalogs`} component={Catalogs} />
-                <Route exact path={`${URL_PREFIX}start`} component={DmptStart} />
-                <Route path={`${URL_PREFIX}start/:projectId`} component={DmptStart} />
+                <Route exact path={`${URL_PREFIX}start`}
+                    component={DmptStart} />
+                <Route path={`${URL_PREFIX}start/:projectId`}
+                    component={DmptStart} />
                 <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
                 {/*    component={SubmissionDetail}/> */}

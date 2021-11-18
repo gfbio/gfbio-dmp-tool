@@ -144,6 +144,12 @@ function DmptStart(props) {
     console.log('-----------------------------');
     const {isLoggedIn, userToken} = props;
     const rdmoContext = useContext(RdmoContext);
+
+    if (props.match.params.projectId) {
+        console.log('ASSING PID from url match');
+        rdmoContext.assignProjectId(props.match.params.projectId);
+    }
+
     const [processing, stage] = useDmptStart(rdmoContext, userToken);
 
     const [nextText, setNextText] = useState('Next Section');
@@ -215,6 +221,8 @@ function DmptStart(props) {
             });
         }
         rdmoContext.assignFormData(formData);
+        console.log('formdata in context ');
+        console.log(rdmoContext.form_data);
     };
 
     const status = (
