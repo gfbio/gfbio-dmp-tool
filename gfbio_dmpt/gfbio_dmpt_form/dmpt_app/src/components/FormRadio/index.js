@@ -1,15 +1,23 @@
 import React, { useContext } from 'react';
 
 import PropTypes from 'prop-types';
-import FormSelect from '../FormSelect';
 import RdmoContext from '../RdmoContext';
 
 function FormRadio(props) {
     const { item, options, value, handleChange } = props;
     const rdmoContext = useContext(RdmoContext);
-    let val = value;
+    // FIXME: quick and dirty
+    let val = value.text;
     if (rdmoContext.form_data[item.key] !== undefined) {
+        // console.log('item key in formdata. key  ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
         val = rdmoContext.form_data[item.key].value;
+    }
+    else {
+        // console.log(' else of key in data. assing to form in context');
+        rdmoContext.form_data[item.key] = {
+            'value': value.text,
+            'question': item
+        };
     }
     return (
         <div className='form-group' key={item.id}>

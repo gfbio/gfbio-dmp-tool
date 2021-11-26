@@ -57,7 +57,7 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         // console.log(values[item.attribute]);
         let value = '';
         if (values[item.attribute] !== undefined) {
-            value = values[item.attribute].text;
+            value = values[item.attribute];
         }
         // console.log(' --- value: ', value);
 

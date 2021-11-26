@@ -10,11 +10,18 @@ function FormSelect(props) {
     // console.log(item);
     // console.log(options)
     // FIXME: quick and dirty
-    let val = value;
+    let val = value.text;
     if (rdmoContext.form_data[item.key] !== undefined) {
+        // console.log('item key in formdata. key  ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
         val = rdmoContext.form_data[item.key].value;
     }
-    // console.log('val ', val);
+    else {
+        // console.log(' else of key in data. assing to form in context');
+        rdmoContext.form_data[item.key] = {
+            'value': value.text,
+            'question': item
+        };
+    }
     return (
         <div className='form-group' key={item.id}>
             <label htmlFor={item.key}>
