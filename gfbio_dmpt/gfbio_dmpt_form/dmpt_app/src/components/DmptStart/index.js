@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
+import { Formik, Field, Form } from 'formik';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
-import { Formik, Field, Form } from 'formik';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -73,6 +73,27 @@ const postValue = (projectId, formItem, token) => {
     );
 };
 
+const putValue = (projectId, formItem, token) => {
+    // FIXME: refactor to use only once
+    const csrftoken = getCookie('csrftoken');
+    // return axios.put(
+    //     `${API_ROOT}projects/projects/${projectId}/values/${valueId}`,
+    //     {
+    //         'attribute': formItem.question.attribute,
+    //         'text': formItem.value,
+    //         'value_type': formItem.question.value_type,
+    //         'unit': formItem.question.unit
+    //     },
+    //     {
+    //         // token of super user (maweber)
+    //         headers: {
+    //             'Authorization': `Token ${token}`,
+    //             'X-CSRFToken': csrftoken
+    //         }
+    //     }
+    // );
+};
+
 const postValues = async (projectId, formData, token) => {
     try {
         // eslint-disable-next-line no-restricted-syntax
@@ -81,6 +102,26 @@ const postValues = async (projectId, formData, token) => {
                 // eslint-disable-next-line no-await-in-loop
                 await postValue(projectId, formData[f], token).then((res) => {
                     console.log('\tpost value res ');
+                    console.log(res);
+                });
+
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    } finally {
+        ;
+    }
+};
+
+const putValues = async (projectId, formData, token) => {
+    try {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const f in formData) {
+            if (formData[f] !== undefined) {
+                // eslint-disable-next-line no-await-in-loop
+                await putValue(projectId, formData[f], token).then((res) => {
+                    console.log('\tput value res ');
                     console.log(res);
                 });
 
@@ -183,6 +224,7 @@ function DmptStart(props) {
     // TODO: add to component hook
     const submitAllHandler = () => {
         let projectId = rdmoContext.project_id;
+        console.log('Submit HANDLER ', projectId);
         if (projectId < 0) {
             createProject(userToken).then((createResult) => {
                 projectId = createResult.data.id;
@@ -198,6 +240,12 @@ function DmptStart(props) {
                 );
                 // -------------------------------------------------------------
             });
+        }
+        else if (projectId > 0) {
+            putValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
+                console.log(valueResult);
+            }
+            );
         }
     };
 
@@ -235,7 +283,6 @@ function DmptStart(props) {
 
         const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
-
         formFields = <Questions
             userToken={userToken}
             sectionIndex={rdmoContext.sections_index}
@@ -253,10 +300,10 @@ function DmptStart(props) {
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user
                 logged in: {isLoggedIn}</small></h1>
             {status}
-            {/*<Formik>*/}
+            {/* <Formik> */}
 
-                {formFields}
-            {/*</Formik>*/}
+            {formFields}
+            {/* </Formik> */}
         </div>
     );
 }

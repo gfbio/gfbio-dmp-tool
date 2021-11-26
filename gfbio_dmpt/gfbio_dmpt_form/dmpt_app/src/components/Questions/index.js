@@ -49,9 +49,9 @@ const fetchAllOptions = async (optionSets, token) => {
 
 // TODO: refactor to component
 const iterateQuestions = (questions, options, values, handleChange) => {
-    console.log('ITERATE QUESTIONS ');
-    console.log('Values');
-    console.log(values);
+    // console.log('ITERATE QUESTIONS ');
+    // console.log('Values');
+    // console.log(values);
     return questions.map((item) => {
         // console.log('item ', item.attribute);
         // console.log(values[item.attribute]);
@@ -63,30 +63,30 @@ const iterateQuestions = (questions, options, values, handleChange) => {
 
         if (item.widget_type === 'textarea') {
             return (
-                <FormTextArea item={item} value={value} handleChange={handleChange} />
+                <FormTextArea item={item} value={value}
+                    handleChange={handleChange} />
             );
-        }
-        if (item.widget_type === 'select') {
+        } if (item.widget_type === 'select') {
             return (
                 <FormSelect item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
-        }
-        if (item.widget_type === 'radio') {
+        } if (item.widget_type === 'radio') {
             return (
                 <FormRadio item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
-        }
-        if (item.widget_type === 'checkbox') {
+        } if (item.widget_type === 'checkbox') {
             return (
                 <FormCheckBox item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
         }
         return (
-            <FormGenericInput item={item} value={value} handleChange={handleChange} />
+            <FormGenericInput item={item} value={value}
+                handleChange={handleChange} />
         );
+
     }
     );
 };
