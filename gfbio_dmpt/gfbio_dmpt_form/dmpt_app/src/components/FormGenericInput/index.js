@@ -21,6 +21,7 @@ function FormGenericInput(props) {
         // console.log(item);
         rdmoContext.form_data[item.key] = {
             'value': value.text,
+            'valueId': value.id,
             'question': item
         };
     }

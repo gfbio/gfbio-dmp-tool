@@ -5,36 +5,36 @@ import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
 
 
 function useProjectList() {
-    console.log('-useProjectList Hook');
+    // console.log('-useProjectList Hook');
     const [projectList, setProjectList] = useState({});
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        console.log(' * use Effect hook');
+        // console.log(' * use Effect hook');
 
         async function fetchProjectList() {
-            console.log('  ** async function');
+            // console.log('  ** async function');
             try {
                 setLoading(true);
-                console.log('  ** try before await');
+                // console.log('  ** try before await');
                 const response = await axios.get(
                     `${API_ROOT}projects/projects/`
                 );
-                console.log('  ** try after await');
+                // console.log('  ** try after await');
                 setProjectList(response.data);
-                console.log('  ** try aftert set project list');
+                // console.log('  ** try aftert set project list');
             } catch (e) {
                 ;
             } finally {
-                console.log('  ** finally set loadionf');
+                // console.log('  ** finally set loadionf');
                 setLoading(false);
             }
         }
 
-        console.log(' * call fetchProjectList');
+        // console.log(' * call fetchProjectList');
         fetchProjectList();
     }, []);
-    console.log('-before return and end of useProjectList hook');
+    // console.log('-before return and end of useProjectList hook');
     return [loading, projectList];
 }
 
@@ -42,8 +42,8 @@ function ProjectList() {
     const [loading, projectList] = useProjectList();
     // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
     // SOLVED: default django object level permissions take care of this, depending on user and/or group
-    console.log('projectList');
-    console.log(projectList);
+    // console.log('projectList');
+    // console.log(projectList);
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {

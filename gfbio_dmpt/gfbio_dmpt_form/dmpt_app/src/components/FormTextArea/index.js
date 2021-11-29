@@ -9,14 +9,11 @@ function FormTextArea(props) {
     const rdmoContext = useContext(RdmoContext);
     // const rdmoContext = useContext(RdmoContext);
     // console.log('FORM TEXT AREA ');
+    // console.log('item');
     // console.log(item);
+    // console.log(' -----  value');
+    // console.log(value);
 
-    // let elem = (<textarea name={item.key} id={item.key} className='form-control'
-    //     rows='3' onChange={handleChange} />);
-    // if (item.key in rdmoContext.form_data) {
-    //     elem = (<textarea name={item.key} id={item.key} className='form-control'
-    //         rows='3' onChange={handleChange} value={rdmoContext.form_data[item.key]} />);
-    // }
 
     // FIXME: quick and dirty
     let val = value.text;
@@ -28,6 +25,7 @@ function FormTextArea(props) {
         // console.log(' else of key in data. assing to form in context');
         rdmoContext.form_data[item.key] = {
             'value': value.text,
+            'valueId': value.id,
             'question': item
         };
     }

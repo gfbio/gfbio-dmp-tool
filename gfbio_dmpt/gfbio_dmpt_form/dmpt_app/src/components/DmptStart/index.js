@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
-import { Formik, Field, Form } from 'formik';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
@@ -76,34 +75,44 @@ const postValue = (projectId, formItem, token) => {
 const putValue = (projectId, formItem, token) => {
     // FIXME: refactor to use only once
     const csrftoken = getCookie('csrftoken');
-    // return axios.put(
-    //     `${API_ROOT}projects/projects/${projectId}/values/${valueId}`,
-    //     {
-    //         'attribute': formItem.question.attribute,
-    //         'text': formItem.value,
-    //         'value_type': formItem.question.value_type,
-    //         'unit': formItem.question.unit
-    //     },
-    //     {
-    //         // token of super user (maweber)
-    //         headers: {
-    //             'Authorization': `Token ${token}`,
-    //             'X-CSRFToken': csrftoken
-    //         }
-    //     }
-    // );
+    return axios.put(
+        `${API_ROOT}projects/projects/${projectId}/values/${formItem.valueId}/`,
+        {
+            'attribute': formItem.question.attribute,
+            'text': formItem.value,
+            'value_type': formItem.question.value_type,
+            'unit': formItem.question.unit
+        },
+        {
+            // token of super user (maweber)
+            headers: {
+                'Authorization': `Token ${token}`,
+                'X-CSRFToken': csrftoken
+            }
+        }
+    );
 };
 
-const postValues = async (projectId, formData, token) => {
+const submitValues = async (projectId, formData, token) => {
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in formData) {
             if (formData[f] !== undefined) {
-                // eslint-disable-next-line no-await-in-loop
-                await postValue(projectId, formData[f], token).then((res) => {
-                    console.log('\tpost value res ');
-                    console.log(res);
-                });
+                const formItem = formData[f];
+                if (formItem.valueId !== undefined) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await putValue(projectId, formItem, token).then((res) => {
+                        console.log('\tput value res ');
+                        console.log(res);
+                    });
+                }
+                else {
+                    // eslint-disable-next-line no-await-in-loop
+                    await postValue(projectId, formItem, token).then((res) => {
+                        console.log('\tpost value res ');
+                        console.log(res);
+                    });
+                }
 
             }
         }
@@ -113,26 +122,26 @@ const postValues = async (projectId, formData, token) => {
         ;
     }
 };
-
-const putValues = async (projectId, formData, token) => {
-    try {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const f in formData) {
-            if (formData[f] !== undefined) {
-                // eslint-disable-next-line no-await-in-loop
-                await putValue(projectId, formData[f], token).then((res) => {
-                    console.log('\tput value res ');
-                    console.log(res);
-                });
-
-            }
-        }
-    } catch (e) {
-        console.error(e);
-    } finally {
-        ;
-    }
-};
+//
+// const putValues = async (projectId, formData, token) => {
+//     try {
+//         // eslint-disable-next-line no-restricted-syntax
+//         for (const f in formData) {
+//             if (formData[f] !== undefined) {
+//                 // eslint-disable-next-line no-await-in-loop
+//                 await putValue(projectId, formData[f], token).then((res) => {
+//                     console.log('\tput value res ');
+//                     console.log(res);
+//                 });
+//
+//             }
+//         }
+//     } catch (e) {
+//         console.error(e);
+//     } finally {
+//         ;
+//     }
+// };
 
 function useDmptStart(rdmoContext, token) {
     const [processing, setProcessing] = useState(true);
@@ -181,13 +190,13 @@ function DmptStart(props) {
     console.log('DMPT start ', props);
     console.log('-----------------------------');
     console.log('');
-    console.log(props.match.params.projectId);
-    console.log('-----------------------------');
+    // console.log(props.match.params.projectId);
+    // console.log('-----------------------------');
     const {isLoggedIn, userToken} = props;
     const rdmoContext = useContext(RdmoContext);
 
     if (props.match.params.projectId) {
-        console.log('ASSING PID from url match');
+        // console.log('ASSING PID from url match');
         rdmoContext.assignProjectId(props.match.params.projectId);
     }
 
@@ -234,15 +243,15 @@ function DmptStart(props) {
                 // TODO: redirect to rdmo overview
 
                 // -------------------------------------------------------------
-                postValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
+                submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
                     console.log(valueResult);
                 }
                 );
                 // -------------------------------------------------------------
             });
         }
-        else if (projectId > 0) {
-            putValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
+        else {
+            submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
                 console.log(valueResult);
             }
             );
@@ -253,7 +262,7 @@ function DmptStart(props) {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
-        console.log('habdleChange: ');
+        console.log('handleChange: ');
         console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
         if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {

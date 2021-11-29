@@ -16,6 +16,7 @@ function FormRadio(props) {
         // console.log(' else of key in data. assing to form in context');
         rdmoContext.form_data[item.key] = {
             'value': value.text,
+            'valueId': value.id,
             'question': item
         };
     }
