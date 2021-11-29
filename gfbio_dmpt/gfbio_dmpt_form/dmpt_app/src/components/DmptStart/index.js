@@ -105,8 +105,7 @@ const submitValues = async (projectId, formData, token) => {
                         console.log('\tput value res ');
                         console.log(res);
                     });
-                }
-                else {
+                } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
                         console.log('\tpost value res ');
@@ -192,7 +191,7 @@ function DmptStart(props) {
     console.log('');
     // console.log(props.match.params.projectId);
     // console.log('-----------------------------');
-    const {isLoggedIn, userToken} = props;
+    const { isLoggedIn, userToken } = props;
     const rdmoContext = useContext(RdmoContext);
 
     if (props.match.params.projectId) {
@@ -214,7 +213,11 @@ function DmptStart(props) {
             setSubmitOnNext(false);
         }
         if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
-            setNextText('Finish');
+            if (rdmoContext.project_id > 0) {
+                setNextText('Update DMP');
+            } else {
+                setNextText('Submit DMP');
+            }
             setSubmitOnNext(true);
         }
     };
@@ -249,8 +252,7 @@ function DmptStart(props) {
                 );
                 // -------------------------------------------------------------
             });
-        }
-        else {
+        } else {
             submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
                 console.log(valueResult);
             }
@@ -320,7 +322,7 @@ function DmptStart(props) {
 // TODO: housekeeping/delete strategy for unused/empty projects
 DmptStart.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
-    userToken: PropTypes.string.isRequired,
+    userToken: PropTypes.string.isRequired
     // projectId: PropTypes.string,
 };
 
