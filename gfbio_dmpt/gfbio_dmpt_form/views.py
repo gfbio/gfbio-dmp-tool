@@ -15,7 +15,8 @@ from jira import JIRA, JIRAError
 from gfbio_dmpt.utils.dmp_export import render_to_format
 from django.http import HttpResponseRedirect
 from django.conf import settings
-
+from gfbio_dmpt.jira_integration.models import Ticket
+from django.core.exceptions import ObjectDoesNotExist
 
 class CSRFViewMixin(View):
     @method_decorator(ensure_csrf_cookie)
@@ -56,75 +57,77 @@ class DmpExportView(ProjectAnswersView):
             context,
         )
 
+# A user should be able to request help on a dmp. This creates a ticket in
+# Jira. 
+class DmpRequestHelp(View):
 
-# a user should be able to request help on a dmp
-class DmpRequestHelp(TemplateView):
-
-    # TODO:
-
+    # TODO:  <30-11-21, claas>
     # allow the user to provide some text with additional information
     # in that dialogue he can also select services which he is interested in?
     # this could be done in the template below. Just as an example. Or it could
     # be done using a form in the dmp template and then just pop up as a modal.
 
-    # we get the project information form rdmo
-    model = Project
-
-    template_name = "gfbio_dmpt_form/dmpt.html"
-
-    # with a button click the issue is generated
     def get(self, context, pk=None, **response_kwargs):
 
-        # initialize jira client
+        project = Project.objects.get(id=pk)
+        try:
+            if project.ticket:
+                # TODO: <30-11-21, claas>
+                # we should return to the user profile instead or remove 
+                # this completely as this might hinder the use of the 
+                # view with the react frontend. 
+                return HttpResponseRedirect("/")
+        except ObjectDoesNotExist as e:
+            # TODO: <18-11-21, claas> # this needs to go to logging later
+            print("A ticket does not exist:")
+            print("---------------------------")
+            print(e)
+
+        # initialize the jira client
         jira = JIRA(
             server = settings.JIRA_URL,
             basic_auth=(settings.JIRA_USERNAME,
                         settings.JIRA_PASS),
         )
 
-        # when the user is logged in we can hand over stuff to the ticket 
+        # get the title and the catalogue the user is requesting help for
+        summary = project.title
+        catalog = project.catalog
+        reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
+
+        # TODO:  <29-11-21, Claas> 
+        # we should have a handling for users not being logged in. 
+        # The email should then be taken from the form the user fills out
+        # in the dmp frontend before asking for help
         if context.user.is_authenticated:
-            # find the user in jira with goestern id or email
             try:
-                # find out if this is the correct field
-                user_asking_for_help = context.user.external_user_id
-            except AttributeError:
-                user_asking_for_help = jira.search_users(user="Claas-Thido.Pfaff@gfbio.org")[0].name
-
-        # when creating a help ticket there is different options. When the user
-        # is not logged in we cannot associate the ticket with the username or
-        # email in jira. If he however is logged in we can adjust that
-
-        # get the project from the configuration. when we have development
-        # running then we go for SAND and when we are in production we go for
-        # the HELP space in Jira.
-
-        # this returns a <JIRA Issue: key='SAND-1863', id='20027'> store that
-        # information in the database so we have a reference for it.
-
-        # project title to request help for
-        #  title = self.model.objects.first().title
-        #  catalog = self.model.objects.first().catalog
-        title = self.model.objects.get(id=pk).title
-        catalog = self.model.objects.get(id=pk).catalog
+                # TODO:  <30-11-21, claas>
+                # a user should be identified by his gostern id when he is logged in and not by the
+                # email
+                reporting_user = jira.search_users(user=context.user.email)[0].name
+            except:
+                reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
 
         try:
-
+            # TODO:  <29-11-21, Claas> 
+            # Find the correct issue type
             if context.user.is_authenticated:
                 new_issue = jira.create_issue(
-                    project="SAND",
-                    summary=title,
-                    description=f"Would you please so nice and help me with that dmp using the {catalog} catalog",
-                    reporter={"name": user_asking_for_help},
+                    project=settings.JIRA_PROJECT,
+                    summary=summary,
+                    description=f"Would you please be so nice and help me with my dmp named '{summary}' using the {catalog} catalog",
+                    reporter={"name": reporting_user},
                     issuetype={"name": "Data Submission"},
                 )
             else:
                 new_issue = jira.create_issue(
-                    project="SAND",
-                    summary=title,
+                    project=settings.JIRA_PROJECT,
+                    summary=summary,
                     description=f"Would you please so nice and help me with that dmp using the {catalog} catalog",
                     issuetype={"name": "Data Submission"},
                 )
+
+            Ticket.objects.create(project = project, ticket_key = new_issue.key, ticket_id = new_issue.id)
 
         except JIRAError as e:
             # TODO: <18-11-21, claas> # this needs to go to logging later
@@ -132,5 +135,8 @@ class DmpRequestHelp(TemplateView):
             print("---------------------------")
             print(e.text)
 
-        # TODO:  <18-11-21, claas> # redirect back to the users profile
+        # TODO: <30-11-21, claas>
+        # we should return to the user profile instead or remove 
+        # this completely as this might hinder the use of the 
+        # view with the react frontend. 
         return HttpResponseRedirect("/")
