@@ -87,7 +87,7 @@ const App = () => {
             <Switch>
                 <Route exact path={`${URL_PREFIX}`}
                     component={UserLoggedInRouter} />
-                <Route path={`${URL_PREFIX}catalogs`} component={Catalogs} />
+                {/* <Route path={`${URL_PREFIX}catalogs`} component={Catalogs} /> */}
                 <Route exact path={`${URL_PREFIX}start`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}start/:projectId`}

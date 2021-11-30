@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
 
-
 function useProjectList() {
     // console.log('-useProjectList Hook');
     const [projectList, setProjectList] = useState({});
@@ -47,15 +46,22 @@ function ProjectList() {
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {
-            return (<Link id={index} to={`${URL_PREFIX}start/${item.id}`}>{item.title}</Link>);
+            return (<Link id={index}
+                          to={`${URL_PREFIX}start/${item.id}`}>{item.title}</Link>);
         });
     }
 
     return (
         <div>
-            <h2>Project List</h2>
-            <p>loading: {`${loading}`}</p>
-            <ul>{projects}</ul>
+            <div>
+                <a href={`${URL_PREFIX}start`}><h3>Create new DMP</h3></a>
+            </div>
+            <div>
+                <h2>Project List</h2>
+                <p>loading: {`${loading}`}</p>
+                <ul>{projects}</ul>
+            </div>
+
         </div>
     );
 
