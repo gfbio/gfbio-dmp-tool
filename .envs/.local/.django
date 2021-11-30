@@ -18,3 +18,9 @@ CELERY_FLOWER_PASSWORD=rxYoE0ROIgorzRuBzmtd1n0lceetX9CsbxNuIPB9RkEYAXKA2tLrSPOEG
 # Anonymous User
 # ------------------------------------------------------------------------------
 ANONYMOUS_PASS=1KDp3MET0hSnfNbXAniwVW4pRiqrQbA8
+
+# JIRA
+# ------------------------------------------------------------------------------
+JIRA_USERNAME=
+JIRA_PASS=
+JIRA_DEFAULT_REPORTER_EMAIL=

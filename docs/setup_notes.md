@@ -1,3 +1,18 @@
+# UPDATED NOTES 30.11.2021:
+
+
+## rdmo groups for in database
+
+docker-compose -f production.yml run --rm django python manage.py setup_groups
+
+        Creating dmpgfbioorg_django_run ... done
+        PostgreSQL is available
+        DEBUG 2021-11-30 14:47:19,251 selector_events 1 140573322024768 Using selector: EpollSelector
+        Group "editor" created
+        Group "reviewer" created
+        Group "api" created
+
+
 # RDMO setup
 
 - add apt install commands to local & production Dockerfile to install RDMO
