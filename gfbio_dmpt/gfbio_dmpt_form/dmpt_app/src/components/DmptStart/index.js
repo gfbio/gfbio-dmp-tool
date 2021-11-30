@@ -25,7 +25,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const createProject = async () => {
+const createProject = async (token) => {
     try {
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
@@ -39,7 +39,7 @@ const createProject = async () => {
             {
                 // token of super user (maweber)
                 headers: {
-                    'Authorization': 'Token a801025296b509457327cac484513e62592167a8',
+                    'Authorization': `Token ${token}`,
                     'X-CSRFToken': csrftoken
                 }
             }
@@ -51,7 +51,7 @@ const createProject = async () => {
     }
 };
 
-const postValue = (projectId, formItem) => {
+const postValue = (projectId, formItem, token) => {
     // FIXME: refactor to use only once
     const csrftoken = getCookie('csrftoken');
     return axios.post(
@@ -65,23 +65,53 @@ const postValue = (projectId, formItem) => {
         {
             // token of super user (maweber)
             headers: {
-                'Authorization': 'Token a801025296b509457327cac484513e62592167a8',
+                'Authorization': `Token ${token}`,
                 'X-CSRFToken': csrftoken
             }
         }
     );
 };
 
-const postValues = async (projectId, formData) => {
+const putValue = (projectId, formItem, token) => {
+    // FIXME: refactor to use only once
+    const csrftoken = getCookie('csrftoken');
+    return axios.put(
+        `${API_ROOT}projects/projects/${projectId}/values/${formItem.valueId}/`,
+        {
+            'attribute': formItem.question.attribute,
+            'text': formItem.value,
+            'value_type': formItem.question.value_type,
+            'unit': formItem.question.unit
+        },
+        {
+            // token of super user (maweber)
+            headers: {
+                'Authorization': `Token ${token}`,
+                'X-CSRFToken': csrftoken
+            }
+        }
+    );
+};
+
+const submitValues = async (projectId, formData, token) => {
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in formData) {
             if (formData[f] !== undefined) {
-                // eslint-disable-next-line no-await-in-loop
-                await postValue(projectId, formData[f]).then((res) => {
-                    console.log('\tpost value res ');
-                    console.log(res);
-                });
+                const formItem = formData[f];
+                if (formItem.valueId !== undefined) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await putValue(projectId, formItem, token).then((res) => {
+                        console.log('\tput value res ');
+                        console.log(res);
+                    });
+                } else {
+                    // eslint-disable-next-line no-await-in-loop
+                    await postValue(projectId, formItem, token).then((res) => {
+                        console.log('\tpost value res ');
+                        console.log(res);
+                    });
+                }
 
             }
         }
@@ -91,8 +121,28 @@ const postValues = async (projectId, formData) => {
         ;
     }
 };
+//
+// const putValues = async (projectId, formData, token) => {
+//     try {
+//         // eslint-disable-next-line no-restricted-syntax
+//         for (const f in formData) {
+//             if (formData[f] !== undefined) {
+//                 // eslint-disable-next-line no-await-in-loop
+//                 await putValue(projectId, formData[f], token).then((res) => {
+//                     console.log('\tput value res ');
+//                     console.log(res);
+//                 });
+//
+//             }
+//         }
+//     } catch (e) {
+//         console.error(e);
+//     } finally {
+//         ;
+//     }
+// };
 
-function useDmptStart(rdmoContext) {
+function useDmptStart(rdmoContext, token) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
@@ -112,7 +162,8 @@ function useDmptStart(rdmoContext) {
                         // local
                         // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
                         // prod
-                        headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+                        // headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+                        headers: { 'Authorization': `Token ${token}` }
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -135,9 +186,20 @@ function useDmptStart(rdmoContext) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
-    const {isLoggedIn} = props;
+    console.log('DMPT start ', props);
+    console.log('-----------------------------');
+    console.log('');
+    // console.log(props.match.params.projectId);
+    // console.log('-----------------------------');
+    const { isLoggedIn, userToken } = props;
     const rdmoContext = useContext(RdmoContext);
-    const [processing, stage] = useDmptStart(rdmoContext);
+
+    if (props.match.params.projectId) {
+        // console.log('ASSING PID from url match');
+        rdmoContext.assignProjectId(props.match.params.projectId);
+    }
+
+    const [processing, stage] = useDmptStart(rdmoContext, userToken);
 
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');
@@ -151,7 +213,11 @@ function DmptStart(props) {
             setSubmitOnNext(false);
         }
         if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
-            setNextText('Finish');
+            if (rdmoContext.project_id > 0) {
+                setNextText('Update DMP');
+            } else {
+                setNextText('Submit DMP');
+            }
             setSubmitOnNext(true);
         }
     };
@@ -170,8 +236,9 @@ function DmptStart(props) {
     // TODO: add to component hook
     const submitAllHandler = () => {
         let projectId = rdmoContext.project_id;
+        console.log('Submit HANDLER ', projectId);
         if (projectId < 0) {
-            createProject().then((createResult) => {
+            createProject(userToken).then((createResult) => {
                 projectId = createResult.data.id;
                 rdmoContext.assignProjectId(projectId);
                 // TODO: set project id, if available do not create a new one
@@ -179,12 +246,17 @@ function DmptStart(props) {
                 // TODO: redirect to rdmo overview
 
                 // -------------------------------------------------------------
-                postValues(projectId, rdmoContext.form_data).then((valueResult) => {
+                submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
                     console.log(valueResult);
                 }
                 );
                 // -------------------------------------------------------------
             });
+        } else {
+            submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
+                console.log(valueResult);
+            }
+            );
         }
     };
 
@@ -192,6 +264,8 @@ function DmptStart(props) {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
+        console.log('handleChange: ');
+        console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
         if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
             delete formData[e.target.name];
@@ -200,12 +274,14 @@ function DmptStart(props) {
                 ...formData,
                 // Trimming any whitespace
                 [e.target.name]: {
-                    'value': e.target.value.trim(),
+                    'value': e.target.value,  // .trim(),
                     'question': item
                 }
             });
         }
         rdmoContext.assignFormData(formData);
+        console.log('formdata in context ');
+        console.log(rdmoContext.form_data);
     };
 
     const status = (
@@ -219,6 +295,7 @@ function DmptStart(props) {
         const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
         formFields = <Questions
+            userToken={userToken}
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
@@ -234,7 +311,10 @@ function DmptStart(props) {
             <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user
                 logged in: {isLoggedIn}</small></h1>
             {status}
+            {/* <Formik> */}
+
             {formFields}
+            {/* </Formik> */}
         </div>
     );
 }
@@ -242,6 +322,8 @@ function DmptStart(props) {
 // TODO: housekeeping/delete strategy for unused/empty projects
 DmptStart.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
+    userToken: PropTypes.string.isRequired
+    // projectId: PropTypes.string,
 };
 
 export default DmptStart;

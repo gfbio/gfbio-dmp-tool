@@ -11,12 +11,9 @@ function useCatalogs() {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    // `${API_ROOT}questions/catalogs/`,   // cataloglist
                     `${API_ROOT}projects/projects/4/overview/`,   // gfbio catalog
                     {
-                        // token of super user (maweber)
-                        // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                        headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
+                        // headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
                     }
                 );
                 console.log('response');

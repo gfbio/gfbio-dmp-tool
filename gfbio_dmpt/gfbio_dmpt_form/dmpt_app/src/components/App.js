@@ -1,25 +1,12 @@
 import React, { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Route, Switch } from 'react-router-dom';
-import Welcome from './Welcome';
 import Catalogs from './Catalogs';
 import DmptStart from './DmptStart';
 import RdmoContext from './RdmoContext';
 import ProjectList from './ProjectList';
 import UserLoggedInRouter from './UserLoggedInRouter';
-
-// TODO: to work when served in django template this prefix has to match
-//  the urls.py + global urls.py entry -> currently (...) regex=r'submissions/ui/', (...)
-// TODO: use this prefix when development with django (-->  url('app/', views.DmptFrontendView.as_view()))
-// eslint-disable-next-line no-unused-vars
-const urlPrefix = '/dmpt/app/';
-
-// for updateview:
-// const urlPrefix = '/curation/submissions/form/';
-
-// TODO: use this prefix when developing with npm start
-// eslint-disable-next-line no-unused-vars
-// const urlPrefix = '/';
+import { URL_PREFIX } from '../constants/api/api_constants';
 
 const App = () => {
 
@@ -35,6 +22,8 @@ const App = () => {
     const [formData, setFormData] = useState({});
 
     const [projectId, setProjectId] = useState(-1);
+
+    const [projectValues, setProjectValues] = useState({});
 
     const assignSections = (data) => {
         setSections(data);
@@ -68,6 +57,10 @@ const App = () => {
         setProjectId(data);
     };
 
+    const assignProjectValues = (data) => {
+        setProjectValues(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         sections_index: sectionsIndex,
@@ -77,6 +70,7 @@ const App = () => {
         options_data: options,
         form_data: formData,
         project_id: projectId,
+        project_values: projectValues,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -84,20 +78,24 @@ const App = () => {
         assignQuestions,
         assignOptions,
         assignFormData,
-        assignProjectId
+        assignProjectId,
+        assignProjectValues
     };
 
     return (
         <RdmoContext.Provider value={rdmoContext}>
             <Switch>
-                <Route exact path={`${urlPrefix}`}
+                <Route exact path={`${URL_PREFIX}`}
                     component={UserLoggedInRouter} />
-                <Route path={`${urlPrefix}catalogs`} component={Catalogs} />
-                <Route path={`${urlPrefix}start`} component={DmptStart} />
-                <Route path={`${urlPrefix}projects`} component={ProjectList} />
-                {/* <Route path={`${urlPrefix}:brokerSubmissionId/`} */}
+                {/* <Route path={`${URL_PREFIX}catalogs`} component={Catalogs} /> */}
+                <Route exact path={`${URL_PREFIX}start`}
+                    component={DmptStart} />
+                <Route path={`${URL_PREFIX}start/:projectId`}
+                    component={DmptStart} />
+                <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
+                {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
                 {/*    component={SubmissionDetail}/> */}
-                {/* <Route path={`${urlPrefix}:brokerSubmissionId/`} */}
+                {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
                 {/*    component={DetailBoard}/> */}
             </Switch>
         </RdmoContext.Provider>

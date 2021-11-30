@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-
-#  from rdmo.core.utils import render_to_format
-from rdmo.projects.models import Project
-from rdmo.projects.views import ProjectAnswersView
-from rest_framework import generics, mixins, permissions
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication
-
 # jira integration
 from jira import JIRA, JIRAError
-from gfbio_dmpt.utils.dmp_export import render_to_format
-from django.http import HttpResponseRedirect
-from django.conf import settings
+from rdmo.projects.models import Project
+from rdmo.projects.views import ProjectAnswersView
+from rest_framework.authtoken.models import Token
+
+from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.jira_integration.models import Ticket
-from django.core.exceptions import ObjectDoesNotExist
+from gfbio_dmpt.users.models import User
+from gfbio_dmpt.utils.dmp_export import render_to_format
+
 
 class CSRFViewMixin(View):
     @method_decorator(ensure_csrf_cookie)
@@ -30,18 +31,32 @@ class CSRFViewMixin(View):
 #     permission_classes = (permissions.IsAuthenticated,)
 #                           # IsOwnerOrReadOnly)
 
-# React App in this template
+# DMP React App in this template
 class DmptFrontendView(CSRFViewMixin, TemplateView):
-    template_name = "gfbio_dmpt_form/dmpt.html"
+    template_name = 'gfbio_dmpt_form/dmpt.html'
 
     def get(self, request, *args, **kwargs):
-        print("DMPTFRONTENDVIEW user logged in ", request.user.is_anonymous)
-        print(request.user.is_authenticated)
+        user = self.request.user
+        if not request.user.is_authenticated:
+            # TODO: annonymous need to be/have permission:
+            #   (rdmo) group: api
+            user, created = User.objects.get_or_create(
+                username='anonymous',
+                defaults={
+                    'username': 'anonymous',
+                    'password': ANONYMOUS_PASS
+                })
+            api_group = Group.objects.get(name='api')
+            api_group.user_set.add(user)
+        token, created = Token.objects.get_or_create(user_id=user.id)
+
         context = self.get_context_data(**kwargs)
-        context["backend"] = {
-            "isLoggedIn": "{}".format(request.user.is_authenticated).lower(),
+        context['backend'] = {
+            'isLoggedIn': '{}'.format(request.user.is_authenticated).lower(),
+            'token': str(token),
         }
         return self.render_to_response(context)
+
 
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
@@ -49,6 +64,9 @@ class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
 
     def render_to_response(self, context, **response_kwargs):
+        return render_to_format(self.request, self.kwargs['format'],
+                                'dmp_export',
+                                'gfbio_dmpt_export/dmp_export.html', context)
         return render_to_format(
             self.request,
             self.kwargs["format"],
@@ -58,7 +76,7 @@ class DmpExportView(ProjectAnswersView):
         )
 
 # A user should be able to request help on a dmp. This creates a ticket in
-# Jira. 
+# Jira.
 class DmpRequestHelp(View):
 
     # TODO:  <30-11-21, claas>
@@ -73,9 +91,9 @@ class DmpRequestHelp(View):
         try:
             if project.ticket:
                 # TODO: <30-11-21, claas>
-                # we should return to the user profile instead or remove 
-                # this completely as this might hinder the use of the 
-                # view with the react frontend. 
+                # we should return to the user profile instead or remove
+                # this completely as this might hinder the use of the
+                # view with the react frontend.
                 return HttpResponseRedirect("/")
         except ObjectDoesNotExist as e:
             # TODO: <18-11-21, claas> # this needs to go to logging later
@@ -95,8 +113,8 @@ class DmpRequestHelp(View):
         catalog = project.catalog
         reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
 
-        # TODO:  <29-11-21, Claas> 
-        # we should have a handling for users not being logged in. 
+        # TODO:  <29-11-21, Claas>
+        # we should have a handling for users not being logged in.
         # The email should then be taken from the form the user fills out
         # in the dmp frontend before asking for help
         if context.user.is_authenticated:
@@ -109,7 +127,7 @@ class DmpRequestHelp(View):
                 reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
 
         try:
-            # TODO:  <29-11-21, Claas> 
+            # TODO:  <29-11-21, Claas>
             # Find the correct issue type
             if context.user.is_authenticated:
                 new_issue = jira.create_issue(
@@ -136,7 +154,7 @@ class DmpRequestHelp(View):
             print(e.text)
 
         # TODO: <30-11-21, claas>
-        # we should return to the user profile instead or remove 
-        # this completely as this might hinder the use of the 
-        # view with the react frontend. 
+        # we should return to the user profile instead or remove
+        # this completely as this might hinder the use of the
+        # view with the react frontend.
         return HttpResponseRedirect("/")
