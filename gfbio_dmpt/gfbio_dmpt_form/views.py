@@ -3,20 +3,26 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+
 #  from rdmo.core.utils import render_to_format
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework import generics, mixins, permissions
-from rest_framework.authentication import TokenAuthentication, \
-    BasicAuthentication
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 
+# jira integration
+from jira import JIRA, JIRAError
 from gfbio_dmpt.utils.dmp_export import render_to_format
+from django.http import HttpResponseRedirect
+from django.conf import settings
+from gfbio_dmpt.jira_integration.models import Ticket
+from django.core.exceptions import ObjectDoesNotExist
 
 class CSRFViewMixin(View):
-
     @method_decorator(ensure_csrf_cookie)
     def get(self, request, *args, **kwargs):
         return super().get(self, request, *args, **kwargs)
+
 
 # class DmptProjectsView(mixins.ListModelMixin,):
 #     queryset = rdmo.projects.models.Project.objects.all()
@@ -26,14 +32,14 @@ class CSRFViewMixin(View):
 
 # React App in this template
 class DmptFrontendView(CSRFViewMixin, TemplateView):
-    template_name = 'gfbio_dmpt_form/dmpt.html'
+    template_name = "gfbio_dmpt_form/dmpt.html"
 
     def get(self, request, *args, **kwargs):
-        print('DMPTFRONTENDVIEW user logged in ', request.user.is_anonymous)
+        print("DMPTFRONTENDVIEW user logged in ", request.user.is_anonymous)
         print(request.user.is_authenticated)
         context = self.get_context_data(**kwargs)
-        context['backend'] = {
-            'isLoggedIn': '{}'.format(request.user.is_authenticated).lower(),
+        context["backend"] = {
+            "isLoggedIn": "{}".format(request.user.is_authenticated).lower(),
         }
         return self.render_to_response(context)
 
@@ -43,4 +49,94 @@ class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
 
     def render_to_response(self, context, **response_kwargs):
-        return render_to_format(self.request, self.kwargs['format'], 'dmp_export', 'gfbio_dmpt_export/dmp_export.html', context)
+        return render_to_format(
+            self.request,
+            self.kwargs["format"],
+            "dmp_export",
+            "gfbio_dmpt_export/dmp_export.html",
+            context,
+        )
+
+# A user should be able to request help on a dmp. This creates a ticket in
+# Jira. 
+class DmpRequestHelp(View):
+
+    # TODO:  <30-11-21, claas>
+    # allow the user to provide some text with additional information
+    # in that dialogue he can also select services which he is interested in?
+    # this could be done in the template below. Just as an example. Or it could
+    # be done using a form in the dmp template and then just pop up as a modal.
+
+    def get(self, context, pk=None, **response_kwargs):
+
+        project = Project.objects.get(id=pk)
+        try:
+            if project.ticket:
+                # TODO: <30-11-21, claas>
+                # we should return to the user profile instead or remove 
+                # this completely as this might hinder the use of the 
+                # view with the react frontend. 
+                return HttpResponseRedirect("/")
+        except ObjectDoesNotExist as e:
+            # TODO: <18-11-21, claas> # this needs to go to logging later
+            print("A ticket does not exist:")
+            print("---------------------------")
+            print(e)
+
+        # initialize the jira client
+        jira = JIRA(
+            server = settings.JIRA_URL,
+            basic_auth=(settings.JIRA_USERNAME,
+                        settings.JIRA_PASS),
+        )
+
+        # get the title and the catalogue the user is requesting help for
+        summary = project.title
+        catalog = project.catalog
+        reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
+
+        # TODO:  <29-11-21, Claas> 
+        # we should have a handling for users not being logged in. 
+        # The email should then be taken from the form the user fills out
+        # in the dmp frontend before asking for help
+        if context.user.is_authenticated:
+            try:
+                # TODO:  <30-11-21, claas>
+                # a user should be identified by his gostern id when he is logged in and not by the
+                # email
+                reporting_user = jira.search_users(user=context.user.email)[0].name
+            except:
+                reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
+
+        try:
+            # TODO:  <29-11-21, Claas> 
+            # Find the correct issue type
+            if context.user.is_authenticated:
+                new_issue = jira.create_issue(
+                    project=settings.JIRA_PROJECT,
+                    summary=summary,
+                    description=f"Would you please be so nice and help me with my dmp named '{summary}' using the {catalog} catalog",
+                    reporter={"name": reporting_user},
+                    issuetype={"name": "Data Submission"},
+                )
+            else:
+                new_issue = jira.create_issue(
+                    project=settings.JIRA_PROJECT,
+                    summary=summary,
+                    description=f"Would you please so nice and help me with that dmp using the {catalog} catalog",
+                    issuetype={"name": "Data Submission"},
+                )
+
+            Ticket.objects.create(project = project, ticket_key = new_issue.key, ticket_id = new_issue.id)
+
+        except JIRAError as e:
+            # TODO: <18-11-21, claas> # this needs to go to logging later
+            print("The ticket creation failed:")
+            print("---------------------------")
+            print(e.text)
+
+        # TODO: <30-11-21, claas>
+        # we should return to the user profile instead or remove 
+        # this completely as this might hinder the use of the 
+        # view with the react frontend. 
+        return HttpResponseRedirect("/")

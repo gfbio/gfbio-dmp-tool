@@ -110,6 +110,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     "gfbio_dmpt.gfbio_dmpt_form.apps.GFBioDmptFormConfig",
     "gfbio_dmpt.basic_rdmo.apps.BasicRdmoConfig",
+    "gfbio_dmpt.jira_integration.apps.JiraIntegrationConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + RDMO_CORE_APPS + LOCAL_APPS
@@ -688,3 +689,10 @@ SETTINGS_EXPORT = [
     'PROJECT_QUESTIONS_AUTOSAVE',
     'NESTED_PROJECTS'
 ]
+
+# jira integration 
+JIRA_URL = env("JIRA_URL", default="http://helpdesk.gfbio.org")
+JIRA_PROJECT = env("JIRA_ENV", default = "SAND")
+JIRA_USERNAME = env("JIRA_USERNAME")
+JIRA_PASS = env("JIRA_PASS")
+JIRA_DEFAULT_REPORTER_EMAIL= env("JIRA_DEFAULT_REPORTER")
