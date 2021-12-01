@@ -194,7 +194,7 @@ function DmptStart(props) {
     const { isLoggedIn, userToken } = props;
     const rdmoContext = useContext(RdmoContext);
 
-    if (props.match.params.projectId) {
+    if (props.match && props.match.params.projectId) {
         // console.log('ASSING PID from url match');
         rdmoContext.assignProjectId(props.match.params.projectId);
     }
