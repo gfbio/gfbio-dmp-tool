@@ -1,0 +1,46 @@
+// Variables
+
+$min-width: 992px !default;
+$max-width: 991px !default;
+
+$white: #fff !default;
+$white-2: #f0f0f0 !default;
+$white-0-1: rgba(255, 255, 255, 0.04) !default;
+$white-0-4: rgba(255, 255, 255, 0.4) !default;
+$white-0-5: rgba(255, 255, 255, 0.5) !default;
+
+$standard-dark: #212529 !default;
+$gray: #818181 !default;
+$gray-dark: #666 !default;
+$gray-100: #f8f8f8 !default;
+$gray-light-1: #a3a3a3 !default;
+$gray-footer: #5c5c5c !default;
+$gray-dark-2: #495057 !default;
+$gray-darker: #343434 !default;
+$gray-darkest: #292929 !default;
+
+// gfbio colors
+$gfbio-blue: #345AA2 !default;
+$gfbio-blue-0-6: rgba(52, 90, 162, .6) !default;
+$gfbio-blue-0-8: rgba(52, 90, 162, 0.8) !default;
+$gfbio-blue-0-8-fulltone: #476aab !default;
+$gfbio-blue-0-1: rgba(52, 90, 162, .1) !default;
+
+$gfbio-light-blue: #3CACE4 !default;
+$gfbio-light-blue-0-8: rgba(60, 172, 228, .8) !default;
+$gfbio-light-blue-0-6: rgba(60, 172, 228, .6) !default;
+$gfbio-light-blue-0-1: rgba(60, 172, 228, .1) !default;
+
+$gfbio-green: #81B248 !default;
+$gfbio-green-0-9: rgba(129, 178, 72, .9) !default;
+$gfbio-green-0-8: rgba(129, 178, 72, .8) !default;
+$gfbio-green-0-7: rgba(129, 178, 72, .7) !default;
+$gfbio-green-0-6: rgba(129, 178, 72, .6) !default;
+$gfbio-green-0-3: rgba(129, 178, 72, .3) !default;
+$gfbio-green-0-1: rgba(129, 178, 72, .1) !default;
+
+$primary: $gfbio-green !default;
+
+$contrast-1: #FF8362 !default;
+$contrast-2: #FF6339 !default;
+$error-red: #dc3545 !default;

@@ -1,0 +1,132 @@
+
+input, textarea {
+
+  color: $gray;
+  font-size: .9rem;
+
+  &::placeholder {
+    color: $gray-light-1 !important;
+    font-size: 0.85rem;
+  }
+
+  &:focus {
+    border-color: $gfbio-green-0-7;
+    box-shadow: 0 0 0 0.2rem $gfbio-green-0-3;
+    outline-color: $gfbio-green-0-7;
+  }
+
+}
+
+textarea {
+}
+
+
+.btn-green {
+
+  @include sans-serif-font-2;
+  font-weight: 500;
+
+  border-color: darken($gfbio-green, .2);
+  background-color: $gfbio-green;
+  color: $white !important;
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:hover, &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    &:focus {
+      box-shadow: none;
+    }
+
+    border-color: darken($gfbio-green, .2);
+    background-color: $white;
+    color: $gfbio-green !important;
+    box-shadow: none;
+  }
+
+  i {
+    margin-right: .75rem;
+  }
+}
+
+// works on btn-secondary
+//.red {
+//  border-color: darken($error-red, .2);
+//  background-color: $error-red;
+//  color: $white !important;
+//
+//  &:focus {
+//    box-shadow: none;
+//  }
+//
+//  &:hover, &:not(:disabled):not(.disabled):active,
+//  &:not(:disabled):not(.disabled).active {
+//    &:focus {
+//      box-shadow: none;
+//    }
+//
+//    border-color: darken($error-red, .2);
+//    background-color: $white;
+//    color: $error-red !important;
+//    box-shadow: none;
+//  }
+//
+//  i {
+//    margin-right: .75rem;
+//  }
+//}
+//
+//.btn-red-inverted {
+//  border-color: darken($error-red, .2);
+//  background-color: $white;
+//  color: $error-red !important;
+//
+//  &:hover, &:not(:disabled):not(.disabled):active,
+//  &:not(:disabled):not(.disabled).active {
+//    &:focus {
+//      box-shadow: none;
+//    }
+//
+//    border-color: darken($error-red, .2);
+//    background-color: $error-red;
+//    color: $white !important;
+//    box-shadow: none;
+//  }
+//
+//  &:focus {
+//    box-shadow: none;
+//  }
+//
+//  &:hover {
+//    background-color: $error-red;
+//    color: $white !important;
+//  }
+//}
+
+
+label {
+  margin-bottom: .5rem;
+  a {
+    color: $gfbio-green !important;
+    @include transition-all;
+
+    &:hover {
+      color: $gfbio-blue-0-8 !important;
+    }
+  }
+}
+
+//.col-form-label {
+//  // @include raleway;
+//  font-size: .9rem;
+//}
+
+
+.boxed {
+  padding: 2rem;
+  background-color: $white;
+  border: 1px solid $gray-light-1;
+  border-radius: .25rem;
+}

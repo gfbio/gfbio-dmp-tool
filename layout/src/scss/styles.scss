@@ -1,0 +1,24 @@
+// Import custom variables
+@import "./variables.scss";
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap.scss";
+
+// Override default Bootstrap variables
+@import "bootstrap-overrides.scss";
+
+@import "./mixins.scss";
+
+// Import custom utilities
+//@import "./utilities.scss";
+
+// Import custom styles
+@import "./global.scss";
+@import "./responsive.scss";
+//@import "./navbar.scss";
+//@import "./landing.scss";
+@import "./footer.scss";
+@import "./forms.scss";
+//@import "./content.scss";
+//@import "./accounts.scss";
+

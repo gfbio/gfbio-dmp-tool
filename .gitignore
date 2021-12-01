@@ -114,7 +114,9 @@ build/Release
 
 # Dependency directories
 node_modules/
+*/node_modules/
 jspm_packages/
+stats.json
 
 # Typescript v1 declaration files
 typings/
@@ -171,6 +173,16 @@ typings/
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
+.idea/inspectionProfiles
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/**/gfbio_portal_update.iml
+**/.idea/**/misc.xml
+**/.idea/**/modules.xml
+**/.idea/**/vcs.xml
+**/.idea/**/userinterface.iml
+
+userinterface/.idea/workspace.xml
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -190,7 +202,7 @@ cmake-build-debug/
 
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
-
+.idea/
 ## File-based project format:
 *.iws
 
@@ -330,3 +342,6 @@ testing_cms/media/
 .env
 .envs/*
 !.envs/.local/
+
+layout/material/
+/layout/package-lock.json

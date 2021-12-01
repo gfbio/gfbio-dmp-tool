@@ -12,6 +12,10 @@ docker-compose -f production.yml run --rm django python manage.py setup_groups
         Group "reviewer" created
         Group "api" created
 
+## layout
+
+- npm install
+
 
 # RDMO setup
 
