@@ -100,7 +100,7 @@ TEMPLATES[-1]["OPTIONS"]["loaders"] = [  # type: ignore[index] # noqa F405
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="GFBio DMPT <noreply@dmp.gfbio.dev>"
+    "DJANGO_DEFAULT_FROM_EMAIL", default="GFBio DMPT <noreply@gfbio.org>"
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
@@ -111,7 +111,7 @@ EMAIL_SUBJECT_PREFIX = env(
 )
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'mail.sd-datasolutions.de'
-EMAIL_HOST_USER = 'gfbio-services'
+EMAIL_HOST_USER = 'gfbio-mailout'
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 
