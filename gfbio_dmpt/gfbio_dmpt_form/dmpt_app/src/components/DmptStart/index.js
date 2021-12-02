@@ -303,10 +303,10 @@ function DmptStart(props) {
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
-                onClickHandler={nextHandler} />}
+                onClickHandler={nextHandler} align="right"/>}
 
             prevSection={<ActionButton text={prevText}
-                onClickHandler={prevSectionHandler} />}
+                onClickHandler={prevSectionHandler} align="left" />}
         />;
 
         header = 'Data Management Plan';
