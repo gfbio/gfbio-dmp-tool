@@ -51,63 +51,10 @@ textarea {
   }
 }
 
-// works on btn-secondary
-//.red {
-//  border-color: darken($error-red, .2);
-//  background-color: $error-red;
-//  color: $white !important;
-//
-//  &:focus {
-//    box-shadow: none;
-//  }
-//
-//  &:hover, &:not(:disabled):not(.disabled):active,
-//  &:not(:disabled):not(.disabled).active {
-//    &:focus {
-//      box-shadow: none;
-//    }
-//
-//    border-color: darken($error-red, .2);
-//    background-color: $white;
-//    color: $error-red !important;
-//    box-shadow: none;
-//  }
-//
-//  i {
-//    margin-right: .75rem;
-//  }
-//}
-//
-//.btn-red-inverted {
-//  border-color: darken($error-red, .2);
-//  background-color: $white;
-//  color: $error-red !important;
-//
-//  &:hover, &:not(:disabled):not(.disabled):active,
-//  &:not(:disabled):not(.disabled).active {
-//    &:focus {
-//      box-shadow: none;
-//    }
-//
-//    border-color: darken($error-red, .2);
-//    background-color: $error-red;
-//    color: $white !important;
-//    box-shadow: none;
-//  }
-//
-//  &:focus {
-//    box-shadow: none;
-//  }
-//
-//  &:hover {
-//    background-color: $error-red;
-//    color: $white !important;
-//  }
-//}
-
 
 label {
   margin-bottom: .5rem;
+
   a {
     color: $gfbio-green !important;
     @include transition-all;
@@ -118,15 +65,39 @@ label {
   }
 }
 
-//.col-form-label {
-//  // @include raleway;
-//  font-size: .9rem;
-//}
-
 
 .boxed {
   padding: 2rem;
   background-color: $white;
   border: 1px solid $gray-light-1;
   border-radius: .25rem;
+}
+
+
+div#projectDetail {
+
+  h5 {
+    color: $gray-dark-2;
+    letter-spacing: normal;
+    text-transform: none;
+    margin-bottom: .5rem;
+    padding-bottom: .4rem;
+  }
+
+  small {
+    margin-bottom: .5rem;
+    color: $gfbio-light-blue !important;
+  }
+
+  .form-group {
+    margin: 1rem 0 2rem 0;
+    border: 1px solid $gfbio-light-blue-0-6;
+    border-radius: .5rem;
+    padding: 1rem;
+    background-color: $gfbio-light-blue-0-05;
+
+    label {
+      width: 100%;
+    }
+  }
 }

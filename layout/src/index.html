@@ -1,11 +1,415 @@
-<!DOCTYPE html>
+{% load static i18n %}<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{% block title %}GFBio | German Federation for Biological
+    Data{% endblock title %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+        content="Presenting general information about the DFG funded project GFBio, along with links and dedicated information and training material regarding all services provided by GFBio.">
+  <meta name="author" content="GFBio e.V.">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <![endif]-->
+
+  <link rel="icon" href="{% static 'assets/img/favicons/favicon.ico' %}">
+
+  {% block css %}
+
+  <!-- Your stuff: Third-party CSS libraries go here -->
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,700;0,800;1,300;1,400;1,600;1,700;1,800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@200;300;400;500;600;700;800;900&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+  <!--Material Icon -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.9.55/css/materialdesignicons.min.css"
+        integrity="sha512-vIgFb4o1CL8iMGoIF7cYiEVFrel13k/BkTGvs0hGfVnlbV6XjAA0M0oEHdWqGdAVRTDID3vIZPOHmKdrMAUChA=="
+        crossorigin="anonymous"/>
+
+  <!-- Pe Icon  css -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css"
+        integrity="sha256-AJfZWudfDWpFpIZ3USExGYDGwsYz47IgfEQCiGTm4wQ="
+        crossorigin="anonymous">
+
+  <!-- FontAwesome 5.15.3 -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous"/>
+
+  <!-- Linea Icons -->
+  <link href="https://cdn.lineicons.com/2.0/LineIcons.css"
+        rel="stylesheet">
+
+  <!-- This file stores project-specific CSS -->
+  <link href="{% static 'css/project.css' %}" rel="stylesheet">
+
+  {% endblock %}
+  <!-- Le javascript
+  ================================================== -->
+  {# Placed at the top of the document so pages load faster with defer #}
+  {% block javascript %}
+
+  <!-- Bootstrap JS and its dependencies-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+          crossorigin="anonymous"></script>
+
+  <!-- Your stuff: Third-party javascript libraries go here -->
+
+
+  <!-- place project specific Javascript in this file -->
+  <script defer src="{% static 'js/project.js' %}"></script>
+
+
+  {% endblock javascript %}
+
 </head>
+
 <body>
-<h1>test</h1>
+
+<!-- ======= Navigation ======= -->
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-shrink navbar-shrink-content"
+     id="mainNavContent">
+  <div class="container">
+    <a class="navbar-brand " href="/">
+      <h1></h1>
+    </a>
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-lg-flex flex-lg-row-reverse"
+         id="navbarResponsive">
+
+      <ul class="navbar-nav ml-auto">
+
+        {% url 'home' as url %}
+        <li class="nav-item {% if request.path == url %}active{% endif %}">
+          <a class="nav-link" href="{{ url }}">Home</a>
+        </li>
+
+        {% url 'about' as url %}
+        <li class="nav-item {% if request.path == url %}active{% endif %}">
+          <a class="nav-link" href="{{ url }}">About</a>
+        </li>
+
+        {% url 'home_rdmo' as url %}
+        <li class="nav-item {% if request.path == url %}active{% endif %}">
+          <a class="nav-link" href="{{ url }}">RDMO</a>
+        </li>
+
+        <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
+          <a class="nav-link" href="/dmpt/app/">DMP App</a>
+        </li>
+
+        {% if request.user.is_authenticated %}
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#"
+             id="userDropdown"
+             role="button" data-bs-toggle="dropdown"
+             aria-expanded="false">
+            {% if request.user.name != '' %}
+            {{ request.user.name }}
+            {% else %}
+            {{ request.user.username }}
+            {% endif %}
+            <i class="mdi mdi-chevron-down"></i>
+          </a>
+          <ul class="dropdown-menu mt-3"
+              aria-labelledby="userDropdown">
+            {# URL provided by django-allauth/account/urls.py #}
+            <li><a class="dropdown-item"
+                   href="{% url 'account_logout' %}">Sign
+              Out</a>
+          </ul>
+        </li>
+
+        {% else %}
+        <li class="nav-item">
+          {# URL provided by django-allauth/account/urls.py #}
+          <a class="nav-link"
+             href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
+             {#                               href="{% url 'account_signup' %}"#}
+          >
+            Sign Up
+          </a>
+        </li>
+        <li class="nav-item">
+          {# URL provided by django-allauth/account/urls.py #}
+          <a class="nav-link"
+             href="{% url 'account_login' %}">
+            Sign In
+          </a>
+        </li>
+        {% endif %}
+
+
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock navigation %}
+<!-- ======= End Navigation ======= -->
+
+
+{% block content-wrapper %}
+<!-- ======= Messages ======= -->
+{% if messages %}
+<div class="container">
+  {% for message in messages %}
+  {#                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}#}
+  {#                    <button type="button" class="close"#}
+                                {#                            data-dismiss="alert"#}
+                                {#                            aria-label="Close"><span#}
+    {#                            aria-hidden="true">&times;</span></button>#}
+  {#                </div>#}
+
+
+  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show"
+       role="alert">
+    {{ message }}
+    <button type="button" class="btn-close"
+            data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  {% endfor %}
+</div>
+{% endif %}
+<!-- ======= End Messages ======= -->
+
+{% block main-section %}
+
+<section class="compensate-nav content">
+  <div class="container">
+
+    {% block content %}
+    <div class="row">
+      <div class="col-12">
+        <p>Nothing to see here currently ...</p>
+      </div>
+    </div>
+    {% endblock content %}
+
+  </div>
+</section>
+{#  min-height is used to push footer to bottom if lack of content.  #}
+{#        <section class="min-height"></section>#}
+
+{% endblock main-section %}
+
+{% endblock content-wrapper %}
+
+
+
+
+
+<!-- ======= Footer ======= -->
+{% block footer %}
+<footer class="footer text-center">
+
+  <!-- Footer top row -->
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+        <div class="border-right pe-2">
+          <h3>GFBio Consortium</h3>
+          <p>
+            The German Federation for Biological Data (GFBio), a
+            sustainable,
+            service oriented,
+            national data infrastructure facilitating data
+            sharing
+            for
+            biological
+            and environmental research.
+          </p>
+        </div>
+        <div class="mt-2">
+          <a href="">
+            <img src="{% static 'assets/img/dfg_logo_schriftzug_weiss_foerderung_en.gif' %}"
+                 width="300">
+          </a>
+        </div>
+      </div>
+
+      <div class="col-8">
+        <div class="row">
+          <div class="col-4 d-inline-block h-100 border-right">
+            <i class="mdi mdi-signal"></i>
+            <h4>Want to know more ?</h4>
+            <ul class="list-group">
+              <a class="list-group-item list-group-item-action"
+                 href="#">Training</a>
+              <a class="list-group-item list-group-item-action"
+                 href="#">FAQ's</a>
+            </ul>
+          </div>
+
+          <div class="col-4 d-inline-block h-100 border-right">
+            <i class="mdi mdi-email-edit-outline"></i>
+            <h4>Got Questions ?</h4>
+            <ul class="list-group">
+              <a class="list-group-item list-group-item-action"
+                 href="http://helpdesk.gfbio.org/servicedesk/customer/portal/2/group/9">Contact
+                Us !</a>
+            </ul>
+          </div>
+
+          <div class="col-4 d-inline-block h-100">
+            <i class="mdi mdi-login"></i>
+            <h4>Sign up !</h4>
+            <p>
+              Get full access to services and resources
+              deriving
+              benefit for
+              your Projects
+            </p>
+            <br>
+            <p>
+              <a href="#" class="btn btn-primary btn-footer">Create
+                an account
+                !</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- end Footer top row -->
+
+  <!-- Footer middle row -->
+  <div class="container">
+    <div class="row mid-row">
+      <div class="col-3 mid-row-item">
+        <i class="mdi mdi-pencil-ruler"></i>
+        <h5>
+          Plan
+        </h5>
+        <p>
+          Prepare a custom Data Management Plan (DMP).
+        </p>
+        <a class="stretched-link" href="/plan"></a>
+      </div>
+
+      <div class="col-3 mid-row-item">
+        <i class="mdi mdi-upload"></i>
+        <h5>
+          Submit
+        </h5>
+        <p>
+          Submit your data to GFBio.
+        </p>
+        <a class="stretched-link" href="/submit"></a>
+      </div>
+
+      <div class="col-3 mid-row-item">
+        <i class="mdi mdi-magnify"></i>
+        <h5>
+          Search
+        </h5>
+        <p>
+          Search the GFBio data pool.
+        </p>
+        <a class="stretched-link" href="/search"></a>
+      </div>
+
+      <div class="col-3 mid-row-item">
+        <i class="mdi mdi-map-plus"></i>
+        <h5>
+          Visualize &amp; Analyze
+        </h5>
+        <p>
+          Dynamically integrate, analyze and
+          visualize GFBio datasets.
+        </p>
+        <a class="stretched-link" href="/visualize"></a>
+      </div>
+    </div>
+  </div>
+  <!-- end Footer middle row -->
+
+  <!-- Footer bottom row -->
+  <div class="container-fluid bottom-row">
+    <div class="container">
+      <div class="row pb-1 pt-1">
+
+        <div class="col-8 d-flex align-items-center">
+          <ul class="list-group list-group-horizontal align-middle">
+            <li class="list-group-item">
+              <a href="/">Terms of use</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/">Legal Notice</a>
+            </li>
+            <li class="list-group-item">
+              <a href="/">Privacy Policy</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-4">
+          <ul class="list-group list-group-horizontal float-end">
+            <li class="list-group-item">
+              <a href="mailto:helpdesk@gfbio.org">
+                <i class="fas fa-envelope"></i>
+              </a>
+            </li>
+            <li class="list-group-item">
+              <a
+                href="https://twitter.com/intent/follow?original_referer=http%3A%2F%2Fwww.gfbio.org%2F&ref_src=twsrc%5Etfw&region=follow_link&screen_name=GFBio_Project&tw_p=followbutton">
+                <i class="fab fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-group-item">
+              <a href="https://github.com/gfbio">
+                <i class="fab fa-github"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end Footer middle row -->
+
+</footer>
+{% endblock footer %}
+<!-- ======= End Footer ======= -->
+
+{% block modal %}{% endblock modal %}
+
+
+<!-- ====== preloader ====== -->
+<div id="preloader"></div>
+<!-- ====== end preloader ====== -->
+
+<!-- ====== back-to-top button ====== -->
+<a id="scrollToTop" href="#"
+   class="back-to-top invisible d-flex align-items-center justify-content-center">
+  <i class="mdi mdi-chevron-triple-up"></i>
+</a>
+<!-- ====== end back-to-top button ====== -->
+
+{% block thirdPartyJavaScript %}
+{% endblock thirdPartyJavaScript %}
+
+{% block inline_javascript %}
+{# Script tags with only code, no src (defer by default) #}
+{% endblock inline_javascript %}
 
 </body>
 </html>
+

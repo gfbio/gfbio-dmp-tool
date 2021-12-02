@@ -11295,7 +11295,7 @@ font-family: 'Rubik', sans-serif;
 */
 /* -------------------------------------------------------------------------- */
 body, html {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   overflow-x: hidden;
   color: #666;
 }
@@ -11687,14 +11687,14 @@ section#twitter h3, section#twitter .h3 {
 	Footer
 ==============================================================*/
 footer {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   background-color: rgba(52, 90, 162, 0.8);
   color: #fff;
   font-weight: 300;
   padding-top: 3rem;
 }
 footer h3, footer .h3, footer h4, footer .h4 {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-weight: 300;
 }
 footer h3, footer .h3 {
@@ -11878,6 +11878,28 @@ label a:hover {
   border-radius: 0.25rem;
 }
 
+div#projectDetail h5, div#projectDetail .h5 {
+  color: #495057;
+  letter-spacing: normal;
+  text-transform: none;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
+}
+div#projectDetail small, div#projectDetail .small {
+  margin-bottom: 0.5rem;
+  color: #3CACE4 !important;
+}
+div#projectDetail .form-group {
+  margin: 1rem 0 2rem 0;
+  border: 1px solid rgba(60, 172, 228, 0.6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: rgba(60, 172, 228, 0.03);
+}
+div#projectDetail .form-group label {
+  width: 100%;
+}
+
 section.page-title {
   background-color: #f8f8f8;
 }
@@ -11983,7 +12005,7 @@ section.content h4, section.content .h4 {
   color: #212529;
 }
 section.content h5, section.content .h5 {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   text-transform: uppercase;
   font-size: 1rem;
   font-weight: 400;
