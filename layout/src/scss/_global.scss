@@ -1,0 +1,47 @@
+body, html {
+  @include sans-serif-font;
+  overflow-x: hidden;
+  color: $gray-dark;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include header-sans-serif-font;
+}
+
+a {
+  color: $primary;
+  @include transition-all;
+
+  &:hover {
+    color: darken($primary, .1);
+  }
+
+  text-decoration: none !important;
+  outline: none;
+}
+
+//.row > * {
+//  position: relative;
+//}
+
+//.section {
+//  padding-top: 5rem;
+//  padding-bottom: 80px;
+//  position: relative;
+//}
+
+section {
+  padding: 4rem 0;
+}
+
+.font-secondary {
+  @include header-sans-serif-font;
+}
+
+.compensate-nav {
+  margin-top: 70px;
+}
+
+.min-height {
+  min-height: 97vh;
+}

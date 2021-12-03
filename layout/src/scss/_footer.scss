@@ -1,0 +1,181 @@
+/*============================================================
+	Footer
+==============================================================*/
+
+
+footer {
+  @include sans-serif-font;
+  background-color: $gfbio-blue-0-8;
+  color: $white;
+  font-weight: 300;
+  padding-top: 3rem;
+
+  h3, h4 {
+    @include sans-serif-font;
+    font-weight: 300;
+  }
+
+  h3 {
+    margin-bottom: 0.65rem;
+    font-size: 1.8em;
+  }
+
+  h4 {
+    font-size: 1.2em;
+  }
+
+  h5 {
+    font-size: 1.2em;
+    padding-left: 3.4rem;
+    padding-top: 0.75rem;
+    text-align: left;
+  }
+
+  a {
+    background-color: transparent;
+    color: $white;
+  }
+
+  a.list-group-item {
+    border: 0;
+    font-weight: bold;
+    padding: 0.5rem 0 0 0;
+    background-color: transparent;
+    color: $white;
+
+
+    &:hover, &:active, &:focus {
+      background-color: transparent;
+      color: inherit;
+    }
+
+    &:hover {
+      font-weight: bolder;
+      font-size: 1.05rem;
+    }
+  }
+
+  i {
+    font-size: 2em !important;
+    padding-bottom: 0.65rem;
+  }
+
+  div.mid-row {
+    border-top: 1px dotted $white-0-4;
+    padding: 1.8rem 0;
+
+    .mid-row-item {
+      position: relative;
+      @include transition-all;
+
+      a {
+
+        &:hover {
+
+          &::after {
+            border-radius: 0.25rem;
+            background-color: $white-0-1;
+          }
+        }
+      }
+    }
+
+    i {
+      font-size: 2.4em !important;
+      float: left;
+      color: $white-0-5;
+    }
+
+    p {
+      text-align: left;
+      padding-left: 3.4rem;
+      font-size: 0.9rem;
+    }
+
+  }
+
+
+  .border-right {
+    border-right: 1px solid $white-0-4;
+  }
+
+  .btn-footer {
+    border-radius: 0.25rem;
+    margin-bottom: 4rem;
+    border: 1px solid $white;
+    background-color: transparent;
+    color: $white;
+    font-size: 0.875em;
+
+
+    &:hover, &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active, &:focus {
+      &:focus {
+        box-shadow: none;
+      }
+
+      border-color: darken($gfbio-blue, .2);
+      background-color: $white;
+      color: $gfbio-blue !important;
+      box-shadow: none;
+    }
+
+  }
+
+  div.bottom-row {
+    background-color: $gray-footer;
+
+    ul {
+      li {
+        border-color: transparent;
+        background-color: transparent;
+
+        a {
+          color: $gray-light-1;
+          font-weight: 400;
+          text-transform: uppercase;
+          //padding: 0.7rem 1rem 0.7rem 1rem;
+
+          i {
+            padding: 0;
+          }
+
+          &:hover {
+            color: $white;
+          }
+        }
+      }
+    }
+
+  }
+
+
+}
+
+.visible {
+  display: block;
+}
+
+.invisible {
+  display: none;
+}
+
+.back-to-top {
+  //display: none;
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+
+  padding: 0 .5rem;
+  border: 1px solid $gfbio-green-0-8;
+  border-radius: .4rem;
+
+  i {
+    font-size: 1.8rem;
+  }
+
+  background-color: $white;
+
+
+}
+
