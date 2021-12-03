@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Route, Switch } from 'react-router-dom';
-import Catalogs from './Catalogs';
 import DmptStart from './DmptStart';
 import RdmoContext from './RdmoContext';
 import ProjectList from './ProjectList';

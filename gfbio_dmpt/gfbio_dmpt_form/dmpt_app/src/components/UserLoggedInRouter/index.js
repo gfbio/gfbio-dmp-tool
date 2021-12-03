@@ -17,7 +17,7 @@ function UserLoggedInRouter() {
     if (backend.isLoggedIn === 'false') {
         return (
             <DmptStart isLoggedIn={backend.isLoggedIn}
-            userToken={backend.token} />);
+                userToken={backend.token} />);
     }
     return (
         <ProjectList />

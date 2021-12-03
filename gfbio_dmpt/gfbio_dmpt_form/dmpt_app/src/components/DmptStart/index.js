@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
+import { Redirect } from 'react-router-dom';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
@@ -196,6 +197,8 @@ function DmptStart(props) {
     const { isLoggedIn, userToken } = props;
     const rdmoContext = useContext(RdmoContext);
 
+    const [submitted, setSubmitted] = useState(false);
+
     if (props.match && props.match.params.projectId) {
         // console.log('ASSING PID from url match');
         rdmoContext.assignProjectId(props.match.params.projectId);
@@ -248,15 +251,18 @@ function DmptStart(props) {
                 // TODO: redirect to rdmo overview
 
                 // -------------------------------------------------------------
-                submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
-                    console.log(valueResult);
-                }
-                );
+                submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
+                    console.log('Submit handler values result ');
+                    // console.log(valueResult);
+                    // return valueResult;
+                    setSubmitted(true);
+                });
                 // -------------------------------------------------------------
             });
         } else {
-            submitValues(projectId, rdmoContext.form_data, userToken).then((valueResult) => {
-                console.log(valueResult);
+            submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
+                // console.log(valueResult);
+                setSubmitted(true);
             }
             );
         }
@@ -286,32 +292,36 @@ function DmptStart(props) {
         console.log(rdmoContext.form_data);
     };
 
-    const status = (
-        <div>
-            <h2><i>{stage}</i></h2>
-        </div>
-    );
+    //     <div>
+    //         <h2><i>{stage}</i></h2>
+    //     </div>
+    // );
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 
     if (!processing) {
 
-        const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+        // FIXME: for testing submit summary, only submitHandler is active
+        // const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+        const nextHandler = submitAllHandler;
 
         formFields = <Questions
             userToken={userToken}
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
-                onClickHandler={nextHandler} align="right"/>}
+                onClickHandler={nextHandler}
+                align='right' />}
 
             prevSection={<ActionButton text={prevText}
-                onClickHandler={prevSectionHandler} align="left" />}
+                onClickHandler={prevSectionHandler}
+                align='left' />}
         />;
 
         header = 'Data Management Plan';
     }
 
+    console.log('--- before return ', processing, '  | submitted ', submitted, ' return now. ...');
     if (processing) {
         return (
             <Row>
@@ -323,6 +333,10 @@ function DmptStart(props) {
         );
     }
 
+    if (submitted) {
+        return <Redirect push to='/somewhere/else' />;
+    }
+
     return (
         <div id='projectDetail'>
             <Row>
@@ -330,7 +344,7 @@ function DmptStart(props) {
                     <h3>{header}</h3>
                 </Col>
             </Row>
-            <Row className="mt-3">
+            <Row className='mt-3'>
                 <Col lg={12}>
                     {formFields}
                 </Col>
