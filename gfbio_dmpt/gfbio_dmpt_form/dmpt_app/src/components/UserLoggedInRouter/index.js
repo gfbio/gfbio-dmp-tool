@@ -15,7 +15,8 @@ function UserLoggedInRouter() {
     console.log('backend context:');
     console.log(backend);
     if (backend.isLoggedIn === 'false') {
-        return (<DmptStart isLoggedIn={backend.isLoggedIn}
+        return (
+            <DmptStart isLoggedIn={backend.isLoggedIn}
             userToken={backend.token} />);
     }
     return (

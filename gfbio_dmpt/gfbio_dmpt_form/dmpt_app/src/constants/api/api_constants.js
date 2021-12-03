@@ -16,4 +16,7 @@ export const API_ROOT = '/api/v1/';
 // const urlPrefix = '/';
 
 export const URL_PREFIX = '/dmp/create/';
+// TODO: use this prefix when using  the from django views.
+//  this applies to production and local environments.
+// export const URL_PREFIX = '/dmpt/app/';
 
