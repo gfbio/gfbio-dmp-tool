@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+
 # jira integration
 from jira import JIRA, JIRAError
 from rdmo.projects.models import Project
@@ -33,7 +34,7 @@ class CSRFViewMixin(View):
 
 # DMP React App in this template
 class DmptFrontendView(CSRFViewMixin, TemplateView):
-    template_name = 'gfbio_dmpt_form/dmpt.html'
+    template_name = "gfbio_dmpt_form/dmpt.html"
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
@@ -41,19 +42,17 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
             user, created = User.objects.get_or_create(
-                username='anonymous',
-                defaults={
-                    'username': 'anonymous',
-                    'password': ANONYMOUS_PASS
-                })
-            api_group = Group.objects.get(name='api')
+                username="anonymous",
+                defaults={"username": "anonymous", "password": ANONYMOUS_PASS},
+            )
+            api_group = Group.objects.get(name="api")
             api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
 
         context = self.get_context_data(**kwargs)
-        context['backend'] = {
-            'isLoggedIn': '{}'.format(request.user.is_authenticated).lower(),
-            'token': str(token),
+        context["backend"] = {
+            "isLoggedIn": "{}".format(request.user.is_authenticated).lower(),
+            "token": str(token),
         }
         return self.render_to_response(context)
 
@@ -64,9 +63,6 @@ class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
 
     def render_to_response(self, context, **response_kwargs):
-        return render_to_format(self.request, self.kwargs['format'],
-                                'dmp_export',
-                                'gfbio_dmpt_export/dmp_export.html', context)
         return render_to_format(
             self.request,
             self.kwargs["format"],
@@ -74,6 +70,7 @@ class DmpExportView(ProjectAnswersView):
             "gfbio_dmpt_export/dmp_export.html",
             context,
         )
+
 
 # A user should be able to request help on a dmp. This creates a ticket in
 # Jira.
@@ -103,15 +100,16 @@ class DmpRequestHelp(View):
 
         # initialize the jira client
         jira = JIRA(
-            server = settings.JIRA_URL,
-            basic_auth=(settings.JIRA_USERNAME,
-                        settings.JIRA_PASS),
+            server=settings.JIRA_URL,
+            basic_auth=(settings.JIRA_USERNAME, settings.JIRA_PASS),
         )
 
         # get the title and the catalogue the user is requesting help for
         summary = project.title
         catalog = project.catalog
-        reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
+        reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
+            0
+        ].name
 
         # TODO:  <29-11-21, Claas>
         # we should have a handling for users not being logged in.
@@ -124,7 +122,9 @@ class DmpRequestHelp(View):
                 # email
                 reporting_user = jira.search_users(user=context.user.email)[0].name
             except:
-                reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[0].name
+                reporting_user = jira.search_users(
+                    user=settings.JIRA_DEFAULT_REPORTER_EMAIL
+                )[0].name
 
         try:
             # TODO:  <29-11-21, Claas>
@@ -145,7 +145,9 @@ class DmpRequestHelp(View):
                     issuetype={"name": "Data Submission"},
                 )
 
-            Ticket.objects.create(project = project, ticket_key = new_issue.key, ticket_id = new_issue.id)
+            Ticket.objects.create(
+                project=project, ticket_key=new_issue.key, ticket_id=new_issue.id
+            )
 
         except JIRAError as e:
             # TODO: <18-11-21, claas> # this needs to go to logging later
