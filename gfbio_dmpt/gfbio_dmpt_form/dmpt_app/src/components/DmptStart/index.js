@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
+import { Col, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
@@ -290,6 +292,8 @@ function DmptStart(props) {
         </div>
     );
     let formFields = <></>;
+    let header = 'Preparing Data Management Plan form fields';
+
     if (!processing) {
 
         const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
@@ -299,22 +303,41 @@ function DmptStart(props) {
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
-                onClickHandler={nextHandler} />}
+                onClickHandler={nextHandler} align="right"/>}
 
             prevSection={<ActionButton text={prevText}
-                onClickHandler={prevSectionHandler} />}
+                onClickHandler={prevSectionHandler} align="left" />}
         />;
 
+        header = 'Data Management Plan';
     }
-    return (
-        <div>
-            <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user
-                logged in: {isLoggedIn}</small></h1>
-            {status}
-            {/* <Formik> */}
 
-            {formFields}
-            {/* </Formik> */}
+    if (processing) {
+        return (
+            <Row>
+                <Col lg={12}>
+                    <SolarSystemLoading color='#345AA2' size='large'
+                        speed={8}>Loading</SolarSystemLoading>
+                </Col>
+            </Row>
+        );
+    }
+
+    return (
+        <div id='projectDetail'>
+            <Row>
+                <Col lg={12}>
+                    <h3>{header}</h3>
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col lg={12}>
+                    {formFields}
+                </Col>
+            </Row>
+            {/* <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user */}
+            {/*    logged in: {isLoggedIn}</small></h1> */}
+
         </div>
     );
 }

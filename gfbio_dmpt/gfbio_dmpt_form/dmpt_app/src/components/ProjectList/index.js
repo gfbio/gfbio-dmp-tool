@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
 import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
 
 function useProjectList() {
@@ -46,21 +48,54 @@ function ProjectList() {
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {
-            return (<Link id={index}
-                          to={`${URL_PREFIX}start/${item.id}`}>{item.title}</Link>);
+            return (
+                <ListGroupItem>
+                    <Link id={index}
+                        to={`${URL_PREFIX}start/${item.id}`}>{item.title}
+                    </Link>
+                </ListGroupItem>
+            );
         });
     }
 
+    if (loading) {
+        return (
+            <div id='projectList'>
+                <Row>
+                    <Col lg={12}>
+                        <SolarSystemLoading color='#81B248' size='large'
+                            speed={8}>Loading</SolarSystemLoading>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+
     return (
-        <div>
-            <div>
-                <a href={`${URL_PREFIX}start`}><h3>Create new DMP</h3></a>
-            </div>
-            <div>
-                <h2>Project List</h2>
-                <p>loading: {`${loading}`}</p>
-                <ul>{projects}</ul>
-            </div>
+        <div id='projectList'>
+
+            <Row >
+                <Col lg={12}>
+                    <h3>Start a new Data Management Plan</h3>
+                </Col>
+            </Row>
+
+            <Row className='mt-5'>
+                <Col lg={12}>
+                    <a href={`${URL_PREFIX}start`}>
+                        <i className="mdi mdi-text-box-plus-outline" />
+                        Create new DMP</a>
+                </Col>
+            </Row>
+
+            <Row className='mt-5'>
+                <Col lg={12}>
+                    <h3>Your data management plans</h3>
+                    <ListGroup variant='flush'>{projects}</ListGroup>
+                </Col>
+            </Row>
+
+
 
         </div>
     );

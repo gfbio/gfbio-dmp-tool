@@ -11,8 +11,7 @@ function FormCheckBox(props) {
     if (rdmoContext.form_data[item.key] !== undefined) {
         // console.log('item key in formdata. key  ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
         val = rdmoContext.form_data[item.key].value;
-    }
-    else if (rdmoContext.form_data[item.key] === undefined && value.text !== undefined)  {
+    } else if (rdmoContext.form_data[item.key] === undefined && value.text !== undefined) {
         // console.log(' else of key in data. assing to form in context');
         rdmoContext.form_data[item.key] = {
             'value': value.text,
@@ -24,14 +23,19 @@ function FormCheckBox(props) {
         <div className='form-group' key={item.id}>
 
             <label htmlFor={item.key}>
-                <i>{item.id}</i>:{item.text_en}
+                <h5>{item.text_en}</h5>
+                <small id={`help_${item.key}`}
+                    className='form-text text-muted'>
+                    {item.help_en}
+                </small>
             </label>
             {
                 options[item.optionsets[0]].map((i) => {
                     if (i.text === val) {
                         return (
                             <div className='form-check' key={i.id}>
-                                <input className='form-check-input' type='checkbox'
+                                <input className='form-check-input'
+                                    type='checkbox'
                                     name={`checkbox_${item.key}_${i.id}`}
                                     value={i.text}
                                     onChange={(e) => handleChange(e, item)}
@@ -60,10 +64,6 @@ function FormCheckBox(props) {
                     );
                 })
             }
-            <small id={`help_${item.key}`}
-                className='form-text text-muted'>
-                {item.help_en}
-            </small>
         </div>
     );
 }

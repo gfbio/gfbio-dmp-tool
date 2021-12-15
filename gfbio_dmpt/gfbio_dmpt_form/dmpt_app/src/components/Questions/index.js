@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { Col, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
@@ -66,17 +68,20 @@ const iterateQuestions = (questions, options, values, handleChange) => {
                 <FormTextArea item={item} value={value}
                     handleChange={handleChange} />
             );
-        } if (item.widget_type === 'select') {
+        }
+        if (item.widget_type === 'select') {
             return (
                 <FormSelect item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
-        } if (item.widget_type === 'radio') {
+        }
+        if (item.widget_type === 'radio') {
             return (
                 <FormRadio item={item} options={options} value={value}
                     handleChange={handleChange} />
             );
-        } if (item.widget_type === 'checkbox') {
+        }
+        if (item.widget_type === 'checkbox') {
             return (
                 <FormCheckBox item={item} options={options} value={value}
                     handleChange={handleChange} />
@@ -238,9 +243,21 @@ function Questions(props) {
             {/* </div> */}
         </div>);
     }
+
+    if (processing) {
+        return (
+            <div>
+                <Row>
+                    <Col lg={12}>
+                        <SolarSystemLoading color='#81B248' size='large'
+                            speed={8}>Loading</SolarSystemLoading>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
     return (
         <div>
-            {status}
             <form id={`section_${rdmoContext.sections_index}`}>
                 {formFields}
             </form>

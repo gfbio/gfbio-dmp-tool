@@ -1,9 +1,4 @@
-/*!
-    * GFBio Layout - GFBio DMP v0.0.1 (https://dmp.gfbio.dev)
-    * Copyright 2021-2021 GFBio e.V.
-    * Licensed under MIT
-    */
-    // Toggle menu
+// Toggle menu
 function toggleMenu() {
     document.getElementById('isToggle').classList.toggle('open');
     var isOpen = document.getElementById('navigation')

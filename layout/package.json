@@ -1,0 +1,49 @@
+{
+  "title": "GFBio DMP",
+  "name": "gfbio_dmp",
+  "version": "0.0.1",
+  "description": "Layout & Design for the update of the official GFBio website",
+  "scripts": {
+    "build": "npm run clean && npm run build:scss && npm run build:scripts && npm run build:assets && npm run build:html",
+    "build:assets": "node scripts/build-assets.js",
+    "build:scripts": "node scripts/build-scripts.js",
+    "build:scss": "node scripts/build-scss.js",
+    "build:html": "node scripts/build-html.js",
+    "clean": "node scripts/clean.js",
+    "start": "npm run build && node scripts/start.js",
+    "start:debug": "npm run build && node scripts/start-debug.js",
+    "collectstatic": "echo yes | docker-compose -f ../local.yml run --rm django python manage.py collectstatic",
+    "collect": "npm run build && ./copy_to_static.sh && npm run collectstatic"
+  },
+  "license": "MIT",
+  "author": "GFBio e.V.",
+  "contributors": [
+    "Marc Weber"
+  ],
+  "homepage": "https://dmp.gfbio.dev",
+  "bugs": {
+    "url": "https://gitlab.gwdg.de/gfbio/dmp.gfbio.org/-/issues",
+    "email": "info@gfbio.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.gwdg.de/gfbio/dmp.gfbio.org.git"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.0",
+    "bootstrap": "^5.1.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "browser-sync": "^2.27.7",
+    "chokidar": "^3.5.2",
+    "clean-css-cli": "^5.4.2",
+    "concurrently": "^6.4.0",
+    "node-sass": "^6.0.1",
+    "postcss": "^8.4.4",
+    "prettier": "^2.5.0",
+    "sass": "^1.44.0",
+    "shelljs": "^0.8.4",
+    "upath": "^2.0.1"
+  }
+}
