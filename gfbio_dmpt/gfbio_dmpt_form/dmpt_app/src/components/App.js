@@ -6,6 +6,7 @@ import RdmoContext from './RdmoContext';
 import ProjectList from './ProjectList';
 import UserLoggedInRouter from './UserLoggedInRouter';
 import { URL_PREFIX } from '../constants/api/api_constants';
+import Summary from './Summary';
 
 const App = () => {
 
@@ -23,6 +24,9 @@ const App = () => {
     const [projectId, setProjectId] = useState(-1);
 
     const [projectValues, setProjectValues] = useState({});
+
+    const [recentSubmit, setRecentSubmit] = useState(false);
+    const [recentUpdate, setRecentUpdate] = useState(false);
 
     const assignSections = (data) => {
         setSections(data);
@@ -60,6 +64,14 @@ const App = () => {
         setProjectValues(data);
     };
 
+    const assignRecentSubmit = (data) => {
+        setRecentSubmit(data);
+    };
+
+    const assignRecentUpdate = (data) => {
+        setRecentUpdate(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         sections_index: sectionsIndex,
@@ -70,6 +82,8 @@ const App = () => {
         form_data: formData,
         project_id: projectId,
         project_values: projectValues,
+        recent_submit: recentSubmit,
+        recent_update: recentUpdate,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -78,7 +92,9 @@ const App = () => {
         assignOptions,
         assignFormData,
         assignProjectId,
-        assignProjectValues
+        assignProjectValues,
+        assignRecentSubmit,
+        assignRecentUpdate
     };
 
     return (
@@ -86,12 +102,13 @@ const App = () => {
             <Switch>
                 <Route exact path={`${URL_PREFIX}`}
                     component={UserLoggedInRouter} />
-                {/* <Route path={`${URL_PREFIX}catalogs`} component={Catalogs} /> */}
                 <Route exact path={`${URL_PREFIX}start`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}start/:projectId`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
+                <Route path={`${URL_PREFIX}summary/:projectId`}
+                    component={Summary} />
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
                 {/*    component={SubmissionDetail}/> */}
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}

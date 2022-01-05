@@ -242,6 +242,9 @@ function DmptStart(props) {
     const submitAllHandler = () => {
         let projectId = rdmoContext.project_id;
         console.log('Submit HANDLER ', projectId);
+        console.log('will submit: ');
+        console.log(rdmoContext.form_data);
+        console.log('      ++++++++++++++++++++++++++++ ');
         if (projectId < 0) {
             createProject(userToken).then((createResult) => {
                 projectId = createResult.data.id;
@@ -334,7 +337,7 @@ function DmptStart(props) {
     }
 
     if (submitted) {
-        return <Redirect push to='/somewhere/else' />;
+        return <Redirect push to={`/summary/${rdmoContext.project_id}`} />;
     }
 
     return (
