@@ -8,10 +8,11 @@ from rdmo.core.views import home, about
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
+    # path("", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
+    # path(
+    #     "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+    # ),
     # RDMO -----------
     path("rdmo/", home, name="home_rdmo"),
     path("rdmo/about/", about, name="about_rdmo"),
@@ -33,7 +34,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     path("oidc/", include("mozilla_django_oidc.urls")),
     # initial url for dmpt, may move to toplevel
-    path("dmpt/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
+    path("dmp/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
