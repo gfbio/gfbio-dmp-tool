@@ -99,14 +99,14 @@
                         <a class="nav-link" href="{{ url }}">Home</a>
                     </li>
 
-                    {% url 'home_rdmo' as url %}
-                    <li class="nav-item {% if request.path == url %}active{% endif %}">
-                        <a class="nav-link" href="{{ url }}">RDMO</a>
-                    </li>
-
                     {% url 'dmpt:create_dmp' as url %}
                     <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
                         <a class="nav-link" href="{{ url }}">Create DMP</a>
+                    </li>
+
+                    {% url 'home_rdmo' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">RDMO</a>
                     </li>
 
                     {% if request.user.is_authenticated %}
