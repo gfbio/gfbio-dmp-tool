@@ -9,6 +9,9 @@ from rdmo.core.views import home, about
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
+    # TODO: if the dmp app has to show up on the first page, a redirect is the
+    #   most flexible way to achive this.
+    # path("", RedirectView.as_view(url='/dmp/create'), name='redirect_to_create_dmp'),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
 
     # RDMO -----------
