@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
@@ -8,32 +9,28 @@ from rdmo.core.views import home, about
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
+    # TODO: if the dmp app has to show up on the first page, a redirect is the
+    #   most flexible way to achive this.
+    # path("", RedirectView.as_view(url='/dmp/create'), name='redirect_to_create_dmp'),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
+
     # RDMO -----------
-    path("rdmo/", home, name="home_rdmo"),
-    path("rdmo/about/", about, name="about_rdmo"),
+    path("rdmo/", staff_member_required(home), name="home_rdmo"),
+    path("rdmo/about/", staff_member_required(about), name="about_rdmo"),
     path("rdmo/", include("rdmo.core.urls")),
     path("api/v1/", include("rdmo.core.urls.v1")),
     path("api/v1/", include("rdmo.core.urls.swagger")),
-    # RDMO -----------
-    # path('', home, name='home_rdmo'),
-    # path('about/', about, name='about_rdmo'),
-    #
-    # path('', include('rdmo.core.urls')),
-    # path('api/v1/', include('rdmo.core.urls.v1')),
-    # path('api/v1/', include('rdmo.core.urls.swagger')),
+
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+
     # User management
     path("users/", include("gfbio_dmpt.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+
     # Your stuff: custom urls includes go here
     path("oidc/", include("mozilla_django_oidc.urls")),
-    # initial url for dmpt, may move to toplevel
-    path("dmpt/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
+    path("dmp/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS

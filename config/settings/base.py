@@ -660,9 +660,9 @@ LANGUAGES = (
     ('de', _('German')),
 )
 
-LOGIN_URL = '/account/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_URL = '/account/logout/'
+LOGOUT_URL = '/accounts/logout/'
 
 MULTISITE = False
 PROFILE_UPDATE = True
