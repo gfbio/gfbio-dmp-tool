@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import { Redirect } from 'react-router-dom';
-import { API_ROOT } from '../../constants/api/api_constants';
+import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
+import ScrollToTop from '../ScrollToTop';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -264,9 +265,9 @@ function DmptStart(props) {
             });
         } else {
             submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
-                // console.log(valueResult);
-                setSubmitted(true);
-            }
+                    // console.log(valueResult);
+                    setSubmitted(true);
+                }
             );
         }
     };
@@ -313,12 +314,12 @@ function DmptStart(props) {
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
-                onClickHandler={nextHandler}
-                align='right' />}
+                                       onClickHandler={nextHandler}
+                                       align='right' />}
 
             prevSection={<ActionButton text={prevText}
-                onClickHandler={prevSectionHandler}
-                align='left' />}
+                                       onClickHandler={prevSectionHandler}
+                                       align='left' />}
         />;
 
         header = 'Data Management Plan';
@@ -330,18 +331,22 @@ function DmptStart(props) {
             <Row>
                 <Col lg={12}>
                     <SolarSystemLoading color='#345AA2' size='large'
-                        speed={8}>Loading</SolarSystemLoading>
+                                        speed={8}>Loading</SolarSystemLoading>
                 </Col>
             </Row>
         );
     }
 
+    // FIXME: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
-        return <Redirect push to={`/summary/${rdmoContext.project_id}`} />;
+        console.log('SUBMITTED : ', URL_PREFIX);
+        return <Redirect push
+                         to={`${URL_PREFIX}summary/${rdmoContext.project_id}`} />;
     }
 
     return (
         <div id='projectDetail'>
+            <ScrollToTop />
             <Row>
                 <Col lg={12}>
                     <h3>{header}</h3>

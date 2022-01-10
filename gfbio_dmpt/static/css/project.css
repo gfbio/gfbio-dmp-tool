@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /*!
 * GFBio Layout - GFBio DMP v0.0.1 (https://dmp.gfbio.dev)
-* Copyright 2021-2021 GFBio e.V.
+* Copyright 2021-2022 GFBio e.V.
 * Licensed under MIT
 */
 /*!
@@ -11898,6 +11898,16 @@ div#projectDetail .form-group {
 }
 div#projectDetail .form-group label {
   width: 100%;
+}
+
+div#summary i {
+  color: #345AA2;
+  font-size: 4rem;
+}
+div#summary h6, div#summary .h6 {
+  color: #345AA2;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 section.page-title {

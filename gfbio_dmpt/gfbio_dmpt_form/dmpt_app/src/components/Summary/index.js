@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
+import ScrollToTop from '../ScrollToTop';
 
 // eslint-disable-next-line no-unused-vars
 
@@ -9,6 +10,7 @@ function Summary(props) {
     console.log('');
     return (
         <div id='summary' className='text-center'>
+            <ScrollToTop />
 
             <Row>
                 <div className='col-12'>

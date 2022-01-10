@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 import json
 from pprint import pp
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
 from django.contrib.auth.models import Group
 from django.test import TestCase
+from rdmo.projects.models.project import Project
+from rdmo.questions.models.catalog import Catalog
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
 from gfbio_dmpt.users.models import User
 
-from rdmo.questions.models.catalog import Catalog
-from rdmo.projects.models.project import Project
-import pytest
-
-from gfbio_dmpt.gfbio_dmpt_form.views import DmpRequestHelp
 
 class RdmoRequestTest(TestCase):
     @classmethod
