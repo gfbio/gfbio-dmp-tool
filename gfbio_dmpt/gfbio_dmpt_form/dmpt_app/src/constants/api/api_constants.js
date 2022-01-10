@@ -15,8 +15,6 @@ export const API_ROOT = '/api/v1/';
 // eslint-disable-next-line no-unused-vars
 // const urlPrefix = '/';
 
-export const URL_PREFIX = '/dmp/create/';
 // TODO: use this prefix when using  the from django views.
 //  this applies to production and local environments.
-// export const URL_PREFIX = '/dmpt/app/';
-
+export const URL_PREFIX = '/dmp/create/';
