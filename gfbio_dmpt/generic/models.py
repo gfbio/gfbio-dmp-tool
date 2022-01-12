@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from gfbio_dmpt.generic.fields import AutoCreatedField, AutoLastModifiedField
 
+# FIXME: @cpfaff this is not needed we have a lib that does exactly this
 class TimeStampedModel(models.Model):
     """
     An abstract base class model that provides self-updating
