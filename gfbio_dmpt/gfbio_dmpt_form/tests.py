@@ -17,7 +17,8 @@ class RdmoRequestTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         user = User.objects.create_user(
-            username="kevin", email="kevin@kevin.de", password="secret", is_staff=True
+            username="kevin", email="kevin@kevin.de", password="secret",
+            is_staff=True
         )
         token = Token.objects.create(user=user)
         client = APIClient()
@@ -184,9 +185,12 @@ class TestDmpExportView(TestCase):
     def test_get_dmp_pdf_logged_in(self):
         self.client.login(username="john", password="secret")
         catalog, status = Catalog.objects.get_or_create(key="testkey")
-        project, status = Project.objects.get_or_create(title="Test", catalog=catalog)
-        response = self.client.get(f"/dmpt/export/{project.pk}/pdf", follow=True)
+        project, status = Project.objects.get_or_create(title="Test",
+                                                        catalog=catalog)
+        response = self.client.get(f"/dmpt/export/{project.pk}/pdf",
+                                   follow=True)
         self.assertEquals(response.get("Content-Type"), "application/pdf")
+
 
 class TestDmpRequestHelp(TestCase):
     @classmethod
@@ -209,6 +213,60 @@ class TestDmpRequestHelp(TestCase):
         mock_Ticket.objcects.create.return_value = True
         self.client.login(username="john", password="secret")
         catalog, status = Catalog.objects.get_or_create(key="testkey")
-        project, status = Project.objects.get_or_create(title="Test", catalog=catalog)
+        project, status = Project.objects.get_or_create(title="Test",
+                                                        catalog=catalog)
         response = self.client.get(f"/dmpt/help/{project.pk}", follow=True)
         self.assertEqual(200, response.status_code)
+
+
+class TestDmptProjectViews(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.std_user = User.objects.create_user(
+            username="john",
+            email="john@doe.de",
+            password="secret",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.std_user)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.std_client = client
+
+    def test_unauthorized_post(self):
+        response = self.client.post('/dmp/dmptprojects/', {})
+        self.assertEqual(403, response.status_code)
+
+    def test_user_post(self):
+        dp = Project.objects.create(title='Unit Test')
+        response = self.std_client.post('/dmp/dmptprojects/', {
+            'rdmo_project': dp.id,
+            'user': self.std_user.id,
+        })
+        self.assertEqual(201, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn('rdmo_project', content.keys())
+        self.assertEqual(dp.id, content.get('rdmo_project', 'invalid_id'))
+
+    def test_unauthorized_get(self):
+        response = self.client.get('/dmp/dmptprojects/')
+        self.assertEqual(403, response.status_code)
+
+    def test_user_get(self):
+        response = self.std_client.get('/dmp/dmptprojects/')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual([], json.loads(response.content))
+
+    def test_user_get_content(self):
+        dp = Project.objects.create(title='Unit Test')
+        self.std_client.post('/dmp/dmptprojects/', {
+            'rdmo_project': dp.id,
+            'user': self.std_user.id,
+        })
+        response = self.std_client.get('/dmp/dmptprojects/')
+        self.assertEqual(200, response.status_code)
+        content = json.loads(response.content)
+        self.assertIsInstance(content, list)
+        self.assertEqual(1, len(content))

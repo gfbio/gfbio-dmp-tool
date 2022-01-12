@@ -7,17 +7,19 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-
 # jira integration
 from jira import JIRA, JIRAError
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
+from rest_framework import generics
 from rest_framework.authtoken.models import Token
 
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.jira_integration.models import Ticket
 from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
+from .models import DmptProject
+from .serializers import DmptProjectSerializer
 
 
 class CSRFViewMixin(View):
@@ -160,3 +162,8 @@ class DmpRequestHelp(View):
         # this completely as this might hinder the use of the
         # view with the react frontend.
         return HttpResponseRedirect("/")
+
+
+class DmptProjectListView(generics.ListCreateAPIView):
+    queryset = DmptProject.objects.all()
+    serializer_class = DmptProjectSerializer
