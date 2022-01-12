@@ -9,6 +9,8 @@ from django.db import IntegrityError
 from django.utils.timezone import now
 
 from gfbio_dmpt.generic.models import TimeStampedModel
+
+# FIXME: @cpfaff this resolves a very strange dependency in one of the fixtures. why import here ?
 from gfbio_dmpt.generic.fields import AutoCreatedField, AutoLastModifiedField
 
 class User(AbstractUser):
@@ -46,7 +48,8 @@ class User(AbstractUser):
         except IntegrityError as ie:
             return (None, False)
 
-
+# FIXME: @cpfaff this is not needed we have a lib installed for TimeStampedModel. remove this please
+#   and add the proper TimeStampedModel
 class ExternalUserId(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     external_id = CharField(

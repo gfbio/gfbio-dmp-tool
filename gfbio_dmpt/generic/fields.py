@@ -1,6 +1,9 @@
 from django.db.models import DateTimeField
 from django.utils.timezone import now
 
+
+# FIXME: @cpfaff this is not needed we have a lib installed for TimeStampedModel. remove this please
+
 class AutoCreatedField(DateTimeField):
     """
     A DateTimeField that automatically populates itself at
