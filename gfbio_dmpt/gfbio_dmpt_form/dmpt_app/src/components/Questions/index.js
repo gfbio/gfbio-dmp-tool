@@ -124,8 +124,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                     }
                 );
 
-                console.log('QUESTION_SETS');
-                console.log(qsResponse.data);
+                // console.log('QUESTION_SETS');
+                // console.log(qsResponse.data);
 
                 setStage('... fetch questions ...');
                 fetchQuestions(qsResponse, token).then((res) => {
@@ -145,8 +145,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                     // TODO: this is needed in context !
                     rdmoContext.assignQuestions(tmp);
 
-                    console.log('QUESTIONS (processed)');
-                    console.log(tmp);
+                    // console.log('QUESTIONS (processed)');
+                    // console.log(tmp);
 
                     setStage('... fetch options ...');
                     fetchAllOptions(oSets, token).then((oRes) => {
@@ -156,8 +156,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         // TODO: this is needed in context !
                         rdmoContext.assignOptions(options);
 
-                        console.log('OPTIONS (processed)');
-                        console.log(options);
+                        // console.log('OPTIONS (processed)');
+                        // console.log(options);
 
                         setStage('... DONE ...');
                         setProcessing(false);
@@ -167,8 +167,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         setStage('... fetch project value  ...', rdmoContext.project_id);
                         const projectValues = {};
                         fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {
-                            console.log('project values response');
-                            console.log(pRes.data);
+                            // console.log('project values response');
+                            // console.log(pRes.data);
 
                             pRes.data.forEach((v) => {
                                 projectValues[v.attribute] = v;

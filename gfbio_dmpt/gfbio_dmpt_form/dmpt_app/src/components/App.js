@@ -25,8 +25,8 @@ const App = () => {
 
     const [projectValues, setProjectValues] = useState({});
 
-    const [recentSubmit, setRecentSubmit] = useState(false);
-    const [recentUpdate, setRecentUpdate] = useState(false);
+    // const [recentSubmit, setRecentSubmit] = useState(false);
+    // const [recentUpdate, setRecentUpdate] = useState(false);
 
     const assignSections = (data) => {
         setSections(data);
@@ -64,13 +64,13 @@ const App = () => {
         setProjectValues(data);
     };
 
-    const assignRecentSubmit = (data) => {
-        setRecentSubmit(data);
-    };
-
-    const assignRecentUpdate = (data) => {
-        setRecentUpdate(data);
-    };
+    // const assignRecentSubmit = (data) => {
+    //     setRecentSubmit(data);
+    // };
+    //
+    // const assignRecentUpdate = (data) => {
+    //     setRecentUpdate(data);
+    // };
 
     const rdmoContext = {
         section_data: sections,
@@ -82,8 +82,8 @@ const App = () => {
         form_data: formData,
         project_id: projectId,
         project_values: projectValues,
-        recent_submit: recentSubmit,
-        recent_update: recentUpdate,
+        // recent_submit: recentSubmit,
+        // recent_update: recentUpdate,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -93,8 +93,8 @@ const App = () => {
         assignFormData,
         assignProjectId,
         assignProjectValues,
-        assignRecentSubmit,
-        assignRecentUpdate
+        // assignRecentSubmit,
+        // assignRecentUpdate
     };
 
     return (

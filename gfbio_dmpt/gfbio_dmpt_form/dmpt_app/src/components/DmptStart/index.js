@@ -106,14 +106,14 @@ const submitValues = async (projectId, formData, token) => {
                 if (formItem.valueId !== undefined) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        console.log('\tput value res ');
-                        console.log(res);
+                        // console.log('\tput value res ');
+                        // console.log(res);
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        console.log('\tpost value res ');
-                        console.log(res);
+                        // console.log('\tpost value res ');
+                        // console.log(res);
                     });
                 }
 
@@ -192,7 +192,7 @@ function useDmptStart(rdmoContext, token) {
 function DmptStart(props) {
     console.log('DMPT start ', props);
     console.log('-----------------------------');
-    console.log('');
+    // console.log('');
     // console.log(props.match.params.projectId);
     // console.log('-----------------------------');
     const { isLoggedIn, userToken } = props;
@@ -242,12 +242,14 @@ function DmptStart(props) {
     // TODO: add to component hook
     const submitAllHandler = () => {
         let projectId = rdmoContext.project_id;
-        console.log('Submit HANDLER ', projectId);
-        console.log('will submit: ');
-        console.log(rdmoContext.form_data);
-        console.log('      ++++++++++++++++++++++++++++ ');
+        // console.log('Submit HANDLER ', projectId);
+        // console.log('will submit: ');
+        // console.log(rdmoContext.form_data);
+        // console.log('      ++++++++++++++++++++++++++++ ');
         if (projectId < 0) {
             createProject(userToken).then((createResult) => {
+                console.log('CREATE PRJ RESULT');
+                console.log(createResult);
                 projectId = createResult.data.id;
                 rdmoContext.assignProjectId(projectId);
                 // TODO: set project id, if available do not create a new one
@@ -256,7 +258,7 @@ function DmptStart(props) {
 
                 // -------------------------------------------------------------
                 submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
-                    console.log('Submit handler values result ');
+                    // console.log('Submit handler values result ');
                     // console.log(valueResult);
                     // return valueResult;
                     setSubmitted(true);
@@ -265,9 +267,9 @@ function DmptStart(props) {
             });
         } else {
             submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
-                    // console.log(valueResult);
-                    setSubmitted(true);
-                }
+                // console.log(valueResult);
+                setSubmitted(true);
+            }
             );
         }
     };
@@ -276,8 +278,8 @@ function DmptStart(props) {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
-        console.log('handleChange: ');
-        console.log(e.target.name, ' -- ', e.target.value.trim());
+        // console.log('handleChange: ');
+        // console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
         if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
             delete formData[e.target.name];
@@ -292,8 +294,8 @@ function DmptStart(props) {
             });
         }
         rdmoContext.assignFormData(formData);
-        console.log('formdata in context ');
-        console.log(rdmoContext.form_data);
+        // console.log('formdata in context ');
+        // console.log(rdmoContext.form_data);
     };
 
     //     <div>
@@ -314,12 +316,12 @@ function DmptStart(props) {
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
-                                       onClickHandler={nextHandler}
-                                       align='right' />}
+                onClickHandler={nextHandler}
+                align='right' />}
 
             prevSection={<ActionButton text={prevText}
-                                       onClickHandler={prevSectionHandler}
-                                       align='left' />}
+                onClickHandler={prevSectionHandler}
+                align='left' />}
         />;
 
         header = 'Data Management Plan';
@@ -331,7 +333,7 @@ function DmptStart(props) {
             <Row>
                 <Col lg={12}>
                     <SolarSystemLoading color='#345AA2' size='large'
-                                        speed={8}>Loading</SolarSystemLoading>
+                        speed={8}>Loading</SolarSystemLoading>
                 </Col>
             </Row>
         );
@@ -339,9 +341,9 @@ function DmptStart(props) {
 
     // FIXME: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
-        console.log('SUBMITTED : ', URL_PREFIX);
+        // console.log('SUBMITTED : ', URL_PREFIX);
         return <Redirect push
-                         to={`${URL_PREFIX}summary/${rdmoContext.project_id}`} />;
+            to={`${URL_PREFIX}summary/${rdmoContext.project_id}`} />;
     }
 
     return (

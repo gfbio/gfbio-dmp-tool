@@ -3,7 +3,7 @@ import ProjectList from '../ProjectList';
 import DmptStart from '../DmptStart';
 
 function UserLoggedInRouter() {
-    console.log('USerloggedInRouter');
+    // console.log('USerloggedInRouter');
     let backend = {};
     // TODO: local development
     backend.isLoggedIn = 'false';
@@ -12,8 +12,8 @@ function UserLoggedInRouter() {
     if (window.props !== undefined) {
         backend = window.props;
     }
-    console.log('backend context:');
-    console.log(backend);
+    // console.log('backend context:');
+    // console.log(backend);
     if (backend.isLoggedIn === 'false') {
         return (
             <DmptStart isLoggedIn={backend.isLoggedIn}
