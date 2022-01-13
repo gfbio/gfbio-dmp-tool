@@ -10,6 +10,7 @@ import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
+import { checkBackendParamters } from '../../utils/backend_context';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -41,7 +42,6 @@ const createProject = async (token) => {
                 'catalog': 18   // FIXME: gfbio catalog id hardcoded --> 18
             },
             {
-                // token of super user (maweber)
                 headers: {
                     'Authorization': `Token ${token}`,
                     'X-CSRFToken': csrftoken
@@ -192,11 +192,17 @@ function useDmptStart(rdmoContext, token) {
 function DmptStart(props) {
     console.log('DMPT start ', props);
     console.log('-----------------------------');
-    // console.log('');
-    // console.log(props.match.params.projectId);
+
     // console.log('-----------------------------');
-    const { isLoggedIn, userToken } = props;
+    // const { isLoggedIn, backendContext } = props;
+    // console.log('BACKENDcontext aus props');
+    // console.log(backendContext);
+    const backendContext = checkBackendParamters();
     const rdmoContext = useContext(RdmoContext);
+
+    // rdmoContext.assignBackendContext(backendContext);
+    console.log('RDMO CONTEXT DMPT START');
+    console.log(rdmoContext);
 
     const [submitted, setSubmitted] = useState(false);
 
@@ -205,7 +211,7 @@ function DmptStart(props) {
         rdmoContext.assignProjectId(props.match.params.projectId);
     }
 
-    const [processing, stage] = useDmptStart(rdmoContext, userToken);
+    const [processing, stage] = useDmptStart(rdmoContext, backendContext.token);
 
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');
@@ -247,7 +253,7 @@ function DmptStart(props) {
         // console.log(rdmoContext.form_data);
         // console.log('      ++++++++++++++++++++++++++++ ');
         if (projectId < 0) {
-            createProject(userToken).then((createResult) => {
+            createProject(backendContext.token).then((createResult) => {
                 console.log('CREATE PRJ RESULT');
                 console.log(createResult);
                 projectId = createResult.data.id;
@@ -257,7 +263,7 @@ function DmptStart(props) {
                 // TODO: redirect to rdmo overview
 
                 // -------------------------------------------------------------
-                submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
+                submitValues(projectId, rdmoContext.form_data, backendContext.token).then(() => {
                     // console.log('Submit handler values result ');
                     // console.log(valueResult);
                     // return valueResult;
@@ -266,7 +272,7 @@ function DmptStart(props) {
                 // -------------------------------------------------------------
             });
         } else {
-            submitValues(projectId, rdmoContext.form_data, userToken).then(() => {
+            submitValues(projectId, rdmoContext.form_data, backendContext.token).then(() => {
                 // console.log(valueResult);
                 setSubmitted(true);
             }
@@ -312,7 +318,7 @@ function DmptStart(props) {
         const nextHandler = submitAllHandler;
 
         formFields = <Questions
-            userToken={userToken}
+            userToken={backendContext.token}
             sectionIndex={rdmoContext.sections_index}
             handleFormChange={handleFormChange}
             nextSection={<ActionButton text={nextText}
@@ -368,8 +374,8 @@ function DmptStart(props) {
 
 // TODO: housekeeping/delete strategy for unused/empty projects
 DmptStart.propTypes = {
-    isLoggedIn: PropTypes.bool.isRequired,
-    userToken: PropTypes.string.isRequired
+    // isLoggedIn: PropTypes.bool.isRequired,
+    // backendContext: PropTypes.object.isRequired
     // projectId: PropTypes.string,
 };
 

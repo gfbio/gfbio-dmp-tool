@@ -237,7 +237,7 @@ class TestDmptProjectViews(TestCase):
 
     def test_unauthorized_post(self):
         response = self.client.post('/dmp/dmptprojects/', {})
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(401, response.status_code)
 
     def test_user_post(self):
         dp = Project.objects.create(title='Unit Test')
@@ -250,9 +250,21 @@ class TestDmptProjectViews(TestCase):
         self.assertIn('rdmo_project', content.keys())
         self.assertEqual(dp.id, content.get('rdmo_project', 'invalid_id'))
 
+    # def test_user_post_no_uid(self):
+    #     dp = Project.objects.create(title='Unit Test')
+    #     response = self.std_client.post('/dmp/dmptprojects/', {
+    #         'rdmo_project': dp.id,
+    #         # 'user': self.std_user.id,
+    #     })
+    #     self.assertEqual(201, response.status_code)
+    #     content = json.loads(response.content)
+    #     print(content)
+    #     self.assertIn('rdmo_project', content.keys())
+    #     self.assertEqual(dp.id, content.get('rdmo_project', 'invalid_id'))
+
     def test_unauthorized_get(self):
         response = self.client.get('/dmp/dmptprojects/')
-        self.assertEqual(403, response.status_code)
+        self.assertEqual(401, response.status_code)
 
     def test_user_get(self):
         response = self.std_client.get('/dmp/dmptprojects/')

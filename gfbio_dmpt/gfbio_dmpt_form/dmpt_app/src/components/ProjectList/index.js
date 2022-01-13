@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
+import RdmoContext from '../RdmoContext';
 
 function useProjectList() {
     // console.log('-useProjectList Hook');
@@ -44,6 +45,9 @@ function ProjectList() {
     // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
     // SOLVED: default django object level permissions take care of this, depending on user and/or group
     // console.log('projectList');
+    // const rdmoContext = useContext(RdmoContext);
+    // console.log('LIST context');
+    // console.log(rdmoContext);
     // console.log(projectList);
     let projects = <></>;
     if (projectList.length) {
