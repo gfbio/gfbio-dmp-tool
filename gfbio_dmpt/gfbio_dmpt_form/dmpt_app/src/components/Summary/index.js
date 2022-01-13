@@ -1,11 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import ScrollToTop from '../ScrollToTop';
-import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import {
+    PROJECT_API_ROOT,
+    URL_PREFIX
+} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
-import { checkBackendParamters } from '../../utils/backend_context';
-
+import {
+    checkBackendParameters,
+    resetContext
+} from '../../utils/backend_context';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -45,14 +51,19 @@ const saveProject = async (token, userId, projectId) => {
 function Summary(props) {
     console.log('Summary ', props);
     console.log('-----------------------------');
-    console.log('');
-    checkBackendParamters();
+    // console.log('');
     const rdmoContext = useContext(RdmoContext);
+    checkBackendParameters(rdmoContext);
+
     const [saving, setSaving] = useState(false);
     const [savingDone, setSavingDone] = useState(false);
     const [dmptProjectId, setDmptProjectId] = useState(-1);
-    console.log('RDOM CONTEXT');
-    console.log(rdmoContext);
+
+    const [discarding, setDiscarding] = useState(false);
+    const [discardingDone, setDiscardingDone] = useState(false);
+
+    // console.log('RDOM CONTEXT');
+    // console.log(rdmoContext);
     console.log(dmptProjectId);
 
     const saveProjectHandler = () => {
@@ -67,7 +78,7 @@ function Summary(props) {
                 rdmoContext.assignDmptProjectId(result.data.id);
                 setSaving(false);
                 setSavingDone(true);
-                setDmptProjectId(result.data.id)
+                setDmptProjectId(result.data.id);
             });
             setSaving(false);
         }
@@ -107,6 +118,51 @@ function Summary(props) {
                 </h6>
             </Col>
         );
+    }
+
+    const discardProjectHandler = () => {
+        setDiscarding(true);
+        // TODO: also delete rdmo project immediatly ?
+        resetContext(rdmoContext);
+        setDiscarding(false);
+        setDiscardingDone(true);
+    };
+    let discardSection = (
+        <Col lg={6} className='p-3'>
+            <i className='mdi mdi-location-exit' />
+            <h6>
+                Finish
+            </h6>
+            <div className='d-grid gap-2'>
+                <Button className='btn btn-secondary btn-green'
+                    onClick={discardProjectHandler}>Discard
+                    &
+                    Exit
+                </Button>
+            </div>
+        </Col>
+    );
+    if (discarding) {
+        discardSection = (
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-location-exit' />
+                <h6>
+                    ... Deleting data & prepare to exit ...
+                </h6>
+            </Col>
+        );
+    }
+    else if (discardingDone) {
+        return <Redirect push
+            to={`${URL_PREFIX}`} />;
+        // discardSection = (
+        //     <Col lg={6} className='p-3'>
+        //         <i className='mdi mdi-content-save-edit-outline' />
+        //         <h6>
+        //             Saving completed successfully !
+        //         </h6>
+        //     </Col>
+        // );
     }
 
     return (<div id='summary' className='text-center'>
@@ -155,18 +211,7 @@ function Summary(props) {
 
         <Row className='mt-3'>
             {saveSection}
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-location-exit' />
-                <h6>
-                    Finish
-                </h6>
-                <div className='d-grid gap-2'>
-                    <Button className='btn btn-secondary btn-green'>Discard
-                        &
-                        Exit
-                    </Button>
-                </div>
-            </Col>
+            {discardSection}
         </Row>
 
     </div>);

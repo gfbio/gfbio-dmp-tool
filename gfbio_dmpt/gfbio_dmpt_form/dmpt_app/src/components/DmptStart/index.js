@@ -10,7 +10,7 @@ import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import { checkBackendParamters } from '../../utils/backend_context';
+import { checkBackendParameters } from '../../utils/backend_context';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -197,8 +197,8 @@ function DmptStart(props) {
     // const { isLoggedIn, backendContext } = props;
     // console.log('BACKENDcontext aus props');
     // console.log(backendContext);
-    const backendContext = checkBackendParamters();
     const rdmoContext = useContext(RdmoContext);
+    const backendContext = checkBackendParameters(rdmoContext);
 
     // rdmoContext.assignBackendContext(backendContext);
     console.log('RDMO CONTEXT DMPT START');

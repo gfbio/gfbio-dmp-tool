@@ -24,7 +24,7 @@ const App = () => {
     const [projectId, setProjectId] = useState(-1);
     const [projectValues, setProjectValues] = useState({});
 
-    const [dmptProjectId, setDmptProjectId] = useState('-1');
+    const [dmptProjectId, setDmptProjectId] = useState(-1);
 
     const [backendContext, setBackendContext] = useState({});
 

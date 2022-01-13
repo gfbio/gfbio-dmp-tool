@@ -1,18 +1,17 @@
-import { useContext } from 'react';
-import RdmoContext from '../components/RdmoContext';
-
-export function checkBackendParamters() {
-    const rdmoContext = useContext(RdmoContext);
+export function checkBackendParameters(rdmoContext) {
     let backend = {};
     backend.isLoggedIn = 'false';
     if (window.props !== undefined) {
-        console.log('backend context DEFINED');
         backend = window.props;
     }
     rdmoContext.assignBackendContext(backend);
     return backend;
 };
 
-export function resetContext() {
-    const rdmoContext = useContext(RdmoContext);
+// TODO: also delete rdmo project immediatly ?
+export function resetContext(rdmoContext) {
+    rdmoContext.assignFormData({});
+    rdmoContext.assignProjectId(-1);
+    rdmoContext.assignProjectValues({});
+    rdmoContext.assignDmptProjectId(-1);
 };
