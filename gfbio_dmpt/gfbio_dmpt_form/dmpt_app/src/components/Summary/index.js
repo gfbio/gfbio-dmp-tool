@@ -49,25 +49,29 @@ function Summary(props) {
     checkBackendParamters();
     const rdmoContext = useContext(RdmoContext);
     const [saving, setSaving] = useState(false);
+    const [savingDone, setSavingDone] = useState(false);
+    const [dmptProjectId, setDmptProjectId] = useState(-1);
     console.log('RDOM CONTEXT');
     console.log(rdmoContext);
+    console.log(dmptProjectId);
 
     const saveProjectHandler = () => {
         setSaving(true);
-        saveProject(
-            rdmoContext.user_token,
-            rdmoContext.user_id,
-            rdmoContext.project_id).then((result) => {
-            console.log('saveProject handler. result');
-            console.log(result);
+        if (dmptProjectId === -1) {
+            saveProject(
+                rdmoContext.backend_context.token,
+                rdmoContext.backend_context.user_id,
+                rdmoContext.project_id).then((result) => {
+                console.log('saveProject handler. result');
+                console.log(result);
+                rdmoContext.assignDmptProjectId(result.data.id);
+                setSaving(false);
+                setSavingDone(true);
+                setDmptProjectId(result.data.id)
+            });
             setSaving(false);
-        });
+        }
     };
-    // const divStyle = {
-    //     // position: 'relative'
-    //     // textAlign: 'center'
-    //     width: 0,
-    // };
 
     let saveSection = (
         <Col lg={6} className='p-3'>
@@ -91,15 +95,16 @@ function Summary(props) {
                 <h6>
                     ... Saving Data Management Plan ...
                 </h6>
-                <div className='d-grid gap-2 text-center'>
-                    {/* <Button */}
-                    {/*    className='btn btn-secondary btn-green' */}
-                    {/* > */}
-                    {/* <SolarSystemLoading color='#345AA2' size='small' */}
-                    {/*    speed={8} */}
-                    {/*    style={divStyle}>saving</SolarSystemLoading> */}
-                    {/* </Button> */}
-                </div>
+            </Col>
+        );
+    }
+    else if (savingDone) {
+        saveSection = (
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
+                <h6>
+                    Saving completed successfully !
+                </h6>
             </Col>
         );
     }

@@ -8,5 +8,8 @@ from config.settings.base import AUTH_USER_MODEL
 
 
 class DmptProject(TimeStampedModel):
-    rdmo_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    rdmo_project = models.OneToOneField(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.rdmo_project.title)

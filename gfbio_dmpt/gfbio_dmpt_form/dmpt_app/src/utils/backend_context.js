@@ -12,3 +12,7 @@ export function checkBackendParamters() {
     rdmoContext.assignBackendContext(backend);
     return backend;
 };
+
+export function resetContext() {
+    const rdmoContext = useContext(RdmoContext);
+};

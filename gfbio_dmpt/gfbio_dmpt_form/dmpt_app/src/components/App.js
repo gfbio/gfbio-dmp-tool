@@ -22,14 +22,9 @@ const App = () => {
     const [formData, setFormData] = useState({});
 
     const [projectId, setProjectId] = useState(-1);
-
     const [projectValues, setProjectValues] = useState({});
 
-    // const [recentSubmit, setRecentSubmit] = useState(false);
-    // const [recentUpdate, setRecentUpdate] = useState(false);
-
-    // const [userId, setUserId] = useState('-1');
-    // const [userToken, setUserToken] = useState('-1');
+    const [dmptProjectId, setDmptProjectId] = useState('-1');
 
     const [backendContext, setBackendContext] = useState({});
 
@@ -69,24 +64,11 @@ const App = () => {
         setProjectValues(data);
     };
 
-    // const assignRecentSubmit = (data) => {
-    //     setRecentSubmit(data);
-    // };
-    //
-    // const assignRecentUpdate = (data) => {
-    //     setRecentUpdate(data);
-    // };
-    // const assignUserId = (data) => {
-    //     console.log('ASSIGN USER ID ', data);
-    //     setUserId(data);
-    // };
-    //
-    // const assignUserToken = (data) => {
-    //     setUserToken(data);
-    // };
+    const assignDmptProjectId = (data) => {
+        setDmptProjectId(data);
+    };
 
     const assignBackendContext = (data) => {
-        console.log('ASSIGN BACKEND CONTEXT ', data);
         setBackendContext(data);
     };
 
@@ -101,10 +83,7 @@ const App = () => {
         project_id: projectId,
         project_values: projectValues,
         backend_context: backendContext,
-        // recent_submit: recentSubmit,
-        // recent_update: recentUpdate,
-        // user_id: userId,
-        // user_token: userToken,
+        dmpt_project_id: dmptProjectId,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -115,10 +94,7 @@ const App = () => {
         assignProjectId,
         assignProjectValues,
         assignBackendContext,
-        // assignRecentSubmit,
-        // assignRecentUpdate
-        // assignUserId,
-        // assignUserToken
+        assignDmptProjectId,
     };
 
     return (

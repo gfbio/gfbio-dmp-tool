@@ -19,4 +19,4 @@ class UserSerializer(serializers.ModelSerializer):
 class DmptProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = DmptProject
-        fields = ['user', 'rdmo_project']
+        fields = ['id', 'user', 'rdmo_project']
