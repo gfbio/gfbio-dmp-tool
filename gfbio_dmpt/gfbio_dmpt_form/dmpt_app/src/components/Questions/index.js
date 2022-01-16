@@ -10,6 +10,7 @@ import FormRadio from '../FormRadio';
 import FormSelect from '../FormSelect';
 import FormTextArea from '../FormTextArea';
 import FormCheckBox from '../FormCheckBox';
+import ScrollToTop from '../ScrollToTop';
 
 const fetchQuestion = async (q, token) => {
     return await axios.get(
@@ -124,8 +125,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                     }
                 );
 
-                console.log('QUESTION_SETS');
-                console.log(qsResponse.data);
+                // console.log('QUESTION_SETS');
+                // console.log(qsResponse.data);
 
                 setStage('... fetch questions ...');
                 fetchQuestions(qsResponse, token).then((res) => {
@@ -145,8 +146,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                     // TODO: this is needed in context !
                     rdmoContext.assignQuestions(tmp);
 
-                    console.log('QUESTIONS (processed)');
-                    console.log(tmp);
+                    // console.log('QUESTIONS (processed)');
+                    // console.log(tmp);
 
                     setStage('... fetch options ...');
                     fetchAllOptions(oSets, token).then((oRes) => {
@@ -156,8 +157,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         // TODO: this is needed in context !
                         rdmoContext.assignOptions(options);
 
-                        console.log('OPTIONS (processed)');
-                        console.log(options);
+                        // console.log('OPTIONS (processed)');
+                        // console.log(options);
 
                         setStage('... DONE ...');
                         setProcessing(false);
@@ -167,8 +168,8 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         setStage('... fetch project value  ...', rdmoContext.project_id);
                         const projectValues = {};
                         fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {
-                            console.log('project values response');
-                            console.log(pRes.data);
+                            // console.log('project values response');
+                            // console.log(pRes.data);
 
                             pRes.data.forEach((v) => {
                                 projectValues[v.attribute] = v;
@@ -205,11 +206,11 @@ function Questions(props) {
 
     const [processing, stage] = useQuestions(rdmoContext, sectionIndex, userToken);
 
-    const status = (
-        <div>
-            <h4>Questions: <i>{stage}</i></h4>
-        </div>
-    );
+    // const status = (
+    //     <div>
+    //         <h4>Questions: <i>{stage}</i></h4>
+    //     </div>
+    // );
     let formFields = <></>;
     let sectionControls = <></>;
     if (!processing) {
@@ -247,6 +248,7 @@ function Questions(props) {
     if (processing) {
         return (
             <div>
+                <ScrollToTop />
                 <Row>
                     <Col lg={12}>
                         <SolarSystemLoading color='#81B248' size='large'
@@ -258,6 +260,7 @@ function Questions(props) {
     }
     return (
         <div>
+            <ScrollToTop />
             <form id={`section_${rdmoContext.sections_index}`}>
                 {formFields}
             </form>

@@ -7,17 +7,21 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-
 # jira integration
 from jira import JIRA, JIRAError
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
+from rest_framework import generics
+from rest_framework.authentication import TokenAuthentication, \
+    BasicAuthentication
 from rest_framework.authtoken.models import Token
 
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.jira_integration.models import Ticket
 from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
+from .models import DmptProject
+from .serializers import DmptProjectSerializer
 
 
 class CSRFViewMixin(View):
@@ -37,8 +41,13 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
     template_name = "gfbio_dmpt_form/dmpt.html"
 
     def get(self, request, *args, **kwargs):
+        print()
+        print('VIEW')
+        print()
         user = self.request.user
-        if not request.user.is_authenticated:
+        print('user', user, ' ', user.is_authenticated, ' ', user.id)
+        is_authenticated = user.is_authenticated
+        if not user.is_authenticated:
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
             user, created = User.objects.get_or_create(
@@ -49,11 +58,17 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
 
+        print(token, ' ', created)
+        print(str(user.id))
+        print(user.username, ' ', is_authenticated)
+
         context = self.get_context_data(**kwargs)
         context["backend"] = {
-            "isLoggedIn": "{}".format(request.user.is_authenticated).lower(),
-            "token": str(token),
+            "isLoggedIn": "{}".format(is_authenticated).lower(),
+            "token": "{}".format(token),
+            "user_id": "{}".format(user.id),
         }
+        print("VIEW conteext ", context)
         return self.render_to_response(context)
 
 
@@ -160,3 +175,9 @@ class DmpRequestHelp(View):
         # this completely as this might hinder the use of the
         # view with the react frontend.
         return HttpResponseRedirect("/")
+
+
+class DmptProjectListView(generics.ListCreateAPIView):
+    queryset = DmptProject.objects.all()
+    serializer_class = DmptProjectSerializer
+    authentication_classes = (TokenAuthentication, BasicAuthentication)

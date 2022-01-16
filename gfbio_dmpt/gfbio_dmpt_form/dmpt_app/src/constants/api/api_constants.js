@@ -1,7 +1,10 @@
 // TODO: for production system
 export const API_ROOT = '/api/v1/';
+
 // TODO: for local/ development
 // export const API_ROOT = 'http://0.0.0.0:8000/api/v1/';
+
+export const PROJECT_API_ROOT = '/dmp/dmptprojects/';
 
 // TODO: to work when served in django template this prefix has to match
 //  the urls.py + global urls.py entry -> currently (...) regex=r'submissions/ui/', (...)
@@ -15,5 +18,6 @@ export const API_ROOT = '/api/v1/';
 // eslint-disable-next-line no-unused-vars
 // const urlPrefix = '/';
 
+// TODO: use this prefix when using  the from django views.
+//  this applies to production and local environments.
 export const URL_PREFIX = '/dmp/create/';
-

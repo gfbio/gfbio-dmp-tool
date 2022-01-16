@@ -101,3 +101,15 @@ div#projectDetail {
     }
   }
 }
+
+div#summary {
+  i {
+    color: $gfbio-blue;
+    font-size: 4rem;
+  }
+  h6 {
+    color: $gfbio-blue;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}

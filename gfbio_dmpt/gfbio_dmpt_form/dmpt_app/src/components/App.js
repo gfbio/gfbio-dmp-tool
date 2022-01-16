@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Route, Switch } from 'react-router-dom';
-import Catalogs from './Catalogs';
 import DmptStart from './DmptStart';
 import RdmoContext from './RdmoContext';
 import ProjectList from './ProjectList';
 import UserLoggedInRouter from './UserLoggedInRouter';
 import { URL_PREFIX } from '../constants/api/api_constants';
+import Summary from './Summary';
 
 const App = () => {
 
@@ -22,8 +22,11 @@ const App = () => {
     const [formData, setFormData] = useState({});
 
     const [projectId, setProjectId] = useState(-1);
-
     const [projectValues, setProjectValues] = useState({});
+
+    const [dmptProjectId, setDmptProjectId] = useState(-1);
+
+    const [backendContext, setBackendContext] = useState({});
 
     const assignSections = (data) => {
         setSections(data);
@@ -61,6 +64,14 @@ const App = () => {
         setProjectValues(data);
     };
 
+    const assignDmptProjectId = (data) => {
+        setDmptProjectId(data);
+    };
+
+    const assignBackendContext = (data) => {
+        setBackendContext(data);
+    };
+
     const rdmoContext = {
         section_data: sections,
         sections_index: sectionsIndex,
@@ -71,6 +82,8 @@ const App = () => {
         form_data: formData,
         project_id: projectId,
         project_values: projectValues,
+        backend_context: backendContext,
+        dmpt_project_id: dmptProjectId,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -79,7 +92,9 @@ const App = () => {
         assignOptions,
         assignFormData,
         assignProjectId,
-        assignProjectValues
+        assignProjectValues,
+        assignBackendContext,
+        assignDmptProjectId,
     };
 
     return (
@@ -87,12 +102,13 @@ const App = () => {
             <Switch>
                 <Route exact path={`${URL_PREFIX}`}
                     component={UserLoggedInRouter} />
-                {/* <Route path={`${URL_PREFIX}catalogs`} component={Catalogs} /> */}
                 <Route exact path={`${URL_PREFIX}start`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}start/:projectId`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
+                <Route path={`${URL_PREFIX}summary/:projectId`}
+                    component={Summary} />
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
                 {/*    component={SubmissionDetail}/> */}
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}

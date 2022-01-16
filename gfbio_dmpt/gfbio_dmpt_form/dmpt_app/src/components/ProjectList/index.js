@@ -42,8 +42,11 @@ function useProjectList() {
 function ProjectList() {
     const [loading, projectList] = useProjectList();
     // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
-    // SOLVED: default django object level permissions take care of this, depending on user and/or group
-    // console.log('projectList');
+    // FIXME SOLVED: default django object level permissions take care of this, depending on user and/or group
+    console.log('ProjectList');
+    // const rdmoContext = useContext(RdmoContext);
+    // console.log('LIST context');
+    // console.log(rdmoContext);
     // console.log(projectList);
     let projects = <></>;
     if (projectList.length) {
