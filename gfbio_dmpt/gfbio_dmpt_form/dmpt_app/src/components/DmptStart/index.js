@@ -67,7 +67,6 @@ const postValue = (projectId, formItem, token) => {
             'unit': formItem.question.unit
         },
         {
-            // token of super user (maweber)
             headers: {
                 'Authorization': `Token ${token}`,
                 'X-CSRFToken': csrftoken
@@ -88,7 +87,6 @@ const putValue = (projectId, formItem, token) => {
             'unit': formItem.question.unit
         },
         {
-            // token of super user (maweber)
             headers: {
                 'Authorization': `Token ${token}`,
                 'X-CSRFToken': csrftoken
@@ -106,14 +104,10 @@ const submitValues = async (projectId, formData, token) => {
                 if (formItem.valueId !== undefined) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        // console.log('\tput value res ');
-                        // console.log(res);
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        // console.log('\tpost value res ');
-                        // console.log(res);
                     });
                 }
 
@@ -125,26 +119,6 @@ const submitValues = async (projectId, formData, token) => {
         ;
     }
 };
-//
-// const putValues = async (projectId, formData, token) => {
-//     try {
-//         // eslint-disable-next-line no-restricted-syntax
-//         for (const f in formData) {
-//             if (formData[f] !== undefined) {
-//                 // eslint-disable-next-line no-await-in-loop
-//                 await putValue(projectId, formData[f], token).then((res) => {
-//                     console.log('\tput value res ');
-//                     console.log(res);
-//                 });
-//
-//             }
-//         }
-//     } catch (e) {
-//         console.error(e);
-//     } finally {
-//         ;
-//     }
-// };
 
 function useDmptStart(rdmoContext, token) {
     const [processing, setProcessing] = useState(true);
@@ -162,11 +136,6 @@ function useDmptStart(rdmoContext, token) {
                 const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=${catalogId}`,  // section for gfbio catalog id hardcoded
                     {
-                        // FIXME: rdmo seems to allow only authenticated requests. solutions is to provide token of user or playground user
-                        // local
-                        // headers: { 'Authorization': 'Token a801025296b509457327cac484513e62592167a8' }
-                        // prod
-                        // headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
                         headers: { 'Authorization': `Token ${token}` }
                     }
                 );
@@ -244,6 +213,7 @@ function DmptStart(props) {
         }
     };
 
+    // FIXME: prevent submitting empty dmp
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
@@ -304,10 +274,6 @@ function DmptStart(props) {
         // console.log(rdmoContext.form_data);
     };
 
-    //     <div>
-    //         <h2><i>{stage}</i></h2>
-    //     </div>
-    // );
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 

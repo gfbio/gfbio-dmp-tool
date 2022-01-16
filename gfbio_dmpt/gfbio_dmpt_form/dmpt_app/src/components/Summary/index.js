@@ -66,6 +66,7 @@ function Summary(props) {
     // console.log(rdmoContext);
     console.log(dmptProjectId);
 
+    // FIXME: no save for anonymous user (no user / not logged in user)
     const saveProjectHandler = () => {
         setSaving(true);
         if (dmptProjectId === -1) {
@@ -155,14 +156,6 @@ function Summary(props) {
     else if (discardingDone) {
         return <Redirect push
             to={`${URL_PREFIX}`} />;
-        // discardSection = (
-        //     <Col lg={6} className='p-3'>
-        //         <i className='mdi mdi-content-save-edit-outline' />
-        //         <h6>
-        //             Saving completed successfully !
-        //         </h6>
-        //     </Col>
-        // );
     }
 
     return (<div id='summary' className='text-center'>
