@@ -10,6 +10,7 @@ import FormRadio from '../FormRadio';
 import FormSelect from '../FormSelect';
 import FormTextArea from '../FormTextArea';
 import FormCheckBox from '../FormCheckBox';
+import ScrollToTop from '../ScrollToTop';
 
 const fetchQuestion = async (q, token) => {
     return await axios.get(
@@ -205,11 +206,11 @@ function Questions(props) {
 
     const [processing, stage] = useQuestions(rdmoContext, sectionIndex, userToken);
 
-    const status = (
-        <div>
-            <h4>Questions: <i>{stage}</i></h4>
-        </div>
-    );
+    // const status = (
+    //     <div>
+    //         <h4>Questions: <i>{stage}</i></h4>
+    //     </div>
+    // );
     let formFields = <></>;
     let sectionControls = <></>;
     if (!processing) {
@@ -247,6 +248,7 @@ function Questions(props) {
     if (processing) {
         return (
             <div>
+                <ScrollToTop />
                 <Row>
                     <Col lg={12}>
                         <SolarSystemLoading color='#81B248' size='large'
@@ -258,6 +260,7 @@ function Questions(props) {
     }
     return (
         <div>
+            <ScrollToTop />
             <form id={`section_${rdmoContext.sections_index}`}>
                 {formFields}
             </form>

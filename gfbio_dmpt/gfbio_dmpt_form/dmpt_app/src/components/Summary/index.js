@@ -49,8 +49,8 @@ const saveProject = async (token, userId, projectId) => {
 };
 
 function Summary(props) {
-    console.log('Summary ', props);
-    console.log('-----------------------------');
+    console.log('Summary ');
+    // console.log('-----------------------------');
     // console.log('');
     const rdmoContext = useContext(RdmoContext);
     checkBackendParameters(rdmoContext);
@@ -64,7 +64,7 @@ function Summary(props) {
 
     // console.log('RDOM CONTEXT');
     // console.log(rdmoContext);
-    console.log(dmptProjectId);
+    // console.log(dmptProjectId);
 
     // FIXME: no save for anonymous user (no user / not logged in user)
     const saveProjectHandler = () => {
@@ -74,8 +74,8 @@ function Summary(props) {
                 rdmoContext.backend_context.token,
                 rdmoContext.backend_context.user_id,
                 rdmoContext.project_id).then((result) => {
-                console.log('saveProject handler. result');
-                console.log(result);
+                // console.log('saveProject handler. result');
+                // console.log(result);
                 rdmoContext.assignDmptProjectId(result.data.id);
                 setSaving(false);
                 setSavingDone(true);

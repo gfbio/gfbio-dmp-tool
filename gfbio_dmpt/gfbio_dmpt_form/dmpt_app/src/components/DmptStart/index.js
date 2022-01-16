@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import { Redirect } from 'react-router-dom';
@@ -103,12 +102,10 @@ const submitValues = async (projectId, formData, token) => {
                 const formItem = formData[f];
                 if (formItem.valueId !== undefined) {
                     // eslint-disable-next-line no-await-in-loop
-                    await putValue(projectId, formItem, token).then((res) => {
-                    });
+                    await putValue(projectId, formItem, token).then((res) => {});
                 } else {
                     // eslint-disable-next-line no-await-in-loop
-                    await postValue(projectId, formItem, token).then((res) => {
-                    });
+                    await postValue(projectId, formItem, token).then((res) => {});
                 }
 
             }
@@ -159,8 +156,8 @@ function useDmptStart(rdmoContext, token) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
-    console.log('DMPT start ', props);
-    console.log('-----------------------------');
+    console.log('DMPT start ');
+    // console.log('-----------------------------');
 
     // console.log('-----------------------------');
     // const { isLoggedIn, backendContext } = props;
@@ -170,8 +167,8 @@ function DmptStart(props) {
     const backendContext = checkBackendParameters(rdmoContext);
 
     // rdmoContext.assignBackendContext(backendContext);
-    console.log('RDMO CONTEXT DMPT START');
-    console.log(rdmoContext);
+    // console.log('RDMO CONTEXT DMPT START');
+    // console.log(rdmoContext);
 
     const [submitted, setSubmitted] = useState(false);
 
@@ -224,8 +221,8 @@ function DmptStart(props) {
         // console.log('      ++++++++++++++++++++++++++++ ');
         if (projectId < 0) {
             createProject(backendContext.token).then((createResult) => {
-                console.log('CREATE PRJ RESULT');
-                console.log(createResult);
+                // console.log('CREATE PRJ RESULT');
+                // console.log(createResult);
                 projectId = createResult.data.id;
                 rdmoContext.assignProjectId(projectId);
                 // TODO: set project id, if available do not create a new one
@@ -280,8 +277,8 @@ function DmptStart(props) {
     if (!processing) {
 
         // FIXME: for testing submit summary, only submitHandler is active
-        // const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
-        const nextHandler = submitAllHandler;
+        // const nextHandler = submitAllHandler;
+        const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
         formFields = <Questions
             userToken={backendContext.token}
@@ -299,7 +296,7 @@ function DmptStart(props) {
         header = 'Data Management Plan';
     }
 
-    console.log('--- before return ', processing, '  | submitted ', submitted, ' return now. ...');
+    // console.log('--- before return ', processing, '  | submitted ', submitted, ' return now. ...');
     if (processing) {
         return (
             <Row>
