@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
-import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
+import {
+    API_ROOT,
+    PROJECT_API_ROOT,
+    URL_PREFIX
+} from '../../constants/api/api_constants';
+import RdmoContext from '../RdmoContext';
+import { checkBackendParameters } from '../../utils/backend_context';
 
-function useProjectList() {
+function useProjectList(token) {
     // console.log('-useProjectList Hook');
     const [projectList, setProjectList] = useState({});
     const [loading, setLoading] = useState(false);
@@ -19,7 +25,14 @@ function useProjectList() {
                 setLoading(true);
                 // console.log('  ** try before await');
                 const response = await axios.get(
-                    `${API_ROOT}projects/projects/`
+                    // `${API_ROOT}projects/projects/`
+                    `${PROJECT_API_ROOT}`,
+                    {
+                        headers: {
+                            'Authorization': `Token ${token}`,
+                            // 'X-CSRFToken': csrftoken
+                        }
+                    }
                 );
                 // console.log('  ** try after await');
                 setProjectList(response.data);
@@ -40,7 +53,9 @@ function useProjectList() {
 }
 
 function ProjectList() {
-    const [loading, projectList] = useProjectList();
+    const rdmoContext = useContext(RdmoContext);
+    const backendContext = checkBackendParameters(rdmoContext);
+    const [loading, projectList] = useProjectList(backendContext.token);
     // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
     // FIXME SOLVED: default django object level permissions take care of this, depending on user and/or group
     console.log('ProjectList');
@@ -54,7 +69,7 @@ function ProjectList() {
             return (
                 <ListGroupItem>
                     <Link id={index}
-                        to={`${URL_PREFIX}start/${item.id}`}>{item.title}
+                        to={`${URL_PREFIX}start/${item.rdmo_project}`}>{item.title}
                     </Link>
                 </ListGroupItem>
             );

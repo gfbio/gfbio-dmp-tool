@@ -156,6 +156,17 @@ class TestDmptProjectViews(TestCase):
         self.assertIsInstance(content, list)
         self.assertEqual(1, len(content))
 
+    def test_get_content_structure(self):
+        dp = Project.objects.create(title='Unit Test')
+        self.std_client.post('/dmp/dmptprojects/', {
+            'rdmo_project': dp.id,
+            'user': self.std_user.id,
+        })
+        response = self.std_client.get('/dmp/dmptprojects/')
+        content = json.loads(response.content)
+        self.assertIn('title', content[0].keys())
+        self.assertIn('rdmo_project', content[0].keys())
+
     def test_user_get_multiple_projects(self):
         self.assertEqual(0, len(Project.objects.all()))
         self.assertEqual(0, len(DmptProject.objects.all()))
