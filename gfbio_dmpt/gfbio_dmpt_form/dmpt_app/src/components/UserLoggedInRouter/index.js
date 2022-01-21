@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ProjectList from '../ProjectList';
 import DmptStart from '../DmptStart';
+import { checkBackendParameters } from '../../utils/backend_context';
+import RdmoContext from '../RdmoContext';
 
 function UserLoggedInRouter() {
-    console.log('USerloggedInRouter');
-    let backend = {};
-    // TODO: local development
-    backend.isLoggedIn = 'false';
-    backend.token = 'b20259c17fae3f74efef7746c4f4e3d32d2d1d72';
-    // --------------------------------------------------------
-    if (window.props !== undefined) {
-        backend = window.props;
-    }
-    console.log('backend context:');
-    console.log(backend);
+    console.log('UserLoggedInRouter');
+    const rdmoContext = useContext(RdmoContext);
+    const backend = checkBackendParameters(rdmoContext);
+
+    // console.log('backend context:');
+    // console.log(backend);
+    // console.log('context');
+    // console.log(rdmoContext);
+
     if (backend.isLoggedIn === 'false') {
-        return (<DmptStart isLoggedIn={backend.isLoggedIn}
-            userToken={backend.token} />);
+        return (
+            <DmptStart />);
     }
     return (
         <ProjectList />

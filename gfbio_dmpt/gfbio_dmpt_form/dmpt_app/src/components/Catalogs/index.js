@@ -16,8 +16,8 @@ function useCatalogs() {
                         // headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
                     }
                 );
-                console.log('response');
-                console.log(response.data);
+                // console.log('response');
+                // console.log(response.data);
                 setCatalogs(response.data);
             } catch (e) {
                 console.error(e);
@@ -34,8 +34,8 @@ function useCatalogs() {
 
 function Catalogs(props) {
     // const bsi = props.bsi || '';
-    console.log('CATALOGS');
-    console.log(props)
+    // console.log('CATALOGS');
+    // console.log(props)
     const [catalogs, loading] = useCatalogs();
     return (
         <div>
