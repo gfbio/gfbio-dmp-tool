@@ -20,8 +20,10 @@ function getCookie(name) {
         for (let i = 0; i < cookies.length; i += 1) {
             const cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (`${name}=`)) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            if (cookie.substring(0, name.length + 1) === `${name}=`) {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
                 break;
             }
         }
@@ -36,15 +38,15 @@ const createProject = async (token) => {
         const response = await axios.post(
             `${API_ROOT}projects/projects/`,
             {
-                'title': `tmp_${nanoid()}`,
-                'description': `tmp_${nanoid()} temporary project`,
-                'catalog': 18   // FIXME: gfbio catalog id hardcoded --> 18
+                title: `tmp_${nanoid()}`,
+                description: `tmp_${nanoid()} temporary project`,
+                catalog: 18, // FIXME: gfbio catalog id hardcoded --> 18
             },
             {
                 headers: {
-                    'Authorization': `Token ${token}`,
-                    'X-CSRFToken': csrftoken
-                }
+                    Authorization: `Token ${token}`,
+                    'X-CSRFToken': csrftoken,
+                },
             }
         );
         return response;
@@ -60,16 +62,16 @@ const postValue = (projectId, formItem, token) => {
     return axios.post(
         `${API_ROOT}projects/projects/${projectId}/values/`,
         {
-            'attribute': formItem.question.attribute,
-            'text': formItem.value,
-            'value_type': formItem.question.value_type,
-            'unit': formItem.question.unit
+            attribute: formItem.question.attribute,
+            text: formItem.value,
+            value_type: formItem.question.value_type,
+            unit: formItem.question.unit,
         },
         {
             headers: {
-                'Authorization': `Token ${token}`,
-                'X-CSRFToken': csrftoken
-            }
+                Authorization: `Token ${token}`,
+                'X-CSRFToken': csrftoken,
+            },
         }
     );
 };
@@ -80,16 +82,16 @@ const putValue = (projectId, formItem, token) => {
     return axios.put(
         `${API_ROOT}projects/projects/${projectId}/values/${formItem.valueId}/`,
         {
-            'attribute': formItem.question.attribute,
-            'text': formItem.value,
-            'value_type': formItem.question.value_type,
-            'unit': formItem.question.unit
+            attribute: formItem.question.attribute,
+            text: formItem.value,
+            value_type: formItem.question.value_type,
+            unit: formItem.question.unit,
         },
         {
             headers: {
-                'Authorization': `Token ${token}`,
-                'X-CSRFToken': csrftoken
-            }
+                Authorization: `Token ${token}`,
+                'X-CSRFToken': csrftoken,
+            },
         }
     );
 };
@@ -102,18 +104,20 @@ const submitValues = async (projectId, formData, token) => {
                 const formItem = formData[f];
                 if (formItem.valueId !== undefined) {
                     // eslint-disable-next-line no-await-in-loop
-                    await putValue(projectId, formItem, token).then((res) => {});
+                    await putValue(projectId, formItem, token).then(
+                        (res) => {}
+                    );
                 } else {
                     // eslint-disable-next-line no-await-in-loop
-                    await postValue(projectId, formItem, token).then((res) => {});
+                    await postValue(projectId, formItem, token).then(
+                        (res) => {}
+                    );
                 }
-
             }
         }
     } catch (e) {
         console.error(e);
     } finally {
-        ;
     }
 };
 
@@ -131,9 +135,9 @@ function useDmptStart(rdmoContext, token) {
             try {
                 setStage('... fetch sections ...');
                 const sectionResponse = await axios.get(
-                    `${API_ROOT}questions/sections/?catalog=${catalogId}`,  // section for gfbio catalog id hardcoded
+                    `${API_ROOT}questions/sections/?catalog=${catalogId}`, // section for gfbio catalog id hardcoded
                     {
-                        headers: { 'Authorization': `Token ${token}` }
+                        headers: { Authorization: `Token ${token}` },
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -144,7 +148,6 @@ function useDmptStart(rdmoContext, token) {
             } catch (e) {
                 console.error(e);
             } finally {
-                ;
             }
         }
 
@@ -181,10 +184,15 @@ function DmptStart(props) {
 
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');
+    const [previousButtonVisibility, setPreviousButtonVisibility] =
+        useState(true);
 
     const [submitOnNext, setSubmitOnNext] = useState(false);
 
     const nextSectionHandler = () => {
+        setPreviousButtonVisibility(
+            rdmoContext.sections_index === -1 ? true : false
+        );
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
             setNextText('Next Section');
@@ -201,6 +209,9 @@ function DmptStart(props) {
     };
 
     const prevSectionHandler = () => {
+        setPreviousButtonVisibility(
+            rdmoContext.sections_index === 0 ? true : false
+        );
         if (rdmoContext.sections_index > 0) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
         }
@@ -230,7 +241,11 @@ function DmptStart(props) {
                 // TODO: redirect to rdmo overview
 
                 // -------------------------------------------------------------
-                submitValues(projectId, rdmoContext.form_data, backendContext.token).then(() => {
+                submitValues(
+                    projectId,
+                    rdmoContext.form_data,
+                    backendContext.token
+                ).then(() => {
                     // console.log('Submit handler values result ');
                     // console.log(valueResult);
                     // return valueResult;
@@ -239,11 +254,14 @@ function DmptStart(props) {
                 // -------------------------------------------------------------
             });
         } else {
-            submitValues(projectId, rdmoContext.form_data, backendContext.token).then(() => {
+            submitValues(
+                projectId,
+                rdmoContext.form_data,
+                backendContext.token
+            ).then(() => {
                 // console.log(valueResult);
                 setSubmitted(true);
-            }
-            );
+            });
         }
     };
 
@@ -254,17 +272,20 @@ function DmptStart(props) {
         // console.log('handleChange: ');
         // console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
-        if (e.target.name.startsWith('checkbox') && formData.hasOwnProperty(e.target.name)) {
+        if (
+            e.target.name.startsWith('checkbox') &&
+            formData.hasOwnProperty(e.target.name)
+        ) {
             delete formData[e.target.name];
         } else {
-            formData = ({
+            formData = {
                 ...formData,
                 // Trimming any whitespace
                 [e.target.name]: {
-                    'value': e.target.value,  // .trim(),
-                    'question': item
-                }
-            });
+                    value: e.target.value, // .trim(),
+                    question: item,
+                },
+            };
         }
         rdmoContext.assignFormData(formData);
         // console.log('formdata in context ');
@@ -275,23 +296,35 @@ function DmptStart(props) {
     let header = 'Preparing Data Management Plan form fields';
 
     if (!processing) {
-
         // FIXME: for testing submit summary, only submitHandler is active
         // const nextHandler = submitAllHandler;
-        const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+        const nextHandler = submitOnNext
+            ? submitAllHandler
+            : nextSectionHandler;
 
-        formFields = <Questions
-            userToken={backendContext.token}
-            sectionIndex={rdmoContext.sections_index}
-            handleFormChange={handleFormChange}
-            nextSection={<ActionButton text={nextText}
-                onClickHandler={nextHandler}
-                align='right' />}
-
-            prevSection={<ActionButton text={prevText}
-                onClickHandler={prevSectionHandler}
-                align='left' />}
-        />;
+        formFields = (
+            <Questions
+                userToken={backendContext.token}
+                sectionIndex={rdmoContext.sections_index}
+                handleFormChange={handleFormChange}
+                prevSection={
+                    <ActionButton
+                        text={prevText}
+                        onClickHandler={prevSectionHandler}
+                        align="left"
+                        hide={previousButtonVisibility}
+                    />
+                }
+                nextSection={
+                    <ActionButton
+                        text={nextText}
+                        onClickHandler={nextHandler}
+                        align="right"
+                        hide={false}
+                    />
+                }
+            />
+        );
 
         header = 'Data Management Plan';
     }
@@ -301,8 +334,9 @@ function DmptStart(props) {
         return (
             <Row>
                 <Col lg={12}>
-                    <SolarSystemLoading color='#345AA2' size='large'
-                        speed={8}>Loading</SolarSystemLoading>
+                    <SolarSystemLoading color="#345AA2" size="large" speed={8}>
+                        Loading
+                    </SolarSystemLoading>
                 </Col>
             </Row>
         );
@@ -311,26 +345,27 @@ function DmptStart(props) {
     // FIXME: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
         // console.log('SUBMITTED : ', URL_PREFIX);
-        return <Redirect push
-            to={`${URL_PREFIX}summary/${rdmoContext.project_id}`} />;
+        return (
+            <Redirect
+                push
+                to={`${URL_PREFIX}summary/${rdmoContext.project_id}`}
+            />
+        );
     }
 
     return (
-        <div id='projectDetail'>
+        <div id="projectDetail">
             <ScrollToTop />
             <Row>
                 <Col lg={12}>
                     <h3>{header}</h3>
                 </Col>
             </Row>
-            <Row className='mt-3'>
-                <Col lg={12}>
-                    {formFields}
-                </Col>
+            <Row className="mt-3">
+                <Col lg={12}>{formFields}</Col>
             </Row>
             {/* <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user */}
             {/*    logged in: {isLoggedIn}</small></h1> */}
-
         </div>
     );
 }
