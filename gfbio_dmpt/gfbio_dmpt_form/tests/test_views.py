@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-from pprint import pp
 from unittest.mock import patch
 
 from django.contrib.auth.models import Group
@@ -10,134 +9,8 @@ from rdmo.questions.models.catalog import Catalog
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
+from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject
 from gfbio_dmpt.users.models import User
-
-
-class RdmoRequestTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        user = User.objects.create_user(
-            username="kevin", email="kevin@kevin.de", password="secret",
-            is_staff=True
-        )
-        token = Token.objects.create(user=user)
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-        cls.staff_client = client
-
-    def test_get_catalog(self):
-        response = self.staff_client.get("/api/v1/projects/projects/")
-        print(response.status_code)
-        content = json.loads(response.content)
-        pp(content)
-
-
-class RdmoLocalServerRequestTest(TestCase):
-
-    # @classmethod
-    # def setUpTestData(cls):
-    #     user = User.objects.create_user(
-    #         username='kevin', email='kevin@kevin.de', password='secret',
-    #         is_staff=True)
-    #     token = Token.objects.create(user=user)
-    #     client = APIClient()
-    #     client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
-    #     cls.staff_client = client
-
-    def test_get_project(self):
-        # http://0.0.0.0:8000/api/v1/
-
-        # http://0.0.0.0:8000/api/v1/projects/projects/
-        # http://0.0.0.0:8000/api/v1/projects/projects/95/
-
-        # FIXME: User has to be in api group for widget to work
-
-        # http://0.0.0.0:8000/api/v1/projects/projects/131/values/
-
-        # [
-        #   {
-        #     "id": 79,
-        #     "created": "2021-11-10T13:35:26.951085Z",
-        #     "updated": "2021-11-10T13:35:26.951092Z",
-        #     "attribute": 252,
-        #     "set_prefix": "",
-        #     "set_index": 0,
-        #     "collection_index": 0,
-        #     "text": "Other",
-        #     "option": null,
-        #     "file_name": null,
-        #     "file_url": null,
-        #     "value_type": "option",
-        #     "unit": "",
-        #     "external_id": ""
-        #   },
-        #   {
-        #     "id": 75,
-        #     "created": "2021-11-10T13:35:25.949021Z",
-        #     "updated": "2021-11-10T13:35:25.949028Z",
-        #     "attribute": 241,
-        #     "set_prefix": "",
-        #     "set_index": 0,
-        #     "collection_index": 0,
-        #     "text": "MW user project via app",
-        #     "option": null,
-        #     "file_name": null,
-        #     "file_url": null,
-        #     "value_type": "text",
-        #     "unit": "",
-        #     "external_id": ""
-        #   },
-        #   {
-        #     "id": 78,
-        #     "created": "2021-11-10T13:35:26.715218Z",
-        #     "updated": "2021-11-10T13:35:26.715225Z",
-        #     "attribute": 245,
-        #     "set_prefix": "",
-        #     "set_index": 0,
-        #     "collection_index": 0,
-        #     "text": "Other",
-        #     "option": null,
-        #     "file_name": null,
-        #     "file_url": null,
-        #     "value_type": "option",
-        #     "unit": "",
-        #     "external_id": ""
-        #   },
-        #   {
-        #     "id": 76,
-        #     "created": "2021-11-10T13:35:26.199680Z",
-        #     "updated": "2021-11-10T13:35:26.199687Z",
-        #     "attribute": 242,
-        #     "set_prefix": "",
-        #     "set_index": 0,
-        #     "collection_index": 0,
-        #     "text": "Other",
-        #     "option": null,
-        #     "file_name": null,
-        #     "file_url": null,
-        #     "value_type": "option",
-        #     "unit": "",
-        #     "external_id": ""
-        #   },
-        #   {
-        #     "id": 77,
-        #     "created": "2021-11-10T13:35:26.478203Z",
-        #     "updated": "2021-11-10T13:35:26.478211Z",
-        #     "attribute": 244,
-        #     "set_prefix": "",
-        #     "set_index": 0,
-        #     "collection_index": 0,
-        #     "text": "React app injected ....",
-        #     "option": null,
-        #     "file_name": null,
-        #     "file_url": null,
-        #     "value_type": "text",
-        #     "unit": "",
-        #     "external_id": ""
-        #   }
-        # ]
-
-        pass
 
 
 class TestDmptFrontendView(TestCase):
@@ -235,6 +108,18 @@ class TestDmptProjectViews(TestCase):
         client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         cls.std_client = client
 
+        cls.std_user_2 = User.objects.create_user(
+            username="jane",
+            email="jane@doe.de",
+            password="top-secret",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.std_user_2)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.std_client_2 = client
+
     def test_unauthorized_post(self):
         response = self.client.post('/dmp/dmptprojects/', {})
         self.assertEqual(401, response.status_code)
@@ -250,23 +135,11 @@ class TestDmptProjectViews(TestCase):
         self.assertIn('rdmo_project', content.keys())
         self.assertEqual(dp.id, content.get('rdmo_project', 'invalid_id'))
 
-    # def test_user_post_no_uid(self):
-    #     dp = Project.objects.create(title='Unit Test')
-    #     response = self.std_client.post('/dmp/dmptprojects/', {
-    #         'rdmo_project': dp.id,
-    #         # 'user': self.std_user.id,
-    #     })
-    #     self.assertEqual(201, response.status_code)
-    #     content = json.loads(response.content)
-    #     print(content)
-    #     self.assertIn('rdmo_project', content.keys())
-    #     self.assertEqual(dp.id, content.get('rdmo_project', 'invalid_id'))
-
     def test_unauthorized_get(self):
         response = self.client.get('/dmp/dmptprojects/')
         self.assertEqual(401, response.status_code)
 
-    def test_user_get(self):
+    def test_user_get_empty(self):
         response = self.std_client.get('/dmp/dmptprojects/')
         self.assertEqual(200, response.status_code)
         self.assertEqual([], json.loads(response.content))
@@ -282,3 +155,46 @@ class TestDmptProjectViews(TestCase):
         content = json.loads(response.content)
         self.assertIsInstance(content, list)
         self.assertEqual(1, len(content))
+
+    def test_get_content_structure(self):
+        dp = Project.objects.create(title='Unit Test')
+        self.std_client.post('/dmp/dmptprojects/', {
+            'rdmo_project': dp.id,
+            'user': self.std_user.id,
+        })
+        response = self.std_client.get('/dmp/dmptprojects/')
+        content = json.loads(response.content)
+        self.assertIn('title', content[0].keys())
+        self.assertIn('rdmo_project', content[0].keys())
+
+    def test_user_get_multiple_projects(self):
+        self.assertEqual(0, len(Project.objects.all()))
+        self.assertEqual(0, len(DmptProject.objects.all()))
+
+        rdmo_ids = []
+        for i in range(0, 5):
+            rdmo_ids.append(
+                Project.objects.create(title='Unit Test {}'.format(i)).pk)
+
+        for r in rdmo_ids[0:2]:
+            self.std_client.post('/dmp/dmptprojects/', {
+                'rdmo_project': r,
+                'user': self.std_user.id,
+            })
+        for r in rdmo_ids[2:]:
+            self.std_client_2.post('/dmp/dmptprojects/', {
+                'rdmo_project': r,
+                'user': self.std_user_2.id,
+            })
+
+        response = self.std_client.get('/dmp/dmptprojects/')
+        content_1 = json.loads(response.content)
+
+        response = self.std_client_2.get('/dmp/dmptprojects/')
+        content_2 = json.loads(response.content)
+
+        self.assertEqual(2, len(content_1))
+        self.assertEqual(3, len(content_2))
+
+        self.assertEqual(self.std_user.id, content_1[0].get('user'))
+        self.assertEqual(self.std_user_2.id, content_2[0].get('user'))

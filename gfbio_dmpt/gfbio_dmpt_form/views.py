@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 from jira import JIRA, JIRAError
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, \
     BasicAuthentication
 from rest_framework.authtoken.models import Token
@@ -21,6 +21,7 @@ from gfbio_dmpt.jira_integration.models import Ticket
 from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
 from .models import DmptProject
+from .permissions import IsOwnerOrReadOnly
 from .serializers import DmptProjectSerializer
 
 
@@ -108,9 +109,9 @@ class DmpRequestHelp(View):
         summary = project.title
         catalog = project.catalog
         reporting_user = \
-        jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
-            0
-        ].name
+            jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
+                0
+            ].name
 
         # TODO:  <29-11-21, Claas>
         # we should have a handling for users not being logged in.
@@ -169,3 +170,8 @@ class DmptProjectListView(generics.ListCreateAPIView):
     queryset = DmptProject.objects.all()
     serializer_class = DmptProjectSerializer
     authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
+
+    def get_queryset(self):
+        user = self.request.user
+        return DmptProject.objects.filter(user=user).order_by('-modified')
