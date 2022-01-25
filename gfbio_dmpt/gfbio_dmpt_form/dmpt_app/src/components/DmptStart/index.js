@@ -40,13 +40,13 @@ const createProject = async (token) => {
             {
                 title: `tmp_${nanoid()}`,
                 description: `tmp_${nanoid()} temporary project`,
-                catalog: 18, // FIXME: gfbio catalog id hardcoded --> 18
+                catalog: 18 // FIXME: gfbio catalog id hardcoded --> 18
             },
             {
                 headers: {
                     Authorization: `Token ${token}`,
-                    'X-CSRFToken': csrftoken,
-                },
+                    'X-CSRFToken': csrftoken
+                }
             }
         );
         return response;
@@ -65,13 +65,13 @@ const postValue = (projectId, formItem, token) => {
             attribute: formItem.question.attribute,
             text: formItem.value,
             value_type: formItem.question.value_type,
-            unit: formItem.question.unit,
+            unit: formItem.question.unit
         },
         {
             headers: {
                 Authorization: `Token ${token}`,
-                'X-CSRFToken': csrftoken,
-            },
+                'X-CSRFToken': csrftoken
+            }
         }
     );
 };
@@ -85,13 +85,13 @@ const putValue = (projectId, formItem, token) => {
             attribute: formItem.question.attribute,
             text: formItem.value,
             value_type: formItem.question.value_type,
-            unit: formItem.question.unit,
+            unit: formItem.question.unit
         },
         {
             headers: {
                 Authorization: `Token ${token}`,
-                'X-CSRFToken': csrftoken,
-            },
+                'X-CSRFToken': csrftoken
+            }
         }
     );
 };
@@ -102,15 +102,20 @@ const submitValues = async (projectId, formData, token) => {
         for (const f in formData) {
             if (formData[f] !== undefined) {
                 const formItem = formData[f];
-                if (formItem.valueId !== undefined) {
+                // console.log('  ---  submitValues ', formItem, '  --- ', formItem.valueId);
+                if (formItem.valueId !== undefined && formItem.valueId !== false) {
+                    console.log('PUT');
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then(
-                        (res) => {}
+                        (res) => {
+                        }
                     );
                 } else {
+                    console.log('POST');
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then(
-                        (res) => {}
+                        (res) => {
+                        }
                     );
                 }
             }
@@ -137,7 +142,7 @@ function useDmptStart(rdmoContext, token) {
                 const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=${catalogId}`, // section for gfbio catalog id hardcoded
                     {
-                        headers: { Authorization: `Token ${token}` },
+                        headers: { Authorization: `Token ${token}` }
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -159,7 +164,7 @@ function useDmptStart(rdmoContext, token) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
-    console.log('DMPT start ');
+    // console.log('DMPT start ');
     // console.log('-----------------------------');
 
     // console.log('-----------------------------');
@@ -272,6 +277,19 @@ function DmptStart(props) {
         // console.log('handleChange: ');
         // console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
+
+        // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
+        let vId = false;
+        // if (formData.hasOwnProperty(e.target.name)) {
+        //     vId = formData[e.target.name].valueId;
+        //     if (e.target.name.startsWith('checkbox')) {
+        //         delete formData[e.target.name];
+        //     }
+        // }
+        if (formData.hasOwnProperty(e.target.name) && formData[e.target.name].hasOwnProperty('valueId')) {
+            vId = formData[e.target.name].valueId;
+        }
+
         if (
             e.target.name.startsWith('checkbox') &&
             formData.hasOwnProperty(e.target.name)
@@ -284,7 +302,9 @@ function DmptStart(props) {
                 [e.target.name]: {
                     value: e.target.value, // .trim(),
                     question: item,
-                },
+                    valueId: vId
+                    // valueId: vId
+                }
             };
         }
         rdmoContext.assignFormData(formData);
@@ -311,7 +331,7 @@ function DmptStart(props) {
                     <ActionButton
                         text={prevText}
                         onClickHandler={prevSectionHandler}
-                        align="left"
+                        align='left'
                         hide={previousButtonVisibility}
                     />
                 }
@@ -319,7 +339,7 @@ function DmptStart(props) {
                     <ActionButton
                         text={nextText}
                         onClickHandler={nextHandler}
-                        align="right"
+                        align='right'
                         hide={false}
                     />
                 }
@@ -334,7 +354,7 @@ function DmptStart(props) {
         return (
             <Row>
                 <Col lg={12}>
-                    <SolarSystemLoading color="#345AA2" size="large" speed={8}>
+                    <SolarSystemLoading color='#345AA2' size='large' speed={8}>
                         Loading
                     </SolarSystemLoading>
                 </Col>
@@ -354,14 +374,14 @@ function DmptStart(props) {
     }
 
     return (
-        <div id="projectDetail">
+        <div id='projectDetail'>
             <ScrollToTop />
             <Row>
                 <Col lg={12}>
                     <h3>{header}</h3>
                 </Col>
             </Row>
-            <Row className="mt-3">
+            <Row className='mt-3'>
                 <Col lg={12}>{formFields}</Col>
             </Row>
             {/* <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user */}

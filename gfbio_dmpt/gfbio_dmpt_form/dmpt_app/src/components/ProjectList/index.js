@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import {
-    API_ROOT,
     PROJECT_API_ROOT,
     URL_PREFIX
 } from '../../constants/api/api_constants';
@@ -58,7 +57,7 @@ function ProjectList() {
     const [loading, projectList] = useProjectList(backendContext.token);
     // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
     // FIXME SOLVED: default django object level permissions take care of this, depending on user and/or group
-    console.log('ProjectList');
+    // console.log('ProjectList');
     // const rdmoContext = useContext(RdmoContext);
     // console.log('LIST context');
     // console.log(rdmoContext);
