@@ -49,7 +49,7 @@ const saveProject = async (token, userId, projectId) => {
 };
 
 function Summary(props) {
-    console.log('Summary ');
+    // console.log('Summary ');
     // console.log('-----------------------------');
     // console.log('');
     const rdmoContext = useContext(RdmoContext);
