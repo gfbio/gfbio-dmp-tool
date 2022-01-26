@@ -38,6 +38,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         is_authenticated = user.is_authenticated
+        print('view is authenticated ', is_authenticated)
         if not user.is_authenticated:
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
