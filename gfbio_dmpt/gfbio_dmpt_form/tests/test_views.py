@@ -26,13 +26,13 @@ class TestDmptFrontendView(TestCase):
         )
 
     def test_get_not_logged_in(self):
-        response = self.client.get("/dmpt/app/")
+        response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
         self.assertIn(b"{'isLoggedIn': 'false', 'token':", response.content)
 
     def test_get_logged_in(self):
         self.client.login(username="john", password="secret")
-        response = self.client.get("/dmpt/app/")
+        response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
         self.assertIn(b"{'isLoggedIn': 'true', 'token':", response.content)
 
@@ -60,7 +60,7 @@ class TestDmpExportView(TestCase):
         catalog, status = Catalog.objects.get_or_create(key="testkey")
         project, status = Project.objects.get_or_create(title="Test",
                                                         catalog=catalog)
-        response = self.client.get(f"/dmpt/export/{project.pk}/pdf",
+        response = self.client.get(f"/dmp/export/{project.pk}/pdf",
                                    follow=True)
         self.assertEquals(response.get("Content-Type"), "application/pdf")
 
@@ -88,7 +88,7 @@ class TestDmpRequestHelp(TestCase):
         catalog, status = Catalog.objects.get_or_create(key="testkey")
         project, status = Project.objects.get_or_create(title="Test",
                                                         catalog=catalog)
-        response = self.client.get(f"/dmpt/help/{project.pk}", follow=True)
+        response = self.client.get(f"/dmp/help/{project.pk}", follow=True)
         self.assertEqual(200, response.status_code)
 
 
@@ -198,3 +198,68 @@ class TestDmptProjectViews(TestCase):
 
         self.assertEqual(self.std_user.id, content_1[0].get('user'))
         self.assertEqual(self.std_user_2.id, content_2[0].get('user'))
+
+
+class TestDmptProjectViews(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        Group.objects.create(name="api")
+        cls.user_1 = User.objects.create_user(
+            username="john",
+            email="john@doe.de",
+            password="secret",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.user_1)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.client_1 = client
+
+        cls.user_2 = User.objects.create_user(
+            username="joe",
+            email="joe@doe.de",
+            password="f00",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.user_2)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.client_2 = client
+
+        cls.user_3 = User.objects.create_user(
+            username="jane",
+            email="jane@doe.de",
+            password="b@r",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.user_3)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.client_3 = client
+
+    def test_get_with_initial_app_request(self):
+        self.client_1.login(username="john", password="secret")
+        self.client_1.get("/dmp/create/")
+        self.client_2.login(username="joe", password="f00")
+        self.client_2.get("/dmp/create/")
+
+        dp = Project.objects.create(title='Unit Test')
+        response = self.client_1.post('/dmp/dmptprojects/', {
+            'rdmo_project': dp.id,
+            'user': self.user_1.id,
+        })
+
+        response = self.client_1.get('/dmp/dmptprojects/')
+        content = json.loads(response.content)
+        self.assertEqual(1, len(content))
+
+        response = self.client_2.get('/dmp/dmptprojects/')
+        content = json.loads(response.content)
+        self.assertEqual(0, len(content))
+
+        response = self.client_2.get('/dmp/dmptprojects/{0}/'.format(dp.pk))
+        self.assertEqual(404, response.status_code)
