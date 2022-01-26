@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import ScrollToTop from '../ScrollToTop';
 import {
     PROJECT_API_ROOT,
@@ -34,7 +35,7 @@ function getCookie(name) {
 const saveProject = async (token, userId, projectId) => {
     try {
         const csrftoken = getCookie('csrftoken');
-        const response = await axios.post(`${PROJECT_API_ROOT}`, {
+        const response = await axios.post(`${PROJECT_API_ROOT}dmptprojects/`, {
             'rdmo_project': projectId, 'user': userId
         }, {
             headers: {
@@ -48,10 +49,11 @@ const saveProject = async (token, userId, projectId) => {
     }
 };
 
-function Summary(props) {
-    // console.log('Summary ');
-    // console.log('-----------------------------');
-    // console.log('');
+function Summary() {
+    console.log('Summary ');
+    console.log('-----------------------------');
+    console.log('');
+    const { projectId } = useParams();
     const rdmoContext = useContext(RdmoContext);
     checkBackendParameters(rdmoContext);
 
@@ -62,9 +64,13 @@ function Summary(props) {
     const [discarding, setDiscarding] = useState(false);
     const [discardingDone, setDiscardingDone] = useState(false);
 
-    // console.log('RDOM CONTEXT');
-    // console.log(rdmoContext);
-    // console.log(dmptProjectId);
+    // const [downloadPdf, setDownloadPdf] = useState(false);
+    // const [downloadDone, setDownloadDone] = useState(false);
+
+    console.log('RDOM CONTEXT');
+    console.log(rdmoContext.project_id);
+    console.log(projectId);
+    console.log(dmptProjectId);
 
     // FIXME: no save for anonymous user (no user / not logged in user)
     const saveProjectHandler = () => {
@@ -73,7 +79,7 @@ function Summary(props) {
             saveProject(
                 rdmoContext.backend_context.token,
                 rdmoContext.backend_context.user_id,
-                rdmoContext.project_id).then((result) => {
+                projectId).then((result) => {
                 // console.log('saveProject handler. result');
                 // console.log(result);
                 rdmoContext.assignDmptProjectId(result.data.id);
@@ -109,8 +115,7 @@ function Summary(props) {
                 </h6>
             </Col>
         );
-    }
-    else if (savingDone) {
+    } else if (savingDone) {
         saveSection = (
             <Col lg={6} className='p-3'>
                 <i className='mdi mdi-content-save-edit-outline' />
@@ -136,7 +141,7 @@ function Summary(props) {
             </h6>
             <div className='d-grid gap-2'>
                 <Button className='btn btn-secondary btn-green'
-                    onClick={discardProjectHandler}>Discard
+                        onClick={discardProjectHandler}>Discard
                     &
                     Exit
                 </Button>
@@ -152,11 +157,51 @@ function Summary(props) {
                 </h6>
             </Col>
         );
-    }
-    else if (discardingDone) {
+    } else if (discardingDone) {
         return <Redirect push
-            to={`${URL_PREFIX}`} />;
+                         to={`${URL_PREFIX}`} />;
     }
+
+    // const downloadPdfHandler = (id) => {
+    //     console.log('downloadPdfHandler ', id);
+    //     console.log('to ', `${PROJECT_API_ROOT}export/${id}/pdf/`);
+    //     setDownloadPdf(true);
+    //     // TODO: add reset ?
+    //     setDownloadPdf(false);
+    //     setDownloadDone(true);
+    // };
+    let downloadPdfSection = (
+        <Col lg={6} className='p-3'>
+            <i className='mdi mdi-download-circle-outline' />
+            <h6>
+                Dowload PDF file
+            </h6>
+            <div className='d-grid gap-2'>
+                <a href={`${PROJECT_API_ROOT}export/${projectId}/pdf/`}
+                    className='btn btn-secondary btn-green'
+                    // onClick={downloadPdfHandler}
+                >Download
+                </a>
+            </div>
+        </Col>
+    );
+    // if (downloadPdf) {
+    //     downloadPdfSection = (
+    //         <Col lg={6} className='p-3'>
+    //             <i className='mdi mdi-location-exit' />
+    //             <h6>
+    //                 ... Preparing to download ...
+    //             </h6>
+    //         </Col>
+    //     );
+    // } else if (downloadDone) {
+    //     // return <Redirect push
+    //     //     to={`${URL_PREFIX}`} />;
+    //     // return <Redirect
+    //     //     push
+    //     //     to={`${PROJECT_API_ROOT}export/${projectId}/pdf/`} />;
+    //     downloadPdfSection = <a href={`${PROJECT_API_ROOT}export/${projectId}/pdf/`}>DOWNLOAD ?</a>;
+    // }
 
     return (<div id='summary' className='text-center'>
         <ScrollToTop />
@@ -188,17 +233,7 @@ function Summary(props) {
                 </div>
             </Col>
 
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-download-circle-outline' />
-                <h6>
-                    Dowload PDF file
-                </h6>
-                <div className='d-grid gap-2'>
-                    <Button
-                        className='btn btn-secondary btn-green'>Download
-                    </Button>
-                </div>
-            </Col>
+            {downloadPdfSection}
 
         </Row>
 
@@ -210,9 +245,12 @@ function Summary(props) {
     </div>);
 }
 
-Summary.propTypes = {
-    // isLoggedIn: PropTypes.bool.isRequired,
-    // userToken: PropTypes.string.isRequired
-};
+// Summary.defaultProps = {
+//     projectId: 'notPropped'
+// };
+//
+// Summary.propTypes = {
+//     projectId: PropTypes.string
+// };
 
 export default Summary;
