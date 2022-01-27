@@ -4,7 +4,11 @@ import { nanoid } from 'nanoid';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import { Redirect, useParams } from 'react-router-dom';
-import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
+import {
+    API_ROOT,
+    PROJECT_API_ROOT,
+    URL_PREFIX
+} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
@@ -126,13 +130,26 @@ const submitValues = async (projectId, formData, token) => {
     }
 };
 
-function useDmptStart(rdmoContext, token) {
+function useDmptStart(rdmoContext, token, dmptProjectId) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
     useEffect(() => {
         async function prepareDmptStart() {
             setProcessing(true);
+
+            try {
+                const dmptProjectDetailResponse = await axios.get(
+                    `${PROJECT_API_ROOT}${dmptProjectId}/`,
+                    {
+                        headers: { Authorization: `Token ${token}` }
+                    }
+                );
+                console.log('dmptProjectDetailResponse');
+                console.log(dmptProjectDetailResponse);
+            } catch (e) {
+                console.error(e);
+            }
 
             // FIXME: section for gfbio catalog id hardcoded --> 18
             const catalogId = '18';
@@ -184,9 +201,11 @@ function DmptStart(props) {
 
     const [submitted, setSubmitted] = useState(false);
 
+    // TODO: 2. assign rdmo project id via dmptproject
     if (backendContext.isLoggedIn !== "false" && projectId) {
-        console.log('ASSING PID from url match ', projectId);
-        rdmoContext.assignProjectId(projectId);
+        // console.log('ASSING PID from url match ', projectId);
+        // rdmoContext.assignProjectId(projectId);
+        rdmoContext.assignDmptProjectId(projectId);
     }
     // if (props.match && props.match.params.projectId) {
     //     console.log('ASSING PID from url match ', props.match.params.projectId);
@@ -194,7 +213,8 @@ function DmptStart(props) {
     // }
     console.log('#############################################');
 
-    const [processing, stage] = useDmptStart(rdmoContext, backendContext.token);
+    // TODO: projectId is pk of DMPTProject object
+    const [processing, stage] = useDmptStart(rdmoContext, backendContext.token, projectId);
 
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');

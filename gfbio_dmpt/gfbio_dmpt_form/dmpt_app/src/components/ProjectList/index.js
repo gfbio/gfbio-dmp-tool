@@ -73,14 +73,16 @@ function ProjectList() {
     }
     // const redirect = notLoggedInRedirect(backendContext.isLoggedIn);
 
-    // console.log(projectList);
+    console.log(projectList);
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {
             return (
                 <ListGroupItem>
                     <Link id={index}
-                          to={`${URL_PREFIX}start/${item.rdmo_project}`}>{item.title}
+                        // TODO: 1. link to dmptproject instead
+                        // to={`${URL_PREFIX}start/${item.rdmo_project}`}>{item.title}
+                        to={`${URL_PREFIX}start/${item.id}`}>{item.title}
                     </Link>
                 </ListGroupItem>
             );
@@ -93,7 +95,7 @@ function ProjectList() {
                 <Row>
                     <Col lg={12}>
                         <SolarSystemLoading color='#81B248' size='large'
-                                            speed={8}>Loading</SolarSystemLoading>
+                            speed={8}>Loading</SolarSystemLoading>
                     </Col>
                 </Row>
             </div>
@@ -123,7 +125,6 @@ function ProjectList() {
                     <ListGroup variant='flush'>{projects}</ListGroup>
                 </Col>
             </Row>
-
 
         </div>
     );

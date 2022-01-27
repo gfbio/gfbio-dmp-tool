@@ -21,7 +21,7 @@ from gfbio_dmpt.jira_integration.models import Ticket
 from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
 from .models import DmptProject
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwner
 from .serializers import DmptProjectSerializer
 
 
@@ -172,8 +172,17 @@ class DmptProjectListView(generics.ListCreateAPIView):
     queryset = DmptProject.objects.all()
     serializer_class = DmptProjectSerializer
     authentication_classes = (TokenAuthentication, BasicAuthentication)
-    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         user = self.request.user
         return DmptProject.objects.filter(user=user).order_by('-modified')
+
+class DmptProjectDetailView(generics.RetrieveAPIView):
+    queryset = DmptProject.objects.all()
+    serializer_class = DmptProjectSerializer
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, IsOwner, )
