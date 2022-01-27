@@ -215,6 +215,7 @@ class TestDmptProjectViews(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        # FIXME: needs api group created by rdmo management script. useless otherwise
         Group.objects.create(name="api")
         cls.user_1 = User.objects.create_user(
             username="john",
@@ -275,6 +276,7 @@ class TestDmptProjectViews(TestCase):
         response = self.client_2.get('/dmp/dmptprojects/{0}/'.format(dp.pk))
         self.assertEqual(404, response.status_code)
 
+    # FIXME: error when not superuser. maybe related to rdmo mangement commands to create groups etc.
     def test_get_dmp_pdf_logged_in(self):
         self.client_1.login(username="john", password="secret")
         self.client_2.login(username="joe", password="f00")
@@ -291,3 +293,5 @@ class TestDmptProjectViews(TestCase):
         #                              follow=True)
         # print(response.status_code)
         # print(response.content)
+
+    # def test_anonymous_request(self):

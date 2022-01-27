@@ -46,6 +46,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
                 username="anonymous",
                 defaults={"username": "anonymous", "password": ANONYMOUS_PASS},
             )
+            print('created annonymous ', created)
         api_group = Group.objects.get(name="api")
         api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
