@@ -52,17 +52,28 @@ class TestDmpExportView(TestCase):
             # user perspectives
             # * admin/normal user
             # * logged in non logged in etc
-            is_superuser=True,
+            # is_superuser=True,
         )
 
     def test_get_dmp_pdf_logged_in(self):
         self.client.login(username="john", password="secret")
+        catalog = Catalog.objects.create(key="testkey")
+        project = Project.objects.create(title="Test",
+                                                        catalog=catalog)
+        print(catalog)
+        print(project.site)
+        response = self.client.get(f"/dmp/export/{project.pk}/pdf/")
+        self.assertEqual(200, response.status_code)
+        self.assertEquals(response.get("Content-Type"), "application/pdf")
+
+    def test_get_dmp_pdf_not_logged_in(self):
         catalog, status = Catalog.objects.get_or_create(key="testkey")
         project, status = Project.objects.get_or_create(title="Test",
                                                         catalog=catalog)
         response = self.client.get(f"/dmp/export/{project.pk}/pdf",
                                    follow=True)
-        self.assertEquals(response.get("Content-Type"), "application/pdf")
+        self.assertEqual(200, response.status_code)
+        self.assertNotEquals(response.get("Content-Type"), "application/pdf")
 
 
 class TestDmpRequestHelp(TestCase):
@@ -263,3 +274,20 @@ class TestDmptProjectViews(TestCase):
 
         response = self.client_2.get('/dmp/dmptprojects/{0}/'.format(dp.pk))
         self.assertEqual(404, response.status_code)
+
+    def test_get_dmp_pdf_logged_in(self):
+        self.client_1.login(username="john", password="secret")
+        self.client_2.login(username="joe", password="f00")
+        # self.client_2.get("/dmp/create/")
+        catalog, status = Catalog.objects.get_or_create(key="testkey")
+        project, status = Project.objects.get_or_create(title="Test",
+                                                        catalog=catalog)
+        response = self.client_1.get(
+            "/dmp/export/{project_pk}/pdf".format(project_pk=project.pk),
+            follow=True)
+        self.assertEquals(response.get("Content-Type"), "application/pdf")
+
+        # response = self.client_2.get("/dmp/export/{project.pk}/pdf",
+        #                              follow=True)
+        # print(response.status_code)
+        # print(response.content)

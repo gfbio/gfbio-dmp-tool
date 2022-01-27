@@ -25,7 +25,7 @@ function useProjectList(token) {
                 // console.log('  ** try before await');
                 const response = await axios.get(
                     // `${API_ROOT}projects/projects/`
-                    `${PROJECT_API_ROOT}`,
+                    `${PROJECT_API_ROOT}dmptprojects/`,
                     {
                         headers: {
                             'Authorization': `Token ${token}`,

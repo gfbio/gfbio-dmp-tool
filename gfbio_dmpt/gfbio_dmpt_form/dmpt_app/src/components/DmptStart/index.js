@@ -104,14 +104,14 @@ const submitValues = async (projectId, formData, token) => {
                 const formItem = formData[f];
                 // console.log('  ---  submitValues ', formItem, '  --- ', formItem.valueId);
                 if (formItem.valueId !== undefined && formItem.valueId !== false) {
-                    console.log('PUT');
+                    // console.log('PUT');
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then(
                         (res) => {
                         }
                     );
                 } else {
-                    console.log('POST');
+                    // console.log('POST');
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then(
                         (res) => {
