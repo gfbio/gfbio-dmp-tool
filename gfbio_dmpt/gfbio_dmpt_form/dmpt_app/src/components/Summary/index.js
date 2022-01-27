@@ -50,9 +50,9 @@ const saveProject = async (token, userId, projectId) => {
 };
 
 function Summary() {
-    console.log('Summary ');
-    console.log('-----------------------------');
-    console.log('');
+    // console.log('Summary ');
+    // console.log('-----------------------------');
+    // console.log('');
     const { projectId } = useParams();
     const rdmoContext = useContext(RdmoContext);
     checkBackendParameters(rdmoContext);
@@ -67,10 +67,10 @@ function Summary() {
     // const [downloadPdf, setDownloadPdf] = useState(false);
     // const [downloadDone, setDownloadDone] = useState(false);
 
-    console.log('RDOM CONTEXT');
-    console.log(rdmoContext.project_id);
-    console.log(projectId);
-    console.log(dmptProjectId);
+    // console.log('RDOM CONTEXT');
+    // console.log(rdmoContext);
+    // console.log(projectId);
+    // console.log(dmptProjectId);
 
     // FIXME: no save for anonymous user (no user / not logged in user)
     const saveProjectHandler = () => {
@@ -170,7 +170,7 @@ function Summary() {
     //     setDownloadPdf(false);
     //     setDownloadDone(true);
     // };
-    let downloadPdfSection = (
+    const downloadPdfSection = (
         <Col lg={6} className='p-3'>
             <i className='mdi mdi-download-circle-outline' />
             <h6>
