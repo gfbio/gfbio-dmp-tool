@@ -164,7 +164,7 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         setProcessing(false);
                     });
                 }).then(() => {
-                    if (rdmoContext.project_id && rdmoContext.project_id > 0) {
+                    if (rdmoContext.backend_context.isLoggedIn !== 'false' && rdmoContext.project_id && rdmoContext.project_id > 0) {
                         setStage('... fetch project value  ...', rdmoContext.project_id);
                         const projectValues = {};
                         fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {

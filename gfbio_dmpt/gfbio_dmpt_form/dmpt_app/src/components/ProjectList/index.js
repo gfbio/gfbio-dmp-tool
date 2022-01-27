@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import {
@@ -28,7 +28,7 @@ function useProjectList(token) {
                     `${PROJECT_API_ROOT}dmptprojects/`,
                     {
                         headers: {
-                            'Authorization': `Token ${token}`,
+                            'Authorization': `Token ${token}`
                             // 'X-CSRFToken': csrftoken
                         }
                     }
@@ -57,10 +57,22 @@ function ProjectList() {
     const [loading, projectList] = useProjectList(backendContext.token);
     // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
     // FIXME SOLVED: default django object level permissions take care of this, depending on user and/or group
-    // console.log('ProjectList');
+    console.log('ProjectList');
+
     // const rdmoContext = useContext(RdmoContext);
-    // console.log('LIST context');
-    // console.log(rdmoContext);
+    // console.log('baclend context');
+    // console.log(backendContext);
+
+    if (backendContext.isLoggedIn === 'false') {
+        return (
+            <Redirect
+                push
+                to={`${URL_PREFIX}`}
+            />
+        );
+    }
+    // const redirect = notLoggedInRedirect(backendContext.isLoggedIn);
+
     // console.log(projectList);
     let projects = <></>;
     if (projectList.length) {
@@ -68,7 +80,7 @@ function ProjectList() {
             return (
                 <ListGroupItem>
                     <Link id={index}
-                        to={`${URL_PREFIX}start/${item.rdmo_project}`}>{item.title}
+                          to={`${URL_PREFIX}start/${item.rdmo_project}`}>{item.title}
                     </Link>
                 </ListGroupItem>
             );
@@ -81,7 +93,7 @@ function ProjectList() {
                 <Row>
                     <Col lg={12}>
                         <SolarSystemLoading color='#81B248' size='large'
-                            speed={8}>Loading</SolarSystemLoading>
+                                            speed={8}>Loading</SolarSystemLoading>
                     </Col>
                 </Row>
             </div>
@@ -91,7 +103,7 @@ function ProjectList() {
     return (
         <div id='projectList'>
 
-            <Row >
+            <Row>
                 <Col lg={12}>
                     <h3>Start a new Data Management Plan</h3>
                 </Col>
@@ -100,7 +112,7 @@ function ProjectList() {
             <Row className='mt-5'>
                 <Col lg={12}>
                     <a href={`${URL_PREFIX}start`}>
-                        <i className="mdi mdi-text-box-plus-outline" />
+                        <i className='mdi mdi-text-box-plus-outline' />
                         Create new DMP</a>
                 </Col>
             </Row>
@@ -111,7 +123,6 @@ function ProjectList() {
                     <ListGroup variant='flush'>{projects}</ListGroup>
                 </Col>
             </Row>
-
 
 
         </div>

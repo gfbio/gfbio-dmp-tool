@@ -3,7 +3,7 @@ import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { API_ROOT, URL_PREFIX } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
@@ -164,8 +164,8 @@ function useDmptStart(rdmoContext, token) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
-    // console.log('DMPT start ');
-    // console.log('-----------------------------');
+    console.log('DMPT start ');
+    console.log('-----------------------------');
 
     // console.log('-----------------------------');
     // const { isLoggedIn, backendContext } = props;
@@ -175,15 +175,24 @@ function DmptStart(props) {
     const backendContext = checkBackendParameters(rdmoContext);
 
     // rdmoContext.assignBackendContext(backendContext);
-    // console.log('RDMO CONTEXT DMPT START');
-    // console.log(rdmoContext);
+    console.log('rdmo context dmpt start');
+    console.log(rdmoContext);
+    console.log('backendcontext');
+    console.log(backendContext);
+    const { projectId } = useParams();
+    console.log(projectId);
 
     const [submitted, setSubmitted] = useState(false);
 
-    if (props.match && props.match.params.projectId) {
-        // console.log('ASSING PID from url match');
-        rdmoContext.assignProjectId(props.match.params.projectId);
+    if (backendContext.isLoggedIn !== "false" && projectId) {
+        console.log('ASSING PID from url match ', projectId);
+        rdmoContext.assignProjectId(projectId);
     }
+    // if (props.match && props.match.params.projectId) {
+    //     console.log('ASSING PID from url match ', props.match.params.projectId);
+    //     rdmoContext.assignProjectId(props.match.params.projectId);
+    // }
+    console.log('#############################################');
 
     const [processing, stage] = useDmptStart(rdmoContext, backendContext.token);
 
