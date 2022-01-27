@@ -140,13 +140,14 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
 
             try {
                 const dmptProjectDetailResponse = await axios.get(
-                    `${PROJECT_API_ROOT}${dmptProjectId}/`,
+                    `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
                     {
                         headers: { Authorization: `Token ${token}` }
                     }
                 );
-                console.log('dmptProjectDetailResponse');
-                console.log(dmptProjectDetailResponse);
+                // console.log('dmptProjectDetailResponse');
+                // console.log(dmptProjectDetailResponse.data);
+                rdmoContext.assignProjectId(dmptProjectDetailResponse.data.rdmo_project);
             } catch (e) {
                 console.error(e);
             }
