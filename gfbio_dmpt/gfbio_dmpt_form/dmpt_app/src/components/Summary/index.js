@@ -50,15 +50,16 @@ const saveProject = async (token, userId, projectId) => {
 };
 
 function Summary() {
-    // console.log('Summary ');
-    // console.log('-----------------------------');
-    // console.log('');
+    console.log('Summary ');
+    console.log('-----------------------------');
+    console.log('');
     const { projectId } = useParams();
     const rdmoContext = useContext(RdmoContext);
-    checkBackendParameters(rdmoContext);
+    const backendContext = checkBackendParameters(rdmoContext);
 
     const [saving, setSaving] = useState(false);
     const [savingDone, setSavingDone] = useState(false);
+    // const [savingNotNeeded, setSavingNotNeeded] = useState(false);
     const [dmptProjectId, setDmptProjectId] = useState(-1);
 
     const [discarding, setDiscarding] = useState(false);
@@ -67,27 +68,41 @@ function Summary() {
     // const [downloadPdf, setDownloadPdf] = useState(false);
     // const [downloadDone, setDownloadDone] = useState(false);
 
-    // console.log('RDOM CONTEXT');
-    // console.log(rdmoContext);
-    // console.log(projectId);
-    // console.log(dmptProjectId);
+    console.log('RDOM CONTEXT');
+    console.log(rdmoContext);
+    // setDmptProjectId(rdmoContext.dmpt_project_id);
+
+    FIXME: also refactor this here to use dmpt projects and ids instead of rdmoprj ids to differ users
+
+    // FIXME: do not mistake for dmptProject id like
+    console.log(projectId);
+    console.log(dmptProjectId);
+    const loggedIn = backendContext.isLoggedIn !== 'false';
+    console.log('LOGGED In ', loggedIn);
+    const noSaveNeeded = rdmoContext.dmpt_project_id !== -1;
 
     // FIXME: no save for anonymous user (no user / not logged in user)
     const saveProjectHandler = () => {
-        setSaving(true);
-        if (dmptProjectId === -1) {
-            saveProject(
-                rdmoContext.backend_context.token,
-                rdmoContext.backend_context.user_id,
-                projectId).then((result) => {
-                // console.log('saveProject handler. result');
-                // console.log(result);
-                rdmoContext.assignDmptProjectId(result.data.id);
+        if (loggedIn) {
+            setSaving(true);
+            if (dmptProjectId === -1 && rdmoContext.dmpt_project_id === -1 && rdmoContext.project_id !== -1) {
+                saveProject(
+                    rdmoContext.backend_context.token,
+                    rdmoContext.backend_context.user_id,
+                    projectId).then((result) => {
+                    // console.log('saveProject handler. result');
+                    // console.log(result);
+                    rdmoContext.assignDmptProjectId(result.data.id);
+                    setSaving(false);
+                    setSavingDone(true);
+                    setDmptProjectId(result.data.id);
+                });
                 setSaving(false);
-                setSavingDone(true);
-                setDmptProjectId(result.data.id);
-            });
+            }
+            // else {
             setSaving(false);
+            //
+            // }
         }
     };
 
@@ -106,6 +121,23 @@ function Summary() {
             </div>
         </Col>
     );
+    if (noSaveNeeded) {
+        saveSection = (
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
+                <h6>
+                    Your plan was already successfully saved and update in the previous step !
+                </h6>
+                <div className='d-grid gap-2'>
+                    {/*<Button*/}
+                    {/*    className='btn btn-secondary btn-green'*/}
+                    {/*    // onClick={saveProjectHandler}*/}
+                    {/*>Save*/}
+                    {/*</Button>*/}
+                </div>
+            </Col>
+        );
+    }
     if (saving) {
         saveSection = (
             <Col lg={6} className='p-3'>
@@ -178,7 +210,7 @@ function Summary() {
             </h6>
             <div className='d-grid gap-2'>
                 <a href={`${PROJECT_API_ROOT}export/${projectId}/pdf/`}
-                    className='btn btn-secondary btn-green'
+                   className='btn btn-secondary btn-green'
                     // onClick={downloadPdfHandler}
                 >Download
                 </a>

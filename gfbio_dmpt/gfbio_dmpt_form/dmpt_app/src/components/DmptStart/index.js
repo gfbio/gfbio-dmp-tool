@@ -395,6 +395,7 @@ function DmptStart(props) {
     // FIXME: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
         // console.log('SUBMITTED : ', URL_PREFIX);
+        // TODO: be careful not to confuse with dmptProject Id that can be in the detail version of this component
         return (
             <Redirect
                 push
