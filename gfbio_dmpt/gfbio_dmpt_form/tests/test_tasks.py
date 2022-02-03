@@ -19,14 +19,19 @@ class TestDeleteRdmoProjectTask(TestCase):
             is_staff=False,
             is_superuser=False,
         )
-        rdmo_p = Project.objects.create(title='Unit Test 1')
-        cls.dmp = DmptProject.objects.create(rdmo_project=rdmo_p,
+        rdmo_1 = Project.objects.create(title='Unit Test 1')
+        rdmo_1.created = rdmo_1.created.replace(day=rdmo_1.created.day - 1)
+        rdmo_1.save()
+        cls.dmp = DmptProject.objects.create(rdmo_project=rdmo_1,
                                              user=cls.std_user)
 
-        Project.objects.create(title='Unit Test 2 tmp')
+        rdmo_2 = Project.objects.create(title='Unit Test 2 tmp')
+        rdmo_2.created = rdmo_2.created.replace(day=rdmo_2.created.day - 1)
+        rdmo_2.save()
+
         Project.objects.create(title='Unit Test 3 tmp')
 
     def test_delete_temporary_rdmo_projects_task(self):
         self.assertEqual(3, len(Project.objects.all()))
         delete_temporary_rdmo_projects_task.apply()
-        self.assertEqual(1, len(Project.objects.all()))
+        self.assertEqual(2, len(Project.objects.all()))
