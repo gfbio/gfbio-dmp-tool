@@ -7,13 +7,13 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+
 # jira integration
 from jira import JIRA, JIRAError
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework import generics, permissions
-from rest_framework.authentication import TokenAuthentication, \
-    BasicAuthentication
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 
 from config.settings.base import ANONYMOUS_PASS
@@ -38,7 +38,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         is_authenticated = user.is_authenticated
-        print('view is authenticated ', is_authenticated)
+        print("view is authenticated ", is_authenticated)
         if not user.is_authenticated:
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
@@ -109,10 +109,9 @@ class DmpRequestHelp(View):
         # get the title and the catalogue the user is requesting help for
         summary = project.title
         catalog = project.catalog
-        reporting_user = \
-            jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
-                0
-            ].name
+        reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
+            0
+        ].name
 
         # TODO:  <29-11-21, Claas>
         # we should have a handling for users not being logged in.
@@ -123,8 +122,7 @@ class DmpRequestHelp(View):
                 # TODO:  <30-11-21, claas>
                 # a user should be identified by his gostern id when he is logged in and not by the
                 # email
-                reporting_user = jira.search_users(user=context.user.email)[
-                    0].name
+                reporting_user = jira.search_users(user=context.user.email)[0].name
             except:
                 reporting_user = jira.search_users(
                     user=settings.JIRA_DEFAULT_REPORTER_EMAIL
@@ -150,8 +148,7 @@ class DmpRequestHelp(View):
                 )
 
             Ticket.objects.create(
-                project=project, ticket_key=new_issue.key,
-                ticket_id=new_issue.id
+                project=project, ticket_key=new_issue.key, ticket_id=new_issue.id
             )
 
         except JIRAError as e:
@@ -171,8 +168,12 @@ class DmptProjectListView(generics.ListCreateAPIView):
     queryset = DmptProject.objects.all()
     serializer_class = DmptProjectSerializer
     authentication_classes = (TokenAuthentication, BasicAuthentication)
-    permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly,)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsOwnerOrReadOnly,
+    )
 
     def get_queryset(self):
         user = self.request.user
-        return DmptProject.objects.filter(user=user).order_by('-modified')
+        return DmptProject.objects.filter(user=user).order_by("-modified")
+
