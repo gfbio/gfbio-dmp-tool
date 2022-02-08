@@ -107,8 +107,8 @@ const App = () => {
                 <Route path={`${URL_PREFIX}start/:projectId`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
-                <Route path={`${URL_PREFIX}summary/:projectId`}
-                    component={Summary} />
+                {/* <Route path={`${URL_PREFIX}summary/:projectId`}*/}
+                {/*    component={Summary} />*/}
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
                 {/*    component={SubmissionDetail}/> */}
                 {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}

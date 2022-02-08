@@ -49,11 +49,15 @@ const saveProject = async (token, userId, projectId) => {
     }
 };
 
-function Summary() {
+function Summary(props) {
     console.log('Summary ');
     console.log('-----------------------------');
     console.log('');
-    const { projectId } = useParams();
+    // console.log(props);
+    // const { projectId } = useParams();
+
+    const { rdmoProjectId } = props;
+
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
 
@@ -81,7 +85,8 @@ function Summary() {
     //      c. if no ids available redirect to list/create views
 
     // FIXME: do not mistake for dmptProject id like
-    console.log(projectId);
+    console.log('RDMO projectId (from Props)');
+    console.log(rdmoProjectId);
     console.log(dmptProjectId);
     const loggedIn = backendContext.isLoggedIn !== 'false';
     console.log('LOGGED In ', loggedIn);
@@ -95,7 +100,7 @@ function Summary() {
                 saveProject(
                     rdmoContext.backend_context.token,
                     rdmoContext.backend_context.user_id,
-                    projectId).then((result) => {
+                    rdmoProjectId).then((result) => {
                     // console.log('saveProject handler. result');
                     // console.log(result);
                     rdmoContext.assignDmptProjectId(result.data.id);
@@ -135,11 +140,11 @@ function Summary() {
                     Your plan was already successfully saved and update in the previous step !
                 </h6>
                 <div className='d-grid gap-2'>
-                    {/*<Button*/}
-                    {/*    className='btn btn-secondary btn-green'*/}
-                    {/*    // onClick={saveProjectHandler}*/}
-                    {/*>Save*/}
-                    {/*</Button>*/}
+                    {/* <Button */}
+                    {/*    className='btn btn-secondary btn-green' */}
+                    {/*    // onClick={saveProjectHandler} */}
+                    {/* >Save */}
+                    {/* </Button> */}
                 </div>
             </Col>
         );
@@ -179,7 +184,7 @@ function Summary() {
             </h6>
             <div className='d-grid gap-2'>
                 <Button className='btn btn-secondary btn-green'
-                        onClick={discardProjectHandler}>Discard
+                    onClick={discardProjectHandler}>Discard
                     &
                     Exit
                 </Button>
@@ -197,7 +202,7 @@ function Summary() {
         );
     } else if (discardingDone) {
         return <Redirect push
-                         to={`${URL_PREFIX}`} />;
+            to={`${URL_PREFIX}`} />;
     }
 
     // const downloadPdfHandler = (id) => {
@@ -215,8 +220,8 @@ function Summary() {
                 Dowload PDF file
             </h6>
             <div className='d-grid gap-2'>
-                <a href={`${PROJECT_API_ROOT}export/${projectId}/pdf/`}
-                   className='btn btn-secondary btn-green'
+                <a href={`${PROJECT_API_ROOT}export/${rdmoProjectId}/pdf/`}
+                    className='btn btn-secondary btn-green'
                     // onClick={downloadPdfHandler}
                 >Download
                 </a>
@@ -284,11 +289,11 @@ function Summary() {
 }
 
 // Summary.defaultProps = {
-//     projectId: 'notPropped'
+//     rdmoProjectId: 'notPropped'
 // };
-//
-// Summary.propTypes = {
-//     projectId: PropTypes.string
-// };
+
+Summary.propTypes = {
+    rdmoProjectId: PropTypes.number.isRequired,
+};
 
 export default Summary;

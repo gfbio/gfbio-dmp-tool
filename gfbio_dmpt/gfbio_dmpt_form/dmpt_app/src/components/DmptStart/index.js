@@ -14,6 +14,7 @@ import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
 import { checkBackendParameters } from '../../utils/backend_context';
+import Summary from '../Summary';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -347,10 +348,10 @@ function DmptStart(props) {
 
     if (!processing) {
         // FIXME: for testing submit summary, only submitHandler is active
-        // const nextHandler = submitAllHandler;
-        const nextHandler = submitOnNext
-            ? submitAllHandler
-            : nextSectionHandler;
+        const nextHandler = submitAllHandler;
+        // const nextHandler = submitOnNext
+        //     ? submitAllHandler
+        //     : nextSectionHandler;
 
         formFields = (
             <Questions
@@ -395,12 +396,14 @@ function DmptStart(props) {
     // FIXME: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
         // console.log('SUBMITTED : ', URL_PREFIX);
+        // console.log('project id from context ', rdmoContext.project_id);
         // TODO: be careful not to confuse with dmptProject Id that can be in the detail version of this component
         return (
-            <Redirect
-                push
-                to={`${URL_PREFIX}summary/${rdmoContext.project_id}`}
-            />
+        //     // <Redirect
+        //     //     push
+        //     //     to={`${URL_PREFIX}summary/${rdmoContext.project_id}`}
+        //     // />
+            <Summary rdmoProjectId={rdmoContext.project_id} />
         );
     }
 
