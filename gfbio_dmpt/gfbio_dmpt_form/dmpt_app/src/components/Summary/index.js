@@ -72,7 +72,13 @@ function Summary() {
     console.log(rdmoContext);
     // setDmptProjectId(rdmoContext.dmpt_project_id);
 
-    FIXME: also refactor this here to use dmpt projects and ids instead of rdmoprj ids to differ users
+    // FIXME: also refactor this here to use dmpt projects and ids instead of rdmoprj ids to differ users
+    //   1. when coming from dmpt-start no dmptProjectid may be available, if no save has been triggered yet
+    //   2. how to prevent annonymous users or anybody else from accessing rdmo summary via this view here
+    //      where the projectid is handed over via url ?
+    //      a. no projecid via url ?
+    //      b. put it into store then redirect to here
+    //      c. if no ids available redirect to list/create views
 
     // FIXME: do not mistake for dmptProject id like
     console.log(projectId);
