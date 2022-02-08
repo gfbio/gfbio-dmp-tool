@@ -1,5 +1,3 @@
-import { Redirect } from 'react-router-dom';
-import { URL_PREFIX } from '../constants/api/api_constants';
 import React from 'react';
 
 export function checkBackendParameters(rdmoContext) {
@@ -20,14 +18,3 @@ export function resetContext(rdmoContext) {
     rdmoContext.assignDmptProjectId(-1);
 };
 
-// export function notLoggedInRedirect(backendContextLoggedIn) {
-//     if (backendContextLoggedIn === 'false') {
-//         return (
-//             <Redirect
-//                 push
-//                 to={`${URL_PREFIX}`}
-//             />
-//         );
-//     }
-//     return <></>;
-// };

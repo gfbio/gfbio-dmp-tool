@@ -3,12 +3,8 @@ import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
-import { Redirect, useParams } from 'react-router-dom';
-import {
-    API_ROOT,
-    PROJECT_API_ROOT,
-    URL_PREFIX
-} from '../../constants/api/api_constants';
+import { useParams } from 'react-router-dom';
+import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
@@ -107,16 +103,13 @@ const submitValues = async (projectId, formData, token) => {
         for (const f in formData) {
             if (formData[f] !== undefined) {
                 const formItem = formData[f];
-                // console.log('  ---  submitValues ', formItem, '  --- ', formItem.valueId);
                 if (formItem.valueId !== undefined && formItem.valueId !== false) {
-                    // console.log('PUT');
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then(
                         (res) => {
                         }
                     );
                 } else {
-                    // console.log('POST');
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then(
                         (res) => {
@@ -128,6 +121,7 @@ const submitValues = async (projectId, formData, token) => {
     } catch (e) {
         console.error(e);
     } finally {
+        ;
     }
 };
 
@@ -138,7 +132,6 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
     useEffect(() => {
         async function prepareDmptStart() {
             setProcessing(true);
-
             try {
                 const dmptProjectDetailResponse = await axios.get(
                     `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
@@ -146,8 +139,6 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
                         headers: { Authorization: `Token ${token}` }
                     }
                 );
-                // console.log('dmptProjectDetailResponse');
-                // console.log(dmptProjectDetailResponse.data);
                 rdmoContext.assignProjectId(dmptProjectDetailResponse.data.rdmo_project);
             } catch (e) {
                 console.error(e);
@@ -172,6 +163,7 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
             } catch (e) {
                 console.error(e);
             } finally {
+                ;
             }
         }
 
@@ -183,39 +175,16 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
 
 // eslint-disable-next-line no-unused-vars
 function DmptStart(props) {
-    console.log('DMPT start ');
-    console.log('-----------------------------');
-
-    // console.log('-----------------------------');
-    // const { isLoggedIn, backendContext } = props;
-    // console.log('BACKENDcontext aus props');
-    // console.log(backendContext);
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
-
-    // rdmoContext.assignBackendContext(backendContext);
-    console.log('rdmo context dmpt start');
-    console.log(rdmoContext);
-    console.log('backendcontext');
-    console.log(backendContext);
     const { projectId } = useParams();
-    console.log(projectId);
 
     const [submitted, setSubmitted] = useState(false);
 
-    // TODO: 2. assign rdmo project id via dmptproject
-    if (backendContext.isLoggedIn !== "false" && projectId) {
-        // console.log('ASSING PID from url match ', projectId);
-        // rdmoContext.assignProjectId(projectId);
+    if (backendContext.isLoggedIn !== 'false' && projectId) {
         rdmoContext.assignDmptProjectId(projectId);
     }
-    // if (props.match && props.match.params.projectId) {
-    //     console.log('ASSING PID from url match ', props.match.params.projectId);
-    //     rdmoContext.assignProjectId(props.match.params.projectId);
-    // }
-    console.log('#############################################');
 
-    // TODO: projectId is pk of DMPTProject object
     const [processing, stage] = useDmptStart(rdmoContext, backendContext.token, projectId);
 
     const [nextText, setNextText] = useState('Next Section');
@@ -262,32 +231,17 @@ function DmptStart(props) {
     // TODO: add to component hook
     const submitAllHandler = () => {
         let projectId = rdmoContext.project_id;
-        // console.log('Submit HANDLER ', projectId);
-        // console.log('will submit: ');
-        // console.log(rdmoContext.form_data);
-        // console.log('      ++++++++++++++++++++++++++++ ');
         if (projectId < 0) {
             createProject(backendContext.token).then((createResult) => {
-                // console.log('CREATE PRJ RESULT');
-                // console.log(createResult);
                 projectId = createResult.data.id;
                 rdmoContext.assignProjectId(projectId);
-                // TODO: set project id, if available do not create a new one
-                // TODO: post answers to project
-                // TODO: redirect to rdmo overview
-
-                // -------------------------------------------------------------
                 submitValues(
                     projectId,
                     rdmoContext.form_data,
                     backendContext.token
                 ).then(() => {
-                    // console.log('Submit handler values result ');
-                    // console.log(valueResult);
-                    // return valueResult;
                     setSubmitted(true);
                 });
-                // -------------------------------------------------------------
             });
         } else {
             submitValues(
@@ -295,7 +249,6 @@ function DmptStart(props) {
                 rdmoContext.form_data,
                 backendContext.token
             ).then(() => {
-                // console.log(valueResult);
                 setSubmitted(true);
             });
         }
@@ -305,18 +258,10 @@ function DmptStart(props) {
         // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
         // TODO: maybe refactor to list of values for specific question
         // eslint-disable-next-line no-prototype-builtins
-        // console.log('handleChange: ');
-        // console.log(e.target.name, ' -- ', e.target.value.trim());
         let formData = rdmoContext.form_data;
 
         // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
         let vId = false;
-        // if (formData.hasOwnProperty(e.target.name)) {
-        //     vId = formData[e.target.name].valueId;
-        //     if (e.target.name.startsWith('checkbox')) {
-        //         delete formData[e.target.name];
-        //     }
-        // }
         if (formData.hasOwnProperty(e.target.name) && formData[e.target.name].hasOwnProperty('valueId')) {
             vId = formData[e.target.name].valueId;
         }
@@ -329,29 +274,25 @@ function DmptStart(props) {
         } else {
             formData = {
                 ...formData,
-                // Trimming any whitespace
                 [e.target.name]: {
-                    value: e.target.value, // .trim(),
+                    value: e.target.value,
                     question: item,
                     valueId: vId
-                    // valueId: vId
                 }
             };
         }
         rdmoContext.assignFormData(formData);
-        // console.log('formdata in context ');
-        // console.log(rdmoContext.form_data);
     };
 
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 
     if (!processing) {
-        // FIXME: for testing submit summary, only submitHandler is active
-        const nextHandler = submitAllHandler;
-        // const nextHandler = submitOnNext
-        //     ? submitAllHandler
-        //     : nextSectionHandler;
+        // TODO: for testing submit summary, only submitHandler is active
+        // const nextHandler = submitAllHandler;
+        const nextHandler = submitOnNext
+            ? submitAllHandler
+            : nextSectionHandler;
 
         formFields = (
             <Questions
@@ -380,7 +321,6 @@ function DmptStart(props) {
         header = 'Data Management Plan';
     }
 
-    // console.log('--- before return ', processing, '  | submitted ', submitted, ' return now. ...');
     if (processing) {
         return (
             <Row>
@@ -393,16 +333,9 @@ function DmptStart(props) {
         );
     }
 
-    // FIXME: for testing submit summary, only submitHandler is active  see line 307
+    // TODO: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
-        // console.log('SUBMITTED : ', URL_PREFIX);
-        // console.log('project id from context ', rdmoContext.project_id);
-        // TODO: be careful not to confuse with dmptProject Id that can be in the detail version of this component
         return (
-        //     // <Redirect
-        //     //     push
-        //     //     to={`${URL_PREFIX}summary/${rdmoContext.project_id}`}
-        //     // />
             <Summary rdmoProjectId={rdmoContext.project_id} />
         );
     }
@@ -418,17 +351,11 @@ function DmptStart(props) {
             <Row className='mt-3'>
                 <Col lg={12}>{formFields}</Col>
             </Row>
-            {/* <h1 style={{ textTransform: 'uppercase' }}>DmptStart<small> user */}
-            {/*    logged in: {isLoggedIn}</small></h1> */}
         </div>
     );
 }
 
 // TODO: housekeeping/delete strategy for unused/empty projects
-DmptStart.propTypes = {
-    // isLoggedIn: PropTypes.bool.isRequired,
-    // backendContext: PropTypes.object.isRequired
-    // projectId: PropTypes.string,
-};
+DmptStart.propTypes = {};
 
 export default DmptStart;

@@ -9,10 +9,8 @@ function FormCheckBox(props) {
     // FIXME: quick and dirty
     let val = value.text;
     if (rdmoContext.form_data[item.key] !== undefined) {
-        // console.log('item key in formdata. key  ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
         val = rdmoContext.form_data[item.key].value;
     } else if (rdmoContext.form_data[item.key] === undefined && value.text !== undefined) {
-        // console.log(' else of key in data. assing to form in context');
         rdmoContext.form_data[item.key] = {
             'value': value.text,
             'valueId': value.id,

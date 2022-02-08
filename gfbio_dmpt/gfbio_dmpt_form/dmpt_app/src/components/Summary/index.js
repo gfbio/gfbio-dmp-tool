@@ -50,51 +50,20 @@ const saveProject = async (token, userId, projectId) => {
 };
 
 function Summary(props) {
-    console.log('Summary ');
-    console.log('-----------------------------');
-    console.log('');
-    // console.log(props);
-    // const { projectId } = useParams();
-
     const { rdmoProjectId } = props;
-
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
 
     const [saving, setSaving] = useState(false);
     const [savingDone, setSavingDone] = useState(false);
-    // const [savingNotNeeded, setSavingNotNeeded] = useState(false);
     const [offerAccount, setOfferAccount] = useState(false);
-
     const [dmptProjectId, setDmptProjectId] = useState(-1);
-
     const [discarding, setDiscarding] = useState(false);
     const [discardingDone, setDiscardingDone] = useState(false);
 
-    // const [downloadPdf, setDownloadPdf] = useState(false);
-    // const [downloadDone, setDownloadDone] = useState(false);
-
-    console.log('RDOM CONTEXT');
-    console.log(rdmoContext);
-    // setDmptProjectId(rdmoContext.dmpt_project_id);
-
-    // FIXME: also refactor this here to use dmpt projects and ids instead of rdmoprj ids to differ users
-    //   1. when coming from dmpt-start no dmptProjectid may be available, if no save has been triggered yet
-    //   2. how to prevent annonymous users or anybody else from accessing rdmo summary via this view here
-    //      where the projectid is handed over via url ?
-    //      a. no projecid via url ?
-    //      b. put it into store then redirect to here
-    //      c. if no ids available redirect to list/create views
-
-    // FIXME: do not mistake for dmptProject id like
-    console.log('RDMO projectId (from Props)');
-    console.log(rdmoProjectId);
-    console.log(dmptProjectId);
     const loggedIn = backendContext.isLoggedIn !== 'false';
-    console.log('LOGGED In ', loggedIn);
     const noSaveNeeded = rdmoContext.dmpt_project_id !== -1;
 
-    // FIXME: no save for anonymous user (no user / not logged in user)
     const saveProjectHandler = () => {
         if (loggedIn) {
             setSaving(true);
@@ -104,8 +73,6 @@ function Summary(props) {
                     rdmoContext.backend_context.token,
                     rdmoContext.backend_context.user_id,
                     rdmoProjectId).then((result) => {
-                    // console.log('saveProject handler. result');
-                    // console.log(result);
                     rdmoContext.assignDmptProjectId(result.data.id);
                     setSaving(false);
                     setSavingDone(true);
@@ -113,12 +80,8 @@ function Summary(props) {
                 });
                 setSaving(false);
             }
-            // else {
             setSaving(false);
-            //
-            // }
-        }
-        else {
+        } else {
             setOfferAccount(true);
         }
     };
@@ -143,15 +106,9 @@ function Summary(props) {
             <Col lg={6} className='p-3'>
                 <i className='mdi mdi-content-save-edit-outline' />
                 <h6>
-                    Your plan was already successfully saved and update in the previous step !
+                    Your plan was already successfully saved and update in the
+                    previous step !
                 </h6>
-                <div className='d-grid gap-2'>
-                    {/* <Button */}
-                    {/*    className='btn btn-secondary btn-green' */}
-                    {/*    // onClick={saveProjectHandler} */}
-                    {/* >Save */}
-                    {/* </Button> */}
-                </div>
             </Col>
         );
     }
@@ -173,8 +130,7 @@ function Summary(props) {
                 </h6>
             </Col>
         );
-    }
-    else if (offerAccount) {
+    } else if (offerAccount) {
         saveSection = (
             <Col lg={6} className='p-3'>
                 <i className='mdi mdi-content-save-edit-outline' />
@@ -183,10 +139,12 @@ function Summary(props) {
                 </h6>
                 <Row>
                     <Col lg={6}>
-                        <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php" className='btn btn-secondary btn-green'>Sign Up</a>
+                        <a href='https://sso.gfbio.org/simplesaml/module.php/accountui/register.php'
+                            className='btn btn-secondary btn-green'>Sign Up</a>
                     </Col>
                     <Col lg={6}>
-                        <a href="/accounts/login/" className='btn btn-secondary btn-green'>Sign In</a>
+                        <a href='/accounts/login/'
+                            className='btn btn-secondary btn-green'>Sign In</a>
                     </Col>
                 </Row>
             </Col>
@@ -195,7 +153,6 @@ function Summary(props) {
 
     const discardProjectHandler = () => {
         setDiscarding(true);
-        // TODO: also delete rdmo project immediatly ?
         resetContext(rdmoContext);
         setDiscarding(false);
         setDiscardingDone(true);
@@ -229,14 +186,6 @@ function Summary(props) {
             to={`${URL_PREFIX}`} />;
     }
 
-    // const downloadPdfHandler = (id) => {
-    //     console.log('downloadPdfHandler ', id);
-    //     console.log('to ', `${PROJECT_API_ROOT}export/${id}/pdf/`);
-    //     setDownloadPdf(true);
-    //     // TODO: add reset ?
-    //     setDownloadPdf(false);
-    //     setDownloadDone(true);
-    // };
     const downloadPdfSection = (
         <Col lg={6} className='p-3'>
             <i className='mdi mdi-download-circle-outline' />
@@ -246,29 +195,11 @@ function Summary(props) {
             <div className='d-grid gap-2'>
                 <a href={`${PROJECT_API_ROOT}export/${rdmoProjectId}/pdf/`}
                     className='btn btn-secondary btn-green'
-                    // onClick={downloadPdfHandler}
                 >Download
                 </a>
             </div>
         </Col>
     );
-    // if (downloadPdf) {
-    //     downloadPdfSection = (
-    //         <Col lg={6} className='p-3'>
-    //             <i className='mdi mdi-location-exit' />
-    //             <h6>
-    //                 ... Preparing to download ...
-    //             </h6>
-    //         </Col>
-    //     );
-    // } else if (downloadDone) {
-    //     // return <Redirect push
-    //     //     to={`${URL_PREFIX}`} />;
-    //     // return <Redirect
-    //     //     push
-    //     //     to={`${PROJECT_API_ROOT}export/${projectId}/pdf/`} />;
-    //     downloadPdfSection = <a href={`${PROJECT_API_ROOT}export/${projectId}/pdf/`}>DOWNLOAD ?</a>;
-    // }
 
     return (<div id='summary' className='text-center'>
         <ScrollToTop />
@@ -312,12 +243,8 @@ function Summary(props) {
     </div>);
 }
 
-// Summary.defaultProps = {
-//     rdmoProjectId: 'notPropped'
-// };
-
 Summary.propTypes = {
-    rdmoProjectId: PropTypes.number.isRequired,
+    rdmoProjectId: PropTypes.number.isRequired
 };
 
 export default Summary;

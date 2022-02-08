@@ -11,43 +11,31 @@ import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
 
 function useProjectList(token) {
-    // console.log('-useProjectList Hook');
     const [projectList, setProjectList] = useState({});
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // console.log(' * use Effect hook');
-
         async function fetchProjectList() {
-            // console.log('  ** async function');
             try {
                 setLoading(true);
-                // console.log('  ** try before await');
                 const response = await axios.get(
-                    // `${API_ROOT}projects/projects/`
                     `${PROJECT_API_ROOT}dmptprojects/`,
                     {
                         headers: {
                             'Authorization': `Token ${token}`
-                            // 'X-CSRFToken': csrftoken
                         }
                     }
                 );
-                // console.log('  ** try after await');
                 setProjectList(response.data);
-                // console.log('  ** try aftert set project list');
             } catch (e) {
                 ;
             } finally {
-                // console.log('  ** finally set loadionf');
                 setLoading(false);
             }
         }
 
-        // console.log(' * call fetchProjectList');
         fetchProjectList();
     }, []);
-    // console.log('-before return and end of useProjectList hook');
     return [loading, projectList];
 }
 
@@ -55,13 +43,6 @@ function ProjectList() {
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
     const [loading, projectList] = useProjectList(backendContext.token);
-    // FIXME: user permissions, only projects for specific user (admin rights = all projects ?)
-    // FIXME SOLVED: default django object level permissions take care of this, depending on user and/or group
-    console.log('ProjectList');
-
-    // const rdmoContext = useContext(RdmoContext);
-    // console.log('baclend context');
-    // console.log(backendContext);
 
     if (backendContext.isLoggedIn === 'false') {
         return (
@@ -71,17 +52,13 @@ function ProjectList() {
             />
         );
     }
-    // const redirect = notLoggedInRedirect(backendContext.isLoggedIn);
 
-    console.log(projectList);
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {
             return (
                 <ListGroupItem>
                     <Link id={index}
-                        // TODO: 1. link to dmptproject instead
-                        // to={`${URL_PREFIX}start/${item.rdmo_project}`}>{item.title}
                         to={`${URL_PREFIX}start/${item.id}`}>{item.title}
                     </Link>
                 </ListGroupItem>
