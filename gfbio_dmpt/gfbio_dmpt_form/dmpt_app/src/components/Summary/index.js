@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ScrollToTop from '../ScrollToTop';
 import {
@@ -64,6 +64,8 @@ function Summary(props) {
     const [saving, setSaving] = useState(false);
     const [savingDone, setSavingDone] = useState(false);
     // const [savingNotNeeded, setSavingNotNeeded] = useState(false);
+    const [offerAccount, setOfferAccount] = useState(false);
+
     const [dmptProjectId, setDmptProjectId] = useState(-1);
 
     const [discarding, setDiscarding] = useState(false);
@@ -96,6 +98,7 @@ function Summary(props) {
     const saveProjectHandler = () => {
         if (loggedIn) {
             setSaving(true);
+            setOfferAccount(false);
             if (dmptProjectId === -1 && rdmoContext.dmpt_project_id === -1 && rdmoContext.project_id !== -1) {
                 saveProject(
                     rdmoContext.backend_context.token,
@@ -114,6 +117,9 @@ function Summary(props) {
             setSaving(false);
             //
             // }
+        }
+        else {
+            setOfferAccount(true);
         }
     };
 
@@ -165,6 +171,24 @@ function Summary(props) {
                 <h6>
                     Saving completed successfully !
                 </h6>
+            </Col>
+        );
+    }
+    else if (offerAccount) {
+        saveSection = (
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
+                <h6>
+                    Please log in to save !
+                </h6>
+                <Row>
+                    <Col lg={6}>
+                        <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php" className='btn btn-secondary btn-green'>Sign Up</a>
+                    </Col>
+                    <Col lg={6}>
+                        <a href="/accounts/login/" className='btn btn-secondary btn-green'>Sign In</a>
+                    </Col>
+                </Row>
             </Col>
         );
     }
