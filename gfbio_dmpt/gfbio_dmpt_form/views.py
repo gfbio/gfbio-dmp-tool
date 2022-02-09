@@ -21,7 +21,7 @@ from gfbio_dmpt.jira_integration.models import Ticket
 from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
 from .models import DmptProject
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwner
 from .serializers import DmptProjectSerializer
 
 
@@ -46,6 +46,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
                 username="anonymous",
                 defaults={"username": "anonymous", "password": ANONYMOUS_PASS},
             )
+            print('created annonymous ', created)
         api_group = Group.objects.get(name="api")
         api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
@@ -168,9 +169,13 @@ class DmptProjectListView(generics.ListCreateAPIView):
     queryset = DmptProject.objects.all()
     serializer_class = DmptProjectSerializer
     authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
     permission_classes = (
         permissions.IsAuthenticated,
-        IsOwnerOrReadOnly,
+        IsOwner,
     )
 
     def get_queryset(self):

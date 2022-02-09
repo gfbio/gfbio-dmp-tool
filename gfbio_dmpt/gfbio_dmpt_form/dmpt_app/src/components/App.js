@@ -6,7 +6,6 @@ import RdmoContext from './RdmoContext';
 import ProjectList from './ProjectList';
 import UserLoggedInRouter from './UserLoggedInRouter';
 import { URL_PREFIX } from '../constants/api/api_constants';
-import Summary from './Summary';
 
 const App = () => {
 
@@ -94,7 +93,7 @@ const App = () => {
         assignProjectId,
         assignProjectValues,
         assignBackendContext,
-        assignDmptProjectId,
+        assignDmptProjectId
     };
 
     return (
@@ -107,12 +106,6 @@ const App = () => {
                 <Route path={`${URL_PREFIX}start/:projectId`}
                     component={DmptStart} />
                 <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
-                <Route path={`${URL_PREFIX}summary/:projectId`}
-                    component={Summary} />
-                {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
-                {/*    component={SubmissionDetail}/> */}
-                {/* <Route path={`${URL_PREFIX}:brokerSubmissionId/`} */}
-                {/*    component={DetailBoard}/> */}
             </Switch>
         </RdmoContext.Provider>
     );

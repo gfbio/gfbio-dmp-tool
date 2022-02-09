@@ -59,7 +59,7 @@ class TestDmpExportView(TestCase):
         self.client.login(username="john", password="secret")
         catalog = Catalog.objects.create(key="testkey")
         project = Project.objects.create(title="Test",
-                                                        catalog=catalog)
+                                         catalog=catalog)
         print(catalog)
         print(project.site)
         response = self.client.get(f"/dmp/export/{project.pk}/pdf/")
@@ -215,6 +215,7 @@ class TestDmptProjectViews(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        # FIXME: needs api group created by rdmo management script. useless otherwise
         Group.objects.create(name="api")
         cls.user_1 = User.objects.create_user(
             username="john",
@@ -275,6 +276,7 @@ class TestDmptProjectViews(TestCase):
         response = self.client_2.get('/dmp/dmptprojects/{0}/'.format(dp.pk))
         self.assertEqual(404, response.status_code)
 
+    # FIXME: error when not superuser. maybe related to rdmo mangement commands to create groups etc.
     def test_get_dmp_pdf_logged_in(self):
         self.client_1.login(username="john", password="secret")
         self.client_2.login(username="joe", password="f00")
@@ -291,3 +293,71 @@ class TestDmptProjectViews(TestCase):
         #                              follow=True)
         # print(response.status_code)
         # print(response.content)
+
+    # def test_anonymous_request(self):
+
+
+class TestDmptProjectDetailView(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user_1 = User.objects.create_user(
+            username="john",
+            email="john@doe.de",
+            password="secret",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.user_1)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.client_1 = client
+
+        rdmo_project = Project.objects.create(title='Unit Test 1')
+        DmptProject.objects.create(user=cls.user_1, rdmo_project=rdmo_project)
+        rdmo_project = Project.objects.create(title='Unit Test 2')
+        DmptProject.objects.create(user=cls.user_1, rdmo_project=rdmo_project)
+
+        cls.user_2 = User.objects.create_user(
+            username="joe",
+            email="joe@doe.de",
+            password="f00",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.user_2)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.client_2 = client
+
+    def test_db_content(self):
+        self.assertEqual(2, len(Project.objects.all()))
+        self.assertEqual(2, len(DmptProject.objects.all()))
+
+    def test_unauthorized_get(self):
+        response = self.client.get('/dmp/dmptprojects/1/')
+        self.assertEqual(401, response.status_code)
+
+    def test_invalid_token_get(self):
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='Token 1234xxx1234')
+        response = client.get('/dmp/dmptprojects/1/')
+        self.assertEqual(401, response.status_code)
+
+    def test_invalid_password_get(self):
+        client = APIClient()
+        client.login(username='john', password='invalid')
+        response = client.get('/dmp/dmptprojects/1/')
+        self.assertEqual(401, response.status_code)
+
+    def test_valid_get(self):
+        dp = DmptProject.objects.first()
+        response = self.client_1.get('/dmp/dmptprojects/{}/'.format(dp.pk))
+        self.assertEqual(200, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn('rdmo_project', content.keys())
+
+    def test_not_owner_get(self):
+        dp = DmptProject.objects.first()
+        response = self.client_2.get('/dmp/dmptprojects/{}/'.format(dp.pk))
+        self.assertEqual(403, response.status_code)

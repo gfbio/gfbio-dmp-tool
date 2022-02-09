@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function checkBackendParameters(rdmoContext) {
     let backend = {};
     backend.isLoggedIn = 'false';
@@ -15,3 +17,4 @@ export function resetContext(rdmoContext) {
     rdmoContext.assignProjectValues({});
     rdmoContext.assignDmptProjectId(-1);
 };
+
