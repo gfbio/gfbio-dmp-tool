@@ -1,18 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ScrollToTop from '../ScrollToTop';
-import {
-    PROJECT_API_ROOT,
-    URL_PREFIX
-} from '../../constants/api/api_constants';
+import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import {
     checkBackendParameters,
     resetContext
 } from '../../utils/backend_context';
+import UserLoggedInRouter from '../UserLoggedInRouter';
+// import DmptStart from '../DmptStart';
+// import UserLoggedInRouter from '../UserLoggedInRouter';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -156,6 +155,7 @@ function Summary(props) {
         resetContext(rdmoContext);
         setDiscarding(false);
         setDiscardingDone(true);
+        console.log('discarding done');
     };
     let discardSection = (
         <Col lg={6} className='p-3'>
@@ -182,8 +182,11 @@ function Summary(props) {
             </Col>
         );
     } else if (discardingDone) {
-        return <Redirect push
-            to={`${URL_PREFIX}`} />;
+        // console.log('Redirect from summary');
+        // return <Redirect push
+        //     to={`${URL_PREFIX}start`} />;
+        return <UserLoggedInRouter />;
+        // return <DmptStart />;
     }
 
     const downloadPdfSection = (
