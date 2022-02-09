@@ -13,7 +13,8 @@ from jira import JIRA, JIRAError
 from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework import generics, permissions
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.authentication import TokenAuthentication, \
+    BasicAuthentication
 from rest_framework.authtoken.models import Token
 
 from config.settings.base import ANONYMOUS_PASS
@@ -110,7 +111,8 @@ class DmpRequestHelp(View):
         # get the title and the catalogue the user is requesting help for
         summary = project.title
         catalog = project.catalog
-        reporting_user = jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
+        reporting_user = \
+        jira.search_users(user=settings.JIRA_DEFAULT_REPORTER_EMAIL)[
             0
         ].name
 
@@ -123,7 +125,8 @@ class DmpRequestHelp(View):
                 # TODO:  <30-11-21, claas>
                 # a user should be identified by his gostern id when he is logged in and not by the
                 # email
-                reporting_user = jira.search_users(user=context.user.email)[0].name
+                reporting_user = jira.search_users(user=context.user.email)[
+                    0].name
             except:
                 reporting_user = jira.search_users(
                     user=settings.JIRA_DEFAULT_REPORTER_EMAIL
@@ -149,7 +152,8 @@ class DmpRequestHelp(View):
                 )
 
             Ticket.objects.create(
-                project=project, ticket_key=new_issue.key, ticket_id=new_issue.id
+                project=project, ticket_key=new_issue.key,
+                ticket_id=new_issue.id
             )
 
         except JIRAError as e:
@@ -173,12 +177,14 @@ class DmptProjectListView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-    permission_classes = (
-        permissions.IsAuthenticated,
-        IsOwner,
-    )
 
     def get_queryset(self):
         user = self.request.user
-        return DmptProject.objects.filter(user=user).order_by("-modified")
+        return DmptProject.objects.filter(user=user).order_by('-modified')
 
+
+class DmptProjectDetailView(generics.RetrieveAPIView):
+    queryset = DmptProject.objects.all()
+    serializer_class = DmptProjectSerializer
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
