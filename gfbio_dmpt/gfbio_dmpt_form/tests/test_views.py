@@ -146,17 +146,6 @@ class TestDmptProjectViews(TestCase):
         self.assertIn('rdmo_project', content.keys())
         self.assertEqual(dp.id, content.get('rdmo_project', 'invalid_id'))
 
-    def test_user_post_title(self):
-        dp = Project.objects.create(title='Unit Test')
-        response = self.std_client.post('/dmp/dmptprojects/', {
-            'rdmo_project': dp.id,
-            'user': self.std_user.id,
-            'title': 'A verbose title !'
-        })
-        self.assertEqual(201, response.status_code)
-        content = json.loads(response.content)
-        print(content)
-
     def test_unauthorized_get(self):
         response = self.client.get('/dmp/dmptprojects/')
         self.assertEqual(401, response.status_code)
