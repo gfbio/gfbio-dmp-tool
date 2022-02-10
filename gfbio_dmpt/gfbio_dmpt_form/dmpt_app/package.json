@@ -16,7 +16,7 @@
     "prepush": "yarn run lint"
   },
   "keywords": [],
-  "author": "Marc Weber <maweber@mpi-bremen.de>",
+  "author": "Marc Weber <mweber@gfbio.org>",
   "license": "MIT",
   "repository": {
     "type": "git",
