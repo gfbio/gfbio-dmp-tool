@@ -73,7 +73,7 @@ tag_release:
 # COMPOSE_FILE - should be specified, default is production.yml
 web_test_update:
   variables:
-    PROJECT_NAME: "dmp.gfbio.org"
+    PROJECT_NAME: "dmp"
     COMPOSE_FILE: "web-test.yml"
   script:
     # get issue id and test name
@@ -93,10 +93,10 @@ web_test_update:
 # will set correct url for environmnet so you can 'view environment' in gitlab
 web_test_update_env_url:
   variables:
-    PROJECT_NAME: "dmp.gfbio.org"
+    PROJECT_NAME: "dmp"
 
 # will stop running environmnet
 web_test_stop:
   variables:
     MAIN_BRANCH_NAME: "master"
-    PROJECT_NAME: "dmp.gfbio.org"
+    PROJECT_NAME: "dmp"
