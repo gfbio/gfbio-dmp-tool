@@ -58,7 +58,6 @@ const createProject = async (token, optionalProjectName = '') => {
                 }
             }
         );
-        console.log('CRREATE PROJECT ', response);
         return response;
     } catch (e) {
         console.error(e);
@@ -303,10 +302,10 @@ function DmptStart(props) {
 
     if (!processing) {
         // TODO: for testing submit summary, only submitHandler is active
-        const nextHandler = submitAllHandler;
-        // const nextHandler = submitOnNext
-        //     ? submitAllHandler
-        //     : nextSectionHandler;
+        // const nextHandler = submitAllHandler;
+        const nextHandler = submitOnNext
+            ? submitAllHandler
+            : nextSectionHandler;
 
         formFields = (
             <Questions
