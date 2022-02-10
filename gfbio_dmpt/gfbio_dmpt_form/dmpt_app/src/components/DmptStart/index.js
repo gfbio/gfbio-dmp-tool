@@ -239,18 +239,18 @@ function DmptStart(props) {
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
-        let projectId = rdmoContext.project_id;
+        let contextProjectId = rdmoContext.project_id;
         let name = '';
         // eslint-disable-next-line no-prototype-builtins
         if (rdmoContext.form_data.hasOwnProperty('project_name') && rdmoContext.form_data.project_name.hasOwnProperty('value')) {
             name = rdmoContext.form_data.project_name.value;
         }
-        if (projectId < 0) {
+        if (contextProjectId < 0) {
             createProject(backendContext.token, name).then((createResult) => {
-                projectId = createResult.data.id;
-                rdmoContext.assignProjectId(projectId);
+                contextProjectId = createResult.data.id;
+                rdmoContext.assignProjectId(contextProjectId);
                 submitValues(
-                    projectId,
+                    contextProjectId,
                     rdmoContext.form_data,
                     backendContext.token
                 ).then(() => {
@@ -259,7 +259,7 @@ function DmptStart(props) {
             });
         } else {
             submitValues(
-                projectId,
+                contextProjectId,
                 rdmoContext.form_data,
                 backendContext.token
             ).then(() => {
