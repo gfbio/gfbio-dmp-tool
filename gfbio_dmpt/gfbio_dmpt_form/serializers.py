@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AUTH_USER_MODEL
-        fields = ('id', 'username', 'rdmo_project')
+        fields = ('id', 'username', 'rdmo_project',)
 
 
 class DmptProjectSerializer(serializers.ModelSerializer):
