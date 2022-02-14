@@ -101,7 +101,13 @@ docker-compose -f production.yml run --rm django python manage.py setup_groups
 - remove build directory content on 141.5.99.16
 - remove runner "nfdi4b-dev"
   in https://gitlab.gwdg.de/gfbio/nfdi4biodiversity.org/-/settings/ci_cd#js-runners-settings
--
+
+### webtest setup - following documentation
+
+- following documentation here: 
+  https://gitlab.gwdg.de/gfbio/cicd
+- add web-test.yml (copy of production.yml with modifications as suggested in documentation)
+- add webtest stages to .gitlab-ci.yml
 
 # GitLab CI (general setup, maybe outdated ... )
 
