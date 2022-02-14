@@ -32,15 +32,23 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const createProject = async (token) => {
+const createProject = async (token, optionalProjectName = '') => {
     try {
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
+        let projectName = `tmp_${nanoid()}`;
+        if (optionalProjectName !== '') {
+            if (optionalProjectName.length > 36) {
+                projectName = `${optionalProjectName.substring(0, 30)} (...)`;
+            } else {
+                projectName = optionalProjectName;
+            }
+        }
         const response = await axios.post(
             `${API_ROOT}projects/projects/`,
             {
-                title: `tmp_${nanoid()}`,
-                description: `tmp_${nanoid()} temporary project`,
+                title: `${projectName}`,
+                description: `${projectName}`,
                 catalog: 18 // FIXME: gfbio catalog id hardcoded --> 18
             },
             {
@@ -196,7 +204,7 @@ function DmptStart(props) {
 
     const nextSectionHandler = () => {
         setPreviousButtonVisibility(
-            rdmoContext.sections_index === -1 ? true : false
+            rdmoContext.sections_index === -1
         );
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
@@ -215,7 +223,7 @@ function DmptStart(props) {
 
     const prevSectionHandler = () => {
         setPreviousButtonVisibility(
-            rdmoContext.sections_index === 0 ? true : false
+            rdmoContext.sections_index === 0
         );
         if (rdmoContext.sections_index > 0) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
@@ -230,13 +238,18 @@ function DmptStart(props) {
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
-        let projectId = rdmoContext.project_id;
-        if (projectId < 0) {
-            createProject(backendContext.token).then((createResult) => {
-                projectId = createResult.data.id;
-                rdmoContext.assignProjectId(projectId);
+        let contextProjectId = rdmoContext.project_id;
+        let name = '';
+        // eslint-disable-next-line no-prototype-builtins
+        if (rdmoContext.form_data.hasOwnProperty('project_name') && rdmoContext.form_data.project_name.hasOwnProperty('value')) {
+            name = rdmoContext.form_data.project_name.value;
+        }
+        if (contextProjectId < 0) {
+            createProject(backendContext.token, name).then((createResult) => {
+                contextProjectId = createResult.data.id;
+                rdmoContext.assignProjectId(contextProjectId);
                 submitValues(
-                    projectId,
+                    contextProjectId,
                     rdmoContext.form_data,
                     backendContext.token
                 ).then(() => {
@@ -245,7 +258,7 @@ function DmptStart(props) {
             });
         } else {
             submitValues(
-                projectId,
+                contextProjectId,
                 rdmoContext.form_data,
                 backendContext.token
             ).then(() => {
