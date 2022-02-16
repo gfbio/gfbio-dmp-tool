@@ -80,7 +80,8 @@ web_test_update:
     - ISSUE_ID=$(awk -F- '{print $1}' <<< ${CI_COMMIT_REF_NAME})
     - TEST_NAME=$ISSUE_ID-$PROJECT_NAME
     # your custom commands
-    - cp -rv /home/gitlab-runner/.gfbio_dmp_envs/.* ./.envs/
+    - rm -r ./.envs/
+    - cp -rv /home/gitlab-runner/.gfbio_dmp_envs/ ./.envs/
     - sed -i s/BRANCH/${TEST_NAME}/g $COMPOSE_FILE
     # TODO: add dmpt-app specific build and copy commands
     #    - cd ammod_ui && npm i && npm run collect
