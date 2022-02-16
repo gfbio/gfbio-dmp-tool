@@ -73,17 +73,18 @@ tag_release:
 # COMPOSE_FILE - should be specified, default is production.yml
 web_test_update:
   variables:
-    PROJECT_NAME: "dmp"
+    PROJECT_NAME: "gfbio-dmp"
     COMPOSE_FILE: "web-test.yml"
   script:
     # get issue id and test name
     - ISSUE_ID=$(awk -F- '{print $1}' <<< ${CI_COMMIT_REF_NAME})
     - TEST_NAME=$ISSUE_ID-$PROJECT_NAME
     # your custom commands
-    - cp -r /home/gitlab-runner/.ammod_envs ./.envs/
+    - cp -r /home/gitlab-runner/.gfbio_dmp_envs ./.envs/
     - sed -i s/BRANCH/${TEST_NAME}/g $COMPOSE_FILE
-    - cd ammod_ui && npm i && npm run collect
-    - cd ../
+    # TODO: add dmpt-app specific build and copy commands
+    #    - cd ammod_ui && npm i && npm run collect
+    #    - cd ../
     - docker-compose -f $COMPOSE_FILE build
     # run docker stack
     - docker stack rm $TEST_NAME || true
@@ -93,10 +94,10 @@ web_test_update:
 # will set correct url for environmnet so you can 'view environment' in gitlab
 web_test_update_env_url:
   variables:
-    PROJECT_NAME: "dmp"
+    PROJECT_NAME: "gfbio-dmp"
 
 # will stop running environmnet
 web_test_stop:
   variables:
     MAIN_BRANCH_NAME: "master"
-    PROJECT_NAME: "dmp"
+    PROJECT_NAME: "gfbio-dmp"
