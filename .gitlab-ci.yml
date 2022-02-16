@@ -83,6 +83,7 @@ web_test_update:
     - rm -r ./.envs/
     - cp -r /home/gitlab-runner/.gfbio_dmp_envs/ ./.envs/
     - sed -i s/BRANCH/${TEST_NAME}/g $COMPOSE_FILE
+    - sed -i s/DJANGO_ALLOWED_HOSTS=.*/DJANGO_ALLOWED_HOSTS=\.gfbio-dmp\.gfbio\.dev/g .envs/.production/.django
     # TODO: add dmpt-app specific build and copy commands
     #    - cd ammod_ui && npm i && npm run collect
     #    - cd ../
