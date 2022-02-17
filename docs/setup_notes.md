@@ -104,10 +104,22 @@ docker-compose -f production.yml run --rm django python manage.py setup_groups
 
 ### webtest setup - following documentation
 
-- following documentation here: 
+- following documentation here:
   https://gitlab.gwdg.de/gfbio/cicd
-- add web-test.yml (copy of production.yml with modifications as suggested in documentation)
+- add web-test.yml (copy of production.yml with modifications as suggested in
+  documentation)
+- remove traefik part from web-test.yml (denbi testserver has own certificates
+  and traefik organized via jumpserver)
 - add webtest stages to .gitlab-ci.yml
+- copy project .envs to devserver /home/gitlab-runner as .gfbio_dmp_envs
+- adapt/add rm/cp command to copy envs properly to build directory
+- add sed onliner to add branch+test specific name to ALLOWED_HOSTS
+
+- next: add adapted start script for ci tests (copy
+  compose/production/django/start)
+  wip: add ci_start, add command in Dockerfile doing the same for ci_start what
+  is done for start, in webtest.yml use ci_start instead of start in django->
+  command section
 
 # GitLab CI (general setup, maybe outdated ... )
 

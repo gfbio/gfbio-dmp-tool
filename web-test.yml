@@ -33,7 +33,7 @@ services:
       - traefik.http.routers.BRANCH-django.entrypoints=web
       - traefik.http.services.BRANCH-django.loadbalancer.server.port=5000
 
-    command: /start
+    command: /ci_start
 
   postgres:
     build:

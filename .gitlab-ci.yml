@@ -92,8 +92,8 @@ web_test_update:
     - docker stack rm $TEST_NAME || true
     - while [[ $(docker ps | grep $TEST_NAME | wc -l) > 0 ]]; do sleep 1; done
     - docker stack deploy -c $COMPOSE_FILE $TEST_NAME
-    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py migrate
-    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py collectstatic --noinput
+#    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py migrate
+#    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py collectstatic --noinput
 
 # will set correct url for environmnet so you can 'view environment' in gitlab
 web_test_update_env_url:
