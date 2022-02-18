@@ -1,10 +1,9 @@
-# according to https://gitlab.gwdg.de/gfbio/cicd -------------------------------
+# as documented here https://gitlab.gwdg.de/gfbio/cicd :
 
 include:
   - project: gfbio/cicd
     file:
       - '.create_merge_request_v2.yml'
-      #      - '.create_merge_request.yml'
       - '.web-test.yml'
       - '.tag_release.yml'
 
@@ -14,7 +13,7 @@ stages:
   - create_merge_request
   - tag_release_check
   - tag_release
-  - web_test_check # there is not need to overwrite anything in this stage
+  - web_test_check
   - web_test_update
   - web_test_update_env_url
   - web_test_stop
@@ -26,7 +25,6 @@ stages:
 #    - sudo rm -rf .pytest_cache
 #    - rsync -a /home/gitlab-runner/.envs .
 #    - docker-compose -f local.yml build
-#    # FIXME: currently not possible due to misssing migration in rdmo questions
 #    # - docker-compose -f local.yml run --rm django python manage.py migrate
 #  script:
 #    - docker-compose -f local.yml run django pytest
@@ -55,8 +53,6 @@ tag_release:
     - docker-compose -f production.yml run --rm django python manage.py migrate
     # - TODO: add js built and copy commands here
     - docker-compose -f production.yml run --rm django python manage.py collectstatic --noinput
-    #    - docker-compose -f production.yml run --rm django python manage.py compress --force
-    #    - docker-compose -f production.yml run --rm django python manage.py collectstatic --noinput
     - docker-compose -f production.yml down
     - docker-compose -f production.yml up -d
   environment:
@@ -92,8 +88,6 @@ web_test_update:
     - docker stack rm $TEST_NAME || true
     - while [[ $(docker ps | grep $TEST_NAME | wc -l) > 0 ]]; do sleep 1; done
     - docker stack deploy -c $COMPOSE_FILE $TEST_NAME
-#    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py migrate
-#    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py collectstatic --noinput
 
 # will set correct url for environmnet so you can 'view environment' in gitlab
 web_test_update_env_url:

@@ -115,11 +115,11 @@ docker-compose -f production.yml run --rm django python manage.py setup_groups
 - adapt/add rm/cp command to copy envs properly to build directory
 - add sed onliner to add branch+test specific name to ALLOWED_HOSTS
 
-- next: add adapted start script for ci tests (copy
-  compose/production/django/start)
-  wip: add ci_start, add command in Dockerfile doing the same for ci_start what
-  is done for start, in webtest.yml use ci_start instead of start in django->
-  command section
+- add adapted start script for ci tests (copy compose/production/django/start)
+    - add ci_start, add command in Dockerfile doing the same for ci_start what
+      is done for start, in webtest.yml use ci_start instead of start in django
+      -> command section
+    - add migrate command (analog to existing collectstatic) to ci_start
 
 # GitLab CI (general setup, maybe outdated ... )
 
