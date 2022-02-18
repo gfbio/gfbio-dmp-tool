@@ -4,7 +4,8 @@ include:
   - project: gfbio/cicd
     file:
       - '.create_merge_request_v2.yml'
-#      - '.create_merge_request.yml'
+      #      - '.create_merge_request.yml'
+      - '.web-test.yml'
       - '.tag_release.yml'
 
 # TODO: unit-tests is conflicting with release, since both currently run on the same machine and cause errors when using the same docker network
@@ -13,8 +14,12 @@ stages:
   - create_merge_request
   - tag_release_check
   - tag_release
+  - web_test_check # there is not need to overwrite anything in this stage
+  - web_test_update
+  - web_test_update_env_url
+  - web_test_stop
 
-# lorem ipsum
+
 #run_unit_tests:
 #  stage: unit_tests
 #  before_script:
@@ -59,3 +64,44 @@ tag_release:
     url: https://dmp.gfbio.dev
   tags:
     - gfbio-dmpt-dev
+
+# ------------------------- WEBTEST ---------------------------
+# add your commands under "your custom commands" section
+# example: 123-foo-bar with project name ammod will create stack named 123-ammod
+# in this example you can also see how to get ISSUE_ID from branch
+# PROJECT_NAME - should be specified, default is project-id
+# COMPOSE_FILE - should be specified, default is production.yml
+web_test_update:
+  variables:
+    PROJECT_NAME: "gfbio-dmp"
+    COMPOSE_FILE: "web-test.yml"
+  script:
+    # get issue id and test name
+    - ISSUE_ID=$(awk -F- '{print $1}' <<< ${CI_COMMIT_REF_NAME})
+    - TEST_NAME=$ISSUE_ID-$PROJECT_NAME
+    # your custom commands
+    - rm -r ./.envs/
+    - cp -r /home/gitlab-runner/.gfbio_dmp_envs/ ./.envs/
+    - sed -i s/DJANGO_ALLOWED_HOSTS=.*/DJANGO_ALLOWED_HOSTS=\.$TEST_NAME\.test.gfbio\.dev/g .envs/.production/.django
+    - sed -i s/BRANCH/${TEST_NAME}/g $COMPOSE_FILE
+    # TODO: add dmpt-app specific build and copy commands
+    #    - cd ammod_ui && npm i && npm run collect
+    #    - cd ../
+    - docker-compose -f $COMPOSE_FILE build
+    # run docker stack
+    - docker stack rm $TEST_NAME || true
+    - while [[ $(docker ps | grep $TEST_NAME | wc -l) > 0 ]]; do sleep 1; done
+    - docker stack deploy -c $COMPOSE_FILE $TEST_NAME
+#    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py migrate
+#    - docker-compose -f $COMPOSE_FILE run --rm django python manage.py collectstatic --noinput
+
+# will set correct url for environmnet so you can 'view environment' in gitlab
+web_test_update_env_url:
+  variables:
+    PROJECT_NAME: "gfbio-dmp"
+
+# will stop running environmnet
+web_test_stop:
+  variables:
+    MAIN_BRANCH_NAME: "master"
+    PROJECT_NAME: "gfbio-dmp"
