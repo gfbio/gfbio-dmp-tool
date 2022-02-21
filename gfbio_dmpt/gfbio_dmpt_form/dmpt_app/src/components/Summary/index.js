@@ -40,13 +40,13 @@ const saveProject = async (token, userId, projectId) => {
             `${PROJECT_API_ROOT}dmptprojects/`,
             {
                 rdmo_project: projectId,
-                user: userId,
+                user: userId
             },
             {
                 headers: {
                     Authorization: `Token ${token}`,
-                    'X-CSRFToken': csrftoken,
-                },
+                    'X-CSRFToken': csrftoken
+                }
             }
         );
         return response;
@@ -67,6 +67,8 @@ function Summary(props) {
     const [dmptProjectId, setDmptProjectId] = useState(-1);
     const [discarding, setDiscarding] = useState(false);
     const [discardingDone, setDiscardingDone] = useState(false);
+
+    const [showSupportForm, setShowSupportForm] = useState(false);
 
     const loggedIn = backendContext.isLoggedIn !== 'false';
     const noSaveNeeded = rdmoContext.dmpt_project_id !== -1;
@@ -94,12 +96,12 @@ function Summary(props) {
     };
 
     let saveSection = (
-        <Col lg={6} className="p-3">
-            <i className="mdi mdi-content-save-edit-outline" />
+        <Col lg={6} className='p-3'>
+            <i className='mdi mdi-content-save-edit-outline' />
             <h6>Save Data Management Plan</h6>
-            <div className="d-grid gap-2">
+            <div className='d-grid gap-2'>
                 <Button
-                    className="btn btn-secondary btn-green"
+                    className='btn btn-secondary btn-green'
                     onClick={saveProjectHandler}
                 >
                     Save
@@ -120,15 +122,15 @@ function Summary(props) {
     }
     if (saving) {
         saveSection = (
-            <Col lg={6} className="p-3">
-                <i className="mdi mdi-content-save-edit-outline" />
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
                 <h6>... Saving Data Management Plan ...</h6>
             </Col>
         );
     } else if (savingDone) {
         saveSection = (
-            <Col lg={6} className="p-3">
-                <i className="mdi mdi-content-save-edit-outline" />
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
                 <h6>Saving completed successfully !</h6>
             </Col>
         );
@@ -177,8 +179,8 @@ function Summary(props) {
     );
     if (discarding) {
         discardSection = (
-            <Col lg={6} className="p-3">
-                <i className="mdi mdi-location-exit" />
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-location-exit' />
                 <h6>... Deleting data & prepare to exit ...</h6>
             </Col>
         );
@@ -205,17 +207,144 @@ function Summary(props) {
         </Col>
     );
 
+    const supportHandler = () => {
+        console.log('support Handler');
+        setShowSupportForm(true);
+    };
+
+    let supportSection = (
+        <Col lg={6} className='p-3'>
+            <i className='mdi mdi-email-send-outline' />
+            <h6>Request Data Management Plan Support</h6>
+            <div className='d-grid gap-2'>
+                <Button className='btn btn-secondary btn-green'
+                    onClick={supportHandler}>
+                    Send Request
+                </Button>
+            </div>
+        </Col>
+    );
+    if (showSupportForm) {
+        supportSection = (
+            <Col lg={6} className='p-3' style={{"text-align": "left"}}>
+                <form>
+                    <div className='row mb-3'>
+                        <label htmlFor='email'
+                            className='col-sm-3 col-form-label'>
+                            Email
+                        </label>
+                        <div className='col-sm-9'>
+                            <input type='email' className='form-control'
+                                id='email'
+                                placeholder='' />
+                        </div>
+                    </div>
+
+                    <div className='row mb-3'>
+                        <label htmlFor='message'
+                            className='col-sm-3 col-form-label'>Message</label>
+                        <textarea
+                            className='col-sm-9'
+                            rows='4'
+                            id='message'
+                            placeholder=''
+                        />
+                    </div>
+
+                    <fieldset className="row mb-3">
+                        <legend
+                            className="col-form-label col-sm-5 pt-0">What services are you interested in ?
+                        </legend>
+
+                        <div className="col-sm-7">
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Data collection and assurance'
+                                    id='interestedIn-1' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-1'>Data Collection and
+                                    Assurance</label>
+                            </div>
+
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Data Curation' id='interestedIn-2' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-2'>Data
+                                    Curation</label>
+                            </div>
+
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Data Archiving' id='interestedIn-3' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-3'>Data
+                                    Archiving</label>
+                            </div>
+
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Data Visualization and Analysis'
+                                    id='interestedIn-4' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-4'>Data Visualization
+                                    and Analysis</label>
+                            </div>
+
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Terminology Service'
+                                    id='interestedIn-5' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-5'>Terminology
+                                    Service</label>
+                            </div>
+
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Data Publication'
+                                    id='interestedIn-6' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-6'>Data
+                                    Publication</label>
+                            </div>
+
+                            <div className='form-check'>
+                                <input className='form-check-input' type='checkbox'
+                                    value='Data Management Training'
+                                    id='interestedIn-7' />
+                                <label className='form-check-label'
+                                    htmlFor='interestedIn-7'>Data Management
+                                    Training</label>
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+                    <div className='form-group'>
+                        <button type='button'
+                            className='btn btn-outline-secondary'>Cancel
+                        </button>
+                        <button type='submit'
+                            className='btn btn-secondary btn-green'>Submit
+                        </button>
+                    </div>
+                </form>
+            </Col>
+        );
+    }
+
     return (
-        <div id="summary" className="text-center">
+        <div id='summary' className='text-center'>
             <ScrollToTop />
 
             <Row>
-                <div className="col-12">
+                <div className='col-12'>
                     <h3>Summary</h3>
                 </div>
             </Row>
 
-            <Row className="mt-3">
+            <Row className='mt-3'>
                 <Col lg={12}>
                     <h5>
                         Send a DMP support request to GFBio, download your DMP
@@ -224,26 +353,16 @@ function Summary(props) {
                 </Col>
             </Row>
 
-            <Row className="mt-5">
-                <Col lg={6} className="p-3">
-                    <i className="mdi mdi-email-send-outline" />
-                    <h6>Request Data Management Plan Support</h6>
-                    <div className="d-grid gap-2">
-                        <Button className="btn btn-secondary btn-green">
-                            Send Request
-                        </Button>
-                    </div>
-                </Col>
-
+            <Row className='mt-5'>
+                {supportSection}
                 {downloadPdfSection}
             </Row>
 
-            <Row className="mt-3">
+            <Row className='mt-3'>
                 {saveSection}
                 {discardSection}
             </Row>
-        </div>
-    );
+        </div>);
 }
 
 Summary.propTypes = {
