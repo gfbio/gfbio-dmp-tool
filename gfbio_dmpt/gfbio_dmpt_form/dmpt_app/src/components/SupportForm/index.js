@@ -9,6 +9,9 @@ function SupportForm(props) {
         isLoggedIn
     } = props;
 
+    // TODO: send actula reuqest to server
+    // TODO: create endpoint and succesive tasks in django
+    // TODO: add cancel function for this form
     const submitRequest = () => {
         console.log('SUBMIT REQUEST (callback)');
         console.log(inputs);
