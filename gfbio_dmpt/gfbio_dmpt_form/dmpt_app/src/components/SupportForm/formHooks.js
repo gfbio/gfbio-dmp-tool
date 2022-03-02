@@ -9,12 +9,16 @@ const useSupportForm = (callback) => {
         }
         callback();
     };
+
     const handleInputChange = (event) => {
         event.persist();
-        console.log('handle change ', event.target.name, ' ', event.target.value);
+        // console.log('handle change ', event.target.name, ' ', event.target.value, ' ');
+        // console.log(event.target);
+        const {target} = event;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
         setInputs(inputs => ({
             ...inputs,
-            [event.target.name]: event.target.value
+            [target.name]: value
         }));
     };
     return {

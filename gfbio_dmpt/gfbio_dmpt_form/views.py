@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
+from django.http.response import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -21,6 +22,7 @@ from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.jira_integration.models import Ticket
 from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
+from .forms import DmptSupportForm
 from .models import DmptProject
 from .permissions import IsOwner
 from .serializers import DmptProjectSerializer
@@ -188,3 +190,15 @@ class DmptProjectDetailView(generics.RetrieveAPIView):
     serializer_class = DmptProjectSerializer
     authentication_classes = (TokenAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated, IsOwner,)
+
+
+class DmptSupportView(View):
+    form_class = DmptSupportForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+        else:
+            print('form not valid ', form.data)
+        return HttpResponse(200)

@@ -275,3 +275,22 @@ class TestDmptProjectDetailView(TestCase):
         dp = DmptProject.objects.first()
         response = self.client_2.get('/dmp/dmptprojects/{}/'.format(dp.pk))
         self.assertEqual(403, response.status_code)
+
+
+class TestDmptSupportView(TestCase):
+
+    def test_post(self):
+        # TODO: rename checkbox fields in form
+        # TODO: email from app context for logged in users or resolve via user id ?
+        # TODO: email mandatory ? needed for user not logged in
+        # TODO: checkbox fields can be 0-n in number
+        example = {
+            'email': 'marc@marc.de',
+            'message': 'tesabgjh idb vi',
+            'interestedTwo': 'Data Curation',
+            'interestedInSeven': 'Data Management Training'
+        }
+
+        response = self.client.post('/dmp/support/', example)
+        print(response.status_code)
+        print(response.content)
