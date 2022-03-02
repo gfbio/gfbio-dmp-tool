@@ -40,7 +40,9 @@ function SupportForm(props) {
                             id='email'
                             name='email'
                             placeholder=''
-                            onChange={handleInputChange} value={inputs.email}
+                            onChange={handleInputChange}
+                            value={inputs.email}
+                            required
                         />
                     </div>
                 </div>
@@ -68,94 +70,80 @@ function SupportForm(props) {
                     <div className='col-sm-7'>
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                // value='Data collection and assurance'
-                                id='dataCollectionAndAssurance'
-                                name='dataCollectionAndAssurance'
+                                id='data_collection_and_assurance'
+                                name='data_collection_and_assurance'
                                 onChange={handleInputChange}
-                                // value={inputs.dataCollectionAndAssurance}
                             />
                             <label className='form-check-label'
-                                htmlFor='dataCollectionAndAssurance'>Data
+                                htmlFor='data_collection_and_assurance'>Data
                                 Collection and
                                 Assurance</label>
                         </div>
 
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                // value='Data Curation'
-                                id='dataCuration'
-                                name='dataCuration'
+                                id='data_curation'
+                                name='data_curation'
                                 onChange={handleInputChange}
-                                // value={inputs.interestedTwo}
                             />
                             <label className='form-check-label'
-                                htmlFor='dataCuration'>Data
+                                htmlFor='data_curation'>Data
                                 Curation</label>
                         </div>
 
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                // value='Data Archiving'
-                                id='dataArchiving'
-                                name='dataArchiving'
+                                id='data_archiving'
+                                name='data_archiving'
                                 onChange={handleInputChange}
-                                // value={inputs.interestedThree}
                             />
                             <label className='form-check-label'
-                                htmlFor='dataArchiving'>Data
+                                htmlFor='data_archiving'>Data
                                 Archiving</label>
                         </div>
 
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                // value='Data Visualization and Analysis'
-                                id='dataVisualizationAndAnalysis'
-                                name='dataVisualizationAndAnalysis'
+                                id='data_visualization_and_analysis'
+                                name='data_visualization_and_analysis'
                                 onChange={handleInputChange}
-                                // value={inputs.interestedInFour}
                             />
                             <label className='form-check-label'
-                                htmlFor='dataVisualizationAndAnalysis'>Data
+                                htmlFor='data_visualization_and_analysis'>Data
                                 Visualization
                                 and Analysis</label>
                         </div>
 
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                // value='Terminology Service'
-                                id='terminologyService'
-                                name='interestedInFive'
+                                id='terminology_service'
+                                name='terminology_service'
                                 onChange={handleInputChange}
-                                // value={inputs.interestedInFive}
                             />
                             <label className='form-check-label'
-                                htmlFor='terminologyService'>Terminology
+                                htmlFor='terminology_service'>Terminology
                                 Service</label>
                         </div>
 
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                value='Data Publication'
-                                id='dataPublication'
-                                name='dataPublication'
+                                id='data_publication'
+                                name='data_publication'
                                 onChange={handleInputChange}
-                                // value={inputs.interestedInSix}
                             />
                             <label className='form-check-label'
-                                htmlFor='dataPublication'>Data
+                                htmlFor='data_publication'>Data
                                 Publication</label>
                         </div>
 
                         <div className='form-check'>
                             <input className='form-check-input' type='checkbox'
-                                // value='Data Management Training'
-                                id='dataManagementTraining'
-                                name='interestedInSeven'
+                                id='data_management_training'
+                                name='data_management_training'
                                 onChange={handleInputChange}
-                                // value={inputs.interestedInSeven}
                             />
                             <label className='form-check-label'
-                                htmlFor='dataManagementTraining'>Data
+                                htmlFor='data_management_training'>Data
                                 Management
                                 Training</label>
                         </div>
