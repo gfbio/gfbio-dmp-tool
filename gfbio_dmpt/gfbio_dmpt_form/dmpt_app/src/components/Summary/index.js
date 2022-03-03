@@ -74,6 +74,10 @@ function Summary(props) {
     const loggedIn = backendContext.isLoggedIn !== 'false';
     const noSaveNeeded = rdmoContext.dmpt_project_id !== -1;
 
+    console.log('SUMMARY rdomProjIdParam ', rdmoProjectId);
+    console.log('context ');
+    console.log(rdmoContext);
+
     const saveProjectHandler = () => {
         if (loggedIn) {
             setSaving(true);
