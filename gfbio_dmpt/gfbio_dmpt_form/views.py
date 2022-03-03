@@ -199,7 +199,6 @@ class DmptSupportView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            # print(form.cleaned_data)
             from .tasks import create_support_issue_task
             create_support_issue_task.apply_async(
                 kwargs={
@@ -208,5 +207,4 @@ class DmptSupportView(View):
             )
             return HttpResponse(status=HTTP_201_CREATED)
         else:
-            # print('form not valid ', form.data)
             return HttpResponse(status=HTTP_400_BAD_REQUEST, content=form.errors.as_json())
