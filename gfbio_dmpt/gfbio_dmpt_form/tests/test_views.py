@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
+import os
 from unittest.mock import patch
 
+import responses
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.test import TestCase
 from rdmo.projects.models.project import Project
@@ -11,6 +14,18 @@ from rest_framework.test import APIClient
 
 from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject
 from gfbio_dmpt.users.models import User
+
+
+def _get_test_data_dir_path():
+    return '{0}{1}gfbio_dmpt{1}gfbio_dmpt_form{1}tests{1}test_data'.format(
+        os.getcwd(), os.sep, )
+
+
+def _get_jira_issue_response():
+    with open(os.path.join(
+            _get_test_data_dir_path(), 'jira_issue_response.json'),
+            'r') as data_file:
+        return json.load(data_file)
 
 
 class TestDmptFrontendView(TestCase):
@@ -28,13 +43,13 @@ class TestDmptFrontendView(TestCase):
     def test_get_not_logged_in(self):
         response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b"{'isLoggedIn': 'false', 'token':", response.content)
+        self.assertIn(b"{'isLoggedIn': 'False', 'token':", response.content)
 
     def test_get_logged_in(self):
         self.client.login(username="john", password="secret")
         response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b"{'isLoggedIn': 'true', 'token':", response.content)
+        self.assertIn(b"{'isLoggedIn': 'True', 'token':", response.content)
 
 
 class TestDmpExportView(TestCase):
@@ -279,18 +294,84 @@ class TestDmptProjectDetailView(TestCase):
 
 class TestDmptSupportView(TestCase):
 
-    def test_post(self):
-        # TODO: rename checkbox fields in form
+    @classmethod
+    def setUpTestData(cls):
+        cls.issue_json = _get_jira_issue_response()
+
+    @staticmethod
+    def _add_gfbio_helpdesk_user_service_response(user_name='regular_user',
+                                                  email='re@gu.la'):
+        url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php' \
+              '?username={0}&email={1}'.format(user_name, email, )
+        responses.add(responses.GET, url, body='regular_user', status=200)
+        # url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php' \
+        #       '?username={0}&email={1}&fullname={2}'.format(
+        #     '0815', user_name, email, )
+        responses.add(responses.GET, url, body=b'deleteMe', status=200)
+
+    @staticmethod
+    def _add_jira_client_responses():
+        responses.add(
+            responses.GET,
+            '{0}/rest/api/2/field'.format(settings.JIRA_URL),
+            status=200,
+        )
+
+    def _add_create_ticket_response(self):
+        self._add_gfbio_helpdesk_user_service_response(user_name='gfbiodmpt',
+                                                       email='horst@horst.de')
+        self._add_jira_client_responses()
+        # responses.add(
+        #     responses.POST,
+        #     '{0}{1}'.format(
+        #         settings.JIRA_URL,
+        #         '/rest/api/2/issue'
+        #     ),
+        #     status=200,
+        #     body=json.dumps({})
+        # )
+        responses.add(
+            responses.POST,
+            '{0}{1}'.format(settings.JIRA_URL,
+                            '/rest/api/2/issue'),
+            json=self.issue_json,
+            status=200)
+
+        responses.add(
+            responses.GET,
+            '{0}/rest/api/2/issue/SAND-1661'.format(
+                settings.JIRA_URL),
+            json=self.issue_json
+        )
+
+    @responses.activate
+    def test_valid_post(self):
         # TODO: email from app context for logged in users or resolve via user id ?
         # TODO: email mandatory ? needed for user not logged in
-        # TODO: checkbox fields can be 0-n in number
-        example = {
-            'email': 'marc@marc.de',
-            'message': 'tesabgjh idb vi',
-            'interestedTwo': 'Data Curation',
-            'interestedInSeven': 'Data Management Training'
+        self._add_create_ticket_response()
+        rdmo_project = Project.objects.create(title='Support View Test 1')
+        data = {
+            'rdmo_project_id': rdmo_project.id,
+            'email': 'horst@horst.de',
+            'message': 'foo bar',
+            'data_collection_and_assurance': False,
+            'data_curation': True,
         }
 
-        response = self.client.post('/dmp/support/', example)
+        response = self.client.post('/dmp/support/', data)
+        self.assertEqual(201, response.status_code)
         print(response.status_code)
         print(response.content)
+
+    def test_invalid_post(self):
+        data = {
+            'email': 'sfdde',
+            'data_collection_and_assurance': False,
+        }
+
+        response = self.client.post('/dmp/support/', data)
+        print(response.status_code)
+        print(response.content)
+        self.assertEqual(400, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn('email', content.keys())

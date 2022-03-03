@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
-from django.http.response import HttpResponse
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -17,6 +17,7 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, \
     BasicAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.jira_integration.models import Ticket
@@ -198,7 +199,14 @@ class DmptSupportView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            # print(form.cleaned_data)
+            from .tasks import create_support_issue_task
+            create_support_issue_task.apply_async(
+                kwargs={
+                    'form_data': form.cleaned_data
+                }
+            )
+            return HttpResponse(status=HTTP_201_CREATED)
         else:
-            print('form not valid ', form.data)
-        return HttpResponse(200)
+            # print('form not valid ', form.data)
+            return HttpResponse(status=HTTP_400_BAD_REQUEST, content=form.errors.as_json())

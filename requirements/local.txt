@@ -45,3 +45,5 @@ django-coverage-plugin==1.8.0  # https://github.com/nedbat/django_coverage_plugi
 # because of rdmo
 pytest-django~=4.4.0  # https://github.com/pytest-dev/pytest-django
 
+responses==0.18.0 # https://github.com/getsentry/responses
+

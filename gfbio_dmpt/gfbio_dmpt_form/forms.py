@@ -4,6 +4,7 @@ from django import forms
 
 
 class DmptSupportForm(forms.Form):
+    rdmo_project_id = forms.IntegerField(required=True)
     email = forms.EmailField(required=True)
     message = forms.CharField(required=True)
     data_collection_and_assurance = forms.BooleanField(required=False)
