@@ -360,8 +360,8 @@ class TestDmptSupportView(TestCase):
 
         response = self.client.post('/dmp/support/', data)
         self.assertEqual(201, response.status_code)
-        print(response.status_code)
-        print(response.content)
+        # print(response.status_code)
+        # print(response.content)
 
     def test_invalid_post(self):
         data = {
@@ -370,8 +370,8 @@ class TestDmptSupportView(TestCase):
         }
 
         response = self.client.post('/dmp/support/', data)
-        print(response.status_code)
-        print(response.content)
+        # print(response.status_code)
+        # print(response.content)
         self.assertEqual(400, response.status_code)
         content = json.loads(response.content)
         self.assertIn('email', content.keys())
