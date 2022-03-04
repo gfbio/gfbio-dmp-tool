@@ -47,6 +47,7 @@ def create_support_issue_task(form_data={}):
         return False
 
     # TODO: if user logged in, get email from there, it will probably no be in the form then
+    #       but form has email as mandatory. maybe suffient to keep it simple here
     email = form_data.get('email')
     # TODO: username of user logged in, preferably GOE_ID from user goe field
     user_name = JIRA_FALLBACK_USERNAME
@@ -87,49 +88,8 @@ def create_support_issue_task(form_data={}):
             # issuetype={"name": "Data Submission"},
         )
         print(issue)
+        return True
     except JIRAError as e:
         logger.error(
             f'tasks.py | create_support_issue_task | error creating issue | {e.text}')
-
-# @celery.task(
-#     base=SubmissionTask,
-#     bind=True,
-#     name='tasks.create_submission_issue_task',
-#     autoretry_for=(TransferServerError,
-#                    TransferClientError
-#                    ),
-#     retry_kwargs={'max_retries': SUBMISSION_MAX_RETRIES},
-#     retry_backoff=SUBMISSION_RETRY_DELAY,
-#     retry_jitter=True
-# )
-# def create_submission_issue_task(self, prev_task_result=None,
-#                                  submission_id=None):
-#     submission, site_configuration = get_submission_and_site_configuration(
-#         submission_id=submission_id,
-#         task=self,
-#         include_closed=True
-#     )
-#     if submission == TaskProgressReport.CANCELLED:
-#         return TaskProgressReport.CANCELLED
-#     # TODO: test task without check for null, what happens when errors occur here, not caused inside a
-#     #  method called here
-#
-#     # TODO: only needed for comment on ticket, thus remove
-#     # TODO: althouht filter for primary should deliver only on ticket, a dedicated manager method
-#     #   would be cleaner (no .first() on query set)
-#     # existing_tickets = submission.additionalreference_set.filter(
-#     #     Q(type=AdditionalReference.GFBIO_HELPDESK_TICKET) & Q(primary=True))
-#
-#     jira_client = JiraClient(resource=site_configuration.helpdesk_server)
-#     jira_client.create_submission_issue(reporter=prev_task_result,
-#                                         site_config=site_configuration,
-#                                         submission=submission)
-#
-#     jira_error_auto_retry(jira_client=jira_client, task=self,
-#                           broker_submission_id=submission.broker_submission_id)
-#     if jira_client.issue:
-#         submission.additionalreference_set.create(
-#             type=AdditionalReference.GFBIO_HELPDESK_TICKET,
-#             reference_key=jira_client.issue.key,
-#             primary=True
-#         )
+        return False
