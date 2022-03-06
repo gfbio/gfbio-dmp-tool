@@ -199,11 +199,7 @@ class DmptSupportView(View):
     form_class = DmptSupportForm
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(json.loads(request.body.decode('utf-8')))
-        print(request.POST)
-        print(request.body)
-        body = json.loads(request.body.decode('utf-8'))
-        print(body)
+        form = self.form_class(request.POST)
         if form.is_valid():
             from .tasks import create_support_issue_task
             create_support_issue_task.apply_async(
