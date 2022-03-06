@@ -231,7 +231,7 @@ function Summary(props) {
     );
     if (showSupportForm) {
         supportSection = (
-            <SupportForm isLoggedIn={loggedIn} />
+            <SupportForm isLoggedIn={loggedIn} rmdoProjectId={rdmoProjectId}/>
         );
     }
 
