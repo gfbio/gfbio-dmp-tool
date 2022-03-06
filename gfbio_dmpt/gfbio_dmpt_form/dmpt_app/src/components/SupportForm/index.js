@@ -3,6 +3,7 @@ import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import axios from 'axios';
+import * as QueryString from 'querystring';
 import useSupportForm from './formHooks';
 import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
@@ -45,11 +46,11 @@ function SupportForm(props) {
         console.log('SUBMIT REQUEST (callback)');
         console.log(inputs);
         const csrftoken = getCookie('csrftoken');
-        // console.log({ inputs });
-        inputs['rdmo_project_id'] = rmdoProjectId;
+        console.log(QueryString.stringify(inputs));
+        inputs.rdmo_project_id = rmdoProjectId;
         axios.post(
             `${PROJECT_API_ROOT}support/`,
-            inputs,
+            QueryString.stringify(inputs),
             {
                 headers: {
                     Authorization: `Token ${rdmoContext.backend_context.token}`,
