@@ -1,20 +1,93 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
+import axios from 'axios';
 import useSupportForm from './formHooks';
+import RdmoContext from '../RdmoContext';
+import { checkBackendParameters } from '../../utils/backend_context';
+import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
+
+// FIXME: refactor move to general module
+function getCookie(name) {
+    // from https://docs.djangoproject.com/en/stable/ref/csrf/
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i += 1) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === `${name}=`) {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
 function SupportForm(props) {
     const {
-        isLoggedIn
+        isLoggedIn,
+        rmdoProjectId,
     } = props;
+
+    const rdmoContext = useContext(RdmoContext);
+    const backendContext = checkBackendParameters(rdmoContext);
 
     // TODO: send actula reuqest to server
     // TODO: create endpoint and succesive tasks in django
     // TODO: add cancel function for this form
+
     const submitRequest = () => {
         console.log('SUBMIT REQUEST (callback)');
         console.log(inputs);
+        const csrftoken = getCookie('csrftoken');
+        // console.log({ inputs });
+        inputs['rdmo_project_id'] = rmdoProjectId;
+        axios.post(
+            `${PROJECT_API_ROOT}support/`,
+            inputs,
+            {
+                headers: {
+                    Authorization: `Token ${rdmoContext.backend_context.token}`,
+                    // 'Content-Type': 'application/json',
+                    // "Content-Type": "multipart/form-data",
+                    'X-CSRFToken': csrftoken
+                }
+            }
+        ).then((res) => {
+            console.log(res);
+        }).catch((error)=>{
+            console.log('ERROR');
+            console.log(error);
+        });
+
+        // let data = inputs;
+        // data['rdmo_project_id'] = 0;
+        // try {
+        //     axios.post(
+        //         `${PROJECT_API_ROOT}support/`,
+        //         data,
+        //         {
+        //             headers: {
+        //                 Authorization: `Token ${rdmoContext.backend_context.token}`,
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRFToken': csrftoken
+        //             }
+        //         }
+        //     ).then((res) => {
+        //         console.log(res);
+        //     });
+        // }catch (e) {
+        //     console.log('ERROR');
+        //     console.log(e);
+        // } finally {
+        //     ;
+        // }
+
         // alert(`support!
         //  Email: ${inputs.email}`);
     };
@@ -166,7 +239,8 @@ function SupportForm(props) {
 }
 
 SupportForm.propTypes = {
-    isLoggedIn: PropTypes.bool.isRequired
+    isLoggedIn: PropTypes.bool.isRequired,
+    rmdoProjectId: PropTypes.number.isRequired,
 };
 
 export default SupportForm;

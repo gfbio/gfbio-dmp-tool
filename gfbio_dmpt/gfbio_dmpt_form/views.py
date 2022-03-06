@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
@@ -197,7 +199,11 @@ class DmptSupportView(View):
     form_class = DmptSupportForm
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        form = self.form_class(json.loads(request.body.decode('utf-8')))
+        print(request.POST)
+        print(request.body)
+        body = json.loads(request.body.decode('utf-8'))
+        print(body)
         if form.is_valid():
             from .tasks import create_support_issue_task
             create_support_issue_task.apply_async(
