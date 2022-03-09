@@ -11,6 +11,7 @@ from rdmo.projects.models import Project
 from .configuration.settings import JIRA_USERNAME_URL_TEMPLATE, \
     JIRA_USERNAME_URL_FULLNAME_TEMPLATE, JIRA_FALLBACK_USERNAME
 from .models import DmptProject
+from ..users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -24,13 +25,11 @@ def delete_temporary_rdmo_projects_task():
                 'objects deleted={0}'.format(number))
 
 
-def get_gfbio_helpdesk_username(user_name, email, fullname=''):
+def _get_gfbio_helpdesk_username(user_name, email, fullname=''):
     url = JIRA_USERNAME_URL_TEMPLATE.format(user_name, email)
     if len(fullname):
         url = JIRA_USERNAME_URL_FULLNAME_TEMPLATE.format(user_name, email,
                                                          quote(fullname))
-    # print(settings.JIRA_USERNAME)
-    # print(settings.JIRA_PASS)
     return requests.get(url=url, auth=(
         settings.JIRA_ACCOUNT_SERVICE_USER,
         settings.JIRA_ACCOUNT_SERVICE_PASSWORD))
@@ -38,8 +37,9 @@ def get_gfbio_helpdesk_username(user_name, email, fullname=''):
 
 @celery.task(name='tasks.create_support_issue_task')
 def create_support_issue_task(form_data={}):
-    print('create_support_issue_task')
-    print(form_data)
+    logger.info(
+        f'tasks.py | create_support_issue_task | '
+        f'start | {form_data}')
     try:
         rdmo_project = Project.objects.get(id=form_data.get('rdmo_project_id'))
     except Project.DoesNotExist as e:
@@ -48,18 +48,24 @@ def create_support_issue_task(form_data={}):
             f'error getting rdmo project | {e}')
         return False
 
-    # TODO: if user logged in, get email from there, it will probably no be in the form then
-    #       but form has email as mandatory. maybe suffient to keep it simple here
     email = form_data.get('email')
-    # TODO: username of user logged in, preferably GOE_ID from user goe field
-    user_name = JIRA_FALLBACK_USERNAME
-    response = get_gfbio_helpdesk_username(user_name=user_name,
-                                           email=email, )
-    # print(response.status_code)
-    # print(response.content)
+    user_id = form_data.get('user_id')
+    user = None
+    if user_id:
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist as e:
+            logger.warning(
+                f'tasks.py | create_support_issue_task | '
+                f'error getting user by user_id | {e}')
+    user_name = JIRA_FALLBACK_USERNAME if user is None else user.username
+    response = _get_gfbio_helpdesk_username(user_name=user_name,
+                                            email=email, )
+    logger.info(
+        f'tasks.py | create_support_issue_task | '
+        f'process _get_gfbio_helpdesk_username with | user_name={user_name} | '
+        f'email={email} | response.content={response.content}')
     reporter = f'{response.content.decode("utf-8")}'
-    print(reporter)
-    print(rdmo_project.title)
 
     jira = JIRA(
         server=settings.JIRA_URL,
@@ -72,10 +78,11 @@ def create_support_issue_task(form_data={}):
                 'project': {
                     'key': settings.JIRA_PROJECT
                 },
-                'summary': '{0}'.format(rdmo_project.title),
-                'description': f"Would you please be so nice and help me with my "
-                               f"dmp named '{rdmo_project.title}' "
-                               f"using the {rdmo_project.catalog} catalog",
+                'summary': 'DMP Support Request for rdmo project {0}'.format(
+                    rdmo_project.pk),
+                'description': f'Would you please be so kind to help me with my '
+                               f'Data Management Plan named "{rdmo_project.title}" '
+                               f'using the "{rdmo_project.catalog}" catalog',
                 'reporter': {
                     'name': reporter
                 },
@@ -83,15 +90,10 @@ def create_support_issue_task(form_data={}):
                     'name': 'Data Submission'
                 },
             }
-            # project=settings.JIRA_PROJECT,
-            # summary=rmdo_project.title,
-            # description=f"Would you please be so nice and help me with my "
-            #             f"dmp named '{rmdo_project.title}' "
-            #             f"using the {rmdo_project.catalog} catalog",
-            # reporter={"name": reporter},
-            # issuetype={"name": "Data Submission"},
         )
-        print(issue)
+        logger.info(
+            f'tasks.py | create_support_issue_task | '
+            f'issue created | issue={issue}')
         return True
     except JIRAError as e:
         logger.error(

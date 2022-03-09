@@ -58,3 +58,16 @@ class TestDmptSupportForm(TestCase):
         )
         self.assertTrue(form.is_valid())
         self.assertNotIn('foo', form.cleaned_data.keys())
+
+    def test_user_id(self):
+        form = DmptSupportForm(
+            {
+                'email': 'sfd@sodfin.de',
+                'rdmo_project_id': 19,
+                'user_id': 23,
+                'message': 'foo bar',
+                'data_collection_and_assurance': False,
+                'data_curation': True,
+            }
+        )
+        self.assertTrue(form.is_valid())
