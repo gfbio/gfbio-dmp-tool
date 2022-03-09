@@ -39,44 +39,46 @@ class CSRFViewMixin(View):
 
 # DMP React App in this template
 class DmptFrontendView(CSRFViewMixin, TemplateView):
-    template_name = "gfbio_dmpt_form/dmpt.html"
+    template_name = 'gfbio_dmpt_form/dmpt.html'
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         is_authenticated = user.is_authenticated
-        print("view is authenticated ", is_authenticated)
+        print('view is authenticated ', is_authenticated)
         if not user.is_authenticated:
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
             user, created = User.objects.get_or_create(
-                username="anonymous",
-                defaults={"username": "anonymous", "password": ANONYMOUS_PASS},
+                username='anonymous',
+                defaults={'username': 'anonymous', 'password': ANONYMOUS_PASS},
             )
             print('created annonymous ', created)
-        api_group = Group.objects.get(name="api")
+        api_group = Group.objects.get(name='api')
         api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
 
         context = self.get_context_data(**kwargs)
-        context["backend"] = {
-            "isLoggedIn": "{}".format(is_authenticated).lower(),
-            "token": "{}".format(token),
-            "user_id": "{}".format(user.id),
+        context['backend'] = {
+            'isLoggedIn': '{}'.format(is_authenticated).lower(),
+            'token': '{}'.format(token),
+            'user_id': '{}'.format(user.id),
+            'user_email': f'{user.email}'
         }
+        print(context['backend'])
         return self.render_to_response(context)
 
 
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
     model = Project
-    template_name = "gfbio_dmpt_export/dmp_export.html"
+    template_name = 'gfbio_dmpt_export/dmp_export.html'
 
     def render_to_response(self, context, **response_kwargs):
         return render_to_format(
             self.request,
-            self.kwargs["format"],
-            "dmp_export",
-            "gfbio_dmpt_export/dmp_export.html",
+            self.kwargs['format'],
+            'dmp_export',
+            'gfbio_dmpt_export/dmp_export.html',
             context,
         )
 
@@ -100,11 +102,11 @@ class DmpRequestHelp(View):
                 # we should return to the user profile instead or remove
                 # this completely as this might hinder the use of the
                 # view with the react frontend.
-                return HttpResponseRedirect("/")
+                return HttpResponseRedirect('/')
         except ObjectDoesNotExist as e:
             # TODO: <18-11-21, claas> # this needs to go to logging later
-            print("A ticket does not exist:")
-            print("---------------------------")
+            print('A ticket does not exist:')
+            print('---------------------------')
             print(e)
 
         # initialize the jira client
@@ -144,16 +146,16 @@ class DmpRequestHelp(View):
                 new_issue = jira.create_issue(
                     project=settings.JIRA_PROJECT,
                     summary=summary,
-                    description=f"Would you please be so nice and help me with my dmp named '{summary}' using the {catalog} catalog",
-                    reporter={"name": reporting_user},
-                    issuetype={"name": "Data Submission"},
+                    description=f'Would you please be so nice and help me with my dmp named "{summary}" using the {catalog} catalog',
+                    reporter={'name': reporting_user},
+                    issuetype={'name': 'Data Submission'},
                 )
             else:
                 new_issue = jira.create_issue(
                     project=settings.JIRA_PROJECT,
                     summary=summary,
-                    description=f"Would you please so nice and help me with that dmp using the {catalog} catalog",
-                    issuetype={"name": "Data Submission"},
+                    description=f'Would you please so nice and help me with that dmp using the {catalog} catalog',
+                    issuetype={'name': 'Data Submission'},
                 )
 
             Ticket.objects.create(
@@ -163,15 +165,15 @@ class DmpRequestHelp(View):
 
         except JIRAError as e:
             # TODO: <18-11-21, claas> # this needs to go to logging later
-            print("The ticket creation failed:")
-            print("---------------------------")
+            print('The ticket creation failed:')
+            print('---------------------------')
             print(e.text)
 
         # TODO: <30-11-21, claas>
         # we should return to the user profile instead or remove
         # this completely as this might hinder the use of the
         # view with the react frontend.
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect('/')
 
 
 class DmptProjectListView(generics.ListCreateAPIView):

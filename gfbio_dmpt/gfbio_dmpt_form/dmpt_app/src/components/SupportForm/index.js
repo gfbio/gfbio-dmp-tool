@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-
-import axios from 'axios';
-import * as QueryString from 'querystring';
 import useSupportForm from './formHooks';
 import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
-import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import axios from 'axios';
+import * as QueryString from 'querystring';
+import * as QueryString from 'querystring';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -29,24 +28,18 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// TODO: add cancel function for this form
 function SupportForm(props) {
     const {
         isLoggedIn,
-        rmdoProjectId,
+        rmdoProjectId
     } = props;
-
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
 
-    // TODO: send actula reuqest to server
-    // TODO: create endpoint and succesive tasks in django
-    // TODO: add cancel function for this form
-
     const submitRequest = () => {
-        console.log('SUBMIT REQUEST (callback)');
-        console.log(inputs);
         const csrftoken = getCookie('csrftoken');
-        console.log(QueryString.stringify(inputs));
+        // eslint-disable-next-line no-use-before-define
         inputs.rdmo_project_id = rmdoProjectId;
         axios.post(
             `${PROJECT_API_ROOT}support/`,
@@ -54,43 +47,14 @@ function SupportForm(props) {
             {
                 headers: {
                     Authorization: `Token ${rdmoContext.backend_context.token}`,
-                    // 'Content-Type': 'application/json',
-                    // "Content-Type": "multipart/form-data",
                     'X-CSRFToken': csrftoken
                 }
             }
         ).then((res) => {
             console.log(res);
-        }).catch((error)=>{
-            console.log('ERROR');
+        }).catch((error) => {
             console.log(error);
         });
-
-        // let data = inputs;
-        // data['rdmo_project_id'] = 0;
-        // try {
-        //     axios.post(
-        //         `${PROJECT_API_ROOT}support/`,
-        //         data,
-        //         {
-        //             headers: {
-        //                 Authorization: `Token ${rdmoContext.backend_context.token}`,
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRFToken': csrftoken
-        //             }
-        //         }
-        //     ).then((res) => {
-        //         console.log(res);
-        //     });
-        // }catch (e) {
-        //     console.log('ERROR');
-        //     console.log(e);
-        // } finally {
-        //     ;
-        // }
-
-        // alert(`support!
-        //  Email: ${inputs.email}`);
     };
 
     const {
@@ -101,26 +65,40 @@ function SupportForm(props) {
 
     console.log('SUPPORT FORM ', isLoggedIn);
 
+    let emailSection = (
+        <div className='row mb-3'>
+            <label htmlFor='email'
+                className='col-sm-3 col-form-label'>
+                Email
+            </label>
+            <div className='col-sm-9'>
+                <input type='email' className='form-control'
+                    id='email'
+                    name='email'
+                    placeholder=''
+                    onChange={handleInputChange}
+                    value={inputs.email}
+                    required
+                />
+            </div>
+        </div>
+    );
+
+    if (backendContext.user_email !== '') {
+        emailSection = (
+            <input type='hidden'
+                id='email'
+                name='email'
+                value={backendContext.user_email}
+            />
+        );
+        inputs.email = backendContext.user_email;
+    }
+
     return (
         <Col lg={6} className='p-3' style={{ 'text-align': 'left' }}>
             <form onSubmit={handleSubmit}>
-                <div className='row mb-3'>
-                    <label htmlFor='email'
-                        className='col-sm-3 col-form-label'>
-                        Email
-                    </label>
-                    <div className='col-sm-9'>
-                        <input type='email' className='form-control'
-                            id='email'
-                            name='email'
-                            placeholder=''
-                            onChange={handleInputChange}
-                            value={inputs.email}
-                            required
-                        />
-                    </div>
-                </div>
-
+                {emailSection}
                 <div className='row mb-3'>
                     <label htmlFor='message'
                         className='col-sm-3 col-form-label'>Message</label>
@@ -227,12 +205,6 @@ function SupportForm(props) {
 
                 <div className='form-group'>
                     <button type='submit'>Submit</button>
-                    {/* <button type='button' */}
-                    {/*    className='btn btn-outline-secondary'>Cancel */}
-                    {/* </button> */}
-                    {/* <button type='submit' */}
-                    {/*    className='btn btn-secondary btn-green'>Submit */}
-                    {/* </button> */}
                 </div>
             </form>
         </Col>
@@ -241,7 +213,7 @@ function SupportForm(props) {
 
 SupportForm.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
-    rmdoProjectId: PropTypes.number.isRequired,
+    rmdoProjectId: PropTypes.number.isRequired
 };
 
 export default SupportForm;
