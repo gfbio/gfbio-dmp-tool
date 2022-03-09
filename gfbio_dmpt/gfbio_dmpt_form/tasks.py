@@ -29,15 +29,17 @@ def get_gfbio_helpdesk_username(user_name, email, fullname=''):
     if len(fullname):
         url = JIRA_USERNAME_URL_FULLNAME_TEMPLATE.format(user_name, email,
                                                          quote(fullname))
+    # print(settings.JIRA_USERNAME)
+    # print(settings.JIRA_PASS)
     return requests.get(url=url, auth=(
-        settings.JIRA_USERNAME,
-        settings.JIRA_PASS))
+        settings.JIRA_ACCOUNT_SERVICE_USER,
+        settings.JIRA_ACCOUNT_SERVICE_PASSWORD))
 
 
 @celery.task(name='tasks.create_support_issue_task')
 def create_support_issue_task(form_data={}):
     print('create_support_issue_task')
-    # print(form_data)
+    print(form_data)
     try:
         rdmo_project = Project.objects.get(id=form_data.get('rdmo_project_id'))
     except Project.DoesNotExist as e:
@@ -53,6 +55,8 @@ def create_support_issue_task(form_data={}):
     user_name = JIRA_FALLBACK_USERNAME
     response = get_gfbio_helpdesk_username(user_name=user_name,
                                            email=email, )
+    # print(response.status_code)
+    # print(response.content)
     reporter = f'{response.content.decode("utf-8")}'
     print(reporter)
     print(rdmo_project.title)
