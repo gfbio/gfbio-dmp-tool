@@ -50,6 +50,7 @@ class TestDmptSupportForm(TestCase):
         form = DmptSupportForm(
             {
                 'email': 'sfd@sodfin.de',
+                'rdmo_project_id': 19,
                 'message': 'foo bar',
                 'data_collection_and_assurance': False,
                 'data_curation': True,
