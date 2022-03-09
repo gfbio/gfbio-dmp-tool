@@ -42,13 +42,15 @@ class TestDmptFrontendView(TestCase):
     def test_get_not_logged_in(self):
         response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b"{\'isLoggedIn\': \'false\', \'token\':", response.content)
+        self.assertIn(b"{\'isLoggedIn\': \'false\', \'token\':",
+                      response.content)
 
     def test_get_logged_in(self):
         self.client.login(username="john", password="secret")
         response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b"{\'isLoggedIn\': \'true\', \'token\':", response.content)
+        self.assertIn(b"{\'isLoggedIn\': \'true\', \'token\':",
+                      response.content)
 
 
 class TestDmpExportView(TestCase):
@@ -88,33 +90,6 @@ class TestDmpExportView(TestCase):
                                    follow=True)
         self.assertEqual(200, response.status_code)
         self.assertNotEquals(response.get("Content-Type"), "application/pdf")
-
-
-# class TestDmpRequestHelp(TestCase):
-#     @classmethod
-#     def setUpTestData(cls):
-#         cls.std_user = User.objects.create_user(
-#             username="john",
-#             email="john@doe.de",
-#             password="secret",
-#             is_staff=False,
-#             is_superuser=True,
-#         )
-#
-#     @patch("gfbio_dmpt.gfbio_dmpt_form.views.JIRA")
-#     @patch("gfbio_dmpt.gfbio_dmpt_form.views.Ticket")
-#     def test_get_dmp_help_logged_in(self, mock_JIRA, mock_Ticket):
-#         # TODO:  <15-12-21, claas> # Better would be to mock the jira ticket in a way
-#         # that it can be saved properly in the database.
-#         mock_JIRA.search_users.return_value = True
-#         mock_JIRA.create_issue.return_value = True
-#         mock_Ticket.objcects.create.return_value = True
-#         self.client.login(username="john", password="secret")
-#         catalog, status = Catalog.objects.get_or_create(key="testkey")
-#         project, status = Project.objects.get_or_create(title="Test",
-#                                                         catalog=catalog)
-#         response = self.client.get(f"/dmp/help/{project.pk}", follow=True)
-#         self.assertEqual(200, response.status_code)
 
 
 class TestDmptProjectViews(TestCase):
