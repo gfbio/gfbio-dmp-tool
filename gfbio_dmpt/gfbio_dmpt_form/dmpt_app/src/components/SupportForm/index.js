@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import axios from 'axios';
+import * as QueryString from 'querystring';
 import useSupportForm from './formHooks';
 import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
-import axios from 'axios';
-import * as QueryString from 'querystring';
-import * as QueryString from 'querystring';
+
+import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -41,8 +42,11 @@ function SupportForm(props) {
         const csrftoken = getCookie('csrftoken');
         // eslint-disable-next-line no-use-before-define
         inputs.rdmo_project_id = rmdoProjectId;
+        // eslint-disable-next-line no-use-before-define
+        inputs.user_id = rdmoContext.backend_context.user_id;
         axios.post(
             `${PROJECT_API_ROOT}support/`,
+            // eslint-disable-next-line no-use-before-define
             QueryString.stringify(inputs),
             {
                 headers: {
@@ -204,7 +208,11 @@ function SupportForm(props) {
                 </fieldset>
 
                 <div className='form-group'>
-                    <button type='submit'>Submit</button>
+                    <div className='d-grid gap-2'>
+                        <button type='submit'
+                            className='btn btn-secondary btn-green'>Submit
+                        </button>
+                    </div>
                 </div>
             </form>
         </Col>
