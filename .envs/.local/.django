@@ -21,6 +21,13 @@ ANONYMOUS_PASS=1KDp3MET0hSnfNbXAniwVW4pRiqrQbA8
 
 # JIRA
 # ------------------------------------------------------------------------------
+
+# GFBio Helpdesk shadow-account
+# ------------------------------------------------------------------------------
+JIRA_ACCOUNT_SERVICE_USER=
+JIRA_ACCOUNT_SERVICE_PASSWORD=
+
 JIRA_USERNAME=
 JIRA_PASS=
 JIRA_DEFAULT_REPORTER_EMAIL=
+
