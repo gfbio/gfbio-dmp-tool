@@ -12,7 +12,6 @@ urlpatterns = [
     path('dmptprojects/<int:pk>/', views.DmptProjectDetailView.as_view(), name='dmpt_project_detail'),
 
     path('export/<int:pk>/<str:format>/', views.DmpExportView.as_view(), name='dmp-detail'),
-    path('help/<int:pk>/', views.DmpRequestHelp.as_view(), name='dmp-request-help'),
 
     path('support/', views.DmptSupportView.as_view(), name='dmpt_support')
 ]
