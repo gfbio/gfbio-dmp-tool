@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -38,6 +38,8 @@ function SupportForm(props) {
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
 
+    const [issue, setIssue] = useState(false);
+
     const submitRequest = () => {
         const csrftoken = getCookie('csrftoken');
         // eslint-disable-next-line no-use-before-define
@@ -56,6 +58,8 @@ function SupportForm(props) {
             }
         ).then((res) => {
             console.log(res);
+            rdmoContext.assignIssueCreated(true);
+            setIssue(true);
         }).catch((error) => {
             console.log(error);
         });
@@ -99,6 +103,17 @@ function SupportForm(props) {
         inputs.email = backendContext.user_email;
     }
 
+    if (issue) {
+        return (
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
+                <h6>
+                    Your request was received !
+                </h6>
+                <p>You will soon be contacted by our helpdesk staff.</p>
+            </Col>
+        );
+    }
     return (
         <Col lg={6} className='p-3' style={{ 'text-align': 'left' }}>
             <form onSubmit={handleSubmit}>
