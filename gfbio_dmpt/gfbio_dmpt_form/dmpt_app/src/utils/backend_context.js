@@ -16,5 +16,6 @@ export function resetContext(rdmoContext) {
     rdmoContext.assignProjectId(-1);
     rdmoContext.assignProjectValues({});
     rdmoContext.assignDmptProjectId(-1);
+    rdmoContext.assignIssueCreated(false);
 };
 
