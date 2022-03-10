@@ -11,7 +11,7 @@ from rdmo.questions.models.catalog import Catalog
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
-from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject
+from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject, DmptIssue
 from gfbio_dmpt.users.models import User
 
 
@@ -278,9 +278,6 @@ class TestDmptSupportView(TestCase):
         url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php' \
               '?username={0}&email={1}'.format(user_name, email, )
         responses.add(responses.GET, url, body='regular_user', status=200)
-        # url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php' \
-        #       '?username={0}&email={1}&fullname={2}'.format(
-        #     '0815', user_name, email, )
         responses.add(responses.GET, url, body=b'deleteMe', status=200)
 
     @staticmethod
@@ -295,15 +292,6 @@ class TestDmptSupportView(TestCase):
         self._add_gfbio_helpdesk_user_service_response(user_name='gfbiodmpt',
                                                        email='horst@horst.de')
         self._add_jira_client_responses()
-        # responses.add(
-        #     responses.POST,
-        #     '{0}{1}'.format(
-        #         settings.JIRA_URL,
-        #         '/rest/api/2/issue'
-        #     ),
-        #     status=200,
-        #     body=json.dumps({})
-        # )
         responses.add(
             responses.POST,
             '{0}{1}'.format(settings.JIRA_URL,
@@ -320,8 +308,6 @@ class TestDmptSupportView(TestCase):
 
     @responses.activate
     def test_valid_post(self):
-        # TODO: email from app context for logged in users or resolve via user id ?
-        # TODO: email mandatory ? needed for user not logged in
         self._add_create_ticket_response()
         rdmo_project = Project.objects.create(title='Support View Test 1')
         data = {
@@ -334,8 +320,7 @@ class TestDmptSupportView(TestCase):
 
         response = self.client.post('/dmp/support/', data)
         self.assertEqual(201, response.status_code)
-        # print(response.status_code)
-        # print(response.content)
+        self.assertEqual(1, len(DmptIssue.objects.all()))
 
     def test_invalid_post(self):
         data = {
@@ -343,9 +328,10 @@ class TestDmptSupportView(TestCase):
             'data_collection_and_assurance': False,
         }
 
+        initial_dmpt_issues = len(DmptIssue.objects.all())
+
         response = self.client.post('/dmp/support/', data)
-        # print(response.status_code)
-        # print(response.content)
         self.assertEqual(400, response.status_code)
         content = json.loads(response.content)
         self.assertIn('email', content.keys())
+        self.assertEqual(initial_dmpt_issues, len(DmptIssue.objects.all()))

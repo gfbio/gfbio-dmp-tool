@@ -10,7 +10,7 @@ from rdmo.projects.models import Project
 
 from .configuration.settings import JIRA_USERNAME_URL_TEMPLATE, \
     JIRA_USERNAME_URL_FULLNAME_TEMPLATE, JIRA_FALLBACK_USERNAME
-from .models import DmptProject
+from .models import DmptProject, DmptIssue
 from ..users.models import User
 
 logger = logging.getLogger(__name__)
@@ -91,6 +91,7 @@ def create_support_issue_task(form_data={}):
                 },
             }
         )
+        DmptIssue.objects.create(rdmo_project=rdmo_project, issue_key=issue.key)
         logger.info(
             f'tasks.py | create_support_issue_task | '
             f'issue created | issue={issue}')
