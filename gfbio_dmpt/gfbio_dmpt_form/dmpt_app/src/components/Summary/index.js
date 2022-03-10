@@ -10,6 +10,7 @@ import {
     resetContext
 } from '../../utils/backend_context';
 import UserLoggedInRouter from '../UserLoggedInRouter';
+import SupportForm from '../SupportForm';
 // import DmptStart from '../DmptStart';
 // import UserLoggedInRouter from '../UserLoggedInRouter';
 
@@ -40,13 +41,13 @@ const saveProject = async (token, userId, projectId) => {
             `${PROJECT_API_ROOT}dmptprojects/`,
             {
                 rdmo_project: projectId,
-                user: userId,
+                user: userId
             },
             {
                 headers: {
                     Authorization: `Token ${token}`,
-                    'X-CSRFToken': csrftoken,
-                },
+                    'X-CSRFToken': csrftoken
+                }
             }
         );
         return response;
@@ -68,8 +69,14 @@ function Summary(props) {
     const [discarding, setDiscarding] = useState(false);
     const [discardingDone, setDiscardingDone] = useState(false);
 
+    const [showSupportForm, setShowSupportForm] = useState(false);
+
     const loggedIn = backendContext.isLoggedIn !== 'false';
     const noSaveNeeded = rdmoContext.dmpt_project_id !== -1;
+
+    console.log('SUMMARY rdomProjIdParam ', rdmoProjectId);
+    console.log('context ');
+    console.log(rdmoContext);
 
     const saveProjectHandler = () => {
         if (loggedIn) {
@@ -94,12 +101,12 @@ function Summary(props) {
     };
 
     let saveSection = (
-        <Col lg={6} className="p-3">
-            <i className="mdi mdi-content-save-edit-outline" />
+        <Col lg={6} className='p-3'>
+            <i className='mdi mdi-content-save-edit-outline' />
             <h6>Save Data Management Plan</h6>
-            <div className="d-grid gap-2">
+            <div className='d-grid gap-2'>
                 <Button
-                    className="btn btn-secondary btn-green"
+                    className='btn btn-secondary btn-green'
                     onClick={saveProjectHandler}
                 >
                     Save
@@ -120,15 +127,15 @@ function Summary(props) {
     }
     if (saving) {
         saveSection = (
-            <Col lg={6} className="p-3">
-                <i className="mdi mdi-content-save-edit-outline" />
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
                 <h6>... Saving Data Management Plan ...</h6>
             </Col>
         );
     } else if (savingDone) {
         saveSection = (
-            <Col lg={6} className="p-3">
-                <i className="mdi mdi-content-save-edit-outline" />
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-content-save-edit-outline' />
                 <h6>Saving completed successfully !</h6>
             </Col>
         );
@@ -177,8 +184,8 @@ function Summary(props) {
     );
     if (discarding) {
         discardSection = (
-            <Col lg={6} className="p-3">
-                <i className="mdi mdi-location-exit" />
+            <Col lg={6} className='p-3'>
+                <i className='mdi mdi-location-exit' />
                 <h6>... Deleting data & prepare to exit ...</h6>
             </Col>
         );
@@ -205,17 +212,40 @@ function Summary(props) {
         </Col>
     );
 
+    const supportHandler = () => {
+        console.log('support Handler');
+        setShowSupportForm(true);
+    };
+
+    let supportSection = (
+        <Col lg={6} className='p-3'>
+            <i className='mdi mdi-email-send-outline' />
+            <h6>Request Data Management Plan Support</h6>
+            <div className='d-grid gap-2'>
+                <Button className='btn btn-secondary btn-green'
+                    onClick={supportHandler}>
+                    Send Request
+                </Button>
+            </div>
+        </Col>
+    );
+    if (showSupportForm) {
+        supportSection = (
+            <SupportForm isLoggedIn={loggedIn} rmdoProjectId={rdmoProjectId}/>
+        );
+    }
+
     return (
-        <div id="summary" className="text-center">
+        <div id='summary' className='text-center'>
             <ScrollToTop />
 
             <Row>
-                <div className="col-12">
+                <div className='col-12'>
                     <h3>Summary</h3>
                 </div>
             </Row>
 
-            <Row className="mt-3">
+            <Row className='mt-3'>
                 <Col lg={12}>
                     <h5>
                         Send a DMP support request to GFBio, download your DMP
@@ -224,26 +254,16 @@ function Summary(props) {
                 </Col>
             </Row>
 
-            <Row className="mt-5">
-                <Col lg={6} className="p-3">
-                    <i className="mdi mdi-email-send-outline" />
-                    <h6>Request Data Management Plan Support</h6>
-                    <div className="d-grid gap-2">
-                        <Button className="btn btn-secondary btn-green">
-                            Send Request
-                        </Button>
-                    </div>
-                </Col>
-
+            <Row className='mt-5'>
+                {supportSection}
                 {downloadPdfSection}
             </Row>
 
-            <Row className="mt-3">
+            <Row className='mt-3'>
                 {saveSection}
                 {discardSection}
             </Row>
-        </div>
-    );
+        </div>);
 }
 
 Summary.propTypes = {

@@ -33,9 +33,12 @@ function getCookie(name) {
 }
 
 const createProject = async (token, optionalProjectName = '') => {
+
     try {
+
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
+
         let projectName = `tmp_${nanoid()}`;
         if (optionalProjectName !== '') {
             if (optionalProjectName.length > 36) {

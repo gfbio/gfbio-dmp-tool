@@ -106,10 +106,15 @@ docker-compose -f production.yml run --rm django python manage.py setup_groups
 
 - following documentation here:
   https://gitlab.gwdg.de/gfbio/cicd
+- enable runner "development-denbi" for this project in CI/CD Settings in gitlab
+  https://gitlab.gwdg.de/gfbio/dmp.gfbio.org/-/settings/ci_cd
+  (enable "staging-denbi" as well ...)
 - add web-test.yml (copy of production.yml with modifications as suggested in
   documentation)
 - remove traefik part from web-test.yml (denbi testserver has own certificates
   and traefik organized via jumpserver)
+- add webtest specific network
+- override labels with dummy label for celery, -worker, -beat and flower
 - add webtest stages to .gitlab-ci.yml
 - copy project .envs to devserver /home/gitlab-runner as .gfbio_dmp_envs
 - adapt/add rm/cp command to copy envs properly to build directory

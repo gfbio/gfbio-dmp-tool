@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-from unittest.mock import patch
+import os
 
+import responses
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.test import TestCase
 from rdmo.projects.models.project import Project
@@ -9,8 +11,20 @@ from rdmo.questions.models.catalog import Catalog
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
-from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject
+from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject, DmptIssue
 from gfbio_dmpt.users.models import User
+
+
+def _get_test_data_dir_path():
+    return '{0}{1}gfbio_dmpt{1}gfbio_dmpt_form{1}tests{1}test_data'.format(
+        os.getcwd(), os.sep, )
+
+
+def _get_jira_issue_response():
+    with open(os.path.join(
+            _get_test_data_dir_path(), 'jira_issue_response.json'),
+            'r') as data_file:
+        return json.load(data_file)
 
 
 class TestDmptFrontendView(TestCase):
@@ -28,13 +42,15 @@ class TestDmptFrontendView(TestCase):
     def test_get_not_logged_in(self):
         response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b"{'isLoggedIn': 'false', 'token':", response.content)
+        self.assertIn(b"{\'isLoggedIn\': \'false\', \'token\':",
+                      response.content)
 
     def test_get_logged_in(self):
         self.client.login(username="john", password="secret")
         response = self.client.get("/dmp/create/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b"{'isLoggedIn': 'true', 'token':", response.content)
+        self.assertIn(b"{\'isLoggedIn\': \'true\', \'token\':",
+                      response.content)
 
 
 class TestDmpExportView(TestCase):
@@ -74,33 +90,6 @@ class TestDmpExportView(TestCase):
                                    follow=True)
         self.assertEqual(200, response.status_code)
         self.assertNotEquals(response.get("Content-Type"), "application/pdf")
-
-
-class TestDmpRequestHelp(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.std_user = User.objects.create_user(
-            username="john",
-            email="john@doe.de",
-            password="secret",
-            is_staff=False,
-            is_superuser=True,
-        )
-
-    @patch("gfbio_dmpt.gfbio_dmpt_form.views.JIRA")
-    @patch("gfbio_dmpt.gfbio_dmpt_form.views.Ticket")
-    def test_get_dmp_help_logged_in(self, mock_JIRA, mock_Ticket):
-        # TODO:  <15-12-21, claas> # Better would be to mock the jira ticket in a way
-        # that it can be saved properly in the database.
-        mock_JIRA.search_users.return_value = True
-        mock_JIRA.create_issue.return_value = True
-        mock_Ticket.objcects.create.return_value = True
-        self.client.login(username="john", password="secret")
-        catalog, status = Catalog.objects.get_or_create(key="testkey")
-        project, status = Project.objects.get_or_create(title="Test",
-                                                        catalog=catalog)
-        response = self.client.get(f"/dmp/help/{project.pk}", follow=True)
-        self.assertEqual(200, response.status_code)
 
 
 class TestDmptProjectViews(TestCase):
@@ -275,3 +264,74 @@ class TestDmptProjectDetailView(TestCase):
         dp = DmptProject.objects.first()
         response = self.client_2.get('/dmp/dmptprojects/{}/'.format(dp.pk))
         self.assertEqual(403, response.status_code)
+
+
+class TestDmptSupportView(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.issue_json = _get_jira_issue_response()
+
+    @staticmethod
+    def _add_gfbio_helpdesk_user_service_response(user_name='regular_user',
+                                                  email='re@gu.la'):
+        url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php' \
+              '?username={0}&email={1}'.format(user_name, email, )
+        responses.add(responses.GET, url, body='regular_user', status=200)
+        responses.add(responses.GET, url, body=b'deleteMe', status=200)
+
+    @staticmethod
+    def _add_jira_client_responses():
+        responses.add(
+            responses.GET,
+            '{0}/rest/api/2/field'.format(settings.JIRA_URL),
+            status=200,
+        )
+
+    def _add_create_ticket_response(self):
+        self._add_gfbio_helpdesk_user_service_response(user_name='gfbiodmpt',
+                                                       email='horst@horst.de')
+        self._add_jira_client_responses()
+        responses.add(
+            responses.POST,
+            '{0}{1}'.format(settings.JIRA_URL,
+                            '/rest/api/2/issue'),
+            json=self.issue_json,
+            status=200)
+
+        responses.add(
+            responses.GET,
+            '{0}/rest/api/2/issue/SAND-1661'.format(
+                settings.JIRA_URL),
+            json=self.issue_json
+        )
+
+    @responses.activate
+    def test_valid_post(self):
+        self._add_create_ticket_response()
+        rdmo_project = Project.objects.create(title='Support View Test 1')
+        data = {
+            'rdmo_project_id': rdmo_project.id,
+            'email': 'horst@horst.de',
+            'message': 'foo bar',
+            'data_collection_and_assurance': False,
+            'data_curation': True,
+        }
+
+        response = self.client.post('/dmp/support/', data)
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(1, len(DmptIssue.objects.all()))
+
+    def test_invalid_post(self):
+        data = {
+            'email': 'sfdde',
+            'data_collection_and_assurance': False,
+        }
+
+        initial_dmpt_issues = len(DmptIssue.objects.all())
+
+        response = self.client.post('/dmp/support/', data)
+        self.assertEqual(400, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn('email', content.keys())
+        self.assertEqual(initial_dmpt_issues, len(DmptIssue.objects.all()))
