@@ -109,7 +109,6 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     "gfbio_dmpt.gfbio_dmpt_form.apps.GFBioDmptFormConfig",
     "gfbio_dmpt.basic_rdmo.apps.BasicRdmoConfig",
-    "gfbio_dmpt.jira_integration.apps.JiraIntegrationConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + RDMO_CORE_APPS + LOCAL_APPS
