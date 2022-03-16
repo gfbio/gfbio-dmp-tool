@@ -24,6 +24,7 @@ const App = () => {
     const [projectValues, setProjectValues] = useState({});
 
     const [dmptProjectId, setDmptProjectId] = useState(-1);
+    const [issueCreated, setIssueCreated] = useState(false);
 
     const [backendContext, setBackendContext] = useState({});
 
@@ -67,6 +68,10 @@ const App = () => {
         setDmptProjectId(data);
     };
 
+    const assignIssueCreated = (data) => {
+        setIssueCreated(data);
+    };
+
     const assignBackendContext = (data) => {
         setBackendContext(data);
     };
@@ -83,6 +88,7 @@ const App = () => {
         project_values: projectValues,
         backend_context: backendContext,
         dmpt_project_id: dmptProjectId,
+        issue_created: issueCreated,
         assignSections,
         assingSectionsIndex,
         assingSectionsSize,
@@ -93,7 +99,8 @@ const App = () => {
         assignProjectId,
         assignProjectValues,
         assignBackendContext,
-        assignDmptProjectId
+        assignDmptProjectId,
+        assignIssueCreated,
     };
 
     return (

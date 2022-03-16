@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from model_utils.models import TimeStampedModel
-
 from django.db import models
+from model_utils.models import TimeStampedModel
 from rdmo.projects.models import Project
 
 from config.settings.base import AUTH_USER_MODEL
@@ -16,3 +15,13 @@ class DmptProject(TimeStampedModel):
 
     def __str__(self):
         return '{0}'.format(self.rdmo_project.title)
+
+
+class DmptIssue(TimeStampedModel):
+    rdmo_project = models.OneToOneField(Project, on_delete=models.CASCADE)
+    dmpt_project = models.OneToOneField(DmptProject, null=True, blank=True,
+                                        on_delete=models.CASCADE)
+    issue_key = models.CharField(max_length=128)
+
+    def __str__(self):
+        return '{0}'.format(self.issue_key)
