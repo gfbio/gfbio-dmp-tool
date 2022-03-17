@@ -36,6 +36,8 @@ const fetchOptions = async (optionSet, token) => {
 };
 
 const fetchProjectValues = async (projectId, token) => {
+    // console.log('fetch project values ', projectId);
+    // console.log(`${API_ROOT}projects/values/?project=${projectId}`);
     return await axios.get(
         `${API_ROOT}projects/values/?project=${projectId}`,
         {
@@ -50,6 +52,7 @@ const fetchAllOptions = async (optionSets, token) => {
 
 // TODO: refactor to component
 const iterateQuestions = (questions, options, values, handleChange) => {
+    // console.log('iterateQuestions values ', values);
     return questions.map((item) => {
         let value = '';
         if (values[item.attribute] !== undefined) {
@@ -145,14 +148,20 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         setProcessing(false);
                     });
                 }).then(() => {
+                    // console.log('useQuestions after getting all | get values before if ', );
                     if (rdmoContext.backend_context.isLoggedIn !== 'false' && rdmoContext.project_id && rdmoContext.project_id > 0) {
+                        // console.log('useQuestions after getting all | get values IN if');
                         setStage('... fetch project value  ...', rdmoContext.project_id);
+                        // rdmoContext.assignFormData({});
                         const projectValues = {};
                         fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {
+                            // console.log('response ', pRes);
                             pRes.data.forEach((v) => {
                                 projectValues[v.attribute] = v;
                             });
+                            // console.log('useQuestions after getting all | project values ', projectValues);
                             rdmoContext.assignProjectValues(projectValues);
+                            rdmoContext.assignFormData({});
                         });
                     }
                 });
@@ -180,6 +189,8 @@ function Questions(props) {
         userToken
     } = props;
     const rdmoContext = useContext(RdmoContext);
+
+    // console.log('\nQuestions ', rdmoContext);
 
     const [processing, stage] = useQuestions(rdmoContext, sectionIndex, userToken);
 

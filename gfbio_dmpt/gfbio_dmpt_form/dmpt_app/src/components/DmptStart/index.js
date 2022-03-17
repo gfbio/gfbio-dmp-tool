@@ -108,22 +108,26 @@ const putValue = (projectId, formItem, token) => {
     );
 };
 
-const submitValues = async (projectId, formData, token) => {
+// TODO: reset formdata after submit/put/post ?
+//   But this means formdata will not be reset when no submit happens
+const submitValues = async (projectId, rdmoContext, token) => {
     try {
         // eslint-disable-next-line no-restricted-syntax
-        for (const f in formData) {
-            if (formData[f] !== undefined) {
-                const formItem = formData[f];
+        for (const f in rdmoContext.form_data) {
+            if (rdmoContext.form_data[f] !== undefined) {
+                const formItem = rdmoContext.form_data[f];
                 if (formItem.valueId !== undefined && formItem.valueId !== false) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then(
                         (res) => {
+                            // console.log('PUT ', projectId, ' ', formItem, ' ', res);
                         }
                     );
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then(
                         (res) => {
+                            // console.log('POST ', projectId, ' ', formItem, ' ', res);
                         }
                     );
                 }
@@ -132,6 +136,8 @@ const submitValues = async (projectId, formData, token) => {
     } catch (e) {
         console.error(e);
     } finally {
+        // console.log('DmptStart | submitValues | finally: reset form ');
+        // rdmoContext.assignFormData({});#
         ;
     }
 };
@@ -141,18 +147,22 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
     const [stage, setStage] = useState('... starting ...');
 
     useEffect(() => {
+        // console.log('use dmpt start  |  dmpt project id ', dmptProjectId);
         async function prepareDmptStart() {
             setProcessing(true);
-            try {
-                const dmptProjectDetailResponse = await axios.get(
-                    `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
-                    {
-                        headers: { Authorization: `Token ${token}` }
-                    }
-                );
-                rdmoContext.assignProjectId(dmptProjectDetailResponse.data.rdmo_project);
-            } catch (e) {
-                console.error(e);
+            if(dmptProjectId) {
+                try {
+                    const dmptProjectDetailResponse = await axios.get(
+                        `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
+                        {
+                            headers: { Authorization: `Token ${token}` }
+                        }
+                    );
+                    // console.log('use dmpt start | assgign rdmo project id  ', dmptProjectDetailResponse.data.rdmo_project);
+                    rdmoContext.assignProjectId(dmptProjectDetailResponse.data.rdmo_project);
+                } catch (e) {
+                    console.error(e);
+                }
             }
 
             // FIXME: section for gfbio catalog id hardcoded --> 18
@@ -190,9 +200,12 @@ function DmptStart(props) {
     const backendContext = checkBackendParameters(rdmoContext);
     const { projectId } = useParams();
 
+    // console.log('\n\nDMPT Start ', projectId, ' loggedIn ', backendContext.isLoggedIn);
+
     const [submitted, setSubmitted] = useState(false);
 
     if (backendContext.isLoggedIn !== 'false' && projectId) {
+        // console.log('assing p id to context ', projectId);
         rdmoContext.assignDmptProjectId(projectId);
     }
 
@@ -253,7 +266,7 @@ function DmptStart(props) {
                 rdmoContext.assignProjectId(contextProjectId);
                 submitValues(
                     contextProjectId,
-                    rdmoContext.form_data,
+                    rdmoContext,
                     backendContext.token
                 ).then(() => {
                     setSubmitted(true);
@@ -262,7 +275,7 @@ function DmptStart(props) {
         } else {
             submitValues(
                 contextProjectId,
-                rdmoContext.form_data,
+                rdmoContext,
                 backendContext.token
             ).then(() => {
                 setSubmitted(true);
@@ -297,6 +310,7 @@ function DmptStart(props) {
                 }
             };
         }
+        // console.log('\t\t-----\thandleFormChange | ', e.target.name, ' | ', e.target.value, ' | ', formData);
         rdmoContext.assignFormData(formData);
     };
 

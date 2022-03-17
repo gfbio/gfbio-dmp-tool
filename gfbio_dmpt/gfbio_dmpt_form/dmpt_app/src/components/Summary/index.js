@@ -74,9 +74,9 @@ function Summary(props) {
     const loggedIn = backendContext.isLoggedIn !== 'false';
     const noSaveNeeded = rdmoContext.dmpt_project_id !== -1;
 
-    console.log('SUMMARY rdomProjIdParam ', rdmoProjectId);
-    console.log('context ');
-    console.log(rdmoContext);
+    // console.log('SUMMARY rdomProjIdParam ', rdmoProjectId);
+    // console.log('context ');
+    // console.log(rdmoContext);
 
     const saveProjectHandler = () => {
         if (loggedIn) {
@@ -165,7 +165,7 @@ function Summary(props) {
         resetContext(rdmoContext);
         setDiscarding(false);
         setDiscardingDone(true);
-        console.log('discarding done');
+        // console.log('discarding done');
     };
     let discardSection = (
         <Col lg={6} className='p-3'>
@@ -213,7 +213,7 @@ function Summary(props) {
     );
 
     const supportHandler = () => {
-        console.log('support Handler');
+        // console.log('support Handler');
         setShowSupportForm(true);
     };
 

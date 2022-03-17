@@ -57,7 +57,7 @@ function SupportForm(props) {
                 }
             }
         ).then((res) => {
-            console.log(res);
+            // console.log(res);
             rdmoContext.assignIssueCreated(true);
             setIssue(true);
         }).catch((error) => {
@@ -71,7 +71,7 @@ function SupportForm(props) {
         handleSubmit
     } = useSupportForm(submitRequest);
 
-    console.log('SUPPORT FORM ', isLoggedIn);
+    // console.log('SUPPORT FORM ', isLoggedIn);
 
     let emailSection = (
         <div className='row mb-3'>

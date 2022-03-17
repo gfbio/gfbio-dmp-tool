@@ -44,6 +44,8 @@ function ProjectList() {
     const backendContext = checkBackendParameters(rdmoContext);
     const [loading, projectList] = useProjectList(backendContext.token);
 
+    // console.log('ProjectList');
+
     if (backendContext.isLoggedIn === 'false') {
         return (
             <Redirect

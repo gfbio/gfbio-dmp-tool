@@ -2,21 +2,12 @@ import React, { useContext } from 'react';
 
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
+import formFieldInit from '../../utils/form_utils';
 
 function FormCheckBox(props) {
     const { item, options, value, handleChange } = props;
     const rdmoContext = useContext(RdmoContext);
-    // FIXME: quick and dirty
-    let val = value.text;
-    if (rdmoContext.form_data[item.key] !== undefined) {
-        val = rdmoContext.form_data[item.key].value;
-    } else if (rdmoContext.form_data[item.key] === undefined && value.text !== undefined) {
-        rdmoContext.form_data[item.key] = {
-            'value': value.text,
-            'valueId': value.id,
-            'question': item
-        };
-    }
+    const val = formFieldInit(value, rdmoContext, item);
     return (
         <div className='form-group' key={item.id}>
 
