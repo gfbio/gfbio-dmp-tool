@@ -141,6 +141,7 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
     const [stage, setStage] = useState('... starting ...');
 
     useEffect(() => {
+        console.log('use dmpt start  |  dmpt project id ', dmptProjectId);
         async function prepareDmptStart() {
             setProcessing(true);
             try {
@@ -150,6 +151,7 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
                         headers: { Authorization: `Token ${token}` }
                     }
                 );
+                console.log('use dmpt start | assgign rdmo project id  ', dmptProjectDetailResponse.data.rdmo_project);
                 rdmoContext.assignProjectId(dmptProjectDetailResponse.data.rdmo_project);
             } catch (e) {
                 console.error(e);
@@ -190,9 +192,12 @@ function DmptStart(props) {
     const backendContext = checkBackendParameters(rdmoContext);
     const { projectId } = useParams();
 
+    console.log('\n\nDMPT Start ', projectId, ' loggedIn ', backendContext.isLoggedIn);
+
     const [submitted, setSubmitted] = useState(false);
 
     if (backendContext.isLoggedIn !== 'false' && projectId) {
+        console.log('assing p id to context ', projectId);
         rdmoContext.assignDmptProjectId(projectId);
     }
 
@@ -305,10 +310,10 @@ function DmptStart(props) {
 
     if (!processing) {
         // TODO: for testing submit summary, only submitHandler is active
-        // const nextHandler = submitAllHandler;
-        const nextHandler = submitOnNext
-            ? submitAllHandler
-            : nextSectionHandler;
+        const nextHandler = submitAllHandler;
+        // const nextHandler = submitOnNext
+        //     ? submitAllHandler
+        //     : nextSectionHandler;
 
         formFields = (
             <Questions

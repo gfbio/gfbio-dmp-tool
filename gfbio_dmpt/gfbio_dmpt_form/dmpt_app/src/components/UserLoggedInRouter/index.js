@@ -8,6 +8,10 @@ function UserLoggedInRouter() {
     const rdmoContext = useContext(RdmoContext);
     const backend = checkBackendParameters(rdmoContext);
 
+    console.log('UserloggedInRouter ', );
+    console.log(rdmoContext);
+    console.log(backend);
+
     if (backend.isLoggedIn === 'false') {
         return (
             <DmptStart />);

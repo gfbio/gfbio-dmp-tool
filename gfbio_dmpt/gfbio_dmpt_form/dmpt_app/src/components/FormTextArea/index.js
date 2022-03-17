@@ -7,27 +7,33 @@ function FormTextArea(props) {
 
     const { item, value, handleChange } = props;
     const rdmoContext = useContext(RdmoContext);
-    // const rdmoContext = useContext(RdmoContext);
-    // console.log('FORM TEXT AREA ');
-    // console.log('item');
-    // console.log(item);
-    // console.log(' -----  value');
-    // console.log(value);
 
+    console.log('\nFormTextArea context formdata', rdmoContext.form_data);
+    console.log('item key ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
+    console.log('value ', value);
     // FIXME: quick and dirty
-    let val = value.text;
+    const val = value.text;
+    console.log('val after assgin  ', val);
     if (rdmoContext.form_data[item.key] !== undefined) {
-        // console.log('item key in formdata. key  ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
-        val = rdmoContext.form_data[item.key].value;
+
+        console.log('IF | item key ', item.key, ' | formdata at key ', rdmoContext.form_data[item.key]);
+        // val = rdmoContext.form_data[item.key].value;
+        rdmoContext.form_data[item.key] = {
+            'value': value.text,
+            'valueId': value.id,
+            'question': item
+        };
     } else if (rdmoContext.form_data[item.key] === undefined && value.text !== undefined) {
-        // console.log(' else of key in data. assing to form in context');
-        // console.log('value' , value);
+        console.log('ELSE_IF | item key', item.key, ' in data. assing to form in context');
         rdmoContext.form_data[item.key] = {
             'value': value.text,
             'valueId': value.id,
             'question': item
         };
     }
+    console.log('before  return');
+    console.log('val ', val);
+    console.log('context form data ', rdmoContext.form_data);
     return (
         <div className='form-group' key={item.id}>
             <label htmlFor={item.key}>
