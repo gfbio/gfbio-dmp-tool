@@ -11,6 +11,8 @@ import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
 import { checkBackendParameters } from '../../utils/backend_context';
 import Summary from '../Summary';
+import useSupportForm from '../SupportForm/formHooks';
+import useDmptForm from './dmptFormHooks';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -219,6 +221,7 @@ function DmptStart(props) {
     const [submitOnNext, setSubmitOnNext] = useState(false);
 
     const nextSectionHandler = () => {
+        console.log('DmptStart | nextSectionHandler |');
         setPreviousButtonVisibility(
             rdmoContext.sections_index === -1
         );
@@ -317,18 +320,33 @@ function DmptStart(props) {
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 
+    const nextHandler = submitOnNext
+        ? submitAllHandler
+        : nextSectionHandler;
+
+    const {
+        inputs,
+        handleInputChange,
+        handleSubmit
+    } = useDmptForm(nextHandler);
+
     if (!processing) {
         // TODO: for testing submit summary, only submitHandler is active
-        const nextHandler = submitAllHandler;
+        // const nextHandler = submitAllHandler;
         // const nextHandler = submitOnNext
         //     ? submitAllHandler
         //     : nextSectionHandler;
+
+
 
         formFields = (
             <Questions
                 userToken={backendContext.token}
                 sectionIndex={rdmoContext.sections_index}
+                inputs={inputs}
                 handleFormChange={handleFormChange}
+                handleInputChange={handleInputChange}
+                handleSubmit={handleSubmit}
                 prevSection={
                     <ActionButton
                         text={prevText}

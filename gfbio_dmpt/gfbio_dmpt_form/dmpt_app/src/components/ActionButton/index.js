@@ -26,7 +26,7 @@ function ActionButton(props) {
             <button
                 type="submit"
                 className={`btn btn-secondary btn-green ${btnClasses}`}
-                onClick={onClickHandler}
+                // onClick={onClickHandler}
             >
                 {text}
             </button>

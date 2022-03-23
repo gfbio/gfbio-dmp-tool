@@ -5,7 +5,7 @@ import RdmoContext from '../RdmoContext';
 import formFieldInit, { markFormFieldMandatory } from '../../utils/form_utils';
 
 function FormTextArea(props) {
-    const { item, value, handleChange } = props;
+    const { item, value, handleChange, inputs } = props;
     const rdmoContext = useContext(RdmoContext);
 
     const val = formFieldInit(value, rdmoContext, item);
@@ -16,13 +16,12 @@ function FormTextArea(props) {
         id={item.key}
         className='form-control'
         rows='3'
-        onChange={(e) => handleChange(e, item)}
+        // onChange={(e) => handleChange(e, item)}
+        onChange={handleChange}
         required
     >
         {val}
     </textarea>);
-
-    console.log(inputField);
 
     if (item.is_optional) {
         inputField = (<textarea
@@ -30,7 +29,8 @@ function FormTextArea(props) {
             id={item.key}
             className='form-control'
             rows='3'
-            onChange={(e) => handleChange(e, item)}
+            // onChange={(e) => handleChange(e, item)}
+            onChange={handleChange}
         >
             {val}
         </textarea>);
@@ -58,7 +58,9 @@ FormTextArea.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     item: PropTypes.object.isRequired,
     value: PropTypes.string,
-    handleChange: PropTypes.func.isRequired
+    handleChange: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    inputs: PropTypes.object.isRequired,
 };
 
 export default FormTextArea;

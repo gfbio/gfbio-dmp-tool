@@ -51,7 +51,8 @@ const fetchAllOptions = async (optionSets, token) => {
 };
 
 // TODO: refactor to component
-const iterateQuestions = (questions, options, values, handleChange) => {
+// const iterateQuestions = (questions, options, values, handleChange) => {
+const iterateQuestions = (questions, options, values, handleChange, inputs) => {
     // console.log('iterateQuestions values ', values);
     return questions.map((item) => {
         let value = '';
@@ -62,7 +63,7 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         if (item.widget_type === 'textarea') {
             return (
                 <FormTextArea item={item} value={value}
-                    handleChange={handleChange} />
+                    handleChange={handleChange} inputs={inputs}/>
             );
         }
         if (item.widget_type === 'select') {
@@ -183,7 +184,10 @@ function Questions(props) {
 
     const {
         sectionIndex,
+        inputs,
         handleFormChange,
+        handleInputChange,
+        handleSubmit,
         nextSection,
         prevSection,
         userToken
@@ -199,7 +203,8 @@ function Questions(props) {
     if (!processing) {
 
         const opts = iterateOptions(rdmoContext.options_data);
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleFormChange);
+        // formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleFormChange);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange, inputs);
         sectionControls = (<div className='row'>
             {prevSection}
             {nextSection}
@@ -222,19 +227,37 @@ function Questions(props) {
     return (
         <div>
             <ScrollToTop />
-            <form id={`section_${rdmoContext.sections_index}`}>
+            <form id={`section_${rdmoContext.sections_index}`} onSubmit={handleSubmit}>
                 {formFields}
+                {sectionControls}
             </form>
-            {sectionControls}
+            {/* {sectionControls} */}
         </div>
     );
 }
 
 Questions.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
+
+    // TODO: inputs for new changehandler
+    // TODO: better validator/proptype
+    // eslint-disable-next-line react/forbid-prop-types
+    inputs: PropTypes.object.isRequired,
+
+    // TODO: maybe obsolete
     handleFormChange: PropTypes.func.isRequired,
+
+    // TODO: maybe the new form change handler
+    handleInputChange: PropTypes.func.isRequired,
+
+    // TODO: maybe new for checking form and handling navigation to next
+    //  or previous section
+    handleSubmit: PropTypes.func.isRequired,
+
+    // TODO: maybe obsolete
     nextSection: PropTypes.element.isRequired,
     prevSection: PropTypes.element.isRequired,
+
     userToken: PropTypes.string.isRequired
 };
 
