@@ -12,6 +12,8 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+import random
+import string
 
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.users.models import User
@@ -39,11 +41,20 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
         if not user.is_authenticated:
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
-            user, created = User.objects.get_or_create(
-                username="anonymous",
-                defaults={"username": "anonymous", "password": ANONYMOUS_PASS},
+            randpart = "".join(
+                random.choice(string.ascii_uppercase + string.digits) for _ in range(20)
             )
-            print("created annonymous ", created)
+            user, created = User.objects.get_or_create(
+                username=f"anonymous-{randpart}",
+                defaults={
+                    "username": f"anonymous-{randpart}",
+                    "password": ANONYMOUS_PASS,
+                },
+            )
+            print("===============================0")
+            print("created annonymous ", user)
+            print("===============================0")
+
         api_group = Group.objects.get(name="api")
         api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
@@ -53,6 +64,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "isLoggedIn": "{}".format(is_authenticated).lower(),
             "token": "{}".format(token),
             "user_id": "{}".format(user.id),
+            "user_name": "{}".format(user.username),
             "user_email": f"{user.email}",
         }
         print(context["backend"])
@@ -62,13 +74,18 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
-
+    # This is passing the request objects into the class so we can access and
+    # modify the requesting user. This is needed as otherwise the checks in the
+    # inheritec rdmo class ProjectAnswersView are not passed and we get
+    # redirected to a login page when trying to download a dmp as anonymous
+    # user.
     def dispatch(self, request, *args, **kwargs):
-        user, created = User.objects.get_or_create(
-            username="anonymous",
-            defaults={"username": "anonymous", "password": ANONYMOUS_PASS},
-        )
-        self.request.user = user
+        if not request.user.is_authenticated:
+            # in order to ensure that not everybody can request any user
+            # we make sure to only accept anonymous- pattern strings.
+            randpart = request.GET.get("username").split("-")[1]
+            user = User.objects.get(username=f"anonymous-{randpart}")
+            self.request.user = user
         return super(DmpExportView, self).dispatch(request, *args, **kwargs)
 
     def render_to_response(self, context, **response_kwargs):
