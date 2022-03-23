@@ -221,7 +221,7 @@ function DmptStart(props) {
     const [submitOnNext, setSubmitOnNext] = useState(false);
 
     const nextSectionHandler = () => {
-        console.log('DmptStart | nextSectionHandler |');
+        console.log('DmptStart | nextSectionHandler | ', inputs);
         setPreviousButtonVisibility(
             rdmoContext.sections_index === -1
         );
@@ -241,6 +241,7 @@ function DmptStart(props) {
     };
 
     const prevSectionHandler = () => {
+        console.log('DmptStart | prevSectionHandler |');
         setPreviousButtonVisibility(
             rdmoContext.sections_index === 0
         );
@@ -257,6 +258,7 @@ function DmptStart(props) {
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
+        console.log('DmptStart | submitAllHandler |');
         let contextProjectId = rdmoContext.project_id;
         let name = '';
         // eslint-disable-next-line no-prototype-builtins
@@ -286,43 +288,45 @@ function DmptStart(props) {
         }
     };
 
-    const handleFormChange = (e, item) => {
-        // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
-        // TODO: maybe refactor to list of values for specific question
-        // eslint-disable-next-line no-prototype-builtins
-        let formData = rdmoContext.form_data;
-
-        // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
-        let vId = false;
-        if (formData.hasOwnProperty(e.target.name) && formData[e.target.name].hasOwnProperty('valueId')) {
-            vId = formData[e.target.name].valueId;
-        }
-
-        if (
-            e.target.name.startsWith('checkbox') &&
-            formData.hasOwnProperty(e.target.name)
-        ) {
-            delete formData[e.target.name];
-        } else {
-            formData = {
-                ...formData,
-                [e.target.name]: {
-                    value: e.target.value,
-                    question: item,
-                    valueId: vId
-                }
-            };
-        }
-        // console.log('\t\t-----\thandleFormChange | ', e.target.name, ' | ', e.target.value, ' | ', formData);
-        rdmoContext.assignFormData(formData);
-    };
+    // const handleFormChange = (e, item) => {
+    //     // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
+    //     // TODO: maybe refactor to list of values for specific question
+    //     // eslint-disable-next-line no-prototype-builtins
+    //     let formData = rdmoContext.form_data;
+    //
+    //     // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
+    //     let vId = false;
+    //     if (formData.hasOwnProperty(e.target.name) && formData[e.target.name].hasOwnProperty('valueId')) {
+    //         vId = formData[e.target.name].valueId;
+    //     }
+    //
+    //     if (
+    //         e.target.name.startsWith('checkbox') &&
+    //         formData.hasOwnProperty(e.target.name)
+    //     ) {
+    //         delete formData[e.target.name];
+    //     } else {
+    //         formData = {
+    //             ...formData,
+    //             [e.target.name]: {
+    //                 value: e.target.value,
+    //                 question: item,
+    //                 valueId: vId
+    //             }
+    //         };
+    //     }
+    //     // console.log('\t\t-----\thandleFormChange | ', e.target.name, ' | ', e.target.value, ' | ', formData);
+    //     rdmoContext.assignFormData(formData);
+    // };
 
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 
-    const nextHandler = submitOnNext
-        ? submitAllHandler
-        : nextSectionHandler;
+    // TODO: for testing submit summary, only submitHandler is active
+    const nextHandler = submitAllHandler;
+    // const nextHandler = submitOnNext
+    //     ? submitAllHandler
+    //     : nextSectionHandler;
 
     const {
         inputs,
@@ -344,12 +348,13 @@ function DmptStart(props) {
                 userToken={backendContext.token}
                 sectionIndex={rdmoContext.sections_index}
                 inputs={inputs}
-                handleFormChange={handleFormChange}
+                // handleFormChange={handleFormChange}
                 handleInputChange={handleInputChange}
                 handleSubmit={handleSubmit}
                 prevSection={
                     <ActionButton
                         text={prevText}
+                        name='previous'
                         onClickHandler={prevSectionHandler}
                         align='left'
                         hide={previousButtonVisibility}
@@ -358,7 +363,8 @@ function DmptStart(props) {
                 nextSection={
                     <ActionButton
                         text={nextText}
-                        onClickHandler={nextHandler}
+                        name='next'
+                        // onClickHandler={nextHandler}
                         align='right'
                         hide={false}
                     />

@@ -16,8 +16,8 @@ function FormTextArea(props) {
         id={item.key}
         className='form-control'
         rows='3'
-        // onChange={(e) => handleChange(e, item)}
-        onChange={handleChange}
+        onChange={(e) => handleChange(e, item)}
+        // onChange={handleChange}
         required
     >
         {val}
@@ -29,8 +29,8 @@ function FormTextArea(props) {
             id={item.key}
             className='form-control'
             rows='3'
-            // onChange={(e) => handleChange(e, item)}
-            onChange={handleChange}
+            onChange={(e) => handleChange(e, item)}
+            // onChange={handleChange}
         >
             {val}
         </textarea>);

@@ -185,7 +185,7 @@ function Questions(props) {
     const {
         sectionIndex,
         inputs,
-        handleFormChange,
+        // handleFormChange,
         handleInputChange,
         handleSubmit,
         nextSection,
@@ -245,7 +245,7 @@ Questions.propTypes = {
     inputs: PropTypes.object.isRequired,
 
     // TODO: maybe obsolete
-    handleFormChange: PropTypes.func.isRequired,
+    // handleFormChange: PropTypes.func.isRequired,
 
     // TODO: maybe the new form change handler
     handleInputChange: PropTypes.func.isRequired,
@@ -254,7 +254,6 @@ Questions.propTypes = {
     //  or previous section
     handleSubmit: PropTypes.func.isRequired,
 
-    // TODO: maybe obsolete
     nextSection: PropTypes.element.isRequired,
     prevSection: PropTypes.element.isRequired,
 

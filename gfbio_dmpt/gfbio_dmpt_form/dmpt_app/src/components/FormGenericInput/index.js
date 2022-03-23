@@ -10,25 +10,25 @@ function FormGenericInput(props) {
     const val = formFieldInit(value, rdmoContext, item);
     const { headerText, helpText } = markFormFieldMandatory(item);
 
-    let inputField = (<input
+    // let inputField = (<input
+    //     type={item.widget_type}
+    //     className='form-control'
+    //     name={item.key}
+    //     id={item.key}
+    //     onChange={(e) => handleChange(e, item)}
+    //     value={val}
+    //     required
+    // />);
+    // if (item.is_optional) {
+    const inputField = (<input
         type={item.widget_type}
         className='form-control'
         name={item.key}
         id={item.key}
         onChange={(e) => handleChange(e, item)}
         value={val}
-        required
     />);
-    if (item.is_optional) {
-        inputField = (<input
-            type={item.widget_type}
-            className='form-control'
-            name={item.key}
-            id={item.key}
-            onChange={(e) => handleChange(e, item)}
-            value={val}
-        />);
-    }
+    // }
 
     return (
         <div className='form-group' key={item.id}>

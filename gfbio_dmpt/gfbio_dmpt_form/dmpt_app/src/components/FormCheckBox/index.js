@@ -26,24 +26,7 @@ function FormCheckBox(props) {
             {
                 options[item.optionsets[0]].map((i) => {
                     if (i.text === val) {
-                        if (item.is_optional) {
-                            return (
-                                <div className='form-check' key={i.id}>
-                                    <input className='form-check-input'
-                                        type='checkbox'
-                                        name={`checkbox_${item.key}_${i.id}`}
-                                        value={i.text}
-                                        onChange={(e) => handleChange(e, item)}
-                                        id={`${item.key}_${i.id}`}
-                                        checked
-                                    />
-                                    <label className='form-check-label'
-                                        htmlFor={`checkbox_${item.key}_${i.id}`}>
-                                        {i.text}
-                                    </label>
-                                </div>
-                            );
-                        }
+                        // if (item.is_optional) {
                         return (
                             <div className='form-check' key={i.id}>
                                 <input className='form-check-input'
@@ -53,7 +36,6 @@ function FormCheckBox(props) {
                                     onChange={(e) => handleChange(e, item)}
                                     id={`${item.key}_${i.id}`}
                                     checked
-                                    required
                                 />
                                 <label className='form-check-label'
                                     htmlFor={`checkbox_${item.key}_${i.id}`}>
@@ -61,23 +43,26 @@ function FormCheckBox(props) {
                                 </label>
                             </div>
                         );
+                        // }
+                        // return (
+                        //     <div className='form-check' key={i.id}>
+                        //         <input className='form-check-input'
+                        //             type='checkbox'
+                        //             name={`checkbox_${item.key}_${i.id}`}
+                        //             value={i.text}
+                        //             onChange={(e) => handleChange(e, item)}
+                        //             id={`${item.key}_${i.id}`}
+                        //             checked
+                        //             required
+                        //         />
+                        //         <label className='form-check-label'
+                        //             htmlFor={`checkbox_${item.key}_${i.id}`}>
+                        //             {i.text}
+                        //         </label>
+                        //     </div>
+                        // );
                     }
-                    if (item.is_optional) {
-                        return (
-                            <div className='form-check' key={i.id}>
-                                <input className='form-check-input'
-                                    type='checkbox'
-                                    name={`checkbox_${item.key}_${i.id}`}
-                                    value={i.text}
-                                    onChange={(e) => handleChange(e, item)}
-                                    id={`${item.key}_${i.id}`} />
-                                <label className='form-check-label'
-                                    htmlFor={`checkbox_${item.key}_${i.id}`}>
-                                    {i.text}
-                                </label>
-                            </div>
-                        );
-                    }
+                    // if (item.is_optional) {
                     return (
                         <div className='form-check' key={i.id}>
                             <input className='form-check-input'
@@ -85,15 +70,30 @@ function FormCheckBox(props) {
                                 name={`checkbox_${item.key}_${i.id}`}
                                 value={i.text}
                                 onChange={(e) => handleChange(e, item)}
-                                id={`${item.key}_${i.id}`}
-                                required
-                            />
+                                id={`${item.key}_${i.id}`} />
                             <label className='form-check-label'
                                 htmlFor={`checkbox_${item.key}_${i.id}`}>
                                 {i.text}
                             </label>
                         </div>
                     );
+                    // }
+                    // return (
+                    //     <div className='form-check' key={i.id}>
+                    //         <input className='form-check-input'
+                    //             type='checkbox'
+                    //             name={`checkbox_${item.key}_${i.id}`}
+                    //             value={i.text}
+                    //             onChange={(e) => handleChange(e, item)}
+                    //             id={`${item.key}_${i.id}`}
+                    //             required
+                    //         />
+                    //         <label className='form-check-label'
+                    //             htmlFor={`checkbox_${item.key}_${i.id}`}>
+                    //             {i.text}
+                    //         </label>
+                    //     </div>
+                    // );
                 })
             }
         </div>
