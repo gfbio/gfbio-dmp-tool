@@ -73,17 +73,17 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_celery_beat",
-    'rest_framework',
-    'rest_framework.authtoken',
-    'widget_tweaks',
-    'markdown',
-    'django_cleanup',
-    'django_filters',
-    'mathfilters',
-    'mptt',
-    'rules',
+    "rest_framework",
+    "rest_framework.authtoken",
+    "widget_tweaks",
+    "markdown",
+    "django_cleanup",
+    "django_filters",
+    "mathfilters",
+    "mptt",
+    "rules",
     # openapi specification tools
-    'rest_framework_swagger'
+    "rest_framework_swagger",
 ]
 
 RDMO_CORE_APPS = [
@@ -158,8 +158,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # MIDDLEWARE
@@ -229,8 +228,8 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "gfbio_dmpt.utils.context_processors.settings_context",
             ],
-            'libraries': {
-                'staticfiles': 'django.templatetags.static',
+            "libraries": {
+                "staticfiles": "django.templatetags.static",
             },
         },
     }
@@ -288,7 +287,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+            "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
@@ -324,6 +323,7 @@ CELERY_TASK_TIME_LIMIT = 5 * 60
 CELERY_TASK_SOFT_TIME_LIMIT = 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
@@ -352,8 +352,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
@@ -370,8 +369,7 @@ ANONYMOUS_PASS = env("ANONYMOUS_PASS")
 # gfbio SSO
 # ------------------------------------------------------------------------------
 OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID", default="no_oidc_cl_id")
-OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET",
-                            default="no_oidc_cl_secret")
+OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET", default="no_oidc_cl_secret")
 OIDC_RP_SIGN_ALGO = env("OIDC_RP_SIGN_ALGO", default="HS256")
 OIDC_OP_JWKS_ENDPOINT = env("OIDC_OP_JWKS_ENDPOINT", default="no_jwks_url")
 OIDC_OP_AUTHORIZATION_ENDPOINT = (
@@ -404,36 +402,29 @@ CSRF_COOKIE_HTTPONLY = False
 USER_API = True
 
 OVERLAYS = {
-    'projects': [
-        'projects-table',
-        'create-project',
-        'import-project'
+    "projects": ["projects-table", "create-project", "import-project"],
+    "project": [
+        "project-questions",
+        "project-catalog",
+        "project-issues",
+        "project-views",
+        "project-memberships",
+        "project-snapshots",
+        "export-project",
+        "import-project",
     ],
-    'project': [
-        'project-questions',
-        'project-catalog',
-        'project-issues',
-        'project-views',
-        'project-memberships',
-        'project-snapshots',
-        'export-project',
-        'import-project'
-    ],
-    'issue_send': [
-        'issue-message',
-        'issue-attachments'
-    ]
+    "issue_send": ["issue-message", "issue-attachments"],
 }
 
 EXPORT_FORMATS = (
-    ('pdf', _('PDF')),
-    ('rtf', _('Rich Text Format')),
-    ('odt', _('Open Office')),
-    ('docx', _('Microsoft Office')),
-    ('html', _('HTML')),
-    ('markdown', _('Markdown')),
-    ('mediawiki', _('mediawiki')),
-    ('tex', _('LaTeX'))
+    ("pdf", _("PDF")),
+    ("rtf", _("Rich Text Format")),
+    ("odt", _("Open Office")),
+    ("docx", _("Microsoft Office")),
+    ("html", _("HTML")),
+    ("markdown", _("Markdown")),
+    ("mediawiki", _("mediawiki")),
+    ("tex", _("LaTeX")),
 )
 
 EXPORT_REFERENCE_ODT_VIEWS = {}
@@ -442,8 +433,8 @@ EXPORT_REFERENCE_ODT = None
 EXPORT_REFERENCE_DOCX = None
 
 EXPORT_PANDOC_ARGS = {
-    'pdf': ['-V', 'geometry:margin=1in', '--pdf-engine=xelatex'],
-    'rtf': ['--standalone']
+    "pdf": ["-V", "geometry:margin=1in", "--pdf-engine=xelatex"],
+    "rtf": ["--standalone"],
 }
 
 PROJECT_ISSUES = True
@@ -451,20 +442,22 @@ PROJECT_ISSUES = True
 PROJECT_VIEWS = True
 
 PROJECT_EXPORTS = [
-    ('xml', _('RDMO XML'), 'rdmo.projects.exports.RDMOXMLExport'),
-    ('csvcomma', _('CSV comma separated'),
-     'rdmo.projects.exports.CSVCommaExport'),
-    ('csvsemicolon', _('CSV semicolon separated'),
-     'rdmo.projects.exports.CSVSemicolonExport')
+    ("xml", _("RDMO XML"), "rdmo.projects.exports.RDMOXMLExport"),
+    ("csvcomma", _("CSV comma separated"), "rdmo.projects.exports.CSVCommaExport"),
+    (
+        "csvsemicolon",
+        _("CSV semicolon separated"),
+        "rdmo.projects.exports.CSVSemicolonExport",
+    ),
 ]
 
 PROJECT_IMPORTS = [
-    ('xml', _('RDMO XML'), 'rdmo.projects.imports.RDMOXMLImport'),
+    ("xml", _("RDMO XML"), "rdmo.projects.imports.RDMOXMLImport"),
 ]
 
 PROJECT_QUESTIONS_AUTOSAVE = False
 
-PROJECT_FILE_QUOTA = '10Mb'
+PROJECT_FILE_QUOTA = "10Mb"
 
 PROJECT_SEND_ISSUE = False
 
@@ -479,225 +472,195 @@ SERVICE_PROVIDERS = []
 OPTIONSET_PROVIDERS = []
 
 QUESTIONS_WIDGETS = [
-    ('text', _('Text'), 'rdmo.projects.widgets.TextWidget'),
-    ('textarea', _('Textarea'), 'rdmo.projects.widgets.TextareaWidget'),
-    ('yesno', _('Yes/No'), 'rdmo.projects.widgets.YesnoWidget'),
-    ('checkbox', _('Checkboxes'), 'rdmo.projects.widgets.CheckboxWidget'),
-    ('radio', _('Radio buttons'), 'rdmo.projects.widgets.RadioWidget'),
-    ('select', _('Select drop-down'), 'rdmo.projects.widgets.SelectWidget'),
-    ('autocomplete', _('Autocomplete'),
-     'rdmo.projects.widgets.AutocompleteWidget'),
-    ('range', _('Range slider'), 'rdmo.projects.widgets.RangeWidget'),
-    ('date', _('Date picker'), 'rdmo.projects.widgets.DateWidget'),
-    ('file', _('File upload'), 'rdmo.projects.widgets.FileWidget')
+    ("text", _("Text"), "rdmo.projects.widgets.TextWidget"),
+    ("textarea", _("Textarea"), "rdmo.projects.widgets.TextareaWidget"),
+    ("yesno", _("Yes/No"), "rdmo.projects.widgets.YesnoWidget"),
+    ("checkbox", _("Checkboxes"), "rdmo.projects.widgets.CheckboxWidget"),
+    ("radio", _("Radio buttons"), "rdmo.projects.widgets.RadioWidget"),
+    ("select", _("Select drop-down"), "rdmo.projects.widgets.SelectWidget"),
+    ("autocomplete", _("Autocomplete"), "rdmo.projects.widgets.AutocompleteWidget"),
+    ("range", _("Range slider"), "rdmo.projects.widgets.RangeWidget"),
+    ("date", _("Date picker"), "rdmo.projects.widgets.DateWidget"),
+    ("file", _("File upload"), "rdmo.projects.widgets.FileWidget"),
 ]
 
-DEFAULT_URI_PREFIX = 'http://example.com/terms'
+DEFAULT_URI_PREFIX = "http://example.com/terms"
 
 VENDOR_CDN = True
 
 VENDOR = {
-    'jquery': {
-        'url': 'https://code.jquery.com/',
-        'js': [
+    "jquery": {
+        "url": "https://code.jquery.com/",
+        "js": [
             {
-                'path': 'jquery-3.4.1.min.js',
-                'sri': 'sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh',
-            }
-        ]
-    },
-    'bootstrap': {
-        'url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/',
-        'js': [
-            {
-                'path': 'js/bootstrap.min.js',
-                'sri': 'sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd',
+                "path": "jquery-3.4.1.min.js",
+                "sri": "sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh",
             }
         ],
-        'css': [
-            {
-                'path': 'css/bootstrap.min.css',
-                'sri': 'sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu',
-            }
-        ]
     },
-    'bootstrap-datepicker': {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/',
-        'css': [
+    "bootstrap": {
+        "url": "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/",
+        "js": [
             {
-                'path': 'css/bootstrap-datepicker.min.css'
+                "path": "js/bootstrap.min.js",
+                "sri": "sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd",
             }
         ],
-        'js': [
+        "css": [
             {
-                'path': 'js/bootstrap-datepicker.min.js'
-            }
-        ]
-    },
-    'font-awesome': {
-        'url': 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/',
-        'css': [
-            {
-                'path': 'css/font-awesome.min.css'
+                "path": "css/bootstrap.min.css",
+                "sri": "sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu",
             }
         ],
-        'font': [
-            {
-                'path': 'fonts/fontawesome-webfont.eot'
-            },
-            {
-                'path': 'fonts/fontawesome-webfont.woff2'
-            },
-            {
-                'path': 'fonts/fontawesome-webfont.woff'
-            },
-            {
-                'path': 'fonts/fontawesome-webfont.ttf'
-            },
-            {
-                'path': 'fonts/fontawesome-webfont.svg'
-            }
-        ]
     },
-    'angular': {
-        'url': 'https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/',
-        'js': [
-            {
-                'path': 'angular.min.js'
-            },
-            {
-                'path': 'angular-resource.min.js'
-            }
-        ]
+    "bootstrap-datepicker": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/",
+        "css": [{"path": "css/bootstrap-datepicker.min.css"}],
+        "js": [{"path": "js/bootstrap-datepicker.min.js"}],
     },
-    'select2': {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/',
-        'js': [
+    "font-awesome": {
+        "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/",
+        "css": [{"path": "css/font-awesome.min.css"}],
+        "font": [
+            {"path": "fonts/fontawesome-webfont.eot"},
+            {"path": "fonts/fontawesome-webfont.woff2"},
+            {"path": "fonts/fontawesome-webfont.woff"},
+            {"path": "fonts/fontawesome-webfont.ttf"},
+            {"path": "fonts/fontawesome-webfont.svg"},
+        ],
+    },
+    "angular": {
+        "url": "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/",
+        "js": [{"path": "angular.min.js"}, {"path": "angular-resource.min.js"}],
+    },
+    "select2": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/",
+        "js": [
             {
-                'path': 'js/select2.min.js',
-                'sri': 'sha256-HNkbndPiWM5EIRgahc3hWiuGD6CtwFgMfEU0o3zeabo='
+                "path": "js/select2.min.js",
+                "sri": "sha256-HNkbndPiWM5EIRgahc3hWiuGD6CtwFgMfEU0o3zeabo=",
             }
         ],
-        'css': [
+        "css": [
             {
-                'path': 'css/select2.min.css',
-                'sri': 'sha256-EQA4j7+ZbrewCQvwJzNmVxiKMwGRspXMGgt7I6AAiqs='
-            }
-        ]
-    },
-    'select2-bootstrap-theme': {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/',
-        'css': [
-            {
-                'path': 'select2-bootstrap.min.css',
-                'sri': 'sha256-nbyata2PJRjImhByQzik2ot6gSHSU4Cqdz5bNYL2zcU='
-            }
-        ]
-    },
-    'moment': {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/',
-        'js': [
-            {
-                'path': 'moment.min.js',
-                'sri': 'sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg='
-            }
-        ]
-    },
-    'codemirror': {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/',
-        'js': [
-            {
-                'path': 'codemirror.min.js',
-                'sri': 'sha256-0LRLvWWVXwt0eH0/Bzd0PHICg/bSMDIe5sXgaDSpZaA='
-            },
-            {
-                'path': 'addon/mode/overlay.min.js',
-                'sri': 'sha256-ffWkw3Pn4ieMygm1vwdRKcMtBJ6E6kuBi8GlVVPXWEs='
-            },
-            {
-                'path': 'mode/django/django.min.js',
-                'sri': 'sha256-6hO1TjC+3W73p+kXnCqcHVjfRa4KMdG7hvWencnu0XM='
+                "path": "css/select2.min.css",
+                "sri": "sha256-EQA4j7+ZbrewCQvwJzNmVxiKMwGRspXMGgt7I6AAiqs=",
             }
         ],
-        'css': [
-            {
-                'path': 'codemirror.min.css',
-                'sri': 'sha256-wluO/w4cnorJpS0JmcdTSYzwdb5E6u045qa4Ervfb1k='
-            }
-        ]
     },
-    'fuse': {
-        'url': 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.6/',
-        'js': [
+    "select2-bootstrap-theme": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/",
+        "css": [
             {
-                'path': 'fuse.min.js',
-                'sri': 'sha512-FwWaT/y9ajd/+J06KL9Fko1jELonJNHMUTR4nGP9MSIq4ZdU2w9/OiLxn16p/zEOZkryHi3wKYsnWPuADD328Q=='
+                "path": "select2-bootstrap.min.css",
+                "sri": "sha256-nbyata2PJRjImhByQzik2ot6gSHSU4Cqdz5bNYL2zcU=",
             }
-        ]
-    }
+        ],
+    },
+    "moment": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/",
+        "js": [
+            {
+                "path": "moment.min.js",
+                "sri": "sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=",
+            }
+        ],
+    },
+    "codemirror": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/",
+        "js": [
+            {
+                "path": "codemirror.min.js",
+                "sri": "sha256-0LRLvWWVXwt0eH0/Bzd0PHICg/bSMDIe5sXgaDSpZaA=",
+            },
+            {
+                "path": "addon/mode/overlay.min.js",
+                "sri": "sha256-ffWkw3Pn4ieMygm1vwdRKcMtBJ6E6kuBi8GlVVPXWEs=",
+            },
+            {
+                "path": "mode/django/django.min.js",
+                "sri": "sha256-6hO1TjC+3W73p+kXnCqcHVjfRa4KMdG7hvWencnu0XM=",
+            },
+        ],
+        "css": [
+            {
+                "path": "codemirror.min.css",
+                "sri": "sha256-wluO/w4cnorJpS0JmcdTSYzwdb5E6u045qa4Ervfb1k=",
+            }
+        ],
+    },
+    "fuse": {
+        "url": "https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.6/",
+        "js": [
+            {
+                "path": "fuse.min.js",
+                "sri": "sha512-FwWaT/y9ajd/+J06KL9Fko1jELonJNHMUTR4nGP9MSIq4ZdU2w9/OiLxn16p/zEOZkryHi3wKYsnWPuADD328Q==",
+            }
+        ],
+    },
 }
 
 # necessary since django 3.2, explicitly set primary key type to avaoid warnings
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 ACCOUNT = True
 ACCOUNT_SIGNUP = True
 ACCOUNT_TERMS_OF_USE = False
 SOCIALACCOUNT = False
 
 EMAIL_RECIPIENTS_CHOICES = [
-    ('email@example.com', 'Emmi Email <email@example.com>'),
+    ("email@example.com", "Emmi Email <email@example.com>"),
 ]
 EMAIL_RECIPIENTS_INPUT = True
 
-SERVICE_PROVIDERS = [
-    ('github', _('GitHub'), 'rdmo.services.providers.GitHubProvider')
-]
+SERVICE_PROVIDERS = [("github", _("GitHub"), "rdmo.services.providers.GitHubProvider")]
 SHIBBOLETH = False
-SHIBBOLETH_LOGOUT_URL = '/Shibboleth.sso/Logout'
+SHIBBOLETH_LOGOUT_URL = "/Shibboleth.sso/Logout"
 LANGUAGES = (
-    ('en', _('English')),
-    ('de', _('German')),
+    ("en", _("English")),
+    ("de", _("German")),
 )
 
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_URL = '/accounts/logout/'
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_URL = "/accounts/logout/"
 
 MULTISITE = False
 PROFILE_UPDATE = True
 PROFILE_DELETE = True
 
 SETTINGS_EXPORT = [
-    'LOGIN_URL',
-    'LOGOUT_URL',
-    'ACCOUNT',
-    'ACCOUNT_SIGNUP',
-    'ACCOUNT_TERMS_OF_USE',
-    'SOCIALACCOUNT',
-    'PROFILE_UPDATE',
-    'PROFILE_DELETE',
-    'SHIBBOLETH',
-    'MULTISITE',
-    'EXPORT_FORMATS',
-    'PROJECT_ISSUES',
-    'PROJECT_VIEWS',
-    'PROJECT_EXPORTS',
-    'PROJECT_IMPORTS',
-    'PROJECT_SEND_ISSUE',
-    'PROJECT_QUESTIONS_AUTOSAVE',
-    'NESTED_PROJECTS'
+    "LOGIN_URL",
+    "LOGOUT_URL",
+    "ACCOUNT",
+    "ACCOUNT_SIGNUP",
+    "ACCOUNT_TERMS_OF_USE",
+    "SOCIALACCOUNT",
+    "PROFILE_UPDATE",
+    "PROFILE_DELETE",
+    "SHIBBOLETH",
+    "MULTISITE",
+    "EXPORT_FORMATS",
+    "PROJECT_ISSUES",
+    "PROJECT_VIEWS",
+    "PROJECT_EXPORTS",
+    "PROJECT_IMPORTS",
+    "PROJECT_SEND_ISSUE",
+    "PROJECT_QUESTIONS_AUTOSAVE",
+    "NESTED_PROJECTS",
 ]
 
 # GFBio Helpdesk Shadow-Account Service
 # ------------------------------------------------------------------------------
-JIRA_ACCOUNT_SERVICE_USER = env("JIRA_ACCOUNT_SERVICE_USER",
-                                default="no_account_service_user")
-JIRA_ACCOUNT_SERVICE_PASSWORD = env("JIRA_ACCOUNT_SERVICE_PASSWORD",
-                                    default="no_account_service_password")
+JIRA_ACCOUNT_SERVICE_USER = env(
+    "JIRA_ACCOUNT_SERVICE_USER", default="no_account_service_user"
+)
+JIRA_ACCOUNT_SERVICE_PASSWORD = env(
+    "JIRA_ACCOUNT_SERVICE_PASSWORD", default="no_account_service_password"
+)
 
-# jira integration 
+# jira integration
 JIRA_URL = env("JIRA_URL", default="https://helpdesk.gfbio.org")
-JIRA_PROJECT = env("JIRA_ENV", default = "SAND")
+JIRA_PROJECT = env("JIRA_ENV", default="SAND")
 JIRA_USERNAME = env("JIRA_USERNAME")
 JIRA_PASS = env("JIRA_PASS")
-JIRA_DEFAULT_REPORTER_EMAIL= env("JIRA_DEFAULT_REPORTER_EMAIL")
+JIRA_DEFAULT_REPORTER_EMAIL = env("JIRA_DEFAULT_REPORTER_EMAIL")
