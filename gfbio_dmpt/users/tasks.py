@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 logger = get_task_logger(__name__)
 
 schedule, _ = CrontabSchedule.objects.get_or_create(
-    minute="*",
-    hour="*",
+    minute="0",
+    hour="0",
     day_of_week="*",
     day_of_month="*",
     month_of_year="*",
