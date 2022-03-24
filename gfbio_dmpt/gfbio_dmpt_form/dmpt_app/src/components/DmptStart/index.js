@@ -229,9 +229,9 @@ function DmptStart(props) {
         }
         if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
             if (rdmoContext.project_id > 0) {
-                setNextText('Update DMP');
+                setNextText('Update');
             } else {
-                setNextText('Submit DMP');
+                setNextText('Finish');
             }
             setSubmitOnNext(true);
         }
