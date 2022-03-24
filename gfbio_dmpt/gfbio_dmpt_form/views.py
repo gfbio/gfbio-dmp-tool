@@ -86,6 +86,10 @@ class DmpExportView(ProjectAnswersView):
             randpart = request.GET.get("username").split("-")[1]
             user = User.objects.get(username=f"anonymous-{randpart}")
             self.request.user = user
+
+            print("===============================0")
+            print("using annonymous ", user)
+            print("===============================0")
         return super(DmpExportView, self).dispatch(request, *args, **kwargs)
 
     def render_to_response(self, context, **response_kwargs):
