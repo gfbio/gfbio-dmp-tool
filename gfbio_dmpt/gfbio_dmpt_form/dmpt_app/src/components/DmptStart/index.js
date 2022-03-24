@@ -323,10 +323,10 @@ function DmptStart(props) {
     let header = 'Preparing Data Management Plan form fields';
 
     // TODO: for testing submit summary, only submitHandler is active
-    const nextHandler = submitAllHandler;
-    // const nextHandler = submitOnNext
-    //     ? submitAllHandler
-    //     : nextSectionHandler;
+    // const nextHandler = submitAllHandler;
+    const nextHandler = submitOnNext
+        ? submitAllHandler
+        : nextSectionHandler;
 
     const {
         inputs,
