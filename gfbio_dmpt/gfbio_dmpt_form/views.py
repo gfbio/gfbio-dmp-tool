@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import Group
+from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -83,14 +84,16 @@ class DmpExportView(ProjectAnswersView):
         if not request.user.is_authenticated:
             # in order to ensure that not everybody can request any user
             # we make sure to only accept anonymous- pattern strings.
-            randpart = request.GET.get("username").split("-")[1]
-            user = User.objects.get(username=f"anonymous-{randpart}")
-            self.request.user = user
-
-            print("===============================0")
-            print("using annonymous ", user)
-            print("===============================0")
-        return super(DmpExportView, self).dispatch(request, *args, **kwargs)
+            randpart = request.GET.get("username").split("-", maxsplit=1)[1]
+            try:
+                user = User.objects.get(username=f"anonymous-{randpart}")
+                self.request.user = user
+                print("===============================0")
+                print("using annonymous ", user)
+                print("===============================0")
+                return super(DmpExportView, self).dispatch(request, *args, **kwargs)
+            except:
+                return redirect("/")
 
     def render_to_response(self, context, **response_kwargs):
         return render_to_format(
