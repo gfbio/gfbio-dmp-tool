@@ -19,9 +19,8 @@ function FormSelect(props) {
             <select name={item.key} id={item.key}
                 onChange={(e) => handleChange(e, item)}
                 className='form-control'>
+                <option disabled selected hidden>-- Please select</option>
                 {options[item.optionsets[0]].map((i) => {
-
-                    // console.log(' --- ', i.text );
                     if (i.text === val) {
                         return (<option key={i.id} selected>{i.text}</option>);
                     }

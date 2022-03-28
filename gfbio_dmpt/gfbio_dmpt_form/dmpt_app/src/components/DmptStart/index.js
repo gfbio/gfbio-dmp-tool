@@ -109,6 +109,7 @@ const putValue = (projectId, formItem, token) => {
 // TODO: reset formdata after submit/put/post ?
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
+    console.log('DmptStart | submitValues | ');
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in rdmoContext.form_data) {
@@ -120,12 +121,12 @@ const submitValues = async (projectId, rdmoContext, token) => {
                 ) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        // console.log('PUT ', projectId, ' ', formItem, ' ', res);
+                        console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        // console.log('POST ', projectId, ' ', formItem, ' ', res);
+                        console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
                     });
                 }
             }
