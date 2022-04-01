@@ -1,22 +1,18 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
-import formFieldInit from '../../utils/form_utils';
+import formFieldInit, {markFormFieldMandatory} from '../../utils/form_utils';
 
 function FormRadio(props) {
-    const { item, options, value, handleChange } = props;
+    const {item, options, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
+
     const val = formFieldInit(value, rdmoContext, item);
-    return (
-        <div className='form-group' key={item.id}>
-            <label htmlFor={item.key}>
-                <h5>{item.text_en}</h5>
-                <small id={`help_item_${item.id}`}
-                    className='form-text text-muted'>
-                    {item.help_en}
-                </small>
-            </label>
+    const {headerText, helpText} = markFormFieldMandatory(item);
+
+    let inputField = (
+        <>
             {
                 options[item.optionsets[0]].map((i) => {
                     if (i.text === val) {
@@ -24,12 +20,12 @@ function FormRadio(props) {
                             <div className='form-check' key={i.id}>
                                 <input className='form-check-input'
                                     type='radio'
-                                    // name={`radio_name_${item.id}`}
                                     name={item.key}
                                     id={`${item.key}_${i.id}`}
                                     value={i.text}
                                     onChange={(e) => handleChange(e, item)}
                                     checked
+                                    required
                                 />
                                 <label className='form-check-label'
                                     htmlFor={`${item.key}_${i.id}`}>
@@ -42,11 +38,11 @@ function FormRadio(props) {
                         <div className='form-check' key={i.id}>
                             <input className='form-check-input'
                                 type='radio'
-                                // name={`radio_name_${item.id}`}
                                 name={item.key}
                                 id={`${item.key}_${i.id}`}
                                 value={i.text}
                                 onChange={(e) => handleChange(e, item)}
+                                required
                             />
                             <label className='form-check-label'
                                 htmlFor={`${item.key}_${i.id}`}>
@@ -56,6 +52,62 @@ function FormRadio(props) {
                     );
                 })
             }
+        </>
+    );
+    if (item.is_optional) {
+        inputField = (
+            <>
+                {
+                    options[item.optionsets[0]].map((i) => {
+                        if (i.text === val) {
+                            return (
+                                <div className='form-check' key={i.id}>
+                                    <input className='form-check-input'
+                                        type='radio'
+                                        name={item.key}
+                                        id={`${item.key}_${i.id}`}
+                                        value={i.text}
+                                        onChange={(e) => handleChange(e, item)}
+                                        checked
+                                    />
+                                    <label className='form-check-label'
+                                        htmlFor={`${item.key}_${i.id}`}>
+                                        {i.text}
+                                    </label>
+                                </div>
+                            );
+                        }
+                        return (
+                            <div className='form-check' key={i.id}>
+                                <input className='form-check-input'
+                                    type='radio'
+                                    name={item.key}
+                                    id={`${item.key}_${i.id}`}
+                                    value={i.text}
+                                    onChange={(e) => handleChange(e, item)}
+                                />
+                                <label className='form-check-label'
+                                    htmlFor={`${item.key}_${i.id}`}>
+                                    {i.text}
+                                </label>
+                            </div>
+                        );
+                    })
+                }
+            </>
+        );
+    }
+
+    return (
+        <div className='form-group' key={item.id}>
+            <label htmlFor={item.key}>
+                {headerText}
+                <small id={`help_item_${item.id}`}
+                    className='form-text text-muted'>
+                    {helpText}
+                </small>
+            </label>
+            {inputField}
         </div>
     );
 }

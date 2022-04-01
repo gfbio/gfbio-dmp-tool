@@ -5,7 +5,7 @@ import RdmoContext from '../RdmoContext';
 import formFieldInit, { markFormFieldMandatory } from '../../utils/form_utils';
 
 function FormTextArea(props) {
-    const { item, value, handleChange, inputs } = props;
+    const { item, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
     const val = formFieldInit(value, rdmoContext, item);
@@ -60,7 +60,7 @@ FormTextArea.propTypes = {
     value: PropTypes.string,
     handleChange: PropTypes.func.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    inputs: PropTypes.object.isRequired,
+    // inputs: PropTypes.object.isRequired,
 };
 
 export default FormTextArea;

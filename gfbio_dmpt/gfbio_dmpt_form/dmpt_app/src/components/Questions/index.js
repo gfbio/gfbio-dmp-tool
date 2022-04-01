@@ -52,18 +52,17 @@ const fetchAllOptions = async (optionSets, token) => {
 
 // TODO: refactor to component
 // const iterateQuestions = (questions, options, values, handleChange) => {
-const iterateQuestions = (questions, options, values, handleChange, inputs) => {
+const iterateQuestions = (questions, options, values, handleChange) => {
     // console.log('iterateQuestions values ', values);
     return questions.map((item) => {
         let value = '';
         if (values[item.attribute] !== undefined) {
             value = values[item.attribute];
         }
-
         if (item.widget_type === 'textarea') {
             return (
                 <FormTextArea item={item} value={value}
-                    handleChange={handleChange} inputs={inputs}/>
+                    handleChange={handleChange} />
             );
         }
         if (item.widget_type === 'select') {
@@ -89,7 +88,6 @@ const iterateQuestions = (questions, options, values, handleChange, inputs) => {
             <FormGenericInput item={item} value={value}
                 handleChange={handleChange} />
         );
-
     }
     );
 };
@@ -185,7 +183,7 @@ function Questions(props) {
 
     const {
         sectionIndex,
-        inputs,
+        // inputs,
         // handleFormChange,
         handleInputChange,
         handleSubmit,
@@ -205,7 +203,7 @@ function Questions(props) {
 
         const opts = iterateOptions(rdmoContext.options_data);
         // formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleFormChange);
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange, inputs);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange);
         sectionControls = (<div className='row'>
             {prevSection}
             {nextSection}
@@ -243,7 +241,7 @@ Questions.propTypes = {
     // TODO: inputs for new changehandler
     // TODO: better validator/proptype
     // eslint-disable-next-line react/forbid-prop-types
-    inputs: PropTypes.object.isRequired,
+    // inputs: PropTypes.object.isRequired,
 
     // TODO: maybe obsolete
     // handleFormChange: PropTypes.func.isRequired,

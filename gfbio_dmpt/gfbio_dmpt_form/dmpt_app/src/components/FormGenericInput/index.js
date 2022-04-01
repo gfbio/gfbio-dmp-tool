@@ -4,7 +4,7 @@ import RdmoContext from '../RdmoContext';
 import formFieldInit, { markFormFieldMandatory } from '../../utils/form_utils';
 
 function FormGenericInput(props) {
-    const { item, value, handleChange } = props;
+    const { item, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
     const val = formFieldInit(value, rdmoContext, item);

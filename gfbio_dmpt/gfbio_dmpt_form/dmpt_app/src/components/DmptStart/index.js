@@ -263,9 +263,10 @@ function DmptStart(props) {
         console.log('DmptStart | submitAllHandler |');
         let contextProjectId = rdmoContext.project_id;
         let name = '';
-        // eslint-disable-next-line no-prototype-builtins
         if (
+            // eslint-disable-next-line no-prototype-builtins
             rdmoContext.form_data.hasOwnProperty('project_name') &&
+            // eslint-disable-next-line no-prototype-builtins
             rdmoContext.form_data.project_name.hasOwnProperty('value')
         ) {
             name = rdmoContext.form_data.project_name.value;
@@ -352,7 +353,7 @@ function DmptStart(props) {
             <Questions
                 userToken={backendContext.token}
                 sectionIndex={rdmoContext.sections_index}
-                inputs={inputs}
+                // inputs={inputs}
                 // handleFormChange={handleFormChange}
                 handleInputChange={handleInputChange}
                 handleSubmit={handleSubmit}
