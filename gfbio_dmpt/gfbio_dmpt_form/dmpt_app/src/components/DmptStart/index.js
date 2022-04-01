@@ -35,9 +35,7 @@ function getCookie(name) {
 }
 
 const createProject = async (token, optionalProjectName = '') => {
-
     try {
-
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
 
@@ -54,13 +52,13 @@ const createProject = async (token, optionalProjectName = '') => {
             {
                 title: `${projectName}`,
                 description: `${projectName}`,
-                catalog: 18 // FIXME: gfbio catalog id hardcoded --> 18
+                catalog: 18, // FIXME: gfbio catalog id hardcoded --> 18
             },
             {
                 headers: {
                     Authorization: `Token ${token}`,
-                    'X-CSRFToken': csrftoken
-                }
+                    'X-CSRFToken': csrftoken,
+                },
             }
         );
         return response;
@@ -79,13 +77,13 @@ const postValue = (projectId, formItem, token) => {
             attribute: formItem.question.attribute,
             text: formItem.value,
             value_type: formItem.question.value_type,
-            unit: formItem.question.unit
+            unit: formItem.question.unit,
         },
         {
             headers: {
                 Authorization: `Token ${token}`,
-                'X-CSRFToken': csrftoken
-            }
+                'X-CSRFToken': csrftoken,
+            },
         }
     );
 };
@@ -99,13 +97,13 @@ const putValue = (projectId, formItem, token) => {
             attribute: formItem.question.attribute,
             text: formItem.value,
             value_type: formItem.question.value_type,
-            unit: formItem.question.unit
+            unit: formItem.question.unit,
         },
         {
             headers: {
                 Authorization: `Token ${token}`,
-                'X-CSRFToken': csrftoken
-            }
+                'X-CSRFToken': csrftoken,
+            },
         }
     );
 };
@@ -113,25 +111,25 @@ const putValue = (projectId, formItem, token) => {
 // TODO: reset formdata after submit/put/post ?
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
+    console.log('DmptStart | submitValues | ');
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in rdmoContext.form_data) {
             if (rdmoContext.form_data[f] !== undefined) {
                 const formItem = rdmoContext.form_data[f];
-                if (formItem.valueId !== undefined && formItem.valueId !== false) {
+                if (
+                    formItem.valueId !== undefined &&
+                    formItem.valueId !== false
+                ) {
                     // eslint-disable-next-line no-await-in-loop
-                    await putValue(projectId, formItem, token).then(
-                        (res) => {
-                            // console.log('PUT ', projectId, ' ', formItem, ' ', res);
-                        }
-                    );
+                    await putValue(projectId, formItem, token).then((res) => {
+                        console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
+                    });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
-                    await postValue(projectId, formItem, token).then(
-                        (res) => {
-                            // console.log('POST ', projectId, ' ', formItem, ' ', res);
-                        }
-                    );
+                    await postValue(projectId, formItem, token).then((res) => {
+                        console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
+                    });
                 }
             }
         }
@@ -140,7 +138,6 @@ const submitValues = async (projectId, rdmoContext, token) => {
     } finally {
         // console.log('DmptStart | submitValues | finally: reset form ');
         // rdmoContext.assignFormData({});#
-        ;
     }
 };
 
@@ -152,16 +149,18 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
         // console.log('use dmpt start  |  dmpt project id ', dmptProjectId);
         async function prepareDmptStart() {
             setProcessing(true);
-            if(dmptProjectId) {
+            if (dmptProjectId) {
                 try {
                     const dmptProjectDetailResponse = await axios.get(
                         `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
                         {
-                            headers: { Authorization: `Token ${token}` }
+                            headers: { Authorization: `Token ${token}` },
                         }
                     );
                     // console.log('use dmpt start | assgign rdmo project id  ', dmptProjectDetailResponse.data.rdmo_project);
-                    rdmoContext.assignProjectId(dmptProjectDetailResponse.data.rdmo_project);
+                    rdmoContext.assignProjectId(
+                        dmptProjectDetailResponse.data.rdmo_project
+                    );
                 } catch (e) {
                     console.error(e);
                 }
@@ -175,7 +174,7 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
                 const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=${catalogId}`, // section for gfbio catalog id hardcoded
                     {
-                        headers: { Authorization: `Token ${token}` }
+                        headers: { Authorization: `Token ${token}` },
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -186,7 +185,6 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
             } catch (e) {
                 console.error(e);
             } finally {
-                ;
             }
         }
 
@@ -211,7 +209,11 @@ function DmptStart(props) {
         rdmoContext.assignDmptProjectId(projectId);
     }
 
-    const [processing, stage] = useDmptStart(rdmoContext, backendContext.token, projectId);
+    const [processing, stage] = useDmptStart(
+        rdmoContext,
+        backendContext.token,
+        projectId
+    );
 
     const [nextText, setNextText] = useState('Next Section');
     const [prevText, setPrevText] = useState('Previous Section');
@@ -232,9 +234,9 @@ function DmptStart(props) {
         }
         if (rdmoContext.sections_index + 1 === rdmoContext.sections_size - 1) {
             if (rdmoContext.project_id > 0) {
-                setNextText('Update DMP');
+                setNextText('Update');
             } else {
-                setNextText('Submit DMP');
+                setNextText('Finish');
             }
             setSubmitOnNext(true);
         }
@@ -262,7 +264,10 @@ function DmptStart(props) {
         let contextProjectId = rdmoContext.project_id;
         let name = '';
         // eslint-disable-next-line no-prototype-builtins
-        if (rdmoContext.form_data.hasOwnProperty('project_name') && rdmoContext.form_data.project_name.hasOwnProperty('value')) {
+        if (
+            rdmoContext.form_data.hasOwnProperty('project_name') &&
+            rdmoContext.form_data.project_name.hasOwnProperty('value')
+        ) {
             name = rdmoContext.form_data.project_name.value;
         }
         if (contextProjectId < 0) {
@@ -389,20 +394,18 @@ function DmptStart(props) {
 
     // TODO: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
-        return (
-            <Summary rdmoProjectId={rdmoContext.project_id} />
-        );
+        return <Summary rdmoProjectId={rdmoContext.project_id} />;
     }
 
     return (
-        <div id='projectDetail'>
+        <div id="projectDetail">
             <ScrollToTop />
             <Row>
                 <Col lg={12}>
                     <h3>{header}</h3>
                 </Col>
             </Row>
-            <Row className='mt-3'>
+            <Row className="mt-3">
                 <Col lg={12}>{formFields}</Col>
             </Row>
         </div>

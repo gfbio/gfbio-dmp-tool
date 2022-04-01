@@ -7,7 +7,7 @@ import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import {
     checkBackendParameters,
-    resetContext
+    resetContext,
 } from '../../utils/backend_context';
 import UserLoggedInRouter from '../UserLoggedInRouter';
 import SupportForm from '../SupportForm';
@@ -41,13 +41,13 @@ const saveProject = async (token, userId, projectId) => {
             `${PROJECT_API_ROOT}dmptprojects/`,
             {
                 rdmo_project: projectId,
-                user: userId
+                user: userId,
             },
             {
                 headers: {
                     Authorization: `Token ${token}`,
-                    'X-CSRFToken': csrftoken
-                }
+                    'X-CSRFToken': csrftoken,
+                },
             }
         );
         return response;
@@ -82,11 +82,16 @@ function Summary(props) {
         if (loggedIn) {
             setSaving(true);
             setOfferAccount(false);
-            if (dmptProjectId === -1 && rdmoContext.dmpt_project_id === -1 && rdmoContext.project_id !== -1) {
+            if (
+                dmptProjectId === -1 &&
+                rdmoContext.dmpt_project_id === -1 &&
+                rdmoContext.project_id !== -1
+            ) {
                 saveProject(
                     rdmoContext.backend_context.token,
                     rdmoContext.backend_context.user_id,
-                    rdmoProjectId).then((result) => {
+                    rdmoProjectId
+                ).then((result) => {
                     rdmoContext.assignDmptProjectId(result.data.id);
                     setSaving(false);
                     setSavingDone(true);
@@ -101,12 +106,12 @@ function Summary(props) {
     };
 
     let saveSection = (
-        <Col lg={6} className='p-3'>
-            <i className='mdi mdi-content-save-edit-outline' />
+        <Col lg={6} className="p-3">
+            <i className="mdi mdi-content-save-edit-outline" />
             <h6>Save Data Management Plan</h6>
-            <div className='d-grid gap-2'>
+            <div className="d-grid gap-2">
                 <Button
-                    className='btn btn-secondary btn-green'
+                    className="btn btn-secondary btn-green"
                     onClick={saveProjectHandler}
                 >
                     Save
@@ -116,8 +121,8 @@ function Summary(props) {
     );
     if (noSaveNeeded) {
         saveSection = (
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-content-save-edit-outline' />
+            <Col lg={6} className="p-3">
+                <i className="mdi mdi-content-save-edit-outline" />
                 <h6>
                     Your plan was already successfully saved and update in the
                     previous step !
@@ -127,33 +132,39 @@ function Summary(props) {
     }
     if (saving) {
         saveSection = (
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-content-save-edit-outline' />
+            <Col lg={6} className="p-3">
+                <i className="mdi mdi-content-save-edit-outline" />
                 <h6>... Saving Data Management Plan ...</h6>
             </Col>
         );
     } else if (savingDone) {
         saveSection = (
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-content-save-edit-outline' />
+            <Col lg={6} className="p-3">
+                <i className="mdi mdi-content-save-edit-outline" />
                 <h6>Saving completed successfully !</h6>
             </Col>
         );
     } else if (offerAccount) {
         saveSection = (
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-content-save-edit-outline' />
-                <h6>
-                    Please log in to save !
-                </h6>
+            <Col lg={6} className="p-3">
+                <i className="mdi mdi-content-save-edit-outline" />
+                <h6>Please log in to save !</h6>
                 <Row>
                     <Col lg={6}>
-                        <a href='https://sso.gfbio.org/simplesaml/module.php/accountui/register.php'
-                            className='btn btn-secondary btn-green'>Sign Up</a>
+                        <a
+                            href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
+                            className="btn btn-secondary btn-green"
+                        >
+                            Sign Up
+                        </a>
                     </Col>
                     <Col lg={6}>
-                        <a href='/accounts/login/'
-                            className='btn btn-secondary btn-green'>Sign In</a>
+                        <a
+                            href="/accounts/login/"
+                            className="btn btn-secondary btn-green"
+                        >
+                            Sign In
+                        </a>
                     </Col>
                 </Row>
             </Col>
@@ -168,24 +179,23 @@ function Summary(props) {
         // console.log('discarding done');
     };
     let discardSection = (
-        <Col lg={6} className='p-3'>
-            <i className='mdi mdi-location-exit' />
-            <h6>
-                Finish
-            </h6>
-            <div className='d-grid gap-2'>
-                <Button className='btn btn-secondary btn-green'
-                    onClick={discardProjectHandler}>Discard
-                    &
-                    Exit
+        <Col lg={6} className="p-3">
+            <i className="mdi mdi-location-exit" />
+            <h6>Finish</h6>
+            <div className="d-grid gap-2">
+                <Button
+                    className="btn btn-secondary btn-green"
+                    onClick={discardProjectHandler}
+                >
+                    Discard & Exit
                 </Button>
             </div>
         </Col>
     );
     if (discarding) {
         discardSection = (
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-location-exit' />
+            <Col lg={6} className="p-3">
+                <i className="mdi mdi-location-exit" />
                 <h6>... Deleting data & prepare to exit ...</h6>
             </Col>
         );
@@ -198,15 +208,15 @@ function Summary(props) {
     }
 
     const downloadPdfSection = (
-        <Col lg={6} className='p-3'>
-            <i className='mdi mdi-download-circle-outline' />
-            <h6>
-                Dowload PDF file
-            </h6>
-            <div className='d-grid gap-2'>
-                <a href={`${PROJECT_API_ROOT}export/${rdmoProjectId}/pdf/`}
-                    className='btn btn-secondary btn-green'
-                >Download
+        <Col lg={6} className="p-3">
+            <i className="mdi mdi-download-circle-outline" />
+            <h6>Dowload PDF file</h6>
+            <div className="d-grid gap-2">
+                <a
+                    href={`${PROJECT_API_ROOT}export/${rdmoProjectId}/pdf?username=${rdmoContext.backend_context.user_name}`}
+                    className="btn btn-secondary btn-green"
+                >
+                    Download
                 </a>
             </div>
         </Col>
@@ -218,12 +228,14 @@ function Summary(props) {
     };
 
     let supportSection = (
-        <Col lg={6} className='p-3'>
-            <i className='mdi mdi-email-send-outline' />
+        <Col lg={6} className="p-3">
+            <i className="mdi mdi-email-send-outline" />
             <h6>Request Data Management Plan Support</h6>
-            <div className='d-grid gap-2'>
-                <Button className='btn btn-secondary btn-green'
-                    onClick={supportHandler}>
+            <div className="d-grid gap-2">
+                <Button
+                    className="btn btn-secondary btn-green"
+                    onClick={supportHandler}
+                >
                     Send Request
                 </Button>
             </div>
@@ -231,21 +243,21 @@ function Summary(props) {
     );
     if (showSupportForm) {
         supportSection = (
-            <SupportForm isLoggedIn={loggedIn} rmdoProjectId={rdmoProjectId}/>
+            <SupportForm isLoggedIn={loggedIn} rmdoProjectId={rdmoProjectId} />
         );
     }
 
     return (
-        <div id='summary' className='text-center'>
+        <div id="summary" className="text-center">
             <ScrollToTop />
 
             <Row>
-                <div className='col-12'>
+                <div className="col-12">
                     <h3>Summary</h3>
                 </div>
             </Row>
 
-            <Row className='mt-3'>
+            <Row className="mt-3">
                 <Col lg={12}>
                     <h5>
                         Send a DMP support request to GFBio, download your DMP
@@ -254,20 +266,21 @@ function Summary(props) {
                 </Col>
             </Row>
 
-            <Row className='mt-5'>
+            <Row className="mt-5">
                 {supportSection}
                 {downloadPdfSection}
             </Row>
 
-            <Row className='mt-3'>
+            <Row className="mt-3">
                 {saveSection}
                 {discardSection}
             </Row>
-        </div>);
+        </div>
+    );
 }
 
 Summary.propTypes = {
-    rdmoProjectId: PropTypes.number.isRequired
+    rdmoProjectId: PropTypes.number.isRequired,
 };
 
 export default Summary;

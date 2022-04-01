@@ -25,6 +25,7 @@ function FormCheckBox(props) {
             </label>
             {
                 options[item.optionsets[0]].map((i) => {
+                    // console.log('\tFormCheckBox | map options | text: ', i.text, ' | val: ', val);
                     if (i.text === val) {
                         // if (item.is_optional) {
                         return (

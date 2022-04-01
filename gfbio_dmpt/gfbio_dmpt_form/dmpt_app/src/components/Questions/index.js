@@ -79,6 +79,7 @@ const iterateQuestions = (questions, options, values, handleChange, inputs) => {
             );
         }
         if (item.widget_type === 'checkbox') {
+            // console.log('\n-----------\nQuestions | iterate questions | checkbox ')
             return (
                 <FormCheckBox item={item} options={options} value={value}
                     handleChange={handleChange} />
