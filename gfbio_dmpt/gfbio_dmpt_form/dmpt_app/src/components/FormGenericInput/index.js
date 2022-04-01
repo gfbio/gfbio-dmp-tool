@@ -10,7 +10,7 @@ function FormGenericInput(props) {
     const val = formFieldInit(value, rdmoContext, item);
     const { headerText, helpText } = markFormFieldMandatory(item);
 
-    const inputField = (<input
+    let inputField = (<input
         type={item.widget_type}
         className='form-control'
         name={item.key}
@@ -20,7 +20,7 @@ function FormGenericInput(props) {
         required
     />);
     if (item.is_optional) {
-        const inputField = (<input
+        inputField = (<input
             type={item.widget_type}
             className='form-control'
             name={item.key}
