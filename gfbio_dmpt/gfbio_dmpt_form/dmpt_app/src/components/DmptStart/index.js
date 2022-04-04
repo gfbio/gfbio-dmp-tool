@@ -1,17 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
-import { nanoid } from 'nanoid';
-import { Col, Row } from 'react-bootstrap';
-import { SolarSystemLoading } from 'react-loadingg';
-import { useParams } from 'react-router-dom';
-import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import {nanoid} from 'nanoid';
+import {Col, Row} from 'react-bootstrap';
+import {SolarSystemLoading} from 'react-loadingg';
+import {useParams} from 'react-router-dom';
+import {API_ROOT, PROJECT_API_ROOT} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import { checkBackendParameters } from '../../utils/backend_context';
+import {checkBackendParameters} from '../../utils/backend_context';
 import Summary from '../Summary';
-import useSupportForm from '../SupportForm/formHooks';
 import useDmptForm from './dmptFormHooks';
 
 // FIXME: refactor move to general module
@@ -111,7 +110,7 @@ const putValue = (projectId, formItem, token) => {
 // TODO: reset formdata after submit/put/post ?
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
-    console.log('DmptStart | submitValues | ');
+    // console.log('DmptStart | submitValues | ');
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in rdmoContext.form_data) {
@@ -123,12 +122,12 @@ const submitValues = async (projectId, rdmoContext, token) => {
                 ) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
+                        // console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
+                        // console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
                     });
                 }
             }
@@ -260,7 +259,7 @@ function DmptStart(props) {
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
-        console.log('DmptStart | submitAllHandler |');
+        // console.log('DmptStart | submitAllHandler |');
         let contextProjectId = rdmoContext.project_id;
         let name = '';
         if (
@@ -294,37 +293,6 @@ function DmptStart(props) {
         }
     };
 
-    // const handleFormChange = (e, item) => {
-    //     // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
-    //     // TODO: maybe refactor to list of values for specific question
-    //     // eslint-disable-next-line no-prototype-builtins
-    //     let formData = rdmoContext.form_data;
-    //
-    //     // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
-    //     let vId = false;
-    //     if (formData.hasOwnProperty(e.target.name) && formData[e.target.name].hasOwnProperty('valueId')) {
-    //         vId = formData[e.target.name].valueId;
-    //     }
-    //
-    //     if (
-    //         e.target.name.startsWith('checkbox') &&
-    //         formData.hasOwnProperty(e.target.name)
-    //     ) {
-    //         delete formData[e.target.name];
-    //     } else {
-    //         formData = {
-    //             ...formData,
-    //             [e.target.name]: {
-    //                 value: e.target.value,
-    //                 question: item,
-    //                 valueId: vId
-    //             }
-    //         };
-    //     }
-    //     // console.log('\t\t-----\thandleFormChange | ', e.target.name, ' | ', e.target.value, ' | ', formData);
-    //     rdmoContext.assignFormData(formData);
-    // };
-
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 
@@ -341,20 +309,10 @@ function DmptStart(props) {
     } = useDmptForm(nextHandler);
 
     if (!processing) {
-        // TODO: for testing submit summary, only submitHandler is active
-        // const nextHandler = submitAllHandler;
-        // const nextHandler = submitOnNext
-        //     ? submitAllHandler
-        //     : nextSectionHandler;
-
-
-
         formFields = (
             <Questions
                 userToken={backendContext.token}
                 sectionIndex={rdmoContext.sections_index}
-                // inputs={inputs}
-                // handleFormChange={handleFormChange}
                 handleInputChange={handleInputChange}
                 handleSubmit={handleSubmit}
                 prevSection={
@@ -370,7 +328,6 @@ function DmptStart(props) {
                     <ActionButton
                         text={nextText}
                         name='next'
-                        // onClickHandler={nextHandler}
                         align='right'
                         hide={false}
                     />

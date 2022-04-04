@@ -11,14 +11,13 @@ function FormCheckBox(props) {
     const val = formFieldInit(value, rdmoContext, item);
     const {headerText, helpText} = markFormFieldMandatory(item);
 
-    const[checkCount, setCheckCount] = useState(0);
+    const [checkCount, setCheckCount] = useState(0);
 
     const handleCheckBoxChange = (e, i) => {
         if (e.target.checked) {
-            setCheckCount(checkCount+1);
-        }
-        else {
-            setCheckCount(checkCount-1);
+            setCheckCount(checkCount + 1);
+        } else {
+            setCheckCount(checkCount - 1);
         }
         handleChange(e, i);
     };
@@ -31,17 +30,13 @@ function FormCheckBox(props) {
 
             <label htmlFor={item.key}>
                 {headerText}
-                <small id={`help_${item.key}`}
-                    className='form-text text-muted'>
-                    {helpText}
-                </small>
+                {helpText}
             </label>
             {
                 options[item.optionsets[0]].map((i) => {
                     // console.log('\tFormCheckBox | map options | text: ', i.text, ' | val: ', val);
                     if (i.text === val) {
-                        setCheckCount(checkCount+1);
-                        // setCheckValid(true);
+                        setCheckCount(checkCount + 1);
                         if (item.is_optional || checkCount > 0) {
                             return (
                                 <div className='form-check' key={i.id}>
@@ -78,7 +73,7 @@ function FormCheckBox(props) {
                             </div>
                         );
                     }
-                    if (item.is_optional  || checkCount > 0) {
+                    if (item.is_optional || checkCount > 0) {
                         return (
                             <div className='form-check' key={i.id}>
                                 <input className='form-check-input'

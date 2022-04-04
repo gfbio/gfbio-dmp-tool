@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import RdmoContext from '../RdmoContext';
-import { checkBackendParameters } from '../../utils/backend_context';
+import {checkBackendParameters} from '../../utils/backend_context';
 
 const useDmptForm = (callback) => {
     const [inputs, setInputs] = useState({});
@@ -8,16 +8,16 @@ const useDmptForm = (callback) => {
     const backendContext = checkBackendParameters(rdmoContext);
 
     const handleSubmit = (event) => {
-        console.log('\nuseDmptForm | handleSubmit | before callback | ', event.submitter);
-        console.log(event);
+        // console.log('\nuseDmptForm | handleSubmit | before callback | ', event.submitter);
+        // console.log(event);
         if (event) {
             event.preventDefault();
         }
-        console.log('inputs before callback | ', inputs);
+        // console.log('inputs before callback | ', inputs);
 
         rdmoContext.assignFormData(Object.assign(rdmoContext.form_data, inputs));
 
-        console.log('rdmoContext form_data before callback | ', rdmoContext.form_data);
+        // console.log('rdmoContext form_data before callback | ', rdmoContext.form_data);
         // FIXME: currently only "next"handler is provided, thus no going back to sections
         //  this needs some logic here.
         callback();
@@ -34,7 +34,7 @@ const useDmptForm = (callback) => {
             vId = inputs[target.name].valueId;
         }
 
-        console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value);
+        // console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value);
         // console.log('item | ', item);
         // console.log('prop test ', (target.name in inputs));
         // console.log('prop test ', ('valueId' in inputs[target.name]));
@@ -59,7 +59,7 @@ const useDmptForm = (callback) => {
                 valueId: vId
             }
         }));
-        console.log('inputs after set | ', inputs);
+        // console.log('inputs after set | ', inputs);
     };
     return {
         handleSubmit,

@@ -102,10 +102,7 @@ function FormRadio(props) {
         <div className='form-group' key={item.id}>
             <label htmlFor={item.key}>
                 {headerText}
-                <small id={`help_item_${item.id}`}
-                    className='form-text text-muted'>
-                    {helpText}
-                </small>
+                {helpText}
             </label>
             {inputField}
         </div>

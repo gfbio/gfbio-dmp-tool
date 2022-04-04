@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
 import formFieldInit, {markFormFieldMandatory} from '../../utils/form_utils';
 
 function FormSelect(props) {
-    const { item, options, value, handleChange } = props;
+    const {item, options, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
     const val = formFieldInit(value, rdmoContext, item);
-    const { headerText, helpText } = markFormFieldMandatory(item);
+    const {headerText, helpText} = markFormFieldMandatory(item);
 
     let inputField = (
         <select name={item.key} id={item.key}
@@ -43,9 +43,7 @@ function FormSelect(props) {
         <div className='form-group' key={item.id}>
             <label htmlFor={item.key}>
                 {headerText}
-                <small id={`help_${item.key}`} className='form-text text-muted'>
-                    {helpText}
-                </small>
+                {helpText}
             </label>
             {inputField}
         </div>

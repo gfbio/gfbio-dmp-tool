@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { Col, Row } from 'react-bootstrap';
-import { SolarSystemLoading } from 'react-loadingg';
-import { API_ROOT } from '../../constants/api/api_constants';
+import {Col, Row} from 'react-bootstrap';
+import {SolarSystemLoading} from 'react-loadingg';
+import {API_ROOT} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
@@ -183,8 +183,6 @@ function Questions(props) {
 
     const {
         sectionIndex,
-        // inputs,
-        // handleFormChange,
         handleInputChange,
         handleSubmit,
         nextSection,
@@ -202,7 +200,6 @@ function Questions(props) {
     if (!processing) {
 
         const opts = iterateOptions(rdmoContext.options_data);
-        // formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleFormChange);
         formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange);
         sectionControls = (<div className='row'>
             {prevSection}
@@ -230,7 +227,6 @@ function Questions(props) {
                 {formFields}
                 {sectionControls}
             </form>
-            {/* {sectionControls} */}
         </div>
     );
 }
