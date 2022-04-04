@@ -69,5 +69,5 @@
       <textMaps />
     </LinkMapSettings>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.9.4 Docker Compose (django at [/home/maweber/devel/gfbio_dmpt/local.yml])" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.9.12 Docker Compose (django at [/home/maweber/devel/dmp_gfbio_org/local.yml])" project-jdk-type="Python SDK" />
 </project>

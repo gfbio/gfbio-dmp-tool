@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { Col, Row } from 'react-bootstrap';
-import { SolarSystemLoading } from 'react-loadingg';
-import { API_ROOT } from '../../constants/api/api_constants';
+import {Col, Row} from 'react-bootstrap';
+import {SolarSystemLoading} from 'react-loadingg';
+import {API_ROOT} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
@@ -51,6 +51,7 @@ const fetchAllOptions = async (optionSets, token) => {
 };
 
 // TODO: refactor to component
+// const iterateQuestions = (questions, options, values, handleChange) => {
 const iterateQuestions = (questions, options, values, handleChange) => {
     // console.log('iterateQuestions values ', values);
     return questions.map((item) => {
@@ -58,7 +59,6 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         if (values[item.attribute] !== undefined) {
             value = values[item.attribute];
         }
-
         if (item.widget_type === 'textarea') {
             return (
                 <FormTextArea item={item} value={value}
@@ -88,7 +88,6 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             <FormGenericInput item={item} value={value}
                 handleChange={handleChange} />
         );
-
     }
     );
 };
@@ -184,7 +183,8 @@ function Questions(props) {
 
     const {
         sectionIndex,
-        handleFormChange,
+        handleInputChange,
+        handleSubmit,
         nextSection,
         prevSection,
         userToken
@@ -200,7 +200,7 @@ function Questions(props) {
     if (!processing) {
 
         const opts = iterateOptions(rdmoContext.options_data);
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleFormChange);
+        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange);
         sectionControls = (<div className='row'>
             {prevSection}
             {nextSection}
@@ -223,19 +223,35 @@ function Questions(props) {
     return (
         <div>
             <ScrollToTop />
-            <form id={`section_${rdmoContext.sections_index}`}>
+            <form id={`section_${rdmoContext.sections_index}`} onSubmit={handleSubmit}>
                 {formFields}
+                {sectionControls}
             </form>
-            {sectionControls}
         </div>
     );
 }
 
 Questions.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
-    handleFormChange: PropTypes.func.isRequired,
+
+    // TODO: inputs for new changehandler
+    // TODO: better validator/proptype
+    // eslint-disable-next-line react/forbid-prop-types
+    // inputs: PropTypes.object.isRequired,
+
+    // TODO: maybe obsolete
+    // handleFormChange: PropTypes.func.isRequired,
+
+    // TODO: maybe the new form change handler
+    handleInputChange: PropTypes.func.isRequired,
+
+    // TODO: maybe new for checking form and handling navigation to next
+    //  or previous section
+    handleSubmit: PropTypes.func.isRequired,
+
     nextSection: PropTypes.element.isRequired,
     prevSection: PropTypes.element.isRequired,
+
     userToken: PropTypes.string.isRequired
 };
 

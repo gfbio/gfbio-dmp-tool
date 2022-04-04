@@ -1,3 +1,10 @@
+.mandatory {
+  color: $contrast-2;
+}
+span.mandatory {
+  color: $contrast-1;
+}
+
 
 input, textarea {
 
@@ -107,6 +114,7 @@ div#summary {
     color: $gfbio-blue;
     font-size: 4rem;
   }
+
   h6 {
     color: $gfbio-blue;
     font-size: 1rem;

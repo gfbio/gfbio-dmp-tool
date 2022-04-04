@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Col } from 'react-bootstrap';
 
 function ActionButton(props) {
-    const { text, onClickHandler, align, hide } = props;
+    const { text, onClickHandler, align, name, hide } = props;
     let colClasses = '';
     let btnClasses = '';
     if (align === 'left') {
@@ -19,12 +19,26 @@ function ActionButton(props) {
     if (hide === true) {
         btnClasses = btnClasses.concat(' d-none');
     }
-
+    if (onClickHandler===null) {
+        return (
+            <Col lg={6} className={colClasses}>
+                <button
+                    type='submit'
+                    name={name}
+                    id={name}
+                    className={`btn btn-secondary btn-green ${btnClasses}`}
+                >
+                    {text}
+                </button>
+            </Col>
+        );
+    }
     return (
         <Col lg={6} className={colClasses}>
-            {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
             <button
-                type="submit"
+                type='button'
+                name={name}
+                id={name}
                 className={`btn btn-secondary btn-green ${btnClasses}`}
                 onClick={onClickHandler}
             >
@@ -32,17 +46,20 @@ function ActionButton(props) {
             </button>
         </Col>
     );
+
 }
 
 ActionButton.propTypes = {
-    onClickHandler: PropTypes.func.isRequired,
+    onClickHandler: PropTypes.func,
     text: PropTypes.string.isRequired,
     align: PropTypes.string.isRequired,
-    hide: PropTypes.bool,
+    name: PropTypes.string.isRequired,
+    hide: PropTypes.bool
 };
 
 ActionButton.defaultProps = {
-    hide: false,
+    onClickHandler: null,
+    hide: false
 };
 
 export default ActionButton;

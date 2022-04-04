@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
-import { nanoid } from 'nanoid';
-import { Col, Row } from 'react-bootstrap';
-import { SolarSystemLoading } from 'react-loadingg';
-import { useParams } from 'react-router-dom';
-import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import {nanoid} from 'nanoid';
+import {Col, Row} from 'react-bootstrap';
+import {SolarSystemLoading} from 'react-loadingg';
+import {useParams} from 'react-router-dom';
+import {API_ROOT, PROJECT_API_ROOT} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import { checkBackendParameters } from '../../utils/backend_context';
+import {checkBackendParameters} from '../../utils/backend_context';
 import Summary from '../Summary';
+import useDmptForm from './dmptFormHooks';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -109,7 +110,7 @@ const putValue = (projectId, formItem, token) => {
 // TODO: reset formdata after submit/put/post ?
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
-    console.log('DmptStart | submitValues | ');
+    // console.log('DmptStart | submitValues | ');
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in rdmoContext.form_data) {
@@ -121,12 +122,12 @@ const submitValues = async (projectId, rdmoContext, token) => {
                 ) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
+                        // console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
+                        // console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
                     });
                 }
             }
@@ -221,7 +222,10 @@ function DmptStart(props) {
     const [submitOnNext, setSubmitOnNext] = useState(false);
 
     const nextSectionHandler = () => {
-        setPreviousButtonVisibility(rdmoContext.sections_index === -1);
+        console.log('DmptStart | nextSectionHandler | ', inputs);
+        setPreviousButtonVisibility(
+            rdmoContext.sections_index === -1
+        );
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
             setNextText('Next Section');
@@ -238,7 +242,10 @@ function DmptStart(props) {
     };
 
     const prevSectionHandler = () => {
-        setPreviousButtonVisibility(rdmoContext.sections_index === 0);
+        console.log('DmptStart | prevSectionHandler |');
+        setPreviousButtonVisibility(
+            rdmoContext.sections_index === 0
+        );
         if (rdmoContext.sections_index > 0) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
         }
@@ -252,11 +259,13 @@ function DmptStart(props) {
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
+        // console.log('DmptStart | submitAllHandler |');
         let contextProjectId = rdmoContext.project_id;
         let name = '';
-        // eslint-disable-next-line no-prototype-builtins
         if (
+            // eslint-disable-next-line no-prototype-builtins
             rdmoContext.form_data.hasOwnProperty('project_name') &&
+            // eslint-disable-next-line no-prototype-builtins
             rdmoContext.form_data.project_name.hasOwnProperty('value')
         ) {
             name = rdmoContext.form_data.project_name.value;
@@ -284,68 +293,42 @@ function DmptStart(props) {
         }
     };
 
-    const handleFormChange = (e, item) => {
-        // TODO: manually detect checkbox changes, maybe improve form field or refactor this ...
-        // TODO: maybe refactor to list of values for specific question
-        // eslint-disable-next-line no-prototype-builtins
-        let formData = rdmoContext.form_data;
-
-        // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
-        let vId = false;
-        if (
-            formData.hasOwnProperty(e.target.name) &&
-            formData[e.target.name].hasOwnProperty('valueId')
-        ) {
-            vId = formData[e.target.name].valueId;
-        }
-
-        if (
-            e.target.name.startsWith('checkbox') &&
-            formData.hasOwnProperty(e.target.name)
-        ) {
-            delete formData[e.target.name];
-        } else {
-            formData = {
-                ...formData,
-                [e.target.name]: {
-                    value: e.target.value,
-                    question: item,
-                    valueId: vId,
-                },
-            };
-        }
-        // console.log('\t\t-----\thandleFormChange | ', e.target.name, ' | ', e.target.value, ' | ', formData);
-        rdmoContext.assignFormData(formData);
-    };
-
     let formFields = <></>;
     let header = 'Preparing Data Management Plan form fields';
 
-    if (!processing) {
-        // TODO: for testing submit summary, only submitHandler is active
-        // const nextHandler = submitAllHandler;
-        const nextHandler = submitOnNext
-            ? submitAllHandler
-            : nextSectionHandler;
+    // TODO: for testing submit summary, only submitHandler is active
+    // const nextHandler = submitAllHandler;
+    const nextHandler = submitOnNext
+        ? submitAllHandler
+        : nextSectionHandler;
 
+    const {
+        inputs,
+        handleInputChange,
+        handleSubmit
+    } = useDmptForm(nextHandler);
+
+    if (!processing) {
         formFields = (
             <Questions
                 userToken={backendContext.token}
                 sectionIndex={rdmoContext.sections_index}
-                handleFormChange={handleFormChange}
+                handleInputChange={handleInputChange}
+                handleSubmit={handleSubmit}
                 prevSection={
                     <ActionButton
                         text={prevText}
+                        name='previous'
                         onClickHandler={prevSectionHandler}
-                        align="left"
+                        align='left'
                         hide={previousButtonVisibility}
                     />
                 }
                 nextSection={
                     <ActionButton
                         text={nextText}
-                        onClickHandler={nextHandler}
-                        align="right"
+                        name='next'
+                        align='right'
                         hide={false}
                     />
                 }
@@ -359,7 +342,7 @@ function DmptStart(props) {
         return (
             <Row>
                 <Col lg={12}>
-                    <SolarSystemLoading color="#345AA2" size="large" speed={8}>
+                    <SolarSystemLoading color='#345AA2' size='large' speed={8}>
                         Loading
                     </SolarSystemLoading>
                 </Col>
