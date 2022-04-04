@@ -11815,6 +11815,14 @@ footer div.bottom-row ul li a:hover {
   font-size: 1.8rem;
 }
 
+.mandatory {
+  color: #FF6339;
+}
+
+span.mandatory {
+  color: #FF8362;
+}
+
 input, textarea {
   color: #818181;
   font-size: 0.9rem;
