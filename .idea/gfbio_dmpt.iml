@@ -19,11 +19,4 @@
     <orderEntry type="jdk" jdkName="Remote Python 3.9.12 Docker Compose (django at [/home/maweber/devel/dmp_gfbio_org/local.yml])" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
-  <component name="TemplatesService">
-    <option name="TEMPLATE_FOLDERS">
-      <list>
-        <option value="$MODULE_DIR$/gfbio_dmpt/templates" />
-      </list>
-    </option>
-  </component>
 </module>
