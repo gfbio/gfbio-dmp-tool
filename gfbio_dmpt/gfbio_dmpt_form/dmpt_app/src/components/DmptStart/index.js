@@ -33,7 +33,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const createProject = async (token, optionalProjectName = '') => {
+const createProject = async (token, rdmoContext, optionalProjectName = '') => {
     try {
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
@@ -47,7 +47,7 @@ const createProject = async (token, optionalProjectName = '') => {
             {
                 title: `${projectName}`,
                 description: `${projectName}`,
-                catalog: 18, // FIXME: gfbio catalog id hardcoded --> 18
+                catalog: rdmoContext.project_id,
             },
             {
                 headers: {
