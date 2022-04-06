@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-from rdmo.projects.models import Project
+from rdmo.questions.models.catalog import Catalog
 from rdmo.projects.views import ProjectAnswersView
 from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
@@ -60,6 +60,13 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
         api_group.user_set.add(user)
         token, created = Token.objects.get_or_create(user_id=user.id)
 
+        # NOTE: At the moment we locally use "GFBio test" and on the dev server we
+        # have "GFBio DMP Catalog". That query thus is a little clumsy way of making
+        # both work. In the end we should decide on how we want to handle the selection
+        # of the catalog. Maybe add a field to let the dmp officer activate a catalog
+        # this is then pulled out not matter which one it is and used here.
+        catalog_id = Catalog.objects.filter(title_lang1__startswith="GFBio").first().id
+
         context = self.get_context_data(**kwargs)
         context["backend"] = {
             "isLoggedIn": "{}".format(is_authenticated).lower(),
@@ -67,6 +74,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_id": "{}".format(user.id),
             "user_name": "{}".format(user.username),
             "user_email": f"{user.email}",
+            "catalog_id": catalog_id,
         }
         print(context["backend"])
         return self.render_to_response(context)
