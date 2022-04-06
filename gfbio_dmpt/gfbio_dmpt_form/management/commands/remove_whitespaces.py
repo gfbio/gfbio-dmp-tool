@@ -13,29 +13,35 @@ class Command(BaseCommand):
         catalogs = Catalog.objects.filter(key__contains=' ')
         for c in catalogs:
             c.key = c.key.replace(' ', '_')
-        Catalog.objects.bulk_update(catalogs, ['key'])
+            c.save()
+        # Catalog.objects.bulk_update(catalogs, ['key'])
 
         sections = Section.objects.filter(key__contains=' ')
         for s in sections:
             s.key = s.key.replace(' ', '_')
-        Section.objects.bulk_update(sections, ['key'])
+            s.save()
+        # Section.objects.bulk_update(sections, ['key'])
 
         option_sets = OptionSet.objects.filter(key__contains=' ')
         for o in option_sets:
             o.key = o.key.replace(' ', '_')
-        OptionSet.objects.bulk_update(option_sets, ['key'])
+            o.save()
+        # OptionSet.objects.bulk_update(option_sets, ['key'])
 
         options = Option.objects.filter(key__contains=' ')
         for o in options:
             o.key = o.key.replace(' ', '_')
-        Option.objects.bulk_update(options, ['key'])
+            o.save()
+        # Option.objects.bulk_update(options, ['key'])
 
         question_sets = QuestionSet.objects.filter(key__contains=' ')
         for q in question_sets:
             q.key = q.key.replace(' ', '_')
-        QuestionSet.objects.bulk_update(question_sets, ['key'])
+            q.save()
+        # QuestionSet.objects.bulk_update(question_sets, ['key'])
 
         questions = Question.objects.filter(key__contains=' ')
         for q in questions:
             q.key = q.key.replace(' ', '_')
-        Question.objects.bulk_update(questions, ['key'])
+            q.save()
+        # Question.objects.bulk_update(questions, ['key'])
