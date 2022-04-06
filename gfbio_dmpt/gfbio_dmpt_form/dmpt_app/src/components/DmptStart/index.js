@@ -47,7 +47,7 @@ const createProject = async (token, rdmoContext, optionalProjectName = '') => {
             {
                 title: `${projectName}`,
                 description: `${projectName}`,
-                catalog: rdmoContext.project_id,
+                catalog: rdmoContext.catalog_id,
             },
             {
                 headers: {
@@ -162,7 +162,7 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
             }
 
             // FIXME: section for gfbio catalog id hardcoded --> 18
-            const catalogId = '18';
+            const catalogId = rdmoContext.catalog_id;
 
             try {
                 setStage('... fetch sections ...');
