@@ -5,7 +5,7 @@ import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import {
     PROJECT_API_ROOT,
-    URL_PREFIX
+    URL_PREFIX,
 } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
@@ -22,13 +22,12 @@ function useProjectList(token) {
                     `${PROJECT_API_ROOT}dmptprojects/`,
                     {
                         headers: {
-                            'Authorization': `Token ${token}`
-                        }
+                            Authorization: `Token ${token}`,
+                        },
                     }
                 );
                 setProjectList(response.data);
             } catch (e) {
-                ;
             } finally {
                 setLoading(false);
             }
@@ -47,34 +46,36 @@ function ProjectList() {
     // console.log('ProjectList');
 
     if (backendContext.isLoggedIn === 'false') {
-        return (
-            <Redirect
-                push
-                to={`${URL_PREFIX}`}
-            />
-        );
+        return <Redirect push to={`${URL_PREFIX}`} />;
     }
 
     let projects = <></>;
     if (projectList.length) {
         projects = projectList.map((item, index) => {
             return (
-                <ListGroupItem>
-                    <Link id={index}
-                        to={`${URL_PREFIX}start/${item.id}`}>{item.title}
-                    </Link>
-                </ListGroupItem>
+                <ol>
+                    <li>
+                        <Link id={index} to={`${URL_PREFIX}start/${item.id}`}>
+                            {item.title}
+                        </Link>
+                    </li>
+                </ol>
             );
         });
     }
 
     if (loading) {
         return (
-            <div id='projectList'>
+            <div id="projectList">
                 <Row>
                     <Col lg={12}>
-                        <SolarSystemLoading color='#81B248' size='large'
-                            speed={8}>Loading</SolarSystemLoading>
+                        <SolarSystemLoading
+                            color="#81B248"
+                            size="large"
+                            speed={8}
+                        >
+                            Loading
+                        </SolarSystemLoading>
                     </Col>
                 </Row>
             </div>
@@ -82,32 +83,30 @@ function ProjectList() {
     }
 
     return (
-        <div id='projectList'>
-
+        <div id="projectList">
             <Row>
                 <Col lg={12}>
                     <h3>Start a new Data Management Plan</h3>
                 </Col>
             </Row>
 
-            <Row className='mt-5'>
+            <Row className="mt-5">
                 <Col lg={12}>
                     <a href={`${URL_PREFIX}start`}>
-                        <i className='mdi mdi-text-box-plus-outline' />
-                        Create new DMP</a>
+                        <i className="mdi mdi-text-box-plus-outline" />
+                        Create new DMP
+                    </a>
                 </Col>
             </Row>
 
-            <Row className='mt-5'>
+            <Row className="mt-5">
                 <Col lg={12}>
                     <h3>Your data management plans</h3>
-                    <ListGroup variant='flush'>{projects}</ListGroup>
+                    {projects}
                 </Col>
             </Row>
-
         </div>
     );
-
-};
+}
 
 export default ProjectList;

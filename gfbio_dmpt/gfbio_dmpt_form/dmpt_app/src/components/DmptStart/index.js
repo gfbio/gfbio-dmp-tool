@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import {nanoid} from 'nanoid';
-import {Col, Row} from 'react-bootstrap';
-import {SolarSystemLoading} from 'react-loadingg';
-import {useParams} from 'react-router-dom';
-import {API_ROOT, PROJECT_API_ROOT} from '../../constants/api/api_constants';
+import { nanoid } from 'nanoid';
+import { Col, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
+import { useParams } from 'react-router-dom';
+import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import {checkBackendParameters} from '../../utils/backend_context';
+import { checkBackendParameters } from '../../utils/backend_context';
 import Summary from '../Summary';
 import useDmptForm from './dmptFormHooks';
 
@@ -40,11 +40,7 @@ const createProject = async (token, optionalProjectName = '') => {
 
         let projectName = `tmp_${nanoid()}`;
         if (optionalProjectName !== '') {
-            if (optionalProjectName.length > 36) {
-                projectName = `${optionalProjectName.substring(0, 30)} (...)`;
-            } else {
-                projectName = optionalProjectName;
-            }
+            projectName = optionalProjectName;
         }
         const response = await axios.post(
             `${API_ROOT}projects/projects/`,
@@ -223,9 +219,7 @@ function DmptStart(props) {
 
     const nextSectionHandler = () => {
         console.log('DmptStart | nextSectionHandler | ', inputs);
-        setPreviousButtonVisibility(
-            rdmoContext.sections_index === -1
-        );
+        setPreviousButtonVisibility(rdmoContext.sections_index === -1);
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
             setNextText('Next Section');
@@ -243,9 +237,7 @@ function DmptStart(props) {
 
     const prevSectionHandler = () => {
         console.log('DmptStart | prevSectionHandler |');
-        setPreviousButtonVisibility(
-            rdmoContext.sections_index === 0
-        );
+        setPreviousButtonVisibility(rdmoContext.sections_index === 0);
         if (rdmoContext.sections_index > 0) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
         }
@@ -298,15 +290,10 @@ function DmptStart(props) {
 
     // TODO: for testing submit summary, only submitHandler is active
     // const nextHandler = submitAllHandler;
-    const nextHandler = submitOnNext
-        ? submitAllHandler
-        : nextSectionHandler;
+    const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
-    const {
-        inputs,
-        handleInputChange,
-        handleSubmit
-    } = useDmptForm(nextHandler);
+    const { inputs, handleInputChange, handleSubmit } =
+        useDmptForm(nextHandler);
 
     if (!processing) {
         formFields = (
@@ -318,17 +305,17 @@ function DmptStart(props) {
                 prevSection={
                     <ActionButton
                         text={prevText}
-                        name='previous'
+                        name="previous"
                         onClickHandler={prevSectionHandler}
-                        align='left'
+                        align="left"
                         hide={previousButtonVisibility}
                     />
                 }
                 nextSection={
                     <ActionButton
                         text={nextText}
-                        name='next'
-                        align='right'
+                        name="next"
+                        align="right"
                         hide={false}
                     />
                 }
@@ -342,7 +329,7 @@ function DmptStart(props) {
         return (
             <Row>
                 <Col lg={12}>
-                    <SolarSystemLoading color='#345AA2' size='large' speed={8}>
+                    <SolarSystemLoading color="#345AA2" size="large" speed={8}>
                         Loading
                     </SolarSystemLoading>
                 </Col>
