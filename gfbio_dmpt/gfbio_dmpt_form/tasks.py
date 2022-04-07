@@ -2,12 +2,9 @@
 import logging
 
 import celery
-from django.conf import settings
-from jira import JIRA, JIRAError
-from rdmo.projects.models import Project
 
-from .jira_utils import get_issue_reporter, create_support_issue
-from .models import DmptProject, DmptIssue
+from .jira_utils import get_issue_reporter, create_support_issue, get_rdmo_project_for_project_id
+from .models import DmptProject
 
 logger = logging.getLogger(__name__)
 
@@ -26,17 +23,14 @@ def create_support_issue_task(form_data={}):
     logger.info(
         f'tasks.py | create_support_issue_task | '
         f'start | {form_data}')
-    try:
-        rdmo_project = Project.objects.get(id=form_data.get('rdmo_project_id'))
-    except Project.DoesNotExist as e:
+
+    rdmo_project_id = form_data.get('rdmo_project_id')
+    rdmo_project = get_rdmo_project_for_project_id(rdmo_project_id)
+    if rdmo_project is None:
         logger.error(
             f'tasks.py | create_support_issue_task | '
-            f'error getting rdmo project | {e}')
-        return False
+            f'error getting rdmo project | rdmo_project_id={rdmo_project_id}')
+        return None
 
-    reporter = get_issue_reporter(form_data)
-
+    reporter = get_issue_reporter(form_data.get('email'), form_data.get('user_id'))
     return create_support_issue(rdmo_project, reporter)
-
-
-

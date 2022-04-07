@@ -5,6 +5,7 @@ from urllib.parse import quote
 import requests
 from django.conf import settings
 from jira import JIRA, JIRAError
+from rdmo.projects.models import Project
 
 from config.settings.base import JIRA_ACCOUNT_SERVICE_USER, JIRA_ACCOUNT_SERVICE_PASSWORD
 from .configuration.settings import JIRA_FALLBACK_USERNAME
@@ -26,9 +27,18 @@ def _get_gfbio_helpdesk_username(user_name, email, fullname=''):
         JIRA_ACCOUNT_SERVICE_PASSWORD))
 
 
-def get_issue_reporter(form_data):
-    email = form_data.get('email')
-    user_id = form_data.get('user_id')
+def get_rdmo_project_for_project_id(rdmo_project_id):
+    rdmo_project = None
+    try:
+        rdmo_project = Project.objects.get(id=rdmo_project_id)
+    except Project.DoesNotExist as e:
+        logger.error(
+            f'jira_utils.py | get_rdmo_project_for_project_id | '
+            f'error getting rdmo project | {e}')
+    return rdmo_project
+
+
+def get_issue_reporter(email, user_id):
     user = None
     if user_id:
         try:
@@ -82,3 +92,24 @@ def create_support_issue(rdmo_project, reporter):
         logger.error(
             f'jira_utils.py | create_support_issue | error creating issue | {e.text}')
         return None
+
+
+def create_support_issue_in_view(form_data={}):
+    logger.info(
+        f'jira_utils.py | create_support_issue_in_view | '
+        f'start | {form_data}')
+
+    rdmo_project_id = form_data.get('rdmo_project_id')
+    rdmo_project = get_rdmo_project_for_project_id(rdmo_project_id)
+    if rdmo_project is None:
+        logger.error(
+            f'jira_utils.py | create_support_issue_in_view | '
+            f'error getting rdmo project | rdmo_project_id={rdmo_project_id}')
+        return {'error': f'no rdmo project found with id: {rdmo_project_id}'}
+
+    reporter = get_issue_reporter(form_data.get('email'), form_data.get('user_id'))
+
+    issue = create_support_issue(rdmo_project, reporter)
+    if issue is None:
+        return {'error': f'no issue could be created'}
+    return {'issue_key': issue.key, 'issue_url': issue.self}
