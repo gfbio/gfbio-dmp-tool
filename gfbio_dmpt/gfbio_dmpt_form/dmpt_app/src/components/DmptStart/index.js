@@ -136,7 +136,7 @@ const submitValues = async (projectId, rdmoContext, token) => {
     }
 };
 
-function useDmptStart(rdmoContext, token, dmptProjectId) {
+function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
@@ -160,9 +160,6 @@ function useDmptStart(rdmoContext, token, dmptProjectId) {
                     console.error(e);
                 }
             }
-
-            // FIXME: section for gfbio catalog id hardcoded --> 18
-            const catalogId = rdmoContext.catalog_id;
 
             try {
                 setStage('... fetch sections ...');
@@ -207,6 +204,7 @@ function DmptStart(props) {
     const [processing, stage] = useDmptStart(
         rdmoContext,
         backendContext.token,
+        backendContext.catalog_id,
         projectId
     );
 
