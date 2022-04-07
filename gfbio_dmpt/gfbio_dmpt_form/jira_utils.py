@@ -58,7 +58,7 @@ def get_issue_reporter(email, user_id):
     return reporter
 
 
-def create_support_issue(rdmo_project, reporter):
+def create_support_issue(rdmo_project, reporter, message=''):
     jira = JIRA(
         server=settings.JIRA_URL,
         basic_auth=(settings.JIRA_USERNAME, settings.JIRA_PASS),
@@ -74,7 +74,7 @@ def create_support_issue(rdmo_project, reporter):
                     rdmo_project.pk),
                 'description': f'Would you please be so kind to help me with my '
                                f'Data Management Plan named "{rdmo_project.title}" '
-                               f'using the "{rdmo_project.catalog}" catalog',
+                               f'using the "{rdmo_project.catalog}" catalog\n\n{message}',
                 'reporter': {
                     'name': reporter
                 },
@@ -139,7 +139,7 @@ def create_support_issue_in_view(form_data={}):
 
     '''
     _add_interests_to_message(form_data, message)
-    issue = create_support_issue(rdmo_project, reporter)
+    issue = create_support_issue(rdmo_project, reporter, message)
     if issue is None:
         return {'error': f'no issue could be created'}
     return {'issue_key': issue.key, 'issue_url': issue.self}
