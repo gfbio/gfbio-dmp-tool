@@ -38,7 +38,6 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         is_authenticated = user.is_authenticated
-        print("view is authenticated ", is_authenticated)
         if not user.is_authenticated:
             # TODO: annonymous need to be/have permission:
             #   (rdmo) group: api
@@ -52,9 +51,6 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
                     "password": ANONYMOUS_PASS,
                 },
             )
-            print("===============================0")
-            print("created annonymous ", user)
-            print("===============================0")
 
         api_group = Group.objects.get(name="api")
         api_group.user_set.add(user)
@@ -76,7 +72,6 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_email": f"{user.email}",
             "catalog_id": catalog_id,
         }
-        print(context["backend"])
         return self.render_to_response(context)
 
 
@@ -96,9 +91,6 @@ class DmpExportView(ProjectAnswersView):
             try:
                 user = User.objects.get(username=f"anonymous-{randpart}")
                 self.request.user = user
-                print("===============================0")
-                print("using annonymous ", user)
-                print("===============================0")
                 return super(DmpExportView, self).dispatch(request, *args, **kwargs)
             except:
                 return redirect("/")
@@ -151,6 +143,7 @@ class DmptSupportView(View):
             create_support_issue_task.apply_async(
                 kwargs={"form_data": form.cleaned_data}
             )
+
             return HttpResponse(status=HTTP_201_CREATED)
         else:
             return HttpResponse(

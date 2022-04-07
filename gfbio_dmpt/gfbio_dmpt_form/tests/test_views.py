@@ -106,6 +106,7 @@ class TestDmpExportView(TestCase):
 
         self.assertEqual(302, response.status_code)
 
+
 class TestDmptProjectViews(TestCase):
     @classmethod
     def setUpTestData(cls):
