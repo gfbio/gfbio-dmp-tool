@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
-import { Col } from 'react-bootstrap';
+import React, {useContext, useState} from 'react';
+import {Col} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import * as QueryString from 'querystring';
 import useSupportForm from './formHooks';
 import RdmoContext from '../RdmoContext';
-import { checkBackendParameters } from '../../utils/backend_context';
+import {checkBackendParameters} from '../../utils/backend_context';
 
-import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import {PROJECT_API_ROOT} from '../../constants/api/api_constants';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -38,7 +38,9 @@ function SupportForm(props) {
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
 
-    const [issue, setIssue] = useState(false);
+    const [issueCreated, setIssueCreated] = useState(false);
+    const [issueKey, setIssueKey] = useState('');
+    const [issueUrl, setIssueUrl] = useState('');
 
     const submitRequest = () => {
         const csrftoken = getCookie('csrftoken');
@@ -57,12 +59,14 @@ function SupportForm(props) {
                 }
             }
         ).then((res) => {
-            console.log('SupportForm');
-            console.log(res);
-            rdmoContext.assignIssueCreated(true);
-            setIssue(true);
+            // console.log('SupportForm');
+            // console.log(res);
+            rdmoContext.assignIssue(res.data.issue_key);
+            setIssueKey(res.data.issue_key);
+            setIssueUrl(res.data.issue_url);
+            setIssueCreated(true);
         }).catch((error) => {
-            console.log(error);
+            console.error(error);
         });
     };
 
@@ -104,19 +108,21 @@ function SupportForm(props) {
         inputs.email = backendContext.user_email;
     }
 
-    if (issue) {
+    if (issueCreated) {
         return (
             <Col lg={6} className='p-3'>
-                <i className='mdi mdi-content-save-edit-outline' />
+                <i className='mdi mdi-content-save-edit-outline'/>
                 <h6>
                     Your request was received !
                 </h6>
                 <p>You will soon be contacted by our helpdesk staff.</p>
+                <p>Your issue key is {issueKey}. Please refer to it in any future communication. To access your issue,
+                    please visit <a href={issueUrl}>{issueKey}</a></p>
             </Col>
         );
     }
     return (
-        <Col lg={6} className='p-3' style={{ 'text-align': 'left' }}>
+        <Col lg={6} className='p-3' style={{'text-align': 'left'}}>
             <form onSubmit={handleSubmit}>
                 {emailSection}
                 <div className='row mb-3'>

@@ -107,11 +107,11 @@ def create_support_issue_in_view(form_data={}):
             f'error getting rdmo project | rdmo_project_id={rdmo_project_id}')
         return {'error': f'no rdmo project found with id: {rdmo_project_id}'}
 
-    reporter = get_issue_reporter(form_data.get('email'), form_data.get('user_id'))
-
-    issue = create_support_issue(rdmo_project, reporter)
-    if issue is None:
-        return {'error': f'no issue could be created'}
+    # reporter = get_issue_reporter(form_data.get('email'), form_data.get('user_id'))
+    #
+    # issue = create_support_issue(rdmo_project, reporter)
+    # if issue is None:
+    #     return {'error': f'no issue could be created'}
     # return {'issue_key': issue.key, 'issue_url': issue.self}
     # FIXME: only for testing, to avoid creating too many real issues in the helpdesk
     return {"issue_key": "SAND-1661", "issue_url": "https://www.example.com/rest/api/2/issue/16814"}
