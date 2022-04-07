@@ -106,6 +106,7 @@ class TestDmpExportView(TestCase):
 
         self.assertEqual(302, response.status_code)
 
+
 class TestDmptProjectViews(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -351,6 +352,7 @@ class TestDmptSupportView(TestCase):
 
         response = self.client.post("/dmp/support/", data)
         self.assertEqual(201, response.status_code)
+        print(response.content)
         self.assertEqual(1, len(DmptIssue.objects.all()))
 
     def test_invalid_post(self):

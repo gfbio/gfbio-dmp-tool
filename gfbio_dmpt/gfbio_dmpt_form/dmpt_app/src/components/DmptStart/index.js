@@ -216,7 +216,7 @@ function DmptStart(props) {
     const [submitOnNext, setSubmitOnNext] = useState(false);
 
     const nextSectionHandler = () => {
-        console.log('DmptStart | nextSectionHandler | ', inputs);
+        // console.log('DmptStart | nextSectionHandler | ', inputs);
         setPreviousButtonVisibility(rdmoContext.sections_index === -1);
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
@@ -234,7 +234,7 @@ function DmptStart(props) {
     };
 
     const prevSectionHandler = () => {
-        console.log('DmptStart | prevSectionHandler |');
+        // console.log('DmptStart | prevSectionHandler |');
         setPreviousButtonVisibility(rdmoContext.sections_index === 0);
         if (rdmoContext.sections_index > 0) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
