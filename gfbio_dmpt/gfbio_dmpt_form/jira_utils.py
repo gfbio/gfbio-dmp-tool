@@ -94,6 +94,30 @@ def create_support_issue(rdmo_project, reporter):
         return None
 
 
+def _add_interests_to_message(form_data, message):
+    if form_data.get('data_collection_and_assurance', False):
+        message += '''- Data Collection and Assurance
+        '''
+    if form_data.get('data_curation', False):
+        message += '''- Data Curation
+        '''
+    if form_data.get('data_archiving', False):
+        message += '''- Data Archiving
+        '''
+    if form_data.get('terminology_service', False):
+        message += '''- Terminology Service
+        '''
+    if form_data.get('data_visualization_and_analysis', False):
+        message += '''- Data Visualization and Analysis
+        '''
+    if form_data.get('data_publication', False):
+        message += '''- Data Publication
+        '''
+    if form_data.get('data_management_training', False):
+        message += '''- Data Management Training
+           '''
+
+
 def create_support_issue_in_view(form_data={}):
     logger.info(
         f'jira_utils.py | create_support_issue_in_view | '
@@ -108,7 +132,13 @@ def create_support_issue_in_view(form_data={}):
         return {'error': f'no rdmo project found with id: {rdmo_project_id}'}
 
     reporter = get_issue_reporter(form_data.get('email'), form_data.get('user_id'))
+    message = f'''
+    {form_data.get('message')}
 
+    I am interested in:
+
+    '''
+    _add_interests_to_message(form_data, message)
     issue = create_support_issue(rdmo_project, reporter)
     if issue is None:
         return {'error': f'no issue could be created'}
