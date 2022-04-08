@@ -2,78 +2,77 @@
 
 
 {% block content %}
-    <div class="row">
-        <div class="col-12">
-            <h1 class="outline green-stroke text-center"
-                style="font-size: 4.2rem;">GFBio Data
-                Management Plan</h1>
-            <h5 class="text-center">Basic questions about data
-                management in one place</h5>
-            <h5 class="text-center">Dynamic data management plan
-                creation</h5>
-            <h5 class="text-center">Personal support</h5>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <h1 class="outline green-stroke text-center"
+          style="font-size: 4.2rem;">GFBio Data
+        Management Plan</h1>
+      <h5 class="text-center">Basic questions about data
+        management in one place</h5>
+      <h5 class="text-center">Dynamic data management plan
+        creation</h5>
+      <h5 class="text-center">Personal support</h5>
     </div>
+  </div>
 
-    <div class="row mt-5 mb-3">
-        <div class="col-12">
-            <div class="d-grid gap-2">
+  <div class="row mt-5 mb-3">
+    <div class="col-12">
+      <div class="d-grid gap-2">
 
-                {% url 'dmpt:create_dmp' as url %}
-                <a class="btn btn-secondary btn-green btn-lg" href="{{ url }}">
-                    Create a Data Management Plan
-                </a>
+        {% url 'dmpt:create_dmp' as url %}
+        <a class="btn btn-secondary btn-green btn-lg" href="{{ url }}">
+          Create a Data Management Plan
+        </a>
 
-            </div>
+      </div>
 
-        </div>
     </div>
+  </div>
 
+  {% if not request.user.is_authenticated %}
     <div class="row mb-3">
-        <div class="col-12">
-            <h5 class="text-center">
-                <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
-                    Get a free GFBio account to save your dynamic DMP</a></h5>
-        </div>
+      <h5 class="text-center">
+        <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
+          Get a free GFBio account to save your dynamic DMP</a></h5>
     </div>
+  {% endif %}
+  <div class="row pt-4 mb-4">
+    <div class="col-6">
+      <h6>Registered Users</h6>
+      <ul>
+        <li>Answer important questions about the data management of your
+          project
+        </li>
+        <li>Download your entries as a structured PDF file</li>
+        <li>Request free personal <a
+          href="https://www.gfbio.org/plan#why-write-dmp">DMP
+          support</a> from our experts
+        </li>
+        <li>Save your entries to your personal account and revise it
+          whenever needed
+        </li>
+      </ul>
+    </div>
+    <div class="col-6">
+      <h6>Unregistered Users</h6>
+      <ul>
+        <li>Answer important questions about the data management of your
+          project
+        </li>
+        <li>Download your entries as a structured PDF file</li>
+        <li>Request free personal <a
+          href="https://www.gfbio.org/plan#why-write-dmp">DMP
+          support</a> from our experts
+        </li>
+      </ul>
+    </div>
+  </div>
 
-    <div class="row pt-4 mb-4">
-        <div class="col-6">
-            <h6>Registered Users</h6>
-            <ul>
-                <li>Answer important questions about the data management of your
-                    project
-                </li>
-                <li>Download your entries as a structured PDF file</li>
-                <li>Request free personal <a
-                        href="https://www.gfbio.org/plan#why-write-dmp">DMP
-                    support</a> from our experts
-                </li>
-                <li>Save your entries to your personal account and revise it
-                    whenever needed
-                </li>
-            </ul>
-        </div>
-        <div class="col-6">
-            <h6>Unregistered Users</h6>
-            <ul>
-                <li>Answer important questions about the data management of your
-                    project
-                </li>
-                <li>Download your entries as a structured PDF file</li>
-                <li>Request free personal <a
-                        href="https://www.gfbio.org/plan#why-write-dmp">DMP
-                    support</a> from our experts
-                </li>
-            </ul>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <h5 class="text-center">
+        <a class="text-black" href="https://www.gfbio.org/plan">
+          Click here for more detailed information and training</a></h5>
     </div>
-
-    <div class="row">
-        <div class="col-12">
-            <h5 class="text-center">
-                <a class="text-black" href="https://www.gfbio.org/plan">
-                    Click here for more detailed information and training</a></h5>
-        </div>
-    </div>
+  </div>
 {% endblock content %}
