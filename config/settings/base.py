@@ -84,6 +84,7 @@ THIRD_PARTY_APPS = [
     "rules",
     # openapi specification tools
     "rest_framework_swagger",
+    "mozilla_django_oidc",
 ]
 
 RDMO_CORE_APPS = [
