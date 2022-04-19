@@ -16,7 +16,7 @@ export const PROJECT_API_ROOT = '/dmp/';
 
 // TODO: use this prefix when developing with npm start
 // eslint-disable-next-line no-unused-vars
-// const urlPrefix = '/';
+// export const URL_PREFIX = '/';
 
 // TODO: use this prefix when using  the from django views.
 //  this applies to production and local environments.

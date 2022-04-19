@@ -8,7 +8,10 @@ function FormTextArea(props) {
     const {item, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
+    // console.log('FormTextArea | value: ', value);
+
     const val = formFieldInit(value, rdmoContext, item);
+    // console.log('val ', val);
     const {headerText, helpText} = markFormFieldMandatory(item);
 
     let inputField = (<textarea

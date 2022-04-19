@@ -8,17 +8,28 @@ function FormCheckBox(props) {
     const {item, options, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
+    console.log('FormCheckBox | value ', value);
+    // let val = -1;
     const val = formFieldInit(value, rdmoContext, item);
+    // console.log('val ', val);
+    const valueMap = {};
+    value.map((v) => {
+        valueMap[v.option] = v;
+        return true;
+    });
+    console.log('valueMap ', valueMap);
+
     const {headerText, helpText} = markFormFieldMandatory(item);
 
-    const [checkCount, setCheckCount] = useState(0);
+    // FIXME: Re-render hell when used in conjunction with form init
+    // const [checkCount, setCheckCount] = useState(0);
 
     const handleCheckBoxChange = (e, i, optionId) => {
-        if (e.target.checked) {
-            setCheckCount(checkCount + 1);
-        } else {
-            setCheckCount(checkCount - 1);
-        }
+        // if (e.target.checked) {
+        //     setCheckCount(checkCount + 1);
+        // } else {
+        //     setCheckCount(checkCount - 1);
+        // }
         e.optionId = optionId;
         handleChange(e, i);
     };
@@ -34,11 +45,20 @@ function FormCheckBox(props) {
                 {helpText}
             </label>
             {
-                options.map((i) => {
-                    // console.log('\tFormCheckBox | map options | text: ', i.text, ' | val: ', val, ' id ', i.id);
-                    if (i.text === val) {
-                        setCheckCount(checkCount + 1);
-                        if (item.is_optional || checkCount > 0) {
+                options.map((i, index) => {
+                    // console.log('\tFormCheckBox | map options | option ', i);
+                    console.log('\tFormCheckBox | map options | option.text: ', i.text, ' | option.id ', i.id, ' | option.checked ', i.checked);
+                    // console.log('checcount ', checkCount);
+                    // value map is a rdmo value referfing to question
+                    // if option.id == valueMap[option.id].option, then it is checked
+
+                    // if (i.text === val) {
+                    // if (i.checked) {
+                    // if(Object.keys().indexOf(i.id) >= 0){
+                    if (valueMap[i.id] && valueMap[i.id].option && i.id === valueMap[i.id].option) {
+                    //     setCheckCount(checkCount + 1);
+
+                        if (item.is_optional ) {  // || checkCount > 0
                             return (
                                 <div className='form-check' key={i.id}>
                                     <input className='form-check-input'
@@ -74,7 +94,7 @@ function FormCheckBox(props) {
                             </div>
                         );
                     }
-                    if (item.is_optional || checkCount > 0) {
+                    if (item.is_optional ) {   // || checkCount > 0
                         return (
                             <div className='form-check' key={i.id}>
                                 <input className='form-check-input'

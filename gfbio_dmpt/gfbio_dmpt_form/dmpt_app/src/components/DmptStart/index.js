@@ -68,6 +68,7 @@ const postValue = (projectId, formItem, token) => {
     const csrftoken = getCookie('csrftoken');
     const d = {
         attribute: formItem.question.attribute,
+        text: `${formItem.value}`,
         value_type: formItem.question.value_type,
         unit: formItem.question.unit,
     };
@@ -75,9 +76,9 @@ const postValue = (projectId, formItem, token) => {
     if (formItem.option) {
         d.option = formItem.option;
     }
-    else {
-        d.text = `${formItem.value}`;
-    }
+    // else {
+    //     d.text = `${formItem.value}`;
+    // }
     return axios.post(
         `${API_ROOT}projects/projects/${projectId}/values/`,
         d,

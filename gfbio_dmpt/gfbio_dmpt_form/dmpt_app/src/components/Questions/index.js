@@ -16,7 +16,7 @@ const fetchQuestion = async (q, token) => {
     return await axios.get(
         `${API_ROOT}questions/questions/?questionset=${q.id}`,
         {
-            headers: { 'Authorization': `Token ${token}` }
+            headers: {'Authorization': `Token ${token}`}
         }
     );
 };
@@ -29,7 +29,7 @@ const fetchOptions = async (optionSet, token) => {
     return await axios.get(
         `${API_ROOT}options/options/?optionset=${optionSet}`,
         {
-            headers: { 'Authorization': `Token ${token}` }
+            headers: {'Authorization': `Token ${token}`}
         }
     );
 
@@ -41,7 +41,7 @@ const fetchProjectValues = async (projectId, token) => {
     return await axios.get(
         `${API_ROOT}projects/values/?project=${projectId}`,
         {
-            headers: { 'Authorization': `Token ${token}` }
+            headers: {'Authorization': `Token ${token}`}
         }
     );
 };
@@ -55,20 +55,30 @@ const fetchAllOptions = async (optionSets, token) => {
 const iterateQuestions = (questions, options, values, handleChange) => {
     // console.log('iterateQuestions values ', values);
     return questions.map((item) => {
-        let value = '';
+        let valueList = [];
         if (values[item.attribute] !== undefined) {
-            value = values[item.attribute];
+            valueList = values[item.attribute];
         }
         if (item.widget_type === 'textarea') {
+            // TODO: refactor
+            let val = '';
+            if(valueList.length === 1) {
+                [val] = valueList;
+            }
             return (
-                <FormTextArea item={item} val118 ue={value}
-                    handleChange={handleChange} />
+                <FormTextArea item={item} value={val}
+                    handleChange={handleChange}/>
             );
         }
         if (item.widget_type === 'select') {
+            // TODO: refactor
+            let val = '';
+            if(valueList.length === 1) {
+                [val] = valueList;
+            }
             return (
-                <FormSelect item={item} options={options} value={value}
-                    handleChange={handleChange} />
+                <FormSelect item={item} options={options} value={val}
+                    handleChange={handleChange}/>
             );
         }
         if (item.widget_type === 'radio') {
@@ -76,23 +86,23 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             const opts = options[item.optionsets[0]];
             // console.log('\n\tQuestions | iterateQuestions | radio | opts ', opts);
             return (
-                <FormRadio item={item} options={opts} value={value}
-                    handleChange={handleChange} />
+                <FormRadio item={item} options={opts} value={valueList}
+                    handleChange={handleChange}/>
             );
         }
         if (item.widget_type === 'checkbox') {
-            // console.log('\n-----------\nQuestions | iterate questions | checkbox ')
+            // console.log('\n-----------\nQuestions | iterate questions | checkbox ');
             // TODO: first option hardcoded, move to top for all when done here
             const opts = options[item.optionsets[0]];
             // console.log('\n\tQuestions | iterateQuestions | checkbox | opts ', opts);
             return (
-                <FormCheckBox item={item} options={opts} value={value}
-                    handleChange={handleChange} />
+                <FormCheckBox item={item} options={opts} value={valueList}
+                    handleChange={handleChange}/>
             );
         }
         return (
-            <FormGenericInput item={item} value={value}
-                handleChange={handleChange} />
+            <FormGenericInput item={item} value={valueList}
+                handleChange={handleChange}/>
         );
     }
     );
@@ -122,7 +132,7 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                 const qsResponse = await axios.get(
                     `${API_ROOT}questions/questionsets/?section=${section.id}`,
                     {
-                        headers: { 'Authorization': `Token ${token}` }
+                        headers: {'Authorization': `Token ${token}`}
                     }
                 );
 
@@ -161,11 +171,21 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                         // rdmoContext.assignFormData({});
                         const projectValues = {};
                         fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {
-                            // console.log('response ', pRes);
+                            // console.log('fetchProjectValues response ', pRes);
                             pRes.data.forEach((v) => {
-                                projectValues[v.attribute] = v;
+                                // console.log('\tres item attrib. ', v.attribute, ' | res item ', v);
+                                if (projectValues[v.attribute]) {
+                                    // console.log('push to ', v.attribute, ' | ', v);
+                                    projectValues[v.attribute].push(v);
+                                } else {
+                                    // Old assignment
+                                    // projectValues[v.attribute] = v;
+
+                                    // console.log('set to ', v.attribute, ' | ', [v]);
+                                    projectValues[v.attribute] = [v];
+                                }
                             });
-                            // console.log('useQuestions after getting all | project values ', projectValues);
+                            console.log('useQuestions after getting all | project values ', projectValues);
                             rdmoContext.assignProjectValues(projectValues);
                             rdmoContext.assignFormData({});
                         });
@@ -207,7 +227,7 @@ function Questions(props) {
 
         const opts = iterateOptions(rdmoContext.options_data);
         formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange);
-        sectionControls = (<div className='row'>
+        sectionControls = (<div className="row">
             {prevSection}
             {nextSection}
         </div>);
@@ -216,10 +236,10 @@ function Questions(props) {
     if (processing) {
         return (
             <div>
-                <ScrollToTop />
+                <ScrollToTop/>
                 <Row>
                     <Col lg={12}>
-                        <SolarSystemLoading color='#81B248' size='large'
+                        <SolarSystemLoading color="#81B248" size="large"
                             speed={8}>Loading</SolarSystemLoading>
                     </Col>
                 </Row>
@@ -228,7 +248,7 @@ function Questions(props) {
     }
     return (
         <div>
-            <ScrollToTop />
+            <ScrollToTop/>
             <form id={`section_${rdmoContext.sections_index}`} onSubmit={handleSubmit}>
                 {formFields}
                 {sectionControls}
