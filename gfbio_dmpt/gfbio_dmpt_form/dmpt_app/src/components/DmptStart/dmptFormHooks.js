@@ -25,7 +25,7 @@ const useDmptForm = (callback) => {
 
     const handleInputChange = (event, item) => {
         event.persist();
-        const { target } = event;
+        const { target, optionId } = event;
         const val = target.type === 'checkbox' ? target.checked : target.value;
 
         // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
@@ -34,8 +34,8 @@ const useDmptForm = (callback) => {
             vId = inputs[target.name].valueId;
         }
 
-        // console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value);
-        // console.log('item | ', item);
+        // console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value, ' optionId ', optionId);
+        // console.log('evnt | ', event);
         // console.log('prop test ', (target.name in inputs));
         // console.log('prop test ', ('valueId' in inputs[target.name]));
 
@@ -56,7 +56,8 @@ const useDmptForm = (callback) => {
             [target.name]: {
                 value: val,
                 question: item,
-                valueId: vId
+                valueId: vId,
+                option: optionId,
             }
         }));
         // console.log('inputs after set | ', inputs);

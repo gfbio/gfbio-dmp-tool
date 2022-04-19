@@ -14,7 +14,7 @@ function FormRadio(props) {
     let inputField = (
         <>
             {
-                options[item.optionsets[0]].map((i) => {
+                options.map((i) => {
                     if (i.text === val) {
                         return (
                             <div className='form-check' key={i.id}>
@@ -58,7 +58,7 @@ function FormRadio(props) {
         inputField = (
             <>
                 {
-                    options[item.optionsets[0]].map((i) => {
+                    options.map((i) => {
                         if (i.text === val) {
                             return (
                                 <div className='form-check' key={i.id}>

@@ -13,12 +13,13 @@ function FormCheckBox(props) {
 
     const [checkCount, setCheckCount] = useState(0);
 
-    const handleCheckBoxChange = (e, i) => {
+    const handleCheckBoxChange = (e, i, optionId) => {
         if (e.target.checked) {
             setCheckCount(checkCount + 1);
         } else {
             setCheckCount(checkCount - 1);
         }
+        e.optionId = optionId;
         handleChange(e, i);
     };
 
@@ -33,8 +34,8 @@ function FormCheckBox(props) {
                 {helpText}
             </label>
             {
-                options[item.optionsets[0]].map((i) => {
-                    // console.log('\tFormCheckBox | map options | text: ', i.text, ' | val: ', val);
+                options.map((i) => {
+                    // console.log('\tFormCheckBox | map options | text: ', i.text, ' | val: ', val, ' id ', i.id);
                     if (i.text === val) {
                         setCheckCount(checkCount + 1);
                         if (item.is_optional || checkCount > 0) {
@@ -44,7 +45,7 @@ function FormCheckBox(props) {
                                         type='checkbox'
                                         name={`checkbox_${item.key}_${i.id}`}
                                         value={i.text}
-                                        onChange={(e) => handleCheckBoxChange(e, item)}
+                                        onChange={(e) => handleCheckBoxChange(e, item, i.id)}
                                         id={`${item.key}_${i.id}`}
                                         checked
                                     />
@@ -61,7 +62,7 @@ function FormCheckBox(props) {
                                     type='checkbox'
                                     name={`checkbox_${item.key}_${i.id}`}
                                     value={i.text}
-                                    onChange={(e) => handleCheckBoxChange(e, item)}
+                                    onChange={(e) => handleCheckBoxChange(e, item, i.id)}
                                     id={`${item.key}_${i.id}`}
                                     checked
                                     required
@@ -80,7 +81,7 @@ function FormCheckBox(props) {
                                     type='checkbox'
                                     name={`checkbox_${item.key}_${i.id}`}
                                     value={i.text}
-                                    onChange={(e) => handleCheckBoxChange(e, item)}
+                                    onChange={(e) => handleCheckBoxChange(e, item, i.id)}
                                     id={`${item.key}_${i.id}`}/>
                                 <label className='form-check-label'
                                     htmlFor={`checkbox_${item.key}_${i.id}`}>
@@ -95,7 +96,7 @@ function FormCheckBox(props) {
                                 type='checkbox'
                                 name={`checkbox_${item.key}_${i.id}`}
                                 value={i.text}
-                                onChange={(e) => handleCheckBoxChange(e, item)}
+                                onChange={(e) => handleCheckBoxChange(e, item, i.id)}
                                 id={`${item.key}_${i.id}`}
                                 required
                             />

@@ -61,7 +61,7 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         }
         if (item.widget_type === 'textarea') {
             return (
-                <FormTextArea item={item} value={value}
+                <FormTextArea item={item} val118 ue={value}
                     handleChange={handleChange} />
             );
         }
@@ -72,15 +72,21 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             );
         }
         if (item.widget_type === 'radio') {
+            // TODO: first option hardcoded, move to top for all when done here
+            const opts = options[item.optionsets[0]];
+            // console.log('\n\tQuestions | iterateQuestions | radio | opts ', opts);
             return (
-                <FormRadio item={item} options={options} value={value}
+                <FormRadio item={item} options={opts} value={value}
                     handleChange={handleChange} />
             );
         }
         if (item.widget_type === 'checkbox') {
             // console.log('\n-----------\nQuestions | iterate questions | checkbox ')
+            // TODO: first option hardcoded, move to top for all when done here
+            const opts = options[item.optionsets[0]];
+            // console.log('\n\tQuestions | iterateQuestions | checkbox | opts ', opts);
             return (
-                <FormCheckBox item={item} options={options} value={value}
+                <FormCheckBox item={item} options={opts} value={value}
                     handleChange={handleChange} />
             );
         }

@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import axios from 'axios';
-import { nanoid } from 'nanoid';
-import { Col, Row } from 'react-bootstrap';
-import { SolarSystemLoading } from 'react-loadingg';
-import { useParams } from 'react-router-dom';
-import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import {nanoid} from 'nanoid';
+import {Col, Row} from 'react-bootstrap';
+import {SolarSystemLoading} from 'react-loadingg';
+import {useParams} from 'react-router-dom';
+import {API_ROOT, PROJECT_API_ROOT} from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import { checkBackendParameters } from '../../utils/backend_context';
+import {checkBackendParameters} from '../../utils/backend_context';
 import Summary from '../Summary';
 import useDmptForm from './dmptFormHooks';
 
@@ -66,14 +66,21 @@ const createProject = async (token, rdmoContext, optionalProjectName = '') => {
 const postValue = (projectId, formItem, token) => {
     // FIXME: refactor to use only once
     const csrftoken = getCookie('csrftoken');
+    const d = {
+        attribute: formItem.question.attribute,
+        value_type: formItem.question.value_type,
+        unit: formItem.question.unit,
+    };
+
+    if (formItem.option) {
+        d.option = formItem.option;
+    }
+    else {
+        d.text = `${formItem.value}`;
+    }
     return axios.post(
         `${API_ROOT}projects/projects/${projectId}/values/`,
-        {
-            attribute: formItem.question.attribute,
-            text: formItem.value,
-            value_type: formItem.question.value_type,
-            unit: formItem.question.unit,
-        },
+        d,
         {
             headers: {
                 Authorization: `Token ${token}`,
@@ -90,7 +97,7 @@ const putValue = (projectId, formItem, token) => {
         `${API_ROOT}projects/projects/${projectId}/values/${formItem.valueId}/`,
         {
             attribute: formItem.question.attribute,
-            text: formItem.value,
+            text: `${formItem.value}`,
             value_type: formItem.question.value_type,
             unit: formItem.question.unit,
         },
@@ -149,7 +156,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
                     const dmptProjectDetailResponse = await axios.get(
                         `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
                         {
-                            headers: { Authorization: `Token ${token}` },
+                            headers: {Authorization: `Token ${token}`},
                         }
                     );
                     // console.log('use dmpt start | assgign rdmo project id  ', dmptProjectDetailResponse.data.rdmo_project);
@@ -166,7 +173,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
                 const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=${catalogId}`, // section for gfbio catalog id hardcoded
                     {
-                        headers: { Authorization: `Token ${token}` },
+                        headers: {Authorization: `Token ${token}`},
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -190,7 +197,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
 function DmptStart(props) {
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
-    const { projectId } = useParams();
+    const {projectId} = useParams();
 
     // console.log('\n\nDMPT Start ', projectId, ' loggedIn ', backendContext.isLoggedIn);
 
@@ -255,7 +262,6 @@ function DmptStart(props) {
         if (
             // eslint-disable-next-line no-prototype-builtins
             rdmoContext.form_data.hasOwnProperty('project_name') &&
-            // eslint-disable-next-line no-prototype-builtins
             rdmoContext.form_data.project_name.hasOwnProperty('value')
         ) {
             name = rdmoContext.form_data.project_name.value;
@@ -287,10 +293,10 @@ function DmptStart(props) {
     let header = 'Preparing Data Management Plan form fields';
 
     // TODO: for testing submit summary, only submitHandler is active
-    // const nextHandler = submitAllHandler;
-    const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
+    const nextHandler = submitAllHandler;
+    // const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
-    const { inputs, handleInputChange, handleSubmit } =
+    const {inputs, handleInputChange, handleSubmit} =
         useDmptForm(nextHandler);
 
     if (!processing) {
@@ -337,12 +343,12 @@ function DmptStart(props) {
 
     // TODO: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
-        return <Summary rdmoProjectId={rdmoContext.project_id} />;
+        return <Summary rdmoProjectId={rdmoContext.project_id}/>;
     }
 
     return (
         <div id="projectDetail">
-            <ScrollToTop />
+            <ScrollToTop/>
             <Row>
                 <Col lg={12}>
                     <h3>{header}</h3>
