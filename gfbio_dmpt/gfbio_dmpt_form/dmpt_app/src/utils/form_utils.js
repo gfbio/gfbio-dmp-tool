@@ -1,26 +1,26 @@
 import React from 'react';
 
 export default function formFieldInit(value, rdmoContext, item) {
-    console.log('\nformFieldInit | value ', value, ' | item ');
+    // // console.log('\nformFieldInit | value ', value, ' | item ');
     let val = value.text;
     if (rdmoContext.form_data[item.key] !== undefined) {
-        console.log('\tassign val from context | ', rdmoContext.form_data[item.key]);
+        // console.log('\tassign val from context | ', rdmoContext.form_data[item.key]);
         val = rdmoContext.form_data[item.key].value;
     } else if (rdmoContext.form_data[item.key] === undefined && value.text !== undefined) {
-        console.log('\tadd to context at [', item.key, ']', {
-            'value': value.text, 'valueId': value.id, 'question': item
-        });
+        // console.log('\tadd to context at [', item.key, ']', {
+        //     'value': value.text, 'valueId': value.id, 'question': item
+        // });
         rdmoContext.form_data[item.key] = {
             'value': value.text, 'valueId': value.id, 'question': item
         };
     }
-    console.log('\treturn val ', val);
+    // console.log('\treturn val ', val);
     return val;
 }
 
 // TODO: first checkbox only
 export function formFieldCheckBoxInit(valueMap, rdmoContext, item, option) {
-    // console.log('\nformFieldCheckBoxInit | valueMap ', valueMap, ' | item ', item, ' option ', option);
+    // // console.log('\nformFieldCheckBoxInit | valueMap ', valueMap, ' | item ', item, ' option ', option);
     let value = valueMap[option.id];
     let val = option.text;
     const itemKey = `checkbox_${item.key}_${option.id}`
@@ -29,7 +29,7 @@ export function formFieldCheckBoxInit(valueMap, rdmoContext, item, option) {
     // } else if (rdmoContext.form_data[item.key] === undefined &&) {
     // }
     if (rdmoContext.form_data[itemKey] === undefined && value !== undefined) {
-        // console.log('\tadd to context at [', itemKey, ']', {
+        // // console.log('\tadd to context at [', itemKey, ']', {
         //     'value': option.text, 'valueId': value.id, 'question': item, 'option': option.id,
         // });
         rdmoContext.form_data[itemKey] = {

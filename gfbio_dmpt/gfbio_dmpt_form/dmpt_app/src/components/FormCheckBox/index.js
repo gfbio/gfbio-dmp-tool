@@ -25,6 +25,7 @@ function FormCheckBox(props) {
     // const [checkCount, setCheckCount] = useState(0);
 
     const handleCheckBoxChange = (e, i, optionId) => {
+        console.log('nFormCheckBox | handleCheckBoxChange ');
         // if (e.target.checked) {
         //     setCheckCount(checkCount + 1);
         // } else {
