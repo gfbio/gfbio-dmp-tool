@@ -23,7 +23,7 @@ function FormRadio(props) {
                                     name={item.key}
                                     id={`${item.key}_${i.id}`}
                                     value={i.text}
-                                    onChange={(e) => handleChange(e, item)}
+                                    onChange={(e) => handleChange(e, item, value.id)}
                                     checked
                                     required
                                 />
@@ -41,7 +41,7 @@ function FormRadio(props) {
                                 name={item.key}
                                 id={`${item.key}_${i.id}`}
                                 value={i.text}
-                                onChange={(e) => handleChange(e, item)}
+                                onChange={(e) => handleChange(e, item, value.id)}
                                 required
                             />
                             <label className='form-check-label'
@@ -67,7 +67,7 @@ function FormRadio(props) {
                                         name={item.key}
                                         id={`${item.key}_${i.id}`}
                                         value={i.text}
-                                        onChange={(e) => handleChange(e, item)}
+                                        onChange={(e) => handleChange(e, item, value.id)}
                                         checked
                                     />
                                     <label className='form-check-label'
@@ -84,7 +84,7 @@ function FormRadio(props) {
                                     name={item.key}
                                     id={`${item.key}_${i.id}`}
                                     value={i.text}
-                                    onChange={(e) => handleChange(e, item)}
+                                    onChange={(e) => handleChange(e, item, value.id)}
                                 />
                                 <label className='form-check-label'
                                     htmlFor={`${item.key}_${i.id}`}>

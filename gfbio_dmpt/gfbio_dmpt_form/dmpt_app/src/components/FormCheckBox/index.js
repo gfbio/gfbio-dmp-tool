@@ -8,7 +8,7 @@ function FormCheckBox(props) {
     const {item, options, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
-    console.log('\n----\nFormCheckBox | value ', value);
+    // console.log('\n----\nFormCheckBox | value ', value);
     // let val = -1;
     // const val = formFieldInit(value, rdmoContext, item);
     // console.log('val ', val);
@@ -17,7 +17,7 @@ function FormCheckBox(props) {
         valueMap[v.option] = v;
         return true;
     });
-    console.log('valueMap ', valueMap);
+    // console.log('valueMap ', valueMap);
 
     const {headerText, helpText} = markFormFieldMandatory(item);
 

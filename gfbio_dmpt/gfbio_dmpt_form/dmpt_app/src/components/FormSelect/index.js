@@ -13,7 +13,7 @@ function FormSelect(props) {
 
     let inputField = (
         <select name={item.key} id={item.key}
-            onChange={(e) => handleChange(e, item)}
+            onChange={(e) => handleChange(e, item, value.id)}
             className='form-control' required>
             <option disabled selected hidden value="">-- Please select</option>
             {options[item.optionsets[0]].map((i) => {
@@ -27,7 +27,7 @@ function FormSelect(props) {
     if (item.is_optional) {
         inputField = (
             <select name={item.key} id={item.key}
-                onChange={(e) => handleChange(e, item)}
+                onChange={(e) => handleChange(e, item, value.id)}
                 className='form-control'>
                 <option disabled selected hidden value="">-- Please select</option>
                 {options[item.optionsets[0]].map((i) => {

@@ -8,10 +8,10 @@ function FormTextArea(props) {
     const {item, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
-    // console.log('FormTextArea | value: ', value);
+    console.log('FormTextArea | value: ', value);
 
     const val = formFieldInit(value, rdmoContext, item);
-    // console.log('val ', val);
+    console.log('val ', val);
     const {headerText, helpText} = markFormFieldMandatory(item);
 
     let inputField = (<textarea
@@ -19,7 +19,7 @@ function FormTextArea(props) {
         id={item.key}
         className='form-control'
         rows='3'
-        onChange={(e) => handleChange(e, item)}
+        onChange={(e) => handleChange(e, item, value.id)}
         required
     >
         {val}
@@ -31,7 +31,7 @@ function FormTextArea(props) {
             id={item.key}
             className='form-control'
             rows='3'
-            onChange={(e) => handleChange(e, item)}
+            onChange={(e) => handleChange(e, item, value.id)}
         >
             {val}
         </textarea>);

@@ -105,12 +105,7 @@ const putValue = (projectId, formItem, token) => {
     }
     return axios.put(
         `${API_ROOT}projects/projects/${projectId}/values/${formItem.valueId}/`,
-        {
-            attribute: formItem.question.attribute,
-            text: `${formItem.value}`,
-            value_type: formItem.question.value_type,
-            unit: formItem.question.unit,
-        },
+        d,
         {
             headers: {
                 Authorization: `Token ${token}`,
@@ -135,12 +130,12 @@ const submitValues = async (projectId, rdmoContext, token) => {
                 ) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        // console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
+                        console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        // console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
+                        console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
                     });
                 }
             }

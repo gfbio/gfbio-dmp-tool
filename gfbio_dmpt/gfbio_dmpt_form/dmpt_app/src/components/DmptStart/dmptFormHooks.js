@@ -23,7 +23,7 @@ const useDmptForm = (callback) => {
         callback();
     };
 
-    const handleInputChange = (event, item) => {
+    const handleInputChange = (event, item, valueId) => {
         event.persist();
         const { target, optionId } = event;
 
@@ -32,11 +32,17 @@ const useDmptForm = (callback) => {
 
         // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
         let vId = false;
-        if ((target.name in inputs) && ('valueId' in inputs[target.name])) {
-            vId = inputs[target.name].valueId;
+        // if ((target.name in inputs) && ('valueId' in inputs[target.name])) {
+        //     vId = inputs[target.name].valueId;
+        // }
+        if (valueId !== undefined) {
+            vId = valueId;
         }
 
-        console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value, ' optionId ', optionId);
+        console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value, ' optionId ', optionId, ' targetid ', vId);
+        console.log('inputs ', inputs);
+        // console.log((target.name in inputs));
+        // console.log(('valueId' in inputs[target.name]));
         // console.log('evnt | ', event);
         // console.log('prop test ', (target.name in inputs));
         // console.log('prop test ', ('valueId' in inputs[target.name]));
@@ -62,6 +68,7 @@ const useDmptForm = (callback) => {
                 option: optionId,
             }
         }));
+        // rdmoContext.assignFormData(Object.assign(rdmoContext.form_data, inputs));
         // console.log('inputs after set | ', inputs);
     };
     return {

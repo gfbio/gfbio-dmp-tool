@@ -53,7 +53,7 @@ const fetchAllOptions = async (optionSets, token) => {
 // TODO: refactor to component
 // const iterateQuestions = (questions, options, values, handleChange) => {
 const iterateQuestions = (questions, options, values, handleChange) => {
-    // console.log('iterateQuestions values ', values);
+    console.log('iterateQuestions values ', values);
     return questions.map((item) => {
         let valueList = [];
         if (values[item.attribute] !== undefined) {

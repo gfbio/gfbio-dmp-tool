@@ -15,7 +15,7 @@ function FormGenericInput(props) {
         className='form-control'
         name={item.key}
         id={item.key}
-        onChange={(e) => handleChange(e, item)}
+        onChange={(e) => handleChange(e, item, value.id)}
         value={val}
         required
     />);
@@ -25,7 +25,7 @@ function FormGenericInput(props) {
             className='form-control'
             name={item.key}
             id={item.key}
-            onChange={(e) => handleChange(e, item)}
+            onChange={(e) => handleChange(e, item, value.id)}
             value={val}
         />);
     }
