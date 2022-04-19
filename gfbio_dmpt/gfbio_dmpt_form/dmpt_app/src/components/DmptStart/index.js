@@ -94,6 +94,15 @@ const postValue = (projectId, formItem, token) => {
 const putValue = (projectId, formItem, token) => {
     // FIXME: refactor to use only once
     const csrftoken = getCookie('csrftoken');
+    const d = {
+        attribute: formItem.question.attribute,
+        text: `${formItem.value}`,
+        value_type: formItem.question.value_type,
+        unit: formItem.question.unit,
+    };
+    if (formItem.option) {
+        d.option = formItem.option;
+    }
     return axios.put(
         `${API_ROOT}projects/projects/${projectId}/values/${formItem.valueId}/`,
         {
@@ -114,7 +123,7 @@ const putValue = (projectId, formItem, token) => {
 // TODO: reset formdata after submit/put/post ?
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
-    // console.log('DmptStart | submitValues | ');
+    console.log('\nDmptStart | submitValues | context form data ', rdmoContext.form_data);
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in rdmoContext.form_data) {

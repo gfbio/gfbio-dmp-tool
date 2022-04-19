@@ -2,15 +2,15 @@ import React, {useContext, useState} from 'react';
 
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
-import formFieldInit, {markFormFieldMandatory} from '../../utils/form_utils';
+import formFieldInit, {formFieldCheckBoxInit, markFormFieldMandatory} from '../../utils/form_utils';
 
 function FormCheckBox(props) {
     const {item, options, value, handleChange} = props;
     const rdmoContext = useContext(RdmoContext);
 
-    console.log('FormCheckBox | value ', value);
+    console.log('\n----\nFormCheckBox | value ', value);
     // let val = -1;
-    const val = formFieldInit(value, rdmoContext, item);
+    // const val = formFieldInit(value, rdmoContext, item);
     // console.log('val ', val);
     const valueMap = {};
     value.map((v) => {
@@ -46,8 +46,9 @@ function FormCheckBox(props) {
             </label>
             {
                 options.map((i, index) => {
+                    const val = formFieldCheckBoxInit(valueMap, rdmoContext, item, i);
                     // console.log('\tFormCheckBox | map options | option ', i);
-                    console.log('\tFormCheckBox | map options | option.text: ', i.text, ' | option.id ', i.id, ' | option.checked ', i.checked);
+                    // console.log('\tFormCheckBox | map options | option.text: ', i.text, ' | option.id ', i.id, ' | option.checked ', i.checked);
                     // console.log('checcount ', checkCount);
                     // value map is a rdmo value referfing to question
                     // if option.id == valueMap[option.id].option, then it is checked

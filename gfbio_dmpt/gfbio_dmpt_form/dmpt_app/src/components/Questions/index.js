@@ -85,8 +85,12 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             // TODO: first option hardcoded, move to top for all when done here
             const opts = options[item.optionsets[0]];
             // console.log('\n\tQuestions | iterateQuestions | radio | opts ', opts);
+            let val = '';
+            if(valueList.length === 1) {
+                [val] = valueList;
+            }
             return (
-                <FormRadio item={item} options={opts} value={valueList}
+                <FormRadio item={item} options={opts} value={val}
                     handleChange={handleChange}/>
             );
         }
