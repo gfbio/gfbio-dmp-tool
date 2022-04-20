@@ -186,6 +186,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
 
                 setStage('... DONE ...');
                 setProcessing(false);
+                console.log('DMPTStart | useDmptStart | sectionsize ', sectionResponse.data.length, ' | sections ', sectionResponse.data);
             } catch (e) {
                 console.error(e);
             } finally {
@@ -303,6 +304,8 @@ function DmptStart(props) {
 
     const {inputs, handleInputChange, handleSubmit} =
         useDmptForm(nextHandler);
+
+    // console.log('DMPT Start | after initial useDmptForm | inputs: ', inputs);
 
     if (!processing) {
         formFields = (

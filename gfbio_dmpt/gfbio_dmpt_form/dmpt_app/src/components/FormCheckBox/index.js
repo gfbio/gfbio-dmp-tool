@@ -5,10 +5,10 @@ import RdmoContext from '../RdmoContext';
 import formFieldInit, {formFieldCheckBoxInit, markFormFieldMandatory} from '../../utils/form_utils';
 
 function FormCheckBox(props) {
-    const {item, options, value, handleChange} = props;
+    const {item, options, value, handleChange, handleCheck} = props;
     const rdmoContext = useContext(RdmoContext);
 
-    // console.log('\n----\nFormCheckBox | value ', value);
+
     // let val = -1;
     // const val = formFieldInit(value, rdmoContext, item);
     // console.log('val ', val);
@@ -25,12 +25,27 @@ function FormCheckBox(props) {
     // const [checkCount, setCheckCount] = useState(0);
 
     const handleCheckBoxChange = (e, i, optionId) => {
-        console.log('nFormCheckBox | handleCheckBoxChange ');
-        // if (e.target.checked) {
-        //     setCheckCount(checkCount + 1);
-        // } else {
-        //     setCheckCount(checkCount - 1);
-        // }
+        console.log('\n----\nFormCheckBox | value ', value);
+        console.log('| handleCheckBoxChange | optionID  ', optionId, ' | i ', i);
+        console.log('checked ', e.target.checked);
+        // value = value.map((e, index) => {
+        //     console.log(' e ', e, ' index: ', index);
+        //     if (e.option === optionId) {
+        //         ;
+        //     }
+        //     else {
+        //         return e;
+        //     }
+        // });
+        if (e.target.checked) {
+            // setCheckCount(checkCount + 1);
+            console.log('checked if');
+        } else {
+            // setCheckCount(checkCount - 1);
+            console.log('checked else');
+        }
+        // delete valueMap[optionId];
+        handleCheck(value, optionId);
         e.optionId = optionId;
         handleChange(e, i);
     };
@@ -57,6 +72,7 @@ function FormCheckBox(props) {
                     // if (i.text === val) {
                     // if (i.checked) {
                     // if(Object.keys().indexOf(i.id) >= 0){
+
                     if (valueMap[i.id] && valueMap[i.id].option && i.id === valueMap[i.id].option) {
                     //     setCheckCount(checkCount + 1);
 

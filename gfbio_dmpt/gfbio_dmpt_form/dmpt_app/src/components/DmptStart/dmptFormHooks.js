@@ -30,7 +30,6 @@ const useDmptForm = (callback) => {
         // const val = target.type === 'checkbox' ? target.checked : target.value;
         const val = target.value;
 
-        // FIXME: assingin formdata below overwrites valueId from first initialization from projectdata
         let vId = false;
         // if ((target.name in inputs) && ('valueId' in inputs[target.name])) {
         //     vId = inputs[target.name].valueId;
@@ -40,6 +39,17 @@ const useDmptForm = (callback) => {
         }
 
         console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value, ' optionId ', optionId, ' targetid ', vId);
+        console.log('context formdata ', rdmoContext.form_data);
+        // if (target.type === 'checkbox') {
+        //     console.log('is checkbox | checked ', target.checked);
+        //     if (target.checked === false && Object.prototype.hasOwnProperty.call(rdmoContext.form_data, target.name)){
+        //         const f = rdmoContext.form_data;
+        //         console.log('target in context formdata ', rdmoContext.form_data[target.name]);
+        //         delete f[target.name];
+        //         rdmoContext.assignFormData(f);
+        //     }
+        // }
+
         console.log('inputs ', inputs);
         // console.log((target.name in inputs));
         // console.log(('valueId' in inputs[target.name]));
@@ -69,7 +79,7 @@ const useDmptForm = (callback) => {
             }
         }));
         // rdmoContext.assignFormData(Object.assign(rdmoContext.form_data, inputs));
-        // console.log('inputs after set | ', inputs);
+        console.log('inputs after set | ', inputs);
     };
     return {
         handleSubmit,

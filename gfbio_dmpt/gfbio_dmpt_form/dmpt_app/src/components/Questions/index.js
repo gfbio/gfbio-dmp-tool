@@ -49,11 +49,20 @@ const fetchProjectValues = async (projectId, token) => {
 const fetchAllOptions = async (optionSets, token) => {
     return Promise.all(optionSets.map((o) => fetchOptions(o, token)));
 };
-
+const valueHandler = (values, optionId) => {
+    // console.log('VALUE HANDLER ', optionId)
+    values.map((v, index) => {
+        // console.log('\tvalueHandler e ', v, ' index: ', index);
+        if (v.option === optionId) {
+            values.splice(index, 1);
+        }
+    });
+};
 // TODO: refactor to component
 // const iterateQuestions = (questions, options, values, handleChange) => {
 const iterateQuestions = (questions, options, values, handleChange) => {
     console.log('iterateQuestions values ', values);
+
     return questions.map((item) => {
         let valueList = [];
         if (values[item.attribute] !== undefined) {
@@ -65,6 +74,7 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             if(valueList.length === 1) {
                 [val] = valueList;
             }
+            console.log('\t assint to TextArea | val : ', val);
             return (
                 <FormTextArea item={item} value={val}
                     handleChange={handleChange}/>
@@ -101,7 +111,7 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             // console.log('\n\tQuestions | iterateQuestions | checkbox | opts ', opts);
             return (
                 <FormCheckBox item={item} options={opts} value={valueList}
-                    handleChange={handleChange}/>
+                    handleChange={handleChange}  handleCheck={valueHandler}/>
             );
         }
         return (
@@ -120,6 +130,10 @@ const iterateOptions = (options) => {
     });
     return res;
 };
+
+// const valHandler = (values, key) => {
+//     delete values[key];
+// };
 
 function useQuestions(rdmoContext, sectionIndex, token) {
 
