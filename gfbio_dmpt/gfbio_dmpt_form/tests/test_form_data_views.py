@@ -1,15 +1,32 @@
 # -*- coding: utf-8 -*-
 from inspect import Attribute
 
-from django.core.management import call_command
 from django.test import TestCase
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Project, Value
 from rdmo.questions.models import Catalog
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
+
+from gfbio_dmpt.users.models import User
 
 
 class TestDmptFormDataView(TestCase):
     fixtures = ['dumps/rdmo_testinstance_dump.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.std_user = User.objects.create_user(
+            username="john",
+            email="john@doe.de",
+            password="secret",
+            is_staff=False,
+            is_superuser=False,
+        )
+        token = Token.objects.create(user=cls.std_user)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.std_client = client
 
     @staticmethod
     def _prepareData():
@@ -20,6 +37,5 @@ class TestDmptFormDataView(TestCase):
 
     def test_get(self):
         self._prepareData()
-        response = self.client.get('/dmp/formdata/')
-        print(response.status_code)
-        print(response.content)
+        response = self.std_client.get('/dmp/formdata/')
+        self.assertEqual(200, response.status_code)

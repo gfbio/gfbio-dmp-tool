@@ -20,6 +20,7 @@ from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
@@ -159,68 +160,75 @@ class DmptSupportView(View):
 
 
 class DmptFormDataView(APIView):
-    permission_classes = [AllowAny]
-
-    # TODO: maybe model and/or serializer to serialize/deseralize data of requests
+    # TODO: maybe this view becomes restricted
+    # permission_classes = [AllowAny]
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsOwner,
+    )
 
     def get(self, request, format=None):
         data = {'content': 'data'}
-        # print(Catalog.objects.all())
-        # for c in Catalog.objects.all():
-        #     print(c, ' ', c.id)
-        catalog_id = 18
-        catalog = Catalog.objects.prefetch_related(
-            'sections',
-            Prefetch('sections__questionsets', queryset=QuestionSet.objects.filter(questionset=None).prefetch_related(
-                'conditions',
-                'questions',
-                'questions__attribute',
-                'questions__optionsets',
-                'questionsets',
-                'questions__optionsets__options',
-            ))
-        ).get(id=catalog_id)
-        print(catalog)
-        # print(catalog.sections.all())
-        first_section = catalog.sections.first()
-        # for s in catalog.sections.all():
 
-        # TODO: for project detail view
-        project = Project.objects.first()
-        print('project available ', project)
-        v = Value.objects.filter(project=project).first()
-        print('first value for project ', v, ' | text: ', v.text, ' | attribute: ', v.attribute)
-        serializer = ProjectSerializer(project)
-        # print('p serializer ', serializer.data)
-        print('\nfirst section', first_section)
+        # prototyping below ------------------------------
+        # # print(Catalog.objects.all())
+        # # for c in Catalog.objects.all():
+        # #     print(c, ' ', c.id)
+        # catalog_id = 18
+        # catalog = Catalog.objects.prefetch_related(
+        #     'sections',
+        #     Prefetch('sections__questionsets', queryset=QuestionSet.objects.filter(questionset=None).prefetch_related(
+        #         'conditions',
+        #         'questions',
+        #         'questions__attribute',
+        #         'questions__optionsets',
+        #         'questionsets',
+        #         'questions__optionsets__options',
+        #     ))
+        # ).get(id=catalog_id)
+        # print(catalog)
+        # # print(catalog.sections.all())
+        # first_section = catalog.sections.all()[3]
+        # # for s in catalog.sections.all():
+        #
+        # # TODO: for project detail view
+        # project = Project.objects.first()
+        # print('project available ', project)
+        # v = Value.objects.filter(project=project).first()
+        # print('first value for project ', v, ' | text: ', v.text, ' | attribute: ', v.attribute)
+        # serializer = ProjectSerializer(project)
+        # # print('p serializer ', serializer.data)
+        # print('\nfirst section', first_section)
+        #
+        # # questions.v1.serializer
+        # # s_data = SectionSerializer(first_section).data
+        # # ns_data = SectionNestedSerializer(first_section).data
+        # # print('section serializer data: ', s_data)
+        # # print('nested section serializer data: ', ns_data)
+        # # print('\n as json \n', JSONRenderer().render(ns_data))
+        # data = DmptSectionNestedSerializer(first_section).data
+        # print('custom serializer data: ', )
+        # print(JSONRenderer().render(data))
+        #
+        # # for qs in first_section.questionsets.all():
+        # #     print('\n\tquestion_set: ', qs, ' |  attribute: ', qs.attribute)
+        # #     # questions.v1.serializer
+        # #     # qs_data = QuestionSetSerializer(qs).data
+        # #     # print('\tqs serializer: ', qs_data)
+        # #     nqs_data = QuestionSetNestedSerializer(qs).data
+        # #     # print('\tnested qs serializer: ', nqs_data)
+        # #     for c in qs.conditions.all():
+        # #         print('\t\tcondition: ', c, ' |  source (attribute): ', c.source)
+        # #     for q in qs.questions.all():
+        # #         # TODO: for value, when requesting specific project, add manager to get singel val and catch exceptions
+        # #         # TODO: value.text for generic and text area, value.option for radio, select and checkbox
+        # #         print('\t\tquestion: ', q, ' |  widget_type: ', q.widget_type, ' |  attribute: ', q.attribute,
+        # #               ' | value available (for project): ',
+        # #               Value.objects.filter(project=project, attribute=q.attribute))
+        # #         for os in q.optionsets.all():
+        # #             print('\t\t\toption_set: ', os, ' | conditions: ', os.conditions.all())
+        # #             for o in os.options.all():
+        # #                 print('\t\t\t\toption: ', o)
 
-        # questions.v1.serializer
-        # s_data = SectionSerializer(first_section).data
-        # ns_data = SectionNestedSerializer(first_section).data
-        # print('section serializer data: ', s_data)
-        # print('nested section serializer data: ', ns_data)
-        # print('\n as json \n', JSONRenderer().render(ns_data))
-
-        print('custom serializer data: ', DmptSectionNestedSerializer(first_section).data)
-
-        # for qs in first_section.questionsets.all():
-        #     print('\n\tquestion_set: ', qs, ' |  attribute: ', qs.attribute)
-        #     # questions.v1.serializer
-        #     # qs_data = QuestionSetSerializer(qs).data
-        #     # print('\tqs serializer: ', qs_data)
-        #     nqs_data = QuestionSetNestedSerializer(qs).data
-        #     # print('\tnested qs serializer: ', nqs_data)
-        #     for c in qs.conditions.all():
-        #         print('\t\tcondition: ', c, ' |  source (attribute): ', c.source)
-        #     for q in qs.questions.all():
-        #         # TODO: for value, when requesting specific project, add manager to get singel val and catch exceptions
-        #         # TODO: value.text for generic and text area, value.option for radio, select and checkbox
-        #         print('\t\tquestion: ', q, ' |  widget_type: ', q.widget_type, ' |  attribute: ', q.attribute,
-        #               ' | value available (for project): ',
-        #               Value.objects.filter(project=project, attribute=q.attribute))
-        #         for os in q.optionsets.all():
-        #             print('\t\t\toption_set: ', os, ' | conditions: ', os.conditions.all())
-        #             for o in os.options.all():
-        #                 print('\t\t\t\toption: ', o)
-
-        return Response(data, HTTP_200_OK)
+        return Response(data=data, status=HTTP_200_OK)
