@@ -10,8 +10,7 @@ function LoggedInRouter() {
     if (backend.isLoggedIn === 'false') {
         return (<h1>user not logged in</h1>);
     }
-    return (<DmptSection/>);
-
+    return (<DmptSection token={backend.token} catalogId={backend.catalog_id}/>);
 }
 
 export default LoggedInRouter;

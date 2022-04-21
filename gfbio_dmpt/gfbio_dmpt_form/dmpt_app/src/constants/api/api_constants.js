@@ -21,3 +21,7 @@ export const PROJECT_API_ROOT = '/dmp/';
 // TODO: use this prefix when using  the from django views.
 //  this applies to production and local environments.
 export const URL_PREFIX = '/dmp/create/';
+
+// ---------------------------------------------------------------------
+// CONSTANTS USED BY REFACTORED CODE BELOW:
+export const SECTION_ROOT = `${PROJECT_API_ROOT}formdata/`;
