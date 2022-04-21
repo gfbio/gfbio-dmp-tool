@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from inspect import Attribute
 
 from django.test import TestCase
@@ -37,7 +38,9 @@ class TestDmptFormDataView(TestCase):
         cls._prepareData()
 
     def test_get(self):
-        response = self.std_client.get('/dmp/formdata/')
+        catalog_id = 18
+        section_index = 0
+        response = self.std_client.get(f'/dmp/formdata/{catalog_id}/{section_index}/')
         self.assertEqual(200, response.status_code)
 
     def test_get_content(self):
@@ -46,5 +49,6 @@ class TestDmptFormDataView(TestCase):
         # TODO: single section or all sections for app ?
         #  or a get section view e.g. [{title: '', sectionId: 23}, ...]
         response = self.std_client.get(f'/dmp/formdata/{catalog_id}/{section_index}/')
-        print(response.content)
-        print(response.status_code)
+        content = json.loads(response.content)
+        self.assertIn('questionsets', content.keys())
+        self.assertIn('questions', content.get('questionsets', []).pop().keys())

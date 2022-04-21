@@ -2,7 +2,6 @@
 import json
 import random
 import string
-from pprint import pp, pprint
 
 from django.contrib.auth.models import Group
 from django.db.models import Prefetch
@@ -12,19 +11,14 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-from rdmo.projects.models import Project, Value
-from rdmo.projects.serializers.v1 import ProjectSerializer
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import QuestionSet
 from rdmo.questions.models.catalog import Catalog
 from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
-from rest_framework.views import APIView
 
 from config.settings.base import ANONYMOUS_PASS
 from gfbio_dmpt.users.models import User
@@ -171,9 +165,8 @@ class DmptFormDataView(generics.GenericAPIView):
 
     def get(self, request, catalog_id, section_index, format='json'):
 
-        print('DmptFormDataView | GET | catalog_id: ', catalog_id, ' | section_index: ', section_index)
+        # print('DmptFormDataView | GET | catalog_id: ', catalog_id, ' | section_index: ', section_index)
 
-        # TODO: formvalidation of GET params
         try:
             catalog = Catalog.objects.prefetch_related(
                 'sections',
