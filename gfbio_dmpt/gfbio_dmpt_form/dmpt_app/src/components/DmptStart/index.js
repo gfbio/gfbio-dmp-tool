@@ -33,7 +33,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const createProject = async (token, rdmoContext, optionalProjectName = '') => {
+const createProject = async (token, catalogId, optionalProjectName = '') => {
     try {
         // FIXME: refactor to use only once
         const csrftoken = getCookie('csrftoken');
@@ -47,7 +47,7 @@ const createProject = async (token, rdmoContext, optionalProjectName = '') => {
             {
                 title: `${projectName}`,
                 description: `${projectName}`,
-                catalog: rdmoContext.catalog_id,
+                catalog: catalogId,
             },
             {
                 headers: {
@@ -261,7 +261,11 @@ function DmptStart(props) {
             name = rdmoContext.form_data.project_name.value;
         }
         if (contextProjectId < 0) {
-            createProject(backendContext.token, name).then((createResult) => {
+            createProject(
+                backendContext.token,
+                backendContext.catalog_id,
+                name
+            ).then((createResult) => {
                 contextProjectId = createResult.data.id;
                 rdmoContext.assignProjectId(contextProjectId);
                 submitValues(
