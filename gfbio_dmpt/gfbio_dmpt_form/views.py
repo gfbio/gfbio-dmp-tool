@@ -87,6 +87,8 @@ class DmpExportView(ProjectAnswersView):
     # user.
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
+            # in order to ensure that not everybody can request any user
+            # we make sure to only accept anonymous- pattern strings.
             try:
                 randpart = request.GET.get("username").split("-", maxsplit=1)[1]
                 user = User.objects.get(username=f"anonymous-{randpart}")
