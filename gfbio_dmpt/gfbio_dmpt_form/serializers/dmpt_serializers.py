@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from rest_framework import serializers
 
 from config.settings.base import AUTH_USER_MODEL
-from .models import DmptProject
+from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject
 
 
 class UserSerializer(serializers.ModelSerializer):

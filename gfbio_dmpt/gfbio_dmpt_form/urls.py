@@ -17,4 +17,5 @@ urlpatterns = [
         "export/<int:pk>/<str:format>", views.DmpExportView.as_view(), name="dmp-detail"
     ),
     path("support/", views.DmptSupportView.as_view(), name="dmpt_support"),
+    path("formdata/", views.DmptFormDataView.as_view(), name="dmpt_form_data"),
 ]
