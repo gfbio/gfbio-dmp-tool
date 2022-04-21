@@ -14,6 +14,13 @@ from gfbio_dmpt.users.models import User
 class TestDmptFormDataView(TestCase):
     fixtures = ['dumps/rdmo_testinstance_dump.json']
 
+    @staticmethod
+    def _prepareData():
+        c = Catalog.objects.get(id=18)
+        p = Project.objects.create(title="Test Data", catalog=c)
+        a = Attribute.objects.get(id=241)
+        v = Value.objects.create(project=p, attribute=a, text='Test Project Title Value', value_type='text')
+
     @classmethod
     def setUpTestData(cls):
         cls.std_user = User.objects.create_user(
@@ -27,15 +34,17 @@ class TestDmptFormDataView(TestCase):
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         cls.std_client = client
-
-    @staticmethod
-    def _prepareData():
-        c = Catalog.objects.get(id=18)
-        p = Project.objects.create(title="Test Data", catalog=c)
-        a = Attribute.objects.get(id=241)
-        v = Value.objects.create(project=p, attribute=a, text='Test Project Title Value', value_type='text')
+        cls._prepareData()
 
     def test_get(self):
-        self._prepareData()
         response = self.std_client.get('/dmp/formdata/')
         self.assertEqual(200, response.status_code)
+
+    def test_get_content(self):
+        catalog_id = 18  # ???
+        section_index = 0
+        # TODO: single section or all sections for app ?
+        #  or a get section view e.g. [{title: '', sectionId: 23}, ...]
+        response = self.std_client.get(f'/dmp/formdata/{catalog_id}/{section_index}/')
+        print(response.content)
+        print(response.status_code)

@@ -2,6 +2,7 @@
 import json
 import random
 import string
+from pprint import pp, pprint
 
 from django.contrib.auth.models import Group
 from django.db.models import Prefetch
@@ -159,7 +160,7 @@ class DmptSupportView(View):
             )
 
 
-class DmptFormDataView(APIView):
+class DmptFormDataView(generics.GenericAPIView):
     # TODO: maybe this view becomes restricted
     # permission_classes = [AllowAny]
     authentication_classes = (TokenAuthentication, BasicAuthentication)
@@ -168,8 +169,33 @@ class DmptFormDataView(APIView):
         IsOwner,
     )
 
-    def get(self, request, format=None):
-        data = {'content': 'data'}
+    def get(self, request, catalog_id, section_index, format='json'):
+
+        print('DmptFormDataView | GET | catalog_id: ', catalog_id, ' | section_index: ', section_index)
+
+        # TODO: formvalidation of GET params
+        try:
+            catalog = Catalog.objects.prefetch_related(
+                'sections',
+                Prefetch('sections__questionsets',
+                         queryset=QuestionSet.objects.filter(questionset=None).prefetch_related(
+                             'conditions',
+                             'questions',
+                             'questions__attribute',
+                             'questions__optionsets',
+                             'questionsets',
+                             'questions__optionsets__options',
+                         ))
+            ).get(id=catalog_id)
+        except Catalog.DoesNotExist as e:
+            return Response(data=f'{e}', status=HTTP_400_BAD_REQUEST)
+
+        sections = catalog.sections.all()
+        if section_index >= len(sections):
+            return Response(data=f'faulty index: {section_index}', status=HTTP_400_BAD_REQUEST)
+
+        serializer = DmptSectionNestedSerializer(sections[section_index])
+        return Response(data=serializer.data, status=HTTP_200_OK)
 
         # prototyping below ------------------------------
         # # print(Catalog.objects.all())
@@ -231,4 +257,4 @@ class DmptFormDataView(APIView):
         # #             for o in os.options.all():
         # #                 print('\t\t\t\toption: ', o)
 
-        return Response(data=data, status=HTTP_200_OK)
+        # return Response(data={}, status=HTTP_200_OK)
