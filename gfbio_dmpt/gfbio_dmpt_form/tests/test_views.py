@@ -8,6 +8,7 @@ from django.contrib.auth.models import Group
 from django.test import TestCase
 from rdmo.projects.models.project import Project
 from rdmo.questions.models.catalog import Catalog
+from django.contrib.sites.models import Site
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
@@ -33,6 +34,7 @@ class TestDmptFrontendView(TestCase):
     @classmethod
     def setUpTestData(cls):
         Group.objects.create(name="api")
+        Catalog.objects.create(key="GFBio", title_lang1="GFBio test catalog")
         cls.std_user = User.objects.create_user(
             username="john",
             email="john@doe.de",
@@ -57,6 +59,7 @@ class TestDmpExportView(TestCase):
     @classmethod
     def setUpTestData(cls):
         Group.objects.create(name="api")
+        Catalog.objects.create(key="GFBio", title_lang1="GFBio test catalog")
         cls.std_user = User.objects.create_user(
             username="john",
             email="john@doe.de",
@@ -95,16 +98,19 @@ class TestDmpExportView(TestCase):
 
     def test_that_anonymous_rabbit_two_can_not_download_others_dmp(self):
         catalog = Catalog.objects.create(key="rabbitcatalogue")
-        project = Project.objects.create(title="rabbitproject", catalog=catalog)
+        site = Site.objects.create(name="rabbithole", domain="rabbithole.carrot.dev")
+        project = Project.objects.create(
+            title="rabbitproject",
+            catalog=catalog,
+            site=site,
+        )
         user = User.objects.get(username="anonymous-rabbit")
         user_two = User.objects.get(username="anonymous-rabbit-two")
         user.projects.add(project)
-
         response = self.client.get(
             f"/dmp/export/{project.pk}/pdf?username={user_two.username}"
         )
-
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(403, response.status_code)
 
 
 class TestDmptProjectViews(TestCase):
