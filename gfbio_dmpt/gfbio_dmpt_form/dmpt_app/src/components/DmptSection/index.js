@@ -59,16 +59,44 @@ function DmptSection(props) {
                 <h5>{questionset.title}</h5>
                 {
                     questionset.questions.map((question, questionIndex) => {
-                        let input = <input type="text" className="form-control" id={question.id} name={question.key}/>;
                         let mandatoryMessage = <span className="mandatory">(This field is mandatory)</span>;
+
+                        // GENERIC/TEXT -----------------------------------------------------------
+                        let input = <input type="text" className="form-control" id={`question-${question.id}`}
+                            name={question.key}/>;
+                        // GENERIC/TEXT -----------------------------------------------------------
+
+                        // TEXTAREA -----------------------------------------------------------
                         if (question.widget_type === "textarea") {
                             input = <textarea
                                 className="form-control"
-                                id={question.id}
+                                id={`question-${question.id}`}
                                 name={question.key}
                                 rows="3"
                             />;
                         }
+                        // TEXTAREA -----------------------------------------------------------
+
+                        // SELECT  -----------------------------------------------------------
+                        else if (question.widget_type === "select") {
+                            const optionSetFields = question.optionsets.map((optionSet) => {
+                                const optionSetOptions = optionSet.options.map((optionSetOption) => {
+                                    return (<option className="form-control"
+                                        id={`option-${optionSetOption.id}`}
+                                        name={optionSetOption.key}>
+                                        {optionSetOption.text}
+                                    </option>);
+                                });
+                                return (
+                                    <select className="form-control" id={`optionset-${optionSet.id}`}
+                                        name={optionSet.key}>
+                                        {optionSetOptions}
+                                    </select>
+                                );
+                            });
+                            input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
+                        }
+                        // SELECT  -----------------------------------------------------------
 
                         if (question.is_optional) {
                             mandatoryMessage = <span/>;
@@ -76,7 +104,7 @@ function DmptSection(props) {
                         return (
                             <div className="col-12">
                                 <label aria-label={question.text} htmlFor="username"
-                                       className="form-label">
+                                    className="form-label">
                                     {question.text}
                                 </label>
                                 {
@@ -87,16 +115,6 @@ function DmptSection(props) {
                         );
                     })
                 }
-
-                {/* <label aria-label="Enter a username" htmlFor="username" className="form-label">Username</label> */}
-                {/* <div className="input-group has-validation"> */}
-                {/*     <span className="input-group-text">@</span> */}
-                {/*     <input type="text" className="form-control" id="username" placeholder="Username" */}
-                {/*            aria-label="Enter a username" required/> */}
-                {/*     <div className="invalid-feedback"> */}
-                {/*         Your username is required. */}
-                {/*     </div> */}
-                {/* </div> */}
 
             </div>
         );
