@@ -1,13 +1,35 @@
 # -*- coding: utf-8 -*-
 from rdmo.conditions.serializers.v1 import ConditionSerializer
-from rdmo.options.serializers.v1 import OptionSetNestedSerializer
+from rdmo.options.models import Option
+from rdmo.options.serializers.v1 import OptionSetNestedSerializer, OptionNestedSerializer
 from rdmo.questions.models import Question
 from rdmo.questions.serializers.v1 import QuestionNestedSerializer, QuestionSetNestedSerializer, \
     SectionNestedSerializer
 
 
+class DmptOptionNestedSerializer(OptionNestedSerializer):
+    class Meta:
+        model = Option
+        fields = (
+            'id',
+            'key',
+            'uri',
+            'uri_prefix',
+            'path',
+            'locked',
+            'order',
+            'text',
+            'warning',
+            'xml_url'
+        )
+
+
+class DmptOptionSetNestedSerializer(OptionSetNestedSerializer):
+    options = DmptOptionNestedSerializer(many=True)
+
+
 class DmptQuestionNestedSerializer(QuestionNestedSerializer):
-    optionsets = OptionSetNestedSerializer(read_only=True, many=True)
+    optionsets = DmptOptionSetNestedSerializer(read_only=True, many=True)
 
     class Meta:
         model = Question

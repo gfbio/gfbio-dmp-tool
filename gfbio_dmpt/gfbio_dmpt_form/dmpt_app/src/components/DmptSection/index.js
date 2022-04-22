@@ -98,6 +98,34 @@ function DmptSection(props) {
                         }
                         // SELECT  -----------------------------------------------------------
 
+                        // RADIO  -----------------------------------------------------------
+                        else if (question.widget_type === "radio") {
+                            const optionSetFields = question.optionsets.map((optionSet) => {
+                                const optionSetOptions = optionSet.options.map((optionSetOption) => {
+                                    return (
+                                        <div className="form-check">
+                                            <input type="radio"
+                                                className="form-check-input"
+                                                name={optionSet.id}
+                                                id={`option-${optionSetOption.id}`}
+                                            />
+                                            <label className="form-check-label"
+                                                htmlFor={`option-${optionSetOption.id}`}>
+                                                {optionSetOption.text}
+                                            </label>
+                                        </div>
+                                    );
+                                });
+                                return (
+                                    <div id={`optionset-${optionSet.id}`} name={optionSet.key}>
+                                        {optionSetOptions}
+                                    </div>
+                                );
+                            });
+                            input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
+                        }
+                        // RADIO  -----------------------------------------------------------
+
                         if (question.is_optional) {
                             mandatoryMessage = <span/>;
                         }
