@@ -125,6 +125,35 @@ function DmptSection(props) {
                             input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
                         }
                         // RADIO  -----------------------------------------------------------
+                        // TODO: RADIO and CHECKBOX almost the same. checkbox has no name and a value,
+                        //  radio needs same name but has no value
+                        // CHECKBOX -----------------------------------------------------------
+                        else if (question.widget_type === "checkbox") {
+                            const optionSetFields = question.optionsets.map((optionSet) => {
+                                const optionSetOptions = optionSet.options.map((optionSetOption) => {
+                                    return (
+                                        <div className="form-check">
+                                            <input className="form-check-input"
+                                                type="checkbox"
+                                                value={optionSetOption.key}
+                                                id={`option-${optionSetOption.id}`}
+                                            />
+                                            <label className="form-check-label"
+                                                htmlFor={`option-${optionSetOption.id}`}>
+                                                {optionSetOption.text}
+                                            </label>
+                                        </div>
+                                    );
+                                });
+                                return (
+                                    <div id={`optionset-${optionSet.id}`} name={optionSet.key}>
+                                        {optionSetOptions}
+                                    </div>
+                                );
+                            });
+                            input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
+                        }
+                        // CHECKBOX  -----------------------------------------------------------
 
                         if (question.is_optional) {
                             mandatoryMessage = <span/>;
