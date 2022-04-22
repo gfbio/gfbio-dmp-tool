@@ -4,6 +4,11 @@ import PropTypes from "prop-types";
 import {Col, Row} from "react-bootstrap";
 import {SolarSystemLoading} from "react-loadingg";
 import {SECTION_ROOT} from "../../constants/api/api_constants";
+import Textarea from "../DmptFormFields/textarea";
+import TextInput from "../DmptFormFields/textinput";
+import Radio from "../DmptFormFields/radio";
+import CheckBox from "../DmptFormFields/checkbox";
+import Select from "../DmptFormFields/select";
 
 const useDmptSection = (catalogId, sectionIndex, token) => {
     const [processing, setProcessing] = useState(true);
@@ -61,99 +66,22 @@ function DmptSection(props) {
                     questionset.questions.map((question, questionIndex) => {
                         let mandatoryMessage = <span className="mandatory">(This field is mandatory)</span>;
 
-                        // GENERIC/TEXT -----------------------------------------------------------
-                        let input = <input type="text" className="form-control" id={`question-${question.id}`}
-                            name={question.key}/>;
-                        // GENERIC/TEXT -----------------------------------------------------------
+                        let input = <TextInput question={question}/>;
 
-                        // TEXTAREA -----------------------------------------------------------
                         if (question.widget_type === "textarea") {
-                            input = <textarea
-                                className="form-control"
-                                id={`question-${question.id}`}
-                                name={question.key}
-                                rows="3"
-                            />;
+                            input = <Textarea question={question}/>;
                         }
-                        // TEXTAREA -----------------------------------------------------------
 
-                        // SELECT  -----------------------------------------------------------
                         else if (question.widget_type === "select") {
-                            const optionSetFields = question.optionsets.map((optionSet) => {
-                                const optionSetOptions = optionSet.options.map((optionSetOption) => {
-                                    return (<option className="form-control"
-                                        id={`option-${optionSetOption.id}`}
-                                        name={optionSetOption.key}>
-                                        {optionSetOption.text}
-                                    </option>);
-                                });
-                                return (
-                                    <select className="form-control" id={`optionset-${optionSet.id}`}
-                                        name={optionSet.key}>
-                                        {optionSetOptions}
-                                    </select>
-                                );
-                            });
-                            input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
+                            input = <Select question={question} />;
                         }
-                        // SELECT  -----------------------------------------------------------
 
-                        // RADIO  -----------------------------------------------------------
                         else if (question.widget_type === "radio") {
-                            const optionSetFields = question.optionsets.map((optionSet) => {
-                                const optionSetOptions = optionSet.options.map((optionSetOption) => {
-                                    return (
-                                        <div className="form-check">
-                                            <input type="radio"
-                                                className="form-check-input"
-                                                name={optionSet.id}
-                                                id={`option-${optionSetOption.id}`}
-                                            />
-                                            <label className="form-check-label"
-                                                htmlFor={`option-${optionSetOption.id}`}>
-                                                {optionSetOption.text}
-                                            </label>
-                                        </div>
-                                    );
-                                });
-                                return (
-                                    <div id={`optionset-${optionSet.id}`} name={optionSet.key}>
-                                        {optionSetOptions}
-                                    </div>
-                                );
-                            });
-                            input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
+                            input = <Radio question={question}/>;
                         }
-                        // RADIO  -----------------------------------------------------------
-                        // TODO: RADIO and CHECKBOX almost the same. checkbox has no name and a value,
-                        //  radio needs same name but has no value
-                        // CHECKBOX -----------------------------------------------------------
                         else if (question.widget_type === "checkbox") {
-                            const optionSetFields = question.optionsets.map((optionSet) => {
-                                const optionSetOptions = optionSet.options.map((optionSetOption) => {
-                                    return (
-                                        <div className="form-check">
-                                            <input className="form-check-input"
-                                                type="checkbox"
-                                                value={optionSetOption.key}
-                                                id={`option-${optionSetOption.id}`}
-                                            />
-                                            <label className="form-check-label"
-                                                htmlFor={`option-${optionSetOption.id}`}>
-                                                {optionSetOption.text}
-                                            </label>
-                                        </div>
-                                    );
-                                });
-                                return (
-                                    <div id={`optionset-${optionSet.id}`} name={optionSet.key}>
-                                        {optionSetOptions}
-                                    </div>
-                                );
-                            });
-                            input = (<div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>);
+                            input = <CheckBox question={question}/>;
                         }
-                        // CHECKBOX  -----------------------------------------------------------
 
                         if (question.is_optional) {
                             mandatoryMessage = <span/>;
