@@ -24,4 +24,4 @@ export const URL_PREFIX = '/dmp/create/';
 
 // ---------------------------------------------------------------------
 // CONSTANTS USED BY REFACTORED CODE BELOW:
-export const SECTION_ROOT = `${PROJECT_API_ROOT}formdata/`;
+export const SECTION_ROOT = `${PROJECT_API_ROOT}section/`;

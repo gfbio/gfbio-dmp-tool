@@ -2,9 +2,10 @@
 from rdmo.conditions.serializers.v1 import ConditionSerializer
 from rdmo.options.models import Option
 from rdmo.options.serializers.v1 import OptionSetNestedSerializer, OptionNestedSerializer
-from rdmo.questions.models import Question
+from rdmo.questions.models import Question, Section
 from rdmo.questions.serializers.v1 import QuestionNestedSerializer, QuestionSetNestedSerializer, \
     SectionNestedSerializer
+from rest_framework import serializers
 
 
 class DmptOptionNestedSerializer(OptionNestedSerializer):
@@ -62,3 +63,19 @@ class DmptQuestionSetNestedSerializer(QuestionSetNestedSerializer):
 
 class DmptSectionNestedSerializer(SectionNestedSerializer):
     questionsets = DmptQuestionSetNestedSerializer(many=True)
+
+
+class DmptSectionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'uri',
+            'uri_prefix',
+            'key',
+            'path',
+            'locked',
+            'order',
+            'title',
+        )

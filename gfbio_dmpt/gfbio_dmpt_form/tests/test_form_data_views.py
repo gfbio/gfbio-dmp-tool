@@ -40,7 +40,7 @@ class TestDmptFormDataView(TestCase):
     def test_get(self):
         catalog_id = 18
         section_index = 0
-        response = self.std_client.get(f'/dmp/formdata/{catalog_id}/{section_index}/')
+        response = self.std_client.get(f'/dmp/section/{catalog_id}/{section_index}/')
         self.assertEqual(200, response.status_code)
 
     def test_get_content(self):
@@ -48,7 +48,13 @@ class TestDmptFormDataView(TestCase):
         section_index = 0
         # TODO: single section or all sections for app ?
         #  or a get section view e.g. [{title: '', sectionId: 23}, ...]
-        response = self.std_client.get(f'/dmp/formdata/{catalog_id}/{section_index}/')
+        response = self.std_client.get(f'/dmp/section/{catalog_id}/{section_index}/')
         content = json.loads(response.content)
         self.assertIn('questionsets', content.keys())
         self.assertIn('questions', content.get('questionsets', []).pop().keys())
+
+    def test_get_section_list(self):
+        catalog_id = 18  # ???
+        response = self.std_client.get(f'/dmp/sections/{catalog_id}/')
+        print(response.status_code)
+        print(response.content)

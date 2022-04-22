@@ -28,7 +28,7 @@ from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
 from .serializers.dmpt_serializers import DmptProjectSerializer
-from .serializers.extended_serializers import DmptSectionNestedSerializer
+from .serializers.extended_serializers import DmptSectionNestedSerializer, DmptSectionSerializer
 
 
 class CSRFViewMixin(View):
@@ -154,7 +154,24 @@ class DmptSupportView(View):
             )
 
 
-class DmptFormDataView(generics.GenericAPIView):
+class DmptSectionListView(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsOwner,
+    )
+
+    def get(self, request, catalog_id):
+        try:
+            catalog = Catalog.objects.prefetch_related('sections').get(id=catalog_id)
+        except Catalog.DoesNotExist as e:
+            return Response(data=f'{e}', status=HTTP_400_BAD_REQUEST)
+        sections = catalog.sections.all()
+        serializer = DmptSectionSerializer(sections, many=True)
+        return Response(data=serializer.data, status=HTTP_200_OK)
+
+
+class DmptSectionDetailView(generics.GenericAPIView):
     # TODO: maybe this view becomes restricted
     # permission_classes = [AllowAny]
     authentication_classes = (TokenAuthentication, BasicAuthentication)
