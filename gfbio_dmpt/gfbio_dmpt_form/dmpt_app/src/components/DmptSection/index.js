@@ -54,7 +54,52 @@ function DmptSection(props) {
 
     // TODO: most probably this will be moved to a dedicated function once complete ---------
     const inputFields = section.questionsets.map((questionset, index) => {
-        return (<h5 id={`questionset-${index}`}>{questionset.title}</h5>);
+        return (
+            <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
+                <h5>{questionset.title}</h5>
+                {
+                    questionset.questions.map((question, questionIndex) => {
+                        let input = <input type="text" className="form-control" id={question.id} name={question.key}/>;
+                        let mandatoryMessage = <span className="mandatory">(This field is mandatory)</span>;
+                        if (question.widget_type === "textarea") {
+                            input = <textarea
+                                className="form-control"
+                                id={question.id}
+                                name={question.key}
+                                rows="3"
+                            />;
+                        }
+
+                        if (question.is_optional) {
+                            mandatoryMessage = <span/>;
+                        }
+                        return (
+                            <div className="col-12">
+                                <label aria-label={question.text} htmlFor="username"
+                                       className="form-label">
+                                    {question.text}
+                                </label>
+                                {
+                                    input
+                                }
+                                <small className="form-text text-muted">{question.help} {mandatoryMessage}</small>
+                            </div>
+                        );
+                    })
+                }
+
+                {/* <label aria-label="Enter a username" htmlFor="username" className="form-label">Username</label> */}
+                {/* <div className="input-group has-validation"> */}
+                {/*     <span className="input-group-text">@</span> */}
+                {/*     <input type="text" className="form-control" id="username" placeholder="Username" */}
+                {/*            aria-label="Enter a username" required/> */}
+                {/*     <div className="invalid-feedback"> */}
+                {/*         Your username is required. */}
+                {/*     </div> */}
+                {/* </div> */}
+
+            </div>
+        );
     });
     // --------------------------------------------------------------------------------------
 
@@ -62,7 +107,14 @@ function DmptSection(props) {
         <div id="section">
             <h2>{section.title}</h2>
             <form id={`section-${section.id}`}>
-                {inputFields}
+                <div className="row g-3">
+                    {inputFields}
+                </div>
+                <div className="row g-3">
+                    <div className="col-12">
+                        <button className="w-100 btn btn-secondary btn-green" type="submit">Continue</button>
+                    </div>
+                </div>
             </form>
         </div>
     );
