@@ -4,11 +4,7 @@ import PropTypes from "prop-types";
 import {Col, Row} from "react-bootstrap";
 import {SolarSystemLoading} from "react-loadingg";
 import {SECTION_ROOT} from "../../constants/api/api_constants";
-import Textarea from "../DmptFormFields/textarea";
-import TextInput from "../DmptFormFields/textinput";
-import Radio from "../DmptFormFields/radio";
-import CheckBox from "../DmptFormFields/checkbox";
-import Select from "../DmptFormFields/select";
+import DmptFormFields from "../DmptFormFields";
 
 const useDmptSection = (catalogId, sectionIndex, token) => {
     const [processing, setProcessing] = useState(true);
@@ -57,62 +53,11 @@ function DmptSection(props) {
         );
     }
 
-    // TODO: most probably this will be moved to a dedicated function once complete ---------
-    const inputFields = section.questionsets.map((questionset, index) => {
-        return (
-            <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
-                <h5>{questionset.title}</h5>
-                {
-                    questionset.questions.map((question, questionIndex) => {
-                        let mandatoryMessage = <span className="mandatory">(This field is mandatory)</span>;
-
-                        let input = <TextInput question={question}/>;
-
-                        if (question.widget_type === "textarea") {
-                            input = <Textarea question={question}/>;
-                        }
-
-                        else if (question.widget_type === "select") {
-                            input = <Select question={question} />;
-                        }
-
-                        else if (question.widget_type === "radio") {
-                            input = <Radio question={question}/>;
-                        }
-                        else if (question.widget_type === "checkbox") {
-                            input = <CheckBox question={question}/>;
-                        }
-
-                        if (question.is_optional) {
-                            mandatoryMessage = <span/>;
-                        }
-                        return (
-                            <div className="col-12">
-                                <label aria-label={question.text} htmlFor="username"
-                                    className="form-label">
-                                    {question.text}
-                                </label>
-                                {
-                                    input
-                                }
-                                <small className="form-text text-muted">{question.help} {mandatoryMessage}</small>
-                            </div>
-                        );
-                    })
-                }
-
-            </div>
-        );
-    });
-    // --------------------------------------------------------------------------------------
-
     return (
         <div id="section">
             <h2>{section.title}</h2>
             <form id={`section-${section.id}`}>
-                <div className="row g-3">
-                    {inputFields}
-                </div>
+                <DmptFormFields section={section}/>
                 <div className="row g-3">
                     <div className="col-12">
                         <button className="w-100 btn btn-secondary btn-green" type="submit">Continue</button>
