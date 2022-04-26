@@ -24,6 +24,10 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
             } catch (error) {
                 console.error(error);
             }
+            // TODO: is this neccessary ?
+            // finally {
+            //     setProcessing(false);
+            // }
         }
 
         prepareDmptSection();
