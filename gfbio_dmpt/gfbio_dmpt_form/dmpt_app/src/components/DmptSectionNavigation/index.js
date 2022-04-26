@@ -77,14 +77,14 @@ function DmptSectionNavigation(props) {
         <div id="section-navigation">
             <div className="row">
                 <div className="col-12">
-                    <h2>{sections[sectionIndex].title}</h2>
+                    <ul className="nav nav-tabs sub-navi">
+                        {sections}
+                    </ul>
                 </div>
             </div>
             <div className="row">
                 <div className="col-12">
-                    <ul className="nav nav-tabs sub-navi">
-                        {sections}
-                    </ul>
+                    <h1>{sectionList[sectionIndex].title}</h1>
                 </div>
             </div>
         </div>
