@@ -25,9 +25,9 @@ const useDmptSectionNavigation = (catalogId, token) => {
     return [processing, sectionList];
 };
 
-const sectionClickHandler = (index) => {
-    console.log('DmptSectionNavigation | sectionClickHandler | index: ', index);
-};
+// const sectionClickHandler = (index) => {
+//     console.log('DmptSectionNavigation | sectionClickHandler | index: ', index);
+// };
 
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     const maxLength = 25;
@@ -61,9 +61,9 @@ function DmptSectionNavigation(props) {
     // TODO: add url routes
 
     const [processing, sectionList] = useDmptSectionNavigation(catalogId, token);
+    const [sectionIndex, setSectionIndex] = useState(0);
 
-    const sectionIndex = 0;
-    const sections = sectionsAsListElements(sectionList, sectionIndex, sectionClickHandler);
+    const sections = sectionsAsListElements(sectionList, sectionIndex, setSectionIndex);
 
     console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | list: `, sectionList);
 
@@ -75,6 +75,7 @@ function DmptSectionNavigation(props) {
 
     return (
         <div id="section-navigation">
+            <h2>{sectionIndex}</h2>
             <div className="row">
                 <div className="col-12">
                     <ul className="nav nav-tabs sub-navi">
