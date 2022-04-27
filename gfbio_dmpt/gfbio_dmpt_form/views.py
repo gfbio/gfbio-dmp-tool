@@ -171,6 +171,7 @@ class DmptSectionListView(generics.GenericAPIView):
         return Response(data=serializer.data, status=HTTP_200_OK)
 
 
+# TODO: maybe it is better to access section directly via id, since we now work with section tab navi in react app
 class DmptSectionDetailView(generics.GenericAPIView):
     # TODO: maybe this view becomes restricted
     # permission_classes = [AllowAny]

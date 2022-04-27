@@ -6,9 +6,11 @@ import {SolarSystemLoading} from "react-loadingg";
 import {SECTION_ROOT} from "../../constants/api/api_constants";
 import DmptFormFields from "../DmptFormFields";
 
+// TODO: maybe change to adapted section detail view. compare TODO in views.py
 const useDmptSection = (catalogId, sectionIndex, token) => {
     const [processing, setProcessing] = useState(true);
     const [section, setSection] = useState({});
+
     useEffect(() => {
         async function prepareDmptSection() {
             setProcessing(true);
@@ -24,28 +26,23 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
             } catch (error) {
                 console.error(error);
             }
-            // TODO: is this neccessary ?
-            // finally {
-            //     setProcessing(false);
-            // }
         }
 
         prepareDmptSection();
-    }, []);
+    }, [sectionIndex]);
     return [processing, section];
 };
 
 function DmptSection(props) {
-    const {catalogId, token} = props;
-    // TODO: as prop for this component when accessing section/tab wise
-    const sectionIndex = 0;
+    const {token, catalogId, sectionIndex} = props;
     const [processing, section] = useDmptSection(catalogId, sectionIndex, token);
+
     console.log('DmptSection | section: ', section);
 
     if (processing) {
         return (
             <div id="section">
-                <h2>DmptSection</h2>
+                {/* <h2>DmptSection</h2> */}
                 <Row>
                     <Col lg={12}>
                         <SolarSystemLoading color="#345AA2" size="large" speed={8}>
@@ -75,6 +72,7 @@ function DmptSection(props) {
 DmptSection.propTypes = {
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
+    sectionIndex: PropTypes.number.isRequired,
 };
 
 export default DmptSection;

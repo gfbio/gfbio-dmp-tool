@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import {SECTIONS_ROOT} from "../../constants/api/api_constants";
 import DmptLoading from "../DmptLoading";
+import DmptSection from "../DmptSection";
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -55,11 +56,6 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 function DmptSectionNavigation(props) {
     const {catalogId, token} = props;
 
-    // TODO: - url ohne section no. = load sections and init with section no 0 ?
-    //       - url mit section no. = no load of all sections just load/init section no. 0-n ?
-    //       - besser load all sections, fill navi, change state (section no) onclick, init section
-    // TODO: add url routes
-
     const [processing, sectionList] = useDmptSectionNavigation(catalogId, token);
     const [sectionIndex, setSectionIndex] = useState(0);
 
@@ -73,9 +69,9 @@ function DmptSectionNavigation(props) {
         );
     }
 
+    // TODO: wrap sidebar and tabnavi+section in extra compoment if needed.
     return (
         <div id="section-navigation">
-            <h2>{sectionIndex}</h2>
             <div className="row">
                 <div className="col-12">
                     <ul className="nav nav-tabs sub-navi">
@@ -85,7 +81,7 @@ function DmptSectionNavigation(props) {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <h1>{sectionList[sectionIndex].title}</h1>
+                    <DmptSection token={token} catalogId={catalogId} sectionIndex={sectionIndex}/>
                 </div>
             </div>
         </div>
