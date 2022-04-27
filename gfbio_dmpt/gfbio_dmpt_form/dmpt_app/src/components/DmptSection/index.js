@@ -59,11 +59,11 @@ function DmptSection(props) {
             <h2>{section.title}</h2>
             <form id={`section-${section.id}`}>
                 <DmptFormFields section={section}/>
-                <div className="row g-3">
-                    <div className="col-12">
-                        <button className="w-100 btn btn-secondary btn-green" type="submit">Continue</button>
-                    </div>
-                </div>
+                {/* <div className="row g-3"> */}
+                {/*     <div className="col-12"> */}
+                {/*         <button className="w-100 btn btn-secondary btn-green" type="submit">Continue</button> */}
+                {/*     </div> */}
+                {/* </div> */}
             </form>
         </div>
     );

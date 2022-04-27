@@ -30,6 +30,18 @@ const useDmptSectionNavigation = (catalogId, token) => {
 //     console.log('DmptSectionNavigation | sectionClickHandler | index: ', index);
 // };
 
+const continueHandler = (val, maxVal, valHandler) => {
+    if (val < maxVal - 1) {
+        valHandler(val + 1);
+    }
+};
+
+const backHandler = (val, valHandler) => {
+    if (val - 1 >= 0) {
+        valHandler(val - 1);
+    }
+};
+
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     const maxLength = 25;
     return sectionList.map((section, index) => {
@@ -60,8 +72,9 @@ function DmptSectionNavigation(props) {
     const [sectionIndex, setSectionIndex] = useState(0);
 
     const sections = sectionsAsListElements(sectionList, sectionIndex, setSectionIndex);
+    const sectionsLength = sectionList.length;
 
-    console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | list: `, sectionList);
+    console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | list: `, sectionList);
 
     if (processing) {
         return (
@@ -82,6 +95,23 @@ function DmptSectionNavigation(props) {
             <div className="row">
                 <div className="col-12">
                     <DmptSection token={token} catalogId={catalogId} sectionIndex={sectionIndex}/>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-6 ps-4">
+                    <button className="btn btn-secondary btn-green"
+                        type="button"
+                        onClick={() => backHandler(sectionIndex, setSectionIndex)}
+                    >Back
+                    </button>
+                </div>
+                <div className="col-6 pe-4">
+                    <button
+                        className="btn btn-secondary btn-green float-end"
+                        type="button"
+                        onClick={() => continueHandler(sectionIndex, sectionsLength, setSectionIndex)}
+                    >Continue
+                    </button>
                 </div>
             </div>
         </div>
