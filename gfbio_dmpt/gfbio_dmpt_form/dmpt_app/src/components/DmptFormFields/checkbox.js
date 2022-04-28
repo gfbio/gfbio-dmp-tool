@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 function CheckBox(props) {
-    const {question} = props;
+    const {question, handleChange} = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
@@ -11,6 +11,7 @@ function CheckBox(props) {
                         className="form-check-input"
                         value={optionSetOption.key}
                         id={`option-${optionSetOption.id}`}
+                        onChange={(e) => handleChange(e)}
                     />
                     <label className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}>
@@ -45,6 +46,7 @@ CheckBox.propTypes = {
             }).isRequired,
         }).isRequired,
     }).isRequired,
+    handleChange: PropTypes.func.isRequired,
 };
 
 export default CheckBox;

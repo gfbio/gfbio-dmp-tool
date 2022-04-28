@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 function Select(props) {
-    const {question} = props;
+    const {question, handleChange} = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (<option className="form-control"
@@ -13,7 +13,7 @@ function Select(props) {
         });
         return (
             <select className="form-control" id={`optionset-${optionSet.id}`}
-                name={optionSet.key}>
+                name={optionSet.key} onChange={(e) => handleChange(e)}>
                 {optionSetOptions}
             </select>
         );
@@ -38,6 +38,7 @@ Select.propTypes = {
             }).isRequired,
         }).isRequired,
     }).isRequired,
+    handleChange: PropTypes.func.isRequired,
 };
 
 export default Select;

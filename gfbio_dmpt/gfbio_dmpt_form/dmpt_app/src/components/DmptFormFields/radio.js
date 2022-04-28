@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 function Radio(props) {
-    const {question} = props;
+    const {question, handleChange} = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
@@ -11,6 +11,7 @@ function Radio(props) {
                         className="form-check-input"
                         name={optionSet.id}
                         id={`option-${optionSetOption.id}`}
+                        onChange={(e)=>handleChange(e)}
                     />
                     <label className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}>
@@ -45,6 +46,7 @@ Radio.propTypes = {
             }).isRequired,
         }).isRequired,
     }).isRequired,
+    handleChange: PropTypes.func.isRequired,
 };
 
 export default Radio;

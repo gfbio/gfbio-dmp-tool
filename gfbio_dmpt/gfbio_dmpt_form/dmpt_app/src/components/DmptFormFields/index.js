@@ -7,7 +7,7 @@ import Radio from "./radio";
 import CheckBox from "./checkbox";
 
 function DmptFormFields(props) {
-    const {section} = props;
+    const {section, handleInputChange} = props;
     const inputFields = section.questionsets.map((questionset) => {
         return (
             <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
@@ -20,15 +20,15 @@ function DmptFormFields(props) {
                             mandatoryMessage = <span/>;
                         }
 
-                        let input = <TextInput question={question}/>;
+                        let input = <TextInput question={question} handleChange={handleInputChange}/>;
                         if (question.widget_type === "textarea") {
-                            input = <Textarea question={question}/>;
+                            input = <Textarea question={question} handleChange={handleInputChange}/>;
                         } else if (question.widget_type === "select") {
-                            input = <Select question={question}/>;
+                            input = <Select question={question} handleChange={handleInputChange}/>;
                         } else if (question.widget_type === "radio") {
-                            input = <Radio question={question}/>;
+                            input = <Radio question={question} handleChange={handleInputChange}/>;
                         } else if (question.widget_type === "checkbox") {
-                            input = <CheckBox question={question}/>;
+                            input = <CheckBox question={question} handleChange={handleInputChange}/>;
                         }
 
                         return (
@@ -68,6 +68,7 @@ DmptFormFields.propTypes = {
             }).isRequired
         }).isRequired,
     }).isRequired,
+    handleInputChange: PropTypes.func.isRequired,
 };
 
 export default DmptFormFields;

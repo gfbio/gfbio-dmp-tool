@@ -4,6 +4,7 @@ import axios from "axios";
 import {SECTIONS_ROOT} from "../../constants/api/api_constants";
 import DmptLoading from "../DmptLoading";
 import DmptSection from "../DmptSection";
+import useDmptSectionForm from "../DmptHooks/formHooks";
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -65,11 +66,17 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     });
 };
 
+const fakeSubmit = () => {
+    console.log('DmptSectionNavigation | fakeSubmit | inputs: ', inputs);
+};
+
 function DmptSectionNavigation(props) {
     const {catalogId, token} = props;
 
     const [processing, sectionList] = useDmptSectionNavigation(catalogId, token);
     const [sectionIndex, setSectionIndex] = useState(0);
+
+    const {inputs, handleInputChange, handleSubmit} = useDmptSectionForm(fakeSubmit);
 
     const sections = sectionsAsListElements(sectionList, sectionIndex, setSectionIndex);
     const sectionsLength = sectionList.length;
@@ -94,7 +101,8 @@ function DmptSectionNavigation(props) {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <DmptSection token={token} catalogId={catalogId} sectionIndex={sectionIndex}/>
+                    <DmptSection token={token} catalogId={catalogId} sectionIndex={sectionIndex}
+                        handleInputChange={handleInputChange} handleSubmit={handleSubmit}/>
                 </div>
             </div>
             <div className="row">

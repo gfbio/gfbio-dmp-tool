@@ -34,7 +34,7 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
 };
 
 function DmptSection(props) {
-    const {token, catalogId, sectionIndex} = props;
+    const {token, catalogId, sectionIndex, handleInputChange, handleSubmit} = props;
     const [processing, section] = useDmptSection(catalogId, sectionIndex, token);
 
     console.log('DmptSection | section: ', section);
@@ -57,8 +57,8 @@ function DmptSection(props) {
     return (
         <div id="section">
             <h2>{section.title}</h2>
-            <form id={`section-${section.id}`}>
-                <DmptFormFields section={section}/>
+            <form id={`section-${section.id}`} onSubmit={handleSubmit}>
+                <DmptFormFields section={section} handleInputChange={handleInputChange}/>
                 {/* <div className="row g-3"> */}
                 {/*     <div className="col-12"> */}
                 {/*         <button className="w-100 btn btn-secondary btn-green" type="submit">Continue</button> */}
@@ -73,6 +73,8 @@ DmptSection.propTypes = {
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
     sectionIndex: PropTypes.number.isRequired,
+    handleInputChange: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
 };
 
 export default DmptSection;

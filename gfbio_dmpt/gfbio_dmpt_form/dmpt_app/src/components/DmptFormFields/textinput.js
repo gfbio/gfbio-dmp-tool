@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 function TextInput(props) {
-    const {question} = props;
+    const {question, handleChange} = props;
     return (
         <input
             type="text"
             className="form-control"
             id={`question-${question.id}`}
             name={question.key}
+            onChange={(e) => handleChange(e)}
         />
     );
 }
@@ -18,6 +19,7 @@ TextInput.propTypes = {
         key: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
     }).isRequired,
+    handleChange: PropTypes.func.isRequired,
 };
 
 export default TextInput;
