@@ -11896,6 +11896,25 @@ input:focus, textarea:focus {
   margin-right: 0.75rem;
 }
 
+.btn-green-sidebar {
+  font-family: "Raleway", sans-serif;
+  font-weight: 400;
+  border-color: #80b148;
+  background-color: #fff;
+  color: #81B248 !important;
+}
+.btn-green-sidebar:focus {
+  box-shadow: none;
+}
+.btn-green-sidebar:hover, .btn-green-sidebar:not(:disabled):not(.disabled):active, .btn-green-sidebar:not(:disabled):not(.disabled).active {
+  border-color: #80b148;
+  background-color: #81B248;
+  color: #fff !important;
+  box-shadow: none;
+}
+.btn-green-sidebar:hover:focus, .btn-green-sidebar:not(:disabled):not(.disabled):active:focus, .btn-green-sidebar:not(:disabled):not(.disabled).active:focus {
+  box-shadow: none;
+}
 label {
   margin-bottom: 0.5rem;
 }
@@ -11944,6 +11963,20 @@ div#summary h6, div#summary .h6 {
   color: #345AA2;
   font-size: 1rem;
   font-weight: 500;
+}
+
+h6.sidebar-list-item, .sidebar-list-item.h6 {
+  margin: 0 !important;
+  padding-top: 0.5rem;
+  padding-bottom: 0.45rem;
+}
+h6.sidebar-list-item i, .sidebar-list-item.h6 i {
+  margin-right: 1rem;
+  font-size: 1.6rem;
+}
+h6.sidebar-list-item i.right, .sidebar-list-item.h6 i.right {
+  margin-right: 0;
+  margin-left: 1.6rem;
 }
 
 section.page-title {
