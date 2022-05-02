@@ -56,5 +56,17 @@ class TestDmptFormDataView(TestCase):
     def test_get_section_list(self):
         catalog_id = 18  # ???
         response = self.std_client.get(f'/dmp/sections/{catalog_id}/')
-        print(response.status_code)
-        print(response.content)
+        self.assertEqual(200, response.status_code)
+        self.assertIsInstance(json.loads(response.content), list)
+
+    def test_post_rdmo_project(self):
+        catalog_id = 18  # ???
+        catalog = Catalog.objects.get(id=catalog_id)
+        title = 'rmdo test project (unit-test)'
+        data = {
+            'title': title,
+            'catalog': catalog.id,
+        }
+        response = self.std_client.post('/dmp/projects/', data)
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(1, len(Project.objects.filter(title=title)))

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import {Col, Row} from "react-bootstrap";
-import {SolarSystemLoading} from "react-loadingg";
-import {SECTION_ROOT} from "../../constants/api/api_constants";
+import { Col, Row } from "react-bootstrap";
+import { SolarSystemLoading } from "react-loadingg";
+import { SECTION_ROOT } from "../../constants/api/api_constants";
 import DmptFormFields from "../DmptFormFields";
 
 // TODO: maybe change to adapted section detail view. compare TODO in views.py
@@ -18,8 +18,8 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
                 const result = await axios.get(
                     `${SECTION_ROOT}${catalogId}/${sectionIndex}`,
                     {
-                        headers: {Authorization: `Token ${token}`},
-                    },
+                        headers: { Authorization: `Token ${token}` }
+                    }
                 );
                 setSection(result.data);
                 setProcessing(false);
@@ -34,10 +34,10 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
 };
 
 function DmptSection(props) {
-    const {token, catalogId, sectionIndex, handleInputChange, handleSubmit} = props;
+    const { token, catalogId, sectionIndex, handleInputChange, handleSubmit } = props;
     const [processing, section] = useDmptSection(catalogId, sectionIndex, token);
 
-    console.log('DmptSection | section: ', section);
+    console.log("DmptSection | section: ", section);
 
     if (processing) {
         return (
@@ -58,12 +58,12 @@ function DmptSection(props) {
         <div id="section">
             <h2>{section.title}</h2>
             <form id={`section-${section.id}`} onSubmit={handleSubmit}>
-                <DmptFormFields section={section} handleInputChange={handleInputChange}/>
-                {/* <div className="row g-3"> */}
-                {/*     <div className="col-12"> */}
-                {/*         <button className="w-100 btn btn-secondary btn-green" type="submit">Continue</button> */}
-                {/*     </div> */}
-                {/* </div> */}
+                <DmptFormFields section={section} handleInputChange={handleInputChange} />
+                <div className="row g-3">
+                    <div className="col-12">
+                        <button className="w-100 btn btn-secondary btn-green" type="submit">Form Submit ...</button>
+                    </div>
+                </div>
             </form>
         </div>
     );
@@ -74,7 +74,7 @@ DmptSection.propTypes = {
     catalogId: PropTypes.number.isRequired,
     sectionIndex: PropTypes.number.isRequired,
     handleInputChange: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired
 };
 
 export default DmptSection;

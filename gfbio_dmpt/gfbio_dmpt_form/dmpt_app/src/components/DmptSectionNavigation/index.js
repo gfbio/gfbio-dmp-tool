@@ -28,9 +28,13 @@ const useDmptSectionNavigation = (catalogId, token) => {
     return [processing, sectionList];
 };
 
-// const sectionClickHandler = (index) => {
-//     console.log('DmptSectionNavigation | sectionClickHandler | index: ', index);
-// };
+const fakeSubmit = (inputs) => {
+    console.log("DmptSectionNavigation | fakeSubmit | inputs: ");
+};
+
+const submitHandler = (inputs) => {
+    console.log("submitHandler | inputs ", inputs);
+};
 
 const continueHandler = (val, maxVal, valHandler) => {
     if (val < maxVal - 1) {
@@ -67,10 +71,6 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     });
 };
 
-const fakeSubmit = () => {
-    console.log("DmptSectionNavigation | fakeSubmit | inputs: ", inputs);
-};
-
 function DmptSectionNavigation(props) {
     const { catalogId, token } = props;
 
@@ -82,7 +82,33 @@ function DmptSectionNavigation(props) {
     const sections = sectionsAsListElements(sectionList, sectionIndex, setSectionIndex);
     const sectionsLength = sectionList.length;
 
-    console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | list: `, sectionList);
+    // console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `, sectionIndex);
+
+    // let continueText = "Next Section";
+    // // let submitOnContinue = false;
+    // if (sectionIndex === sectionsLength - 1) {
+    //     continueText = "Submit Plan";
+    //     // submitOnContinue = true;
+    // }
+
+    let continueButton = (
+        <button type="button" className="list-group-item list-group-item-action text-end"
+            onClick={() => continueHandler(sectionIndex, sectionsLength, setSectionIndex)}>
+            <h6 className="sidebar-list-item"><i
+                className="mdi mdi-chevron-double-right align-middle right" /><br /> Next Section
+            </h6>
+        </button>
+    );
+    if (sectionIndex === sectionsLength - 1) {
+        continueButton = (
+            <button type="button" className="list-group-item list-group-item-action text-end"
+                onClick={() => submitHandler(inputs)}>
+                <h6 className="sidebar-list-item"><i
+                    className="mdi mdi-chevron-double-right align-middle right" /><br /> Submit Plan
+                </h6>
+            </button>
+        );
+    }
 
     if (processing) {
         return (
@@ -102,51 +128,41 @@ function DmptSectionNavigation(props) {
             </div>
 
             <div className="row" id="section-wrapper-row">
-
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
                         <div className="row">
 
-                            {/* <div className="col-6"> */}
-                            {/*     <button className="btn btn-secondary btn-green-sidebar " */}
-                            {/*         type="button" onClick={() => backHandler(sectionIndex, setSectionIndex)} */}
-                            {/*     ><i className="mdi mdi-chevron-double-left" /> Back */}
-                            {/*     </button> */}
-                            {/* </div> */}
-                            {/* <div className="col-6"> */}
-                            {/*     <button */}
-                            {/*         className="btn btn-secondary btn-green-sidebar float-end me-3" */}
-                            {/*         type="button" */}
-                            {/*         onClick={() => continueHandler(sectionIndex, sectionsLength, setSectionIndex)} */}
-                            {/*     >Next <i className="mdi mdi-chevron-double-right" /> */}
-                            {/*     </button> */}
-                            {/* </div> */}
-
                             <div className="list-group list-group-flush">
                                 <button type="button" className="list-group-item list-group-item-action">
-                                    <h6 className="sidebar-list-item"><i className="mdi mdi-content-save-all-outline align-middle" />Save Project </h6>
+                                    <h6 className="sidebar-list-item"><i
+                                        className="mdi mdi-content-save-all-outline align-middle" />Save Project
+                                    </h6>
                                 </button>
                                 <button type="button" className="list-group-item list-group-item-action">
-                                    <h6 className="sidebar-list-item"><i className="mdi mdi-trash-can-outline align-middle" />Discard & Exit ?</h6>
+                                    <h6 className="sidebar-list-item"><i
+                                        className="mdi mdi-trash-can-outline align-middle" />Discard & Exit ?</h6>
                                 </button>
                                 <button type="button" className="list-group-item list-group-item-action">
-                                    <h6 className="sidebar-list-item"><i className="mdi mdi-file-pdf-box align-middle" />Download PDF</h6>
+                                    <h6 className="sidebar-list-item"><i
+                                        className="mdi mdi-file-pdf-box align-middle" />Download PDF</h6>
                                 </button>
                                 <button type="button" className="list-group-item list-group-item-action">
-                                    <h6 className="sidebar-list-item"><i className="mdi mdi-account-question-outline align-middle" />Request Support</h6>
+                                    <h6 className="sidebar-list-item"><i
+                                        className="mdi mdi-account-question-outline align-middle" />Request Support
+                                    </h6>
                                 </button>
                             </div>
 
-                            {/* TODO: bottom of form need same prev/next navigtion */}
                             <div className="list-group list-group-flush list-group-horizontal mt-5">
-                                <button type="button" className="list-group-item list-group-item-action text-start" onClick={() => backHandler(sectionIndex, setSectionIndex)}>
-                                    <h6 className="sidebar-list-item"><i className="mdi mdi-chevron-double-left align-middle" /><br/>Previous Section</h6>
+                                <button type="button" className="list-group-item list-group-item-action text-start"
+                                    onClick={() => backHandler(sectionIndex, setSectionIndex)}>
+                                    <h6 className="sidebar-list-item"><i
+                                        className="mdi mdi-chevron-double-left align-middle" /><br />Previous
+                                        Section
+                                    </h6>
                                 </button>
-                                <button type="button" className="list-group-item list-group-item-action text-end" onClick={() => continueHandler(sectionIndex, sectionsLength, setSectionIndex)}>
-                                    <h6 className="sidebar-list-item"><i className="mdi mdi-chevron-double-right align-middle right" /><br/>Next Section</h6>
-                                </button>
+                                {continueButton}
                             </div>
-
 
                         </div>
 
@@ -157,27 +173,23 @@ function DmptSectionNavigation(props) {
                     <div className="row">
                         <div className="col-12">
                             <DmptSection token={token} catalogId={catalogId} sectionIndex={sectionIndex}
-                                         handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+                                handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
                         </div>
                     </div>
-                    {/* <div className="row"> */}
-                    {/*     <div className="col-6 ps-4"> */}
-                    {/*         <button className="btn btn-secondary btn-green" */}
-                    {/*             type="button" onClick={() => backHandler(sectionIndex, setSectionIndex)} */}
-                    {/*         >Back */}
-                    {/*         </button> */}
-                    {/*     </div> */}
-                    {/*     <div className="col-6 pe-4"> */}
-                    {/*         <button */}
-                    {/*             className="btn btn-secondary btn-green float-end" */}
-                    {/*             type="button" */}
-                    {/*             onClick={() => continueHandler(sectionIndex, sectionsLength, setSectionIndex)} */}
-                    {/*         >Continue */}
-                    {/*         </button> */}
-                    {/*     </div> */}
-                    {/* </div> */}
+                    <div className="row">
+                        <div className="list-group list-group-flush list-group-horizontal mt-5">
+                            <button type="button" className="list-group-item list-group-item-action text-start"
+                                onClick={() => backHandler(sectionIndex, setSectionIndex)}>
+                                <h6 className="sidebar-list-item"><i
+                                    className="mdi mdi-chevron-double-left align-middle" /><br />Previous Section
+                                </h6>
+                            </button>
+                            {continueButton}
+                        </div>
+                    </div>
                 </div>
             </div>
+            {/* end wrapper row */}
 
         </div>
     );

@@ -8,6 +8,7 @@ const useDmptSectionForm = (callback) => {
         if (event) {
             event.preventDefault();
         }
+        console.log('formHooks | useDmptSectionForm | handleSubmit | inputs: ', inputs);
         callback();
     };
 

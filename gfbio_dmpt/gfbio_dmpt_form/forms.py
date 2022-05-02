@@ -15,3 +15,8 @@ class DmptSupportForm(forms.Form):
     data_visualization_and_analysis = forms.BooleanField(required=False)
     data_publication = forms.BooleanField(required=False)
     data_management_training = forms.BooleanField(required=False)
+
+
+class RdmoCreateProjectForm(forms.Form):
+    title = forms.CharField(required=True)
+    catalog = forms.IntegerField(required=True)

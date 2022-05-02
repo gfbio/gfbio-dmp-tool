@@ -10,7 +10,8 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView, FormView
+from rdmo.projects.models import Project
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import QuestionSet
 from rdmo.questions.models.catalog import Catalog
@@ -27,7 +28,7 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
-from .serializers.dmpt_serializers import DmptProjectSerializer
+from .serializers.dmpt_serializers import DmptProjectSerializer, RdmoProjectSerializer
 from .serializers.extended_serializers import DmptSectionNestedSerializer, DmptSectionSerializer
 
 
@@ -153,6 +154,11 @@ class DmptSupportView(View):
                 status=HTTP_400_BAD_REQUEST, content=form.errors.as_json()
             )
 
+
+# REFACTORING BELOW --------------------------------------------------------------
+
+class RdmoProjectCreateView(generics.CreateAPIView):
+    serializer_class = RdmoProjectSerializer
 
 class DmptSectionListView(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication, BasicAuthentication)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from rdmo.projects.models import Project
 from rest_framework import serializers
 
 from config.settings.base import AUTH_USER_MODEL
@@ -25,3 +26,9 @@ class DmptProjectSerializer(serializers.ModelSerializer):
 
     def get_title(self, obj):
         return obj.rdmo_project.title
+
+
+class RdmoProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['id', 'title', 'catalog']
