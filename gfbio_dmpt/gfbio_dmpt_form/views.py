@@ -2,6 +2,7 @@
 import json
 import random
 import string
+from multiprocessing import Value
 
 from django.contrib.auth.models import Group
 from django.db.models import Prefetch
@@ -10,10 +11,10 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.generic import TemplateView, CreateView, FormView
-from rdmo.projects.models import Project
+from django.views.generic import TemplateView
+from rdmo.projects.models import Project, Value
 from rdmo.projects.views import ProjectAnswersView
-from rdmo.questions.models import QuestionSet
+from rdmo.questions.models import QuestionSet, Question
 from rdmo.questions.models.catalog import Catalog
 from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
@@ -28,7 +29,7 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
-from .serializers.dmpt_serializers import DmptProjectSerializer, RdmoProjectSerializer
+from .serializers.dmpt_serializers import DmptProjectSerializer, RdmoProjectSerializer, RdmoProjectValuesSerializer
 from .serializers.extended_serializers import DmptSectionNestedSerializer, DmptSectionSerializer
 
 
@@ -159,6 +160,56 @@ class DmptSupportView(View):
 
 class RdmoProjectCreateView(generics.CreateAPIView):
     serializer_class = RdmoProjectSerializer
+
+
+class RdmoProjectValuesCreateView(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsOwner,
+    )
+
+    def post(self, request, format=None):
+        print('RdmoProjectValuesCreateView | POST | ')
+        serializer = RdmoProjectValuesSerializer(data=request.data)
+        print(serializer.is_valid())
+        print(serializer.errors)
+        print(serializer.data)
+        if serializer.is_valid():
+            catalog = Catalog.objects.get(id=serializer.data.get('catalog'))
+            project = Project.objects.create(catalog=catalog, title=serializer.data.get('title'))
+            print('RdmoProjectValuesCreateView | POST | valid | catalog: ', catalog, ' | project : ', project)
+            form_data = serializer.data.get('form_data', {})
+            questions = Question.objects.filter(key__in=form_data).prefetch_related(
+                'attribute')
+            print('\t | question ', questions)
+            for q in questions:
+                value = Value.objects.create(
+                    project_id=project.id,
+                    attribute=q.attribute,
+                    text=form_data.get(q.key),
+                    value_type=q.value_type,
+                    unit=q.unit,
+                )
+                print('\t\t | created value ', value.project_id)
+            # for field in serializer.data.get('form_data', {}):
+            #     print('\t | field ', field)
+
+            #  const d = {
+            #         attribute: formItem.question.attribute,
+            #         text: `${formItem.value}`,
+            #         value_type: formItem.question.value_type,
+            #         unit: formItem.question.unit,
+            #     };
+            #
+            #     if (formItem.option) {
+            #         d.option = formItem.option;
+            #     }
+
+            return Response(data=serializer.data, status=HTTP_200_OK)
+
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
 
 class DmptSectionListView(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication, BasicAuthentication)

@@ -70,3 +70,35 @@ class TestDmptFormDataView(TestCase):
         response = self.std_client.post('/dmp/projects/', data)
         self.assertEqual(201, response.status_code)
         self.assertEqual(1, len(Project.objects.filter(title=title)))
+
+    def test_post_value(self):
+        # <textarea class="form-control" id="question-525" name="data_backup" rows="3"></textarea>
+        # project = Project.objects.first()
+        catalog_id = 18  # ???
+        catalog = Catalog.objects.get(id=catalog_id)
+        data = {
+            'catalog': catalog.id,
+            'title': 'Le Title',
+            'form_data': {
+                'project_name': 'Project name from question',
+                'data_backup': 'Data Backup bla bla bla ...',
+            }
+        }
+        response = self.std_client.post('/dmp/projects/values/', data, format='json')
+        print(response.status_code)
+        print(response.content)
+
+        values = Value.objects.all()
+        for v in values:
+            print('\n\n', v.__dict__)
+
+        # data = {
+        #     'catalog': 666,
+        #     'title': 'Le Wrong',
+        #     'form_data': {
+        #         'data_backup': 'Data Backup bla bla bla ...',
+        #     }
+        # }
+        # response = self.std_client.post('/dmp/projects/values/', data, format='json')
+        # print(response.status_code)
+        # print(response.content)

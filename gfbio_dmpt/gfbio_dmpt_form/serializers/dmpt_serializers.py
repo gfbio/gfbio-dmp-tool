@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from rdmo.projects.models import Project
+from rdmo.questions.models import Catalog
 from rest_framework import serializers
 
 from config.settings.base import AUTH_USER_MODEL
@@ -32,3 +33,18 @@ class RdmoProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id', 'title', 'catalog']
+
+
+class RdmoProjectValuesSerializer(serializers.Serializer):
+    catalog = serializers.IntegerField(required=True)
+    title = serializers.CharField(required=True)
+    form_data = serializers.JSONField(required=True)
+
+    class Meta:
+        fields = ['title', 'catalog', 'form_data']
+
+    def validate(self, data):
+        catalogs = Catalog.objects.filter(id=data.get('catalog', None))
+        if len(catalogs) != 1:
+            raise serializers.ValidationError({'catalog': 'catalog not found for this id'})
+        return data

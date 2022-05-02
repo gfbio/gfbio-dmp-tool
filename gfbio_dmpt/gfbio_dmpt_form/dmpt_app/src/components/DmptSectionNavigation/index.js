@@ -34,6 +34,10 @@ const fakeSubmit = (inputs) => {
 
 const submitHandler = (inputs) => {
     console.log("submitHandler | inputs ", inputs);
+    // assuming fresh start:
+    // create project (tmp/rdmo)
+    // post form data, as it is and process in backend
+    // maybe, do create project and add values in one view ? -> nope if wanting to use model crate view on rdmo project
 };
 
 const continueHandler = (val, maxVal, valHandler) => {

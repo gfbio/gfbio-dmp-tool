@@ -21,4 +21,5 @@ urlpatterns = [
     path("section/<int:catalog_id>/<int:section_index>/", views.DmptSectionDetailView.as_view(), name="dmpt_section_detail"),
 
     path("projects/", views.RdmoProjectCreateView.as_view(), name="dmpt_rdmo_projects"),
+    path("projects/values/", views.RdmoProjectValuesCreateView.as_view(), name="dmpt_rdmo_values"),
 ]
