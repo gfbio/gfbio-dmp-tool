@@ -12,7 +12,9 @@ const useDmptSectionForm = (callback) => {
         callback();
     };
 
+    // TODO: enrich data in form with more information from questions and options
     const handleInputChange = (event) => {
+    // const handleInputChange = (event) => {
         event.persist();
         setInputs(inputs => ({...inputs, [event.target.name]: event.target.value}));
         // console.log('formHooks | useDmptSectionForm | handleChange | inputs: ', inputs);

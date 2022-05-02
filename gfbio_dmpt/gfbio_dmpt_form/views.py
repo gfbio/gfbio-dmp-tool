@@ -183,6 +183,7 @@ class RdmoProjectValuesCreateView(generics.GenericAPIView):
             questions = Question.objects.filter(key__in=form_data).prefetch_related(
                 'attribute')
             print('\t | question ', questions)
+            # TODO: how to deal with options ? more context inf formdata from app ?
             for q in questions:
                 value = Value.objects.create(
                     project_id=project.id,

@@ -9,7 +9,11 @@ function CheckBox(props) {
                 <div className="form-check">
                     <input type="checkbox"
                         className="form-check-input"
-                        value={optionSetOption.key}
+                        // value is id of option to be set in value, since it is a foreign key relation there
+                        value={optionSetOption.id}
+                        // name is the key in the form, it has to be unique but we need the question.key for
+                        // assigning the value to the right question/project
+                        name={`option-${question.key}-${optionSetOption.key}`}
                         id={`option-${optionSetOption.id}`}
                         onChange={(e) => handleChange(e)}
                     />

@@ -7,7 +7,7 @@ import Radio from "./radio";
 import CheckBox from "./checkbox";
 
 function DmptFormFields(props) {
-    const {section, handleInputChange} = props;
+    const {section, handleInputChange, inputs} = props;
     const inputFields = section.questionsets.map((questionset) => {
         return (
             <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
@@ -20,9 +20,17 @@ function DmptFormFields(props) {
                             mandatoryMessage = <span/>;
                         }
 
+                        // TODO: this is a template to solve init of textbased fields, compare textarea
+                        let initialValue = 'horst';
+                        if (inputs[question.key] !== undefined) {
+                            initialValue = inputs[question.key];
+                        }
+                        // TODO: add a way to do this for option based fields, like radio, select, checkbox
+
                         let input = <TextInput question={question} handleChange={handleInputChange}/>;
                         if (question.widget_type === "textarea") {
-                            input = <Textarea question={question} handleChange={handleInputChange}/>;
+
+                            input = <Textarea question={question} handleChange={handleInputChange} initialValue={initialValue}/>;
                         } else if (question.widget_type === "select") {
                             input = <Select question={question} handleChange={handleInputChange}/>;
                         } else if (question.widget_type === "radio") {
@@ -69,6 +77,8 @@ DmptFormFields.propTypes = {
         }).isRequired,
     }).isRequired,
     handleInputChange: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    inputs: PropTypes.object.isRequired
 };
 
 export default DmptFormFields;

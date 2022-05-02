@@ -177,7 +177,7 @@ function DmptSectionNavigation(props) {
                     <div className="row">
                         <div className="col-12">
                             <DmptSection token={token} catalogId={catalogId} sectionIndex={sectionIndex}
-                                handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
+                                handleInputChange={handleInputChange} handleSubmit={handleSubmit} inputs={inputs} />
                         </div>
                     </div>
                     <div className="row">

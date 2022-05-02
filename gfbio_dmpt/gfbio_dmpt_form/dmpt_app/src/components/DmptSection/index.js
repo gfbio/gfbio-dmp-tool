@@ -34,7 +34,7 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
 };
 
 function DmptSection(props) {
-    const { token, catalogId, sectionIndex, handleInputChange, handleSubmit } = props;
+    const { token, catalogId, sectionIndex, handleInputChange, handleSubmit, inputs } = props;
     const [processing, section] = useDmptSection(catalogId, sectionIndex, token);
 
     console.log("DmptSection | section: ", section);
@@ -58,7 +58,7 @@ function DmptSection(props) {
         <div id="section">
             <h2>{section.title}</h2>
             <form id={`section-${section.id}`} onSubmit={handleSubmit}>
-                <DmptFormFields section={section} handleInputChange={handleInputChange} />
+                <DmptFormFields section={section} handleInputChange={handleInputChange} inputs={inputs}/>
                 <div className="row g-3">
                     <div className="col-12">
                         <button className="w-100 btn btn-secondary btn-green" type="submit">Form Submit ...</button>
@@ -74,7 +74,9 @@ DmptSection.propTypes = {
     catalogId: PropTypes.number.isRequired,
     sectionIndex: PropTypes.number.isRequired,
     handleInputChange: PropTypes.func.isRequired,
-    handleSubmit: PropTypes.func.isRequired
+    handleSubmit: PropTypes.func.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    inputs: PropTypes.object.isRequired
 };
 
 export default DmptSection;

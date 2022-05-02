@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 function TextArea(props) {
-    const {question, handleChange} = props;
+    const {question, handleChange, initialValue} = props;
     if (question.is_optional) {
         return (
             <textarea
@@ -11,7 +11,7 @@ function TextArea(props) {
                 name={question.key}
                 rows="3"
                 onChange={(e) => handleChange(e)}
-            />
+            >{initialValue}</textarea>
         );
     }
     return (
@@ -22,7 +22,7 @@ function TextArea(props) {
             rows="3"
             required
             onChange={(e) => handleChange(e)}
-        />
+        >{initialValue}</textarea>
     );
 }
 
@@ -33,6 +33,7 @@ TextArea.propTypes = {
         is_optional: PropTypes.bool.isRequired,
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
+    initialValue: PropTypes.string.isRequired,
 };
 
 export default TextArea;
