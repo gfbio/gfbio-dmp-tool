@@ -97,20 +97,14 @@ class TestDmptFormDataView(TestCase):
             }
         }
         response = self.std_client.post('/dmp/projects/values/', data, format='json')
-        print(response.status_code)
-        print(response.content)
+        self.assertEqual(201, response.status_code)
+        content = json.loads(response.content)
+        self.assertDictEqual(content['form_data'], data['form_data'])
 
-        # values = Value.objects.all()
-        # for v in values:
-        #     print('\n\n', v.__dict__)
+        projects = Project.objects.filter(title=data['title'])
+        self.assertEqual(1, len(projects))
 
-        # data = {
-        #     'catalog': 666,
-        #     'title': 'Le Wrong',
-        #     'form_data': {
-        #         'data_backup': 'Data Backup bla bla bla ...',
-        #     }
-        # }
-        # response = self.std_client.post('/dmp/projects/values/', data, format='json')
-        # print(response.status_code)
-        # print(response.content)
+        values = Value.objects.filter(project=projects.first())
+        self.assertEqual(6, len(values))
+        self.assertEqual(4, len(Value.objects.filter(project=projects.first()).filter(option_id__isnull=False)))
+

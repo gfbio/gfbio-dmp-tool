@@ -13,6 +13,8 @@ from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from pprint import pprint
+
+from rdmo.options.models import Option
 from rdmo.projects.models import Project, Value
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import QuestionSet, Question
@@ -171,42 +173,54 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
     )
 
     def post(self, request, format=None):
-        print('RdmoProjectValuesCreateView | POST | ')
+        # print('RdmoProjectValuesCreateView | POST | ')
         serializer = RdmoProjectValuesSerializer(data=request.data)
-        print('RdmoProjectValuesCreateView | POST | valid: ', serializer.is_valid())
-        print('RdmoProjectValuesCreateView | POST | errors: ', serializer.errors)
+        # print('RdmoProjectValuesCreateView | POST | valid: ', serializer.is_valid())
+        # print('RdmoProjectValuesCreateView | POST | errors: ', serializer.errors)
         # print('RdmoProjectValuesCreateView | POST | data: ', serializer.data)
         if serializer.is_valid():
+
             catalog = Catalog.objects.get(id=serializer.data.get('catalog'))
             project = Project.objects.create(catalog=catalog, title=serializer.data.get('title'))
-            print('RdmoProjectValuesCreateView | POST | valid | catalog: ', catalog, ' | project : ', project)
+            # print('RdmoProjectValuesCreateView | POST | valid | catalog: ', catalog, ' | project : ', project)
 
             form_data = serializer.data.get('form_data', {})
 
-            question_keys = []
+            # question_keys = []
             # form_field: object
             for form_field in form_data:
-                print('\tfield: ', form_field, ' | field value: ', form_data[form_field])
+                # print('\tfield: ', form_field, ' | field value: ', form_data[form_field])
                 question_key = form_field
                 # this applies to option-247 and optionset-54
                 if form_field.startswith('option'):
                     sub_fields = form_field.split('____')
                     if len(sub_fields) == 2:
                         question_key = sub_fields[1]
-                        question_keys.append(question_key)
-                        print('----- get question for ', question_key, ' create an OPTION based value')
+                        # question_keys.append(question_key)
+                        # print('----- get question for ', question_key, ' create an OPTION based value')
                         question = Question.objects.get(key=question_key)
-                        options = Op
+                        option = Option.objects.get(id=int(form_data[form_field]))
                         value = Value.objects.create(
                             project_id=project.id,
                             attribute=question.attribute,
                             # text=form_data.get(q.key),
+                            option=option,
                             value_type=question.value_type,
                             unit=question.unit,
                         )
+                        # print('------------------ value ', value, ' value option ', value.option)
                         continue
-                question_keys.append(question_key)
-                print('---- get question for ', question_key, ' and create a TEXT based value ')
+                # question_keys.append(question_key)
+                # print('---- get question for ', question_key, ' and create a TEXT based value ')
+                question = Question.objects.get(key=question_key)
+                value = Value.objects.create(
+                    project_id=project.id,
+                    attribute=question.attribute,
+                    text=form_data[form_field],
+                    value_type=question.value_type,
+                    unit=question.unit,
+                )
+                # print('------------------ value ', value, ' value text ', value.text)
 
                 # if form_field.startswith('optionset-'):
                 #     sub_fields = form_field.split('____')
@@ -224,19 +238,19 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
                 # # else:
                 # #     question_keys.append(form_field)
 
-            pprint(question_keys)
+            # pprint(question_keys)
             # questions = Question.objects.filter(key__in=form_data).prefetch_related(
             #     'attribute')
             # print('\t | question ', questions)
             # # TODO: how to deal with options ? more context inf formdata from app ?
             # for q in questions:
-                value = Value.objects.create(
-                    project_id=project.id,
-                    attribute=q.attribute,
-                    text=form_data.get(q.key),
-                    value_type=q.value_type,
-                    unit=q.unit,
-                )
+            #     value = Value.objects.create(
+            #         project_id=project.id,
+            #         attribute=q.attribute,
+            #         text=form_data.get(q.key),
+            #         value_type=q.value_type,
+            #         unit=q.unit,
+            #     )
             #     print('RdmoProjectValuesCreateView | POST | created value ', value.project_id)
 
             # for field in serializer.data.get('form_data', {}):
@@ -253,7 +267,7 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             #         d.option = formItem.option;
             #     }
 
-            return Response(data=serializer.data, status=HTTP_200_OK)
+            return Response(data=serializer.data, status=HTTP_201_CREATED)
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
