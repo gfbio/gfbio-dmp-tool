@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
 function TextArea(props) {
-    const {question, handleChange, initialValue} = props;
+    const { question, handleChange, initialValue } = props;
     if (question.is_optional) {
         return (
             <textarea
@@ -30,10 +30,14 @@ TextArea.propTypes = {
     question: PropTypes.shape({
         key: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
-        is_optional: PropTypes.bool.isRequired,
+        is_optional: PropTypes.bool.isRequired
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
-    initialValue: PropTypes.string.isRequired,
+    initialValue: PropTypes.string
+};
+
+TextArea.defaultProps = {
+    initialValue: ""
 };
 
 export default TextArea;
