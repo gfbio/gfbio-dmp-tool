@@ -1,17 +1,18 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
 function Radio(props) {
-    const {question, handleChange} = props;
+    const { question, handleChange } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
                 <div className="form-check">
                     <input type="radio"
                         className="form-check-input"
-                        name={optionSet.id}
+                        name={`option-${optionSetOption.id}____${question.key}`}
                         id={`option-${optionSetOption.id}`}
-                        onChange={(e)=>handleChange(e)}
+                        value={optionSetOption.id}
+                        onChange={(e) => handleChange(e)}
                     />
                     <label className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}>
@@ -42,11 +43,11 @@ Radio.propTypes = {
             options: PropTypes.shape({
                 id: PropTypes.number.isRequired,
                 key: PropTypes.string.isRequired,
-                text: PropTypes.string.isRequired,
-            }).isRequired,
-        }).isRequired,
+                text: PropTypes.string.isRequired
+            }).isRequired
+        }).isRequired
     }).isRequired,
-    handleChange: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired
 };
 
 export default Radio;

@@ -58,12 +58,7 @@ function DmptSection(props) {
         <div id="section">
             <h2>{section.title}</h2>
             <form id={`section-${section.id}`} onSubmit={handleSubmit}>
-                <DmptFormFields section={section} handleInputChange={handleInputChange} inputs={inputs}/>
-                <div className="row g-3">
-                    <div className="col-12">
-                        <button className="w-100 btn btn-secondary btn-green" type="submit">Form Submit ...</button>
-                    </div>
-                </div>
+                <DmptFormFields section={section} handleInputChange={handleInputChange} inputs={inputs} />
             </form>
         </div>
     );

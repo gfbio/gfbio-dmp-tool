@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
 function CheckBox(props) {
-    const {question, handleChange} = props;
+    const { question, handleChange } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
@@ -13,7 +13,7 @@ function CheckBox(props) {
                         value={optionSetOption.id}
                         // name is the key in the form, it has to be unique but we need the question.key for
                         // assigning the value to the right question/project
-                        name={`option-${question.key}-${optionSetOption.key}`}
+                        name={`option-${optionSetOption.id}____${question.key}`}
                         id={`option-${optionSetOption.id}`}
                         onChange={(e) => handleChange(e)}
                     />
@@ -46,11 +46,11 @@ CheckBox.propTypes = {
             options: PropTypes.shape({
                 id: PropTypes.number.isRequired,
                 key: PropTypes.string.isRequired,
-                text: PropTypes.string.isRequired,
-            }).isRequired,
-        }).isRequired,
+                text: PropTypes.string.isRequired
+            }).isRequired
+        }).isRequired
     }).isRequired,
-    handleChange: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired
 };
 
 export default CheckBox;
