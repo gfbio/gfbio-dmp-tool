@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import RdmoContext from '../RdmoContext';
-import { checkBackendParameters } from '../../utils/backend_context';
+import checkBackendParameters from '../../utils/backend_context';
 
 const useDmptForm = (callback) => {
     const [inputs, setInputs] = useState({});
