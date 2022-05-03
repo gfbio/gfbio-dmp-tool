@@ -103,8 +103,8 @@ class TestDmptFormDataView(TestCase):
 
         projects = Project.objects.filter(title=data['title'])
         self.assertEqual(1, len(projects))
+        self.assertEqual(projects.first().id, content.get('rdmo_project_id', -1))
 
         values = Value.objects.filter(project=projects.first())
         self.assertEqual(6, len(values))
         self.assertEqual(4, len(Value.objects.filter(project=projects.first()).filter(option_id__isnull=False)))
-
