@@ -48,11 +48,11 @@ Radio.propTypes = {
             options: PropTypes.shape({
                 id: PropTypes.number.isRequired,
                 key: PropTypes.string.isRequired,
-                text: PropTypes.string.isRequired
-            }).isRequired
-        }).isRequired
+                text: PropTypes.string.isRequired,
+            }).isRequired,
+        }).isRequired,
     }).isRequired,
-    handleChange: PropTypes.func.isRequired
+    handleChange: PropTypes.func.isRequired,
 };
 
 export default Radio;

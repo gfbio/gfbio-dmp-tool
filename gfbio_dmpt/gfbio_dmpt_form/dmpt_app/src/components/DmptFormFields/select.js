@@ -5,18 +5,24 @@ function Select(props) {
     const { question, handleChange } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
-            return (<option className="form-control"
-                id={`option-${optionSetOption.id}`}
-                name={optionSetOption.key}
-                value={optionSetOption.id}
-            >
-                {optionSetOption.text}
-            </option>);
+            return (
+                <option
+                    className="form-control"
+                    id={`option-${optionSetOption.id}`}
+                    name={optionSetOption.key}
+                    value={optionSetOption.id}
+                >
+                    {optionSetOption.text}
+                </option>
+            );
         });
         return (
-            <select className="form-control" id={`optionset-${optionSet.id}`}
+            <select
+                className="form-control"
+                id={`optionset-${optionSet.id}`}
                 name={`optionset-${optionSet.id}____${question.key}`}
-                onChange={(e) => handleChange(e)}>
+                onChange={(e) => handleChange(e)}
+            >
                 {optionSetOptions}
             </select>
         );
@@ -39,11 +45,11 @@ Select.propTypes = {
             options: PropTypes.shape({
                 id: PropTypes.number.isRequired,
                 key: PropTypes.string.isRequired,
-                text: PropTypes.string.isRequired
-            }).isRequired
-        }).isRequired
+                text: PropTypes.string.isRequired,
+            }).isRequired,
+        }).isRequired,
     }).isRequired,
-    handleChange: PropTypes.func.isRequired
+    handleChange: PropTypes.func.isRequired,
 };
 
 export default Select;
