@@ -13,16 +13,17 @@ const useSupportForm = (callback) => {
     const handleInputChange = (event) => {
         event.persist();
         const { target } = event;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        setInputs(inputs => ({
+        const value =
+            target.type === 'checkbox' ? target.checked : target.value;
+        setInputs((inputs) => ({
             ...inputs,
-            [target.name]: value
+            [target.name]: value,
         }));
     };
     return {
         handleSubmit,
         handleInputChange,
-        inputs
+        inputs,
     };
 };
 

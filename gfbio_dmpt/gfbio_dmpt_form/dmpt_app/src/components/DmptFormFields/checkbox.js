@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function CheckBox(props) {
     const { question, handleChange } = props;
@@ -7,7 +7,8 @@ function CheckBox(props) {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
                 <div className="form-check">
-                    <input type="checkbox"
+                    <input
+                        type="checkbox"
                         className="form-check-input"
                         // value is id of option to be set in value, since it is a foreign key relation there
                         value={optionSetOption.id}
@@ -17,8 +18,10 @@ function CheckBox(props) {
                         id={`option-${optionSetOption.id}`}
                         onChange={(e) => handleChange(e)}
                     />
-                    <label className="form-check-label"
-                        htmlFor={`option-${optionSetOption.id}`}>
+                    <label
+                        className="form-check-label"
+                        htmlFor={`option-${optionSetOption.id}`}
+                    >
                         {optionSetOption.text}
                     </label>
                 </div>
@@ -31,7 +34,9 @@ function CheckBox(props) {
         );
     });
     return (
-        <div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>
+        <div id={`question-${question.id}`} name={question.key}>
+            {optionSetFields}
+        </div>
     );
 }
 

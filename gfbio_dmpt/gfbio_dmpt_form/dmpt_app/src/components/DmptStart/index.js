@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import {nanoid} from 'nanoid';
-import {Col, Row} from 'react-bootstrap';
-import {SolarSystemLoading} from 'react-loadingg';
-import {useParams} from 'react-router-dom';
-import {API_ROOT, PROJECT_API_ROOT} from '../../constants/api/api_constants';
+import { nanoid } from 'nanoid';
+import { Col, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
+import { useParams } from 'react-router-dom';
+import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import {checkBackendParameters} from '../../utils/backend_context';
+import checkBackendParameters from '../../utils/backend_context';
 import Summary from '../Summary';
 import useDmptForm from './dmptFormHooks';
 
@@ -79,16 +79,12 @@ const postValue = (projectId, formItem, token) => {
     // else {
     //     d.text = `${formItem.value}`;
     // }
-    return axios.post(
-        `${API_ROOT}projects/projects/${projectId}/values/`,
-        d,
-        {
-            headers: {
-                Authorization: `Token ${token}`,
-                'X-CSRFToken': csrftoken,
-            },
-        }
-    );
+    return axios.post(`${API_ROOT}projects/projects/${projectId}/values/`, d, {
+        headers: {
+            Authorization: `Token ${token}`,
+            'X-CSRFToken': csrftoken,
+        },
+    });
 };
 
 const putValue = (projectId, formItem, token) => {
@@ -118,7 +114,10 @@ const putValue = (projectId, formItem, token) => {
 // TODO: reset formdata after submit/put/post ?
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
-    console.log('\nDmptStart | submitValues | context form data ', rdmoContext.form_data);
+    console.log(
+        '\nDmptStart | submitValues | context form data ',
+        rdmoContext.form_data
+    );
     try {
         // eslint-disable-next-line no-restricted-syntax
         for (const f in rdmoContext.form_data) {
@@ -130,12 +129,26 @@ const submitValues = async (projectId, rdmoContext, token) => {
                 ) {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
-                        console.log('DmptStart | submitValues | PUT | ', projectId, ' ', formItem, ' ', res);
+                        console.log(
+                            'DmptStart | submitValues | PUT | ',
+                            projectId,
+                            ' ',
+                            formItem,
+                            ' ',
+                            res
+                        );
                     });
                 } else {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
-                        console.log('DmptStart | submitValues | POST | ', projectId, ' ', formItem, ' ', res);
+                        console.log(
+                            'DmptStart | submitValues | POST | ',
+                            projectId,
+                            ' ',
+                            formItem,
+                            ' ',
+                            res
+                        );
                     });
                 }
             }
@@ -161,7 +174,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
                     const dmptProjectDetailResponse = await axios.get(
                         `${PROJECT_API_ROOT}dmptprojects/${dmptProjectId}/`,
                         {
-                            headers: {Authorization: `Token ${token}`},
+                            headers: { Authorization: `Token ${token}` },
                         }
                     );
                     // console.log('use dmpt start | assgign rdmo project id  ', dmptProjectDetailResponse.data.rdmo_project);
@@ -178,7 +191,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
                 const sectionResponse = await axios.get(
                     `${API_ROOT}questions/sections/?catalog=${catalogId}`, // section for gfbio catalog id hardcoded
                     {
-                        headers: {Authorization: `Token ${token}`},
+                        headers: { Authorization: `Token ${token}` },
                     }
                 );
                 rdmoContext.assignSections(sectionResponse.data);
@@ -186,7 +199,12 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
 
                 setStage('... DONE ...');
                 setProcessing(false);
-                console.log('DMPTStart | useDmptStart | sectionsize ', sectionResponse.data.length, ' | sections ', sectionResponse.data);
+                console.log(
+                    'DMPTStart | useDmptStart | sectionsize ',
+                    sectionResponse.data.length,
+                    ' | sections ',
+                    sectionResponse.data
+                );
             } catch (e) {
                 console.error(e);
             } finally {
@@ -203,7 +221,7 @@ function useDmptStart(rdmoContext, token, catalogId, dmptProjectId) {
 function DmptStart(props) {
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
-    const {projectId} = useParams();
+    const { projectId } = useParams();
 
     // console.log('\n\nDMPT Start ', projectId, ' loggedIn ', backendContext.isLoggedIn);
 
@@ -302,7 +320,7 @@ function DmptStart(props) {
     const nextHandler = submitAllHandler;
     // const nextHandler = submitOnNext ? submitAllHandler : nextSectionHandler;
 
-    const {inputs, handleInputChange, handleSubmit} =
+    const { inputs, handleInputChange, handleSubmit } =
         useDmptForm(nextHandler);
 
     // console.log('DMPT Start | after initial useDmptForm | inputs: ', inputs);
@@ -351,12 +369,12 @@ function DmptStart(props) {
 
     // TODO: for testing submit summary, only submitHandler is active  see line 307
     if (submitted) {
-        return <Summary rdmoProjectId={rdmoContext.project_id}/>;
+        return <Summary rdmoProjectId={rdmoContext.project_id} />;
     }
 
     return (
         <div id="projectDetail">
-            <ScrollToTop/>
+            <ScrollToTop />
             <Row>
                 <Col lg={12}>
                     <h3>{header}</h3>

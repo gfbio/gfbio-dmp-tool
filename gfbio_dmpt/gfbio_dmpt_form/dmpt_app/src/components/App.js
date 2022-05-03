@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
-import {Route, Switch} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import DmptStart from './DmptStart';
 import RdmoContext from './RdmoContext';
 import ProjectList from './ProjectList';
-import {URL_PREFIX} from '../constants/api/api_constants';
-import LoggedInRouter from "./UserLoggedInRouter/refactor_index";
+import { URL_PREFIX } from '../constants/api/api_constants';
+import LoggedInRouter from './UserLoggedInRouter/refactor_index';
 
 const App = () => {
-
     // https://www.savaslabs.com/blog/using-react-global-state-hooks-and-context
     // const [sections, setSections] = useState({});
     // const [sectionsIndex, setSectionsIndex] = useState(0);
@@ -108,13 +107,21 @@ const App = () => {
             <Switch>
                 {/* <Route exact path={`${URL_PREFIX}`} */}
                 {/*     component={UserLoggedInRouter} /> */}
-                <Route exact path={`${URL_PREFIX}`}
-                    component={LoggedInRouter}/>
-                <Route exact path={`${URL_PREFIX}start`}
-                    component={DmptStart}/>
-                <Route path={`${URL_PREFIX}start/:projectId`}
-                    component={DmptStart}/>
-                <Route path={`${URL_PREFIX}projects`} component={ProjectList}/>
+                <Route
+                    exact
+                    path={`${URL_PREFIX}`}
+                    component={LoggedInRouter}
+                />
+                <Route
+                    exact
+                    path={`${URL_PREFIX}start`}
+                    component={DmptStart}
+                />
+                <Route
+                    path={`${URL_PREFIX}start/:projectId`}
+                    component={DmptStart}
+                />
+                <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
             </Switch>
         </RdmoContext.Provider>
     );

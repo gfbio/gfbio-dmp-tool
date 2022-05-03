@@ -1,28 +1,20 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function TextArea(props) {
     const { question, handleChange, initialValue } = props;
-    if (question.is_optional) {
-        return (
-            <textarea
-                className="form-control"
-                id={`question-${question.id}`}
-                name={question.key}
-                rows="3"
-                onChange={(e) => handleChange(e)}
-            >{initialValue}</textarea>
-        );
-    }
+
     return (
         <textarea
             className="form-control"
             id={`question-${question.id}`}
             name={question.key}
             rows="3"
-            required
+            { question.is_optional ? "" : "required"}
             onChange={(e) => handleChange(e)}
-        >{initialValue}</textarea>
+        >
+            {initialValue}
+        </textarea>
     );
 }
 

@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function Select(props) {
     const { question, handleChange } = props;
@@ -22,7 +22,9 @@ function Select(props) {
         );
     });
     return (
-        <div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>
+        <div id={`question-${question.id}`} name={question.key}>
+            {optionSetFields}
+        </div>
     );
 }
 

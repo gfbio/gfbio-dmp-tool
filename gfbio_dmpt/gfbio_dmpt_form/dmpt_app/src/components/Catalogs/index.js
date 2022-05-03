@@ -11,7 +11,7 @@ function useCatalogs() {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `${API_ROOT}projects/projects/4/overview/`,   // gfbio catalog
+                    `${API_ROOT}projects/projects/4/overview/`, // gfbio catalog
                     {
                         // headers: { 'Authorization': 'Token 329ced1de6ee34b19bd24c9b22ee73b64311ffc3' }
                     }

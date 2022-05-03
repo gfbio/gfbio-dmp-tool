@@ -10,21 +10,27 @@ export default function Welcome() {
     return (
         <div>
             <h1>Welcome to GFBio DMPT</h1>
-            <Link to={{
-                pathname: 'catalogs'
-            }}>
+            <Link
+                to={{
+                    pathname: 'catalogs',
+                }}
+            >
                 Catalogs
             </Link>
-            <Link to={{
-                pathname: 'start'
-            }}>
+            <Link
+                to={{
+                    pathname: 'start',
+                }}
+            >
                 Start DMPT
             </Link>
-            <Link to={{
-                pathname: 'projects'
-            }}>
+            <Link
+                to={{
+                    pathname: 'projects',
+                }}
+            >
                 Projects
             </Link>
         </div>
     );
-};
+}

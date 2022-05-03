@@ -13,13 +13,9 @@ function UserLoggedInRouter() {
     // console.log(backend);
 
     if (backend.isLoggedIn === 'false') {
-        return (
-            <DmptStart />);
+        return <DmptStart />;
     }
-    return (
-        <ProjectList />
-    );
-
+    return <ProjectList />;
 }
 
 export default UserLoggedInRouter;

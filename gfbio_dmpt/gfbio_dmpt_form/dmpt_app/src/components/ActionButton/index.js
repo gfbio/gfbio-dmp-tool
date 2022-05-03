@@ -19,11 +19,11 @@ function ActionButton(props) {
     if (hide === true) {
         btnClasses = btnClasses.concat(' d-none');
     }
-    if (onClickHandler===null) {
+    if (onClickHandler === null) {
         return (
             <Col lg={6} className={colClasses}>
                 <button
-                    type='submit'
+                    type="submit"
                     name={name}
                     id={name}
                     className={`btn btn-secondary btn-green ${btnClasses}`}
@@ -36,7 +36,7 @@ function ActionButton(props) {
     return (
         <Col lg={6} className={colClasses}>
             <button
-                type='button'
+                type="button"
                 name={name}
                 id={name}
                 className={`btn btn-secondary btn-green ${btnClasses}`}
@@ -46,7 +46,6 @@ function ActionButton(props) {
             </button>
         </Col>
     );
-
 }
 
 ActionButton.propTypes = {
@@ -54,12 +53,12 @@ ActionButton.propTypes = {
     text: PropTypes.string.isRequired,
     align: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    hide: PropTypes.bool
+    hide: PropTypes.bool,
 };
 
 ActionButton.defaultProps = {
     onClickHandler: null,
-    hide: false
+    hide: false,
 };
 
 export default ActionButton;

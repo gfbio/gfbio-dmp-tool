@@ -73,6 +73,14 @@ class TestDmptFormDataView(TestCase):
 
     def test_post_value(self):
         # <textarea class="form-control" id="question-525" name="data_backup" rows="3"></textarea>
+        # {
+        #     "project_name": "Project Title",
+        #     "optionset-54____categoryType": "317",
+        #     "option-247____is_data_reproducible": "247",
+        #     "option-248____is_data_reproducible": "248",
+        #     "PersonName": "Contact for data",
+        #     "option-325____principal_investigators": "325"
+        # }
         # project = Project.objects.first()
         catalog_id = 18  # ???
         catalog = Catalog.objects.get(id=catalog_id)
@@ -80,17 +88,21 @@ class TestDmptFormDataView(TestCase):
             'catalog': catalog.id,
             'title': 'Le Title',
             'form_data': {
-                'project_name': 'Project name from question',
-                'data_backup': 'Data Backup bla bla bla ...',
+                'project_name': 'Project Title',
+                'optionset-54____categoryType': '317',
+                'option-247____is_data_reproducible': '247',
+                'option-248____is_data_reproducible': '248',
+                'PersonName': 'Contact for data',
+                'option-325____principal_investigators': '325'
             }
         }
         response = self.std_client.post('/dmp/projects/values/', data, format='json')
         print(response.status_code)
         print(response.content)
 
-        values = Value.objects.all()
-        for v in values:
-            print('\n\n', v.__dict__)
+        # values = Value.objects.all()
+        # for v in values:
+        #     print('\n\n', v.__dict__)
 
         # data = {
         #     'catalog': 666,

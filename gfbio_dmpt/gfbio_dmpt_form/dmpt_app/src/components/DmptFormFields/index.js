@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import TextInput from "./textinput";
-import Textarea from "./textarea";
-import Select from "./select";
-import Radio from "./radio";
-import CheckBox from "./checkbox";
+import React from 'react';
+import PropTypes from 'prop-types';
+import TextInput from './textinput';
+import Textarea from './textarea';
+import Select from './select';
+import Radio from './radio';
+import CheckBox from './checkbox';
 
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs } = props;
@@ -41,27 +41,26 @@ function DmptFormFields(props) {
                             input = <CheckBox question={question} handleChange={handleInputChange} />;
                         }
 
-                        return (
-                            <div className="col-12">
-                                <label aria-label={question.text} htmlFor="username"
-                                    className="form-label">
-                                    {question.text}
-                                </label>
-                                {input}
-                                <small className="form-text text-muted">{question.help} {mandatoryMessage}</small>
-                            </div>
-                        );
-                    })
-                }
-
+                    return (
+                        <div className="col-12">
+                            <label
+                                aria-label={question.text}
+                                htmlFor="username"
+                                className="form-label"
+                            >
+                                {question.text}
+                            </label>
+                            {input}
+                            <small className="form-text text-muted">
+                                {question.help} {mandatoryMessage}
+                            </small>
+                        </div>
+                    );
+                })}
             </div>
         );
     });
-    return (
-        <div className="row g-3">
-            {inputFields}
-        </div>
-    );
+    return <div className="row g-3">{inputFields}</div>;
 }
 
 DmptFormFields.propTypes = {
@@ -74,13 +73,13 @@ DmptFormFields.propTypes = {
                 is_optional: PropTypes.bool.isRequired,
                 widget_type: PropTypes.string.isRequired,
                 text: PropTypes.string.isRequired,
-                help: PropTypes.string
-            }).isRequired
-        }).isRequired
+                help: PropTypes.string,
+            }).isRequired,
+        }).isRequired,
     }).isRequired,
     handleInputChange: PropTypes.func.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    inputs: PropTypes.object.isRequired
+    inputs: PropTypes.object.isRequired,
 };
 
 export default DmptFormFields;

@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+from pprint import pprint
 from rdmo.projects.models import Project, Value
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import QuestionSet, Question
@@ -162,7 +163,7 @@ class RdmoProjectCreateView(generics.CreateAPIView):
     serializer_class = RdmoProjectSerializer
 
 
-class RdmoProjectValuesCreateView(generics.GenericAPIView):
+class DmptRdmoProjectCreateView(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication, BasicAuthentication)
     permission_classes = (
         permissions.IsAuthenticated,
@@ -172,19 +173,63 @@ class RdmoProjectValuesCreateView(generics.GenericAPIView):
     def post(self, request, format=None):
         print('RdmoProjectValuesCreateView | POST | ')
         serializer = RdmoProjectValuesSerializer(data=request.data)
-        print(serializer.is_valid())
-        print(serializer.errors)
-        print(serializer.data)
+        print('RdmoProjectValuesCreateView | POST | valid: ', serializer.is_valid())
+        print('RdmoProjectValuesCreateView | POST | errors: ', serializer.errors)
+        # print('RdmoProjectValuesCreateView | POST | data: ', serializer.data)
         if serializer.is_valid():
             catalog = Catalog.objects.get(id=serializer.data.get('catalog'))
             project = Project.objects.create(catalog=catalog, title=serializer.data.get('title'))
             print('RdmoProjectValuesCreateView | POST | valid | catalog: ', catalog, ' | project : ', project)
+
             form_data = serializer.data.get('form_data', {})
-            questions = Question.objects.filter(key__in=form_data).prefetch_related(
-                'attribute')
-            print('\t | question ', questions)
-            # TODO: how to deal with options ? more context inf formdata from app ?
-            for q in questions:
+
+            question_keys = []
+            # form_field: object
+            for form_field in form_data:
+                print('\tfield: ', form_field, ' | field value: ', form_data[form_field])
+                question_key = form_field
+                # this applies to option-247 and optionset-54
+                if form_field.startswith('option'):
+                    sub_fields = form_field.split('____')
+                    if len(sub_fields) == 2:
+                        question_key = sub_fields[1]
+                        question_keys.append(question_key)
+                        print('----- get question for ', question_key, ' create an OPTION based value')
+                        question = Question.objects.get(key=question_key)
+                        options = Op
+                        value = Value.objects.create(
+                            project_id=project.id,
+                            attribute=question.attribute,
+                            # text=form_data.get(q.key),
+                            value_type=question.value_type,
+                            unit=question.unit,
+                        )
+                        continue
+                question_keys.append(question_key)
+                print('---- get question for ', question_key, ' and create a TEXT based value ')
+
+                # if form_field.startswith('optionset-'):
+                #     sub_fields = form_field.split('____')
+                #     print('\t\toptionset (select) subfields ', sub_fields)
+                #     if len(sub_fields) == 2:
+                #         # question_keys.append(sub_fields[1])
+                #         question_key = sub_fields[1]
+                # elif form_field.startswith('option-'):
+                #     sub_fields = form_field.split('____')
+                #     # may have multiple entries for same question when dealing witch checkbox fields
+                #     print('\t\toption (select, radio, check) subfields ', sub_fields)
+                #     if len(sub_fields) == 2:
+                #         # question_keys.append(sub_fields[1])
+                #         question_key = sub_fields[1]
+                # # else:
+                # #     question_keys.append(form_field)
+
+            pprint(question_keys)
+            # questions = Question.objects.filter(key__in=form_data).prefetch_related(
+            #     'attribute')
+            # print('\t | question ', questions)
+            # # TODO: how to deal with options ? more context inf formdata from app ?
+            # for q in questions:
                 value = Value.objects.create(
                     project_id=project.id,
                     attribute=q.attribute,
@@ -192,7 +237,8 @@ class RdmoProjectValuesCreateView(generics.GenericAPIView):
                     value_type=q.value_type,
                     unit=q.unit,
                 )
-                print('\t\t | created value ', value.project_id)
+            #     print('RdmoProjectValuesCreateView | POST | created value ', value.project_id)
+
             # for field in serializer.data.get('form_data', {}):
             #     print('\t | field ', field)
 
