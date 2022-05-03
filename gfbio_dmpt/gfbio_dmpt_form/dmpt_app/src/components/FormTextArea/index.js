@@ -14,40 +14,22 @@ function FormTextArea(props) {
     console.log('val ', val);
     const { headerText, helpText } = markFormFieldMandatory(item);
 
-    let inputField = (
-        <textarea
-            name={item.key}
-            id={item.key}
-            className="form-control"
-            rows="3"
-            onChange={(e) => handleChange(e, item, value.id)}
-            required
-        >
-            {val}
-        </textarea>
-    );
-
-    if (item.is_optional) {
-        inputField = (
-            <textarea
-                name={item.key}
-                id={item.key}
-                className="form-control"
-                rows="3"
-                onChange={(e) => handleChange(e, item, value.id)}
-            >
-                {val}
-            </textarea>
-        );
-    }
-
     return (
         <div className="form-group" key={item.id}>
             <label htmlFor={item.key}>
                 {headerText}
                 {helpText}
             </label>
-            {inputField}
+            <textarea
+                name={item.key}
+                id={item.key}
+                className="form-control"
+                rows="3"
+                onChange={(e) => handleChange(e, item, value.id)}
+                { item.is_optional ? '' : 'required' }
+            >
+                {val}
+            </textarea>
         </div>
     );
 }
