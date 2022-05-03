@@ -9,7 +9,7 @@ import RdmoContext from '../RdmoContext';
 import Questions from '../Questions';
 import ActionButton from '../ActionButton';
 import ScrollToTop from '../ScrollToTop';
-import { checkBackendParameters } from '../../utils/backend_context';
+import checkBackendParameters from '../../utils/backend_context';
 import Summary from '../Summary';
 import useDmptForm from './dmptFormHooks';
 
