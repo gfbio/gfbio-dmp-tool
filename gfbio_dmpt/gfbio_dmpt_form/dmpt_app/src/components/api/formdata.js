@@ -1,5 +1,5 @@
-import axios from "axios";
-import { PROJECT_API_ROOT } from "../../constants/api/api_constants";
+import axios from 'axios';
+import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
 
 const createProject = async (token, data) => {
     let projectId = -1;
@@ -8,11 +8,11 @@ const createProject = async (token, data) => {
             `${PROJECT_API_ROOT}projects/`,
             data,
             {
-                headers: { Authorization: `Token ${token}` }
-            },
+                headers: { Authorization: `Token ${token}` },
+            }
         );
         projectId = response.data.id;
-    }catch (error) {
+    } catch (error) {
         console.error(error);
     }
     return projectId;

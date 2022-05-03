@@ -1,25 +1,35 @@
 import React from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 function Select(props) {
-    const {question, handleChange} = props;
+    const { question, handleChange } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
-            return (<option className="form-control"
-                id={`option-${optionSetOption.id}`}
-                name={optionSetOption.key}>
-                {optionSetOption.text}
-            </option>);
+            return (
+                <option
+                    className="form-control"
+                    id={`option-${optionSetOption.id}`}
+                    name={optionSetOption.key}
+                >
+                    {optionSetOption.text}
+                </option>
+            );
         });
         return (
-            <select className="form-control" id={`optionset-${optionSet.id}`}
-                name={optionSet.key} onChange={(e) => handleChange(e)}>
+            <select
+                className="form-control"
+                id={`optionset-${optionSet.id}`}
+                name={optionSet.key}
+                onChange={(e) => handleChange(e)}
+            >
                 {optionSetOptions}
             </select>
         );
     });
     return (
-        <div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>
+        <div id={`question-${question.id}`} name={question.key}>
+            {optionSetFields}
+        </div>
     );
 }
 

@@ -1,13 +1,13 @@
-import React, {useContext, useState} from 'react';
-import {Col} from 'react-bootstrap';
+import React, { useContext, useState } from 'react';
+import { Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import * as QueryString from 'querystring';
 import useSupportForm from './formHooks';
 import RdmoContext from '../RdmoContext';
-import {checkBackendParameters} from '../../utils/backend_context';
+import { checkBackendParameters } from '../../utils/backend_context';
 
-import {PROJECT_API_ROOT} from '../../constants/api/api_constants';
+import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -31,10 +31,7 @@ function getCookie(name) {
 
 // TODO: add cancel function for this form
 function SupportForm(props) {
-    const {
-        isLoggedIn,
-        rmdoProjectId
-    } = props;
+    const { isLoggedIn, rmdoProjectId } = props;
     const rdmoContext = useContext(RdmoContext);
     const backendContext = checkBackendParameters(rdmoContext);
 
@@ -48,47 +45,48 @@ function SupportForm(props) {
         inputs.rdmo_project_id = rmdoProjectId;
         // eslint-disable-next-line no-use-before-define
         inputs.user_id = rdmoContext.backend_context.user_id;
-        axios.post(
-            `${PROJECT_API_ROOT}support/`,
-            // eslint-disable-next-line no-use-before-define
-            QueryString.stringify(inputs),
-            {
-                headers: {
-                    Authorization: `Token ${rdmoContext.backend_context.token}`,
-                    'X-CSRFToken': csrftoken
+        axios
+            .post(
+                `${PROJECT_API_ROOT}support/`,
+                // eslint-disable-next-line no-use-before-define
+                QueryString.stringify(inputs),
+                {
+                    headers: {
+                        Authorization: `Token ${rdmoContext.backend_context.token}`,
+                        'X-CSRFToken': csrftoken,
+                    },
                 }
-            }
-        ).then((res) => {
-            // console.log('SupportForm');
-            // console.log(res);
-            rdmoContext.assignIssue(res.data.issue_key);
-            setIssueKey(res.data.issue_key);
-            setIssueUrl(res.data.issue_url);
-            setIssueCreated(true);
-        }).catch((error) => {
-            console.error(error);
-        });
+            )
+            .then((res) => {
+                // console.log('SupportForm');
+                // console.log(res);
+                rdmoContext.assignIssue(res.data.issue_key);
+                setIssueKey(res.data.issue_key);
+                setIssueUrl(res.data.issue_url);
+                setIssueCreated(true);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
-    const {
-        inputs,
-        handleInputChange,
-        handleSubmit
-    } = useSupportForm(submitRequest);
+    const { inputs, handleInputChange, handleSubmit } =
+        useSupportForm(submitRequest);
 
     // console.log('SUPPORT FORM ', isLoggedIn);
 
     let emailSection = (
-        <div className='row mb-3'>
-            <label htmlFor='email'
-                className='col-sm-3 col-form-label'>
+        <div className="row mb-3">
+            <label htmlFor="email" className="col-sm-3 col-form-label">
                 Email
             </label>
-            <div className='col-sm-9'>
-                <input type='email' className='form-control'
-                    id='email'
-                    name='email'
-                    placeholder=''
+            <div className="col-sm-9">
+                <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    name="email"
+                    placeholder=""
                     onChange={handleInputChange}
                     value={inputs.email}
                     required
@@ -99,9 +97,10 @@ function SupportForm(props) {
 
     if (backendContext.user_email !== '') {
         emailSection = (
-            <input type='hidden'
-                id='email'
-                name='email'
+            <input
+                type="hidden"
+                id="email"
+                name="email"
                 value={backendContext.user_email}
             />
         );
@@ -110,129 +109,168 @@ function SupportForm(props) {
 
     if (issueCreated) {
         return (
-            <Col lg={6} className='p-3'>
-                <i className='mdi mdi-content-save-edit-outline'/>
-                <h6>
-                    Your request was received !
-                </h6>
+            <Col lg={6} className="p-3">
+                <i className="mdi mdi-content-save-edit-outline" />
+                <h6>Your request was received !</h6>
                 <p>You will soon be contacted by our helpdesk staff.</p>
-                <p>Your issue key is {issueKey}. Please refer to it in any future communication. To access your issue,
-                    please visit <a href={issueUrl}>{issueKey}</a></p>
+                <p>
+                    Your issue key is {issueKey}. Please refer to it in any
+                    future communication. To access your issue, please visit{' '}
+                    <a href={issueUrl}>{issueKey}</a>
+                </p>
             </Col>
         );
     }
     return (
-        <Col lg={6} className='p-3' style={{'text-align': 'left'}}>
+        <Col lg={6} className="p-3" style={{ 'text-align': 'left' }}>
             <form onSubmit={handleSubmit}>
                 {emailSection}
-                <div className='row mb-3'>
-                    <label htmlFor='message'
-                        className='col-sm-3 col-form-label'>Message</label>
+                <div className="row mb-3">
+                    <label
+                        htmlFor="message"
+                        className="col-sm-3 col-form-label"
+                    >
+                        Message
+                    </label>
                     <textarea
-                        className='col-sm-9'
-                        rows='4'
-                        id='message'
-                        name='message'
-                        placeholder=''
-                        onChange={handleInputChange} value={inputs.message}
+                        className="col-sm-9"
+                        rows="4"
+                        id="message"
+                        name="message"
+                        placeholder=""
+                        onChange={handleInputChange}
+                        value={inputs.message}
                         required
                     />
                 </div>
 
-                <fieldset className='row mb-3'>
-                    <legend
-                        className='col-form-label col-sm-5 pt-0'>What services
-                        are you interested in ?
+                <fieldset className="row mb-3">
+                    <legend className="col-form-label col-sm-5 pt-0">
+                        What services are you interested in ?
                     </legend>
 
-                    <div className='col-sm-7'>
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='data_collection_and_assurance'
-                                name='data_collection_and_assurance'
+                    <div className="col-sm-7">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="data_collection_and_assurance"
+                                name="data_collection_and_assurance"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='data_collection_and_assurance'>Data
-                                Collection and
-                                Assurance</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="data_collection_and_assurance"
+                            >
+                                Data Collection and Assurance
+                            </label>
                         </div>
 
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='data_curation'
-                                name='data_curation'
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="data_curation"
+                                name="data_curation"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='data_curation'>Data
-                                Curation</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="data_curation"
+                            >
+                                Data Curation
+                            </label>
                         </div>
 
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='data_archiving'
-                                name='data_archiving'
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="data_archiving"
+                                name="data_archiving"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='data_archiving'>Data
-                                Archiving</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="data_archiving"
+                            >
+                                Data Archiving
+                            </label>
                         </div>
 
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='data_visualization_and_analysis'
-                                name='data_visualization_and_analysis'
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="data_visualization_and_analysis"
+                                name="data_visualization_and_analysis"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='data_visualization_and_analysis'>Data
-                                Visualization
-                                and Analysis</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="data_visualization_and_analysis"
+                            >
+                                Data Visualization and Analysis
+                            </label>
                         </div>
 
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='terminology_service'
-                                name='terminology_service'
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="terminology_service"
+                                name="terminology_service"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='terminology_service'>Terminology
-                                Service</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="terminology_service"
+                            >
+                                Terminology Service
+                            </label>
                         </div>
 
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='data_publication'
-                                name='data_publication'
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="data_publication"
+                                name="data_publication"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='data_publication'>Data
-                                Publication</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="data_publication"
+                            >
+                                Data Publication
+                            </label>
                         </div>
 
-                        <div className='form-check'>
-                            <input className='form-check-input' type='checkbox'
-                                id='data_management_training'
-                                name='data_management_training'
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="data_management_training"
+                                name="data_management_training"
                                 onChange={handleInputChange}
                             />
-                            <label className='form-check-label'
-                                htmlFor='data_management_training'>Data
-                                Management
-                                Training</label>
+                            <label
+                                className="form-check-label"
+                                htmlFor="data_management_training"
+                            >
+                                Data Management Training
+                            </label>
                         </div>
                     </div>
-
                 </fieldset>
 
-                <div className='form-group'>
-                    <div className='d-grid gap-2'>
-                        <button type='submit'
-                            className='btn btn-secondary btn-green'>Submit
+                <div className="form-group">
+                    <div className="d-grid gap-2">
+                        <button
+                            type="submit"
+                            className="btn btn-secondary btn-green"
+                        >
+                            Submit
                         </button>
                     </div>
                 </div>
@@ -243,7 +281,7 @@ function SupportForm(props) {
 
 SupportForm.propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
-    rmdoProjectId: PropTypes.number.isRequired
+    rmdoProjectId: PropTypes.number.isRequired,
 };
 
 export default SupportForm;

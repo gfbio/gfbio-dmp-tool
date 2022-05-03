@@ -8,7 +8,7 @@ export default function checkBackendParameters(rdmoContext) {
     }
     rdmoContext.assignBackendContext(backend);
     return backend;
-};
+}
 
 // TODO: also delete rdmo project immediatly ?
 // export function resetContext(rdmoContext) {
@@ -18,4 +18,3 @@ export default function checkBackendParameters(rdmoContext) {
 //     rdmoContext.assignDmptProjectId(-1);
 //     rdmoContext.assignIssueCreated(false);
 // };
-

@@ -1,6 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import RdmoContext from '../RdmoContext';
-import {checkBackendParameters} from '../../utils/backend_context';
+import { checkBackendParameters } from '../../utils/backend_context';
 
 const useDmptForm = (callback) => {
     const [inputs, setInputs] = useState({});
@@ -15,7 +15,9 @@ const useDmptForm = (callback) => {
         }
         // console.log('inputs before callback | ', inputs);
 
-        rdmoContext.assignFormData(Object.assign(rdmoContext.form_data, inputs));
+        rdmoContext.assignFormData(
+            Object.assign(rdmoContext.form_data, inputs)
+        );
 
         // console.log('rdmoContext form_data before callback | ', rdmoContext.form_data);
         // FIXME: currently only "next"handler is provided, thus no going back to sections
@@ -38,7 +40,18 @@ const useDmptForm = (callback) => {
             vId = valueId;
         }
 
-        console.log('\nuseDmptForm | handleInputChange | ', target.name, ', ', target.type, ', ', target.value, ' optionId ', optionId, ' targetid ', vId);
+        console.log(
+            '\nuseDmptForm | handleInputChange | ',
+            target.name,
+            ', ',
+            target.type,
+            ', ',
+            target.value,
+            ' optionId ',
+            optionId,
+            ' targetid ',
+            vId
+        );
         console.log('context formdata ', rdmoContext.form_data);
         // if (target.type === 'checkbox') {
         //     console.log('is checkbox | checked ', target.checked);
@@ -69,14 +82,14 @@ const useDmptForm = (callback) => {
         //     delete formData[e.target.name];
         // } else {
 
-        setInputs(inputs => ({
+        setInputs((inputs) => ({
             ...inputs,
             [target.name]: {
                 value: val,
                 question: item,
                 valueId: vId,
                 option: optionId,
-            }
+            },
         }));
         // rdmoContext.assignFormData(Object.assign(rdmoContext.form_data, inputs));
         console.log('inputs after set | ', inputs);
@@ -84,7 +97,7 @@ const useDmptForm = (callback) => {
     return {
         handleSubmit,
         handleInputChange,
-        inputs
+        inputs,
     };
 };
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 function TextInput(props) {
-    const {question, handleChange} = props;
+    const { question, handleChange } = props;
     return (
         <input
             type="text"

@@ -1,20 +1,23 @@
 import React from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 function Radio(props) {
-    const {question, handleChange} = props;
+    const { question, handleChange } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
                 <div className="form-check">
-                    <input type="radio"
+                    <input
+                        type="radio"
                         className="form-check-input"
                         name={optionSet.id}
                         id={`option-${optionSetOption.id}`}
-                        onChange={(e)=>handleChange(e)}
+                        onChange={(e) => handleChange(e)}
                     />
-                    <label className="form-check-label"
-                        htmlFor={`option-${optionSetOption.id}`}>
+                    <label
+                        className="form-check-label"
+                        htmlFor={`option-${optionSetOption.id}`}
+                    >
                         {optionSetOption.text}
                     </label>
                 </div>
@@ -27,7 +30,9 @@ function Radio(props) {
         );
     });
     return (
-        <div id={`question-${question.id}`} name={question.key}>{optionSetFields}</div>
+        <div id={`question-${question.id}`} name={question.key}>
+            {optionSetFields}
+        </div>
     );
 }
 

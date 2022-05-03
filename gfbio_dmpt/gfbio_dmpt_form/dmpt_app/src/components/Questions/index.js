@@ -1,9 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {Col, Row} from 'react-bootstrap';
-import {SolarSystemLoading} from 'react-loadingg';
-import {API_ROOT} from '../../constants/api/api_constants';
+import { Col, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
+import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../FormGenericInput';
 import FormRadio from '../FormRadio';
@@ -16,7 +16,7 @@ const fetchQuestion = async (q, token) => {
     return await axios.get(
         `${API_ROOT}questions/questions/?questionset=${q.id}`,
         {
-            headers: {'Authorization': `Token ${token}`}
+            headers: { Authorization: `Token ${token}` },
         }
     );
 };
@@ -29,21 +29,17 @@ const fetchOptions = async (optionSet, token) => {
     return await axios.get(
         `${API_ROOT}options/options/?optionset=${optionSet}`,
         {
-            headers: {'Authorization': `Token ${token}`}
+            headers: { Authorization: `Token ${token}` },
         }
     );
-
 };
 
 const fetchProjectValues = async (projectId, token) => {
     // console.log('fetch project values ', projectId);
     // console.log(`${API_ROOT}projects/values/?project=${projectId}`);
-    return await axios.get(
-        `${API_ROOT}projects/values/?project=${projectId}`,
-        {
-            headers: {'Authorization': `Token ${token}`}
-        }
-    );
+    return await axios.get(`${API_ROOT}projects/values/?project=${projectId}`, {
+        headers: { Authorization: `Token ${token}` },
+    });
 };
 
 const fetchAllOptions = async (optionSets, token) => {
@@ -71,24 +67,31 @@ const iterateQuestions = (questions, options, values, handleChange) => {
         if (item.widget_type === 'textarea') {
             // TODO: refactor
             let val = '';
-            if(valueList.length === 1) {
+            if (valueList.length === 1) {
                 [val] = valueList;
             }
             console.log('\t assint to TextArea | val : ', val);
             return (
-                <FormTextArea item={item} value={val}
-                    handleChange={handleChange}/>
+                <FormTextArea
+                    item={item}
+                    value={val}
+                    handleChange={handleChange}
+                />
             );
         }
         if (item.widget_type === 'select') {
             // TODO: refactor
             let val = '';
-            if(valueList.length === 1) {
+            if (valueList.length === 1) {
                 [val] = valueList;
             }
             return (
-                <FormSelect item={item} options={options} value={val}
-                    handleChange={handleChange}/>
+                <FormSelect
+                    item={item}
+                    options={options}
+                    value={val}
+                    handleChange={handleChange}
+                />
             );
         }
         if (item.widget_type === 'radio') {
@@ -96,12 +99,16 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             const opts = options[item.optionsets[0]];
             // console.log('\n\tQuestions | iterateQuestions | radio | opts ', opts);
             let val = '';
-            if(valueList.length === 1) {
+            if (valueList.length === 1) {
                 [val] = valueList;
             }
             return (
-                <FormRadio item={item} options={opts} value={val}
-                    handleChange={handleChange}/>
+                <FormRadio
+                    item={item}
+                    options={opts}
+                    value={val}
+                    handleChange={handleChange}
+                />
             );
         }
         if (item.widget_type === 'checkbox') {
@@ -110,16 +117,23 @@ const iterateQuestions = (questions, options, values, handleChange) => {
             const opts = options[item.optionsets[0]];
             // console.log('\n\tQuestions | iterateQuestions | checkbox | opts ', opts);
             return (
-                <FormCheckBox item={item} options={opts} value={valueList}
-                    handleChange={handleChange}  handleCheck={valueHandler}/>
+                <FormCheckBox
+                    item={item}
+                    options={opts}
+                    value={valueList}
+                    handleChange={handleChange}
+                    handleCheck={valueHandler}
+                />
             );
         }
         return (
-            <FormGenericInput item={item} value={valueList}
-                handleChange={handleChange}/>
+            <FormGenericInput
+                item={item}
+                value={valueList}
+                handleChange={handleChange}
+            />
         );
-    }
-    );
+    });
 };
 
 // TODO: refactor to component
@@ -136,7 +150,6 @@ const iterateOptions = (options) => {
 // };
 
 function useQuestions(rdmoContext, sectionIndex, token) {
-
     const [processing, setProcessing] = useState(true);
     const [stage, setStage] = useState('... starting ...');
 
@@ -150,70 +163,84 @@ function useQuestions(rdmoContext, sectionIndex, token) {
                 const qsResponse = await axios.get(
                     `${API_ROOT}questions/questionsets/?section=${section.id}`,
                     {
-                        headers: {'Authorization': `Token ${token}`}
+                        headers: { Authorization: `Token ${token}` },
                     }
                 );
 
                 setStage('... fetch questions ...');
-                fetchQuestions(qsResponse, token).then((res) => {
-                    const tmp = [];
-                    const oSets = [];
-                    const options = [];
-                    res.forEach((item) => {
-                        item.data.forEach((q) => {
-                            if (q.optionsets.length > 0) {
-                                q.optionsets.forEach((oSet) => {
-                                    oSets.push(oSet);
-                                });
-                            }
-                            tmp.push(q);
-                        });
-                    });
-                    rdmoContext.assignQuestions(tmp);
-
-                    setStage('... fetch options ...');
-                    fetchAllOptions(oSets, token).then((oRes) => {
-                        oRes.forEach((o) => {
-                            options.push(o.data);
-                        });
-                        rdmoContext.assignOptions(options);
-
-                        setStage('... DONE ...');
-                        setProcessing(false);
-                    });
-                }).then(() => {
-                    // console.log('useQuestions after getting all | get values before if ', );
-                    if (rdmoContext.backend_context.isLoggedIn !== 'false' && rdmoContext.project_id && rdmoContext.project_id > 0) {
-                        // console.log('useQuestions after getting all | get values IN if');
-                        setStage('... fetch project value  ...', rdmoContext.project_id);
-                        // rdmoContext.assignFormData({});
-                        const projectValues = {};
-                        fetchProjectValues(rdmoContext.project_id, token).then((pRes) => {
-                            // console.log('fetchProjectValues response ', pRes);
-                            pRes.data.forEach((v) => {
-                                // console.log('\tres item attrib. ', v.attribute, ' | res item ', v);
-                                if (projectValues[v.attribute]) {
-                                    // console.log('push to ', v.attribute, ' | ', v);
-                                    projectValues[v.attribute].push(v);
-                                } else {
-                                    // Old assignment
-                                    // projectValues[v.attribute] = v;
-
-                                    // console.log('set to ', v.attribute, ' | ', [v]);
-                                    projectValues[v.attribute] = [v];
+                fetchQuestions(qsResponse, token)
+                    .then((res) => {
+                        const tmp = [];
+                        const oSets = [];
+                        const options = [];
+                        res.forEach((item) => {
+                            item.data.forEach((q) => {
+                                if (q.optionsets.length > 0) {
+                                    q.optionsets.forEach((oSet) => {
+                                        oSets.push(oSet);
+                                    });
                                 }
+                                tmp.push(q);
                             });
-                            console.log('useQuestions after getting all | project values ', projectValues);
-                            rdmoContext.assignProjectValues(projectValues);
-                            rdmoContext.assignFormData({});
                         });
-                    }
-                });
+                        rdmoContext.assignQuestions(tmp);
 
+                        setStage('... fetch options ...');
+                        fetchAllOptions(oSets, token).then((oRes) => {
+                            oRes.forEach((o) => {
+                                options.push(o.data);
+                            });
+                            rdmoContext.assignOptions(options);
+
+                            setStage('... DONE ...');
+                            setProcessing(false);
+                        });
+                    })
+                    .then(() => {
+                        // console.log('useQuestions after getting all | get values before if ', );
+                        if (
+                            rdmoContext.backend_context.isLoggedIn !==
+                                'false' &&
+                            rdmoContext.project_id &&
+                            rdmoContext.project_id > 0
+                        ) {
+                            // console.log('useQuestions after getting all | get values IN if');
+                            setStage(
+                                '... fetch project value  ...',
+                                rdmoContext.project_id
+                            );
+                            // rdmoContext.assignFormData({});
+                            const projectValues = {};
+                            fetchProjectValues(
+                                rdmoContext.project_id,
+                                token
+                            ).then((pRes) => {
+                                // console.log('fetchProjectValues response ', pRes);
+                                pRes.data.forEach((v) => {
+                                    // console.log('\tres item attrib. ', v.attribute, ' | res item ', v);
+                                    if (projectValues[v.attribute]) {
+                                        // console.log('push to ', v.attribute, ' | ', v);
+                                        projectValues[v.attribute].push(v);
+                                    } else {
+                                        // Old assignment
+                                        // projectValues[v.attribute] = v;
+
+                                        // console.log('set to ', v.attribute, ' | ', [v]);
+                                        projectValues[v.attribute] = [v];
+                                    }
+                                });
+                                console.log(
+                                    'useQuestions after getting all | project values ',
+                                    projectValues
+                                );
+                                rdmoContext.assignProjectValues(projectValues);
+                                rdmoContext.assignFormData({});
+                            });
+                        }
+                    });
             } catch (e) {
                 console.error(e);
             } finally {
-                ;
             }
         }
 
@@ -224,41 +251,55 @@ function useQuestions(rdmoContext, sectionIndex, token) {
 
 // eslint-disable-next-line no-unused-vars
 function Questions(props) {
-
     const {
         sectionIndex,
         handleInputChange,
         handleSubmit,
         nextSection,
         prevSection,
-        userToken
+        userToken,
     } = props;
     const rdmoContext = useContext(RdmoContext);
 
     // console.log('\nQuestions ', rdmoContext);
 
-    const [processing, stage] = useQuestions(rdmoContext, sectionIndex, userToken);
+    const [processing, stage] = useQuestions(
+        rdmoContext,
+        sectionIndex,
+        userToken
+    );
 
     let formFields = <></>;
     let sectionControls = <></>;
     if (!processing) {
-
         const opts = iterateOptions(rdmoContext.options_data);
-        formFields = iterateQuestions(rdmoContext.questions_data, opts, rdmoContext.project_values, handleInputChange);
-        sectionControls = (<div className="row">
-            {prevSection}
-            {nextSection}
-        </div>);
+        formFields = iterateQuestions(
+            rdmoContext.questions_data,
+            opts,
+            rdmoContext.project_values,
+            handleInputChange
+        );
+        sectionControls = (
+            <div className="row">
+                {prevSection}
+                {nextSection}
+            </div>
+        );
     }
 
     if (processing) {
         return (
             <div>
-                <ScrollToTop/>
+                <ScrollToTop />
                 <Row>
                     <Col lg={12}>
-                        <SolarSystemLoading color="#81B248" size="large"
-                            speed={8}>Loading</SolarSystemLoading>
+                        <SolarSystemLoading
+                            color="#81B248"
+                            size="large"
+                            speed={8}
+                        >
+                            Loading
+                        </SolarSystemLoading>
                     </Col>
                 </Row>
             </div>
@@ -266,8 +307,11 @@ function Questions(props) {
     }
     return (
         <div>
-            <ScrollToTop/>
-            <form id={`section_${rdmoContext.sections_index}`} onSubmit={handleSubmit}>
+            <ScrollToTop />
+            <form
+                id={`section_${rdmoContext.sections_index}`}
+                onSubmit={handleSubmit}
+            >
                 {formFields}
                 {sectionControls}
             </form>
@@ -296,7 +340,7 @@ Questions.propTypes = {
     nextSection: PropTypes.element.isRequired,
     prevSection: PropTypes.element.isRequired,
 
-    userToken: PropTypes.string.isRequired
+    userToken: PropTypes.string.isRequired,
 };
 
 export default Questions;

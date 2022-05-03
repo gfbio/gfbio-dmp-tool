@@ -16,9 +16,9 @@ ReactDOM.render(
     <BrowserRouter>
         <Fragment>
             <Provider store={store}>
-                <App/>
+                <App />
             </Provider>
-            <GlobalStyle/>
+            <GlobalStyle />
         </Fragment>
     </BrowserRouter>,
     document.getElementById('root')

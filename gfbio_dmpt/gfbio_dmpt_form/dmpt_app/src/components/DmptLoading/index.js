@@ -1,5 +1,5 @@
-import React from "react";
-import {SolarSystemLoading} from "react-loadingg";
+import React from 'react';
+import { SolarSystemLoading } from 'react-loadingg';
 
 function DmptLoading() {
     return (
