@@ -7,6 +7,8 @@ import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
+import postProject from "../api/formdata";
+import Welcome from "../Welcome";
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -35,6 +37,15 @@ const useDmptSectionNavigation = (catalogId, token) => {
 const fakeSubmit = () => {
     console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
 };
+
+// const submitProjectData = (token, catalogId, inputs) => {
+//     console.log('submitHandler | inputs ', inputs);
+//     console.log('submitHandler | post ..... ');
+//     postProject(token, catalogId, inputs).then((res) => {
+//         console.log('submitHandler | post res:  ', res);
+//
+//     });
+// };
 
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     const maxLength = 25;
@@ -72,6 +83,7 @@ function DmptSectionNavigation(props) {
         token
     );
     const [sectionIndex, setSectionIndex] = useState(0);
+    const [rdmoProjectSubmitted, setRdmoProjectSubmitted] = useState(false);
 
     const { inputs, handleInputChange, handleSubmit } =
         useDmptSectionForm(fakeSubmit);
@@ -83,11 +95,15 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    // console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `, sectionIndex);
+    console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `, sectionIndex, ' | rdmoProjectSubmitted: ', rdmoProjectSubmitted);
 
     if (processing) {
         return <DmptLoading />;
     }
+
+    if (rdmoProjectSubmitted) {
+        return <Welcome />;
+    };
 
     return (
         <div id="section-navigation">
@@ -147,6 +163,7 @@ function DmptSectionNavigation(props) {
                                 sectionIndex={sectionIndex}
                                 sectionsLength={sectionsLength}
                                 setSectionIndex={setSectionIndex}
+                                callBack={setRdmoProjectSubmitted}
                                 token={token}
                                 catalogId={catalogId}
                                 inputs={inputs}
@@ -173,6 +190,7 @@ function DmptSectionNavigation(props) {
                             sectionIndex={sectionIndex}
                             sectionsLength={sectionsLength}
                             setSectionIndex={setSectionIndex}
+                            callBack={setRdmoProjectSubmitted}
                             token={token}
                             catalogId={catalogId}
                             inputs={inputs}

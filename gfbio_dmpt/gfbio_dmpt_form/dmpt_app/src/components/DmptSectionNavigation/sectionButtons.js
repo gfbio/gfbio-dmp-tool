@@ -14,11 +14,20 @@ const backHandler = (val, valHandler) => {
     }
 };
 
-const submitHandler = (token, catalogId, inputs) => {
+// const submitHandler = (token, catalogId, inputs) => {
+//     console.log('submitHandler | inputs ', inputs);
+//     console.log('submitHandler | post ..... ');
+//     postProject(token, catalogId, inputs).then((res) => {
+//         console.log('submitHandler | post res:  ', res);
+//     });
+// };
+
+const submitProjectData = (token, catalogId, inputs, callBack) => {
     console.log('submitHandler | inputs ', inputs);
     console.log('submitHandler | post ..... ');
     postProject(token, catalogId, inputs).then((res) => {
         console.log('submitHandler | post res:  ', res);
+        callBack(true);
     });
 };
 
@@ -27,6 +36,7 @@ function SectionButtons(props) {
         sectionIndex,
         sectionsLength,
         setSectionIndex,
+        callBack,
         token,
         catalogId,
         inputs,
@@ -51,7 +61,7 @@ function SectionButtons(props) {
             <button
                 type="button"
                 className="list-group-item list-group-item-action text-end"
-                onClick={() => submitHandler(token, catalogId, inputs)}
+                onClick={() => submitProjectData(token, catalogId, inputs, callBack)}
             >
                 <h6 className="sidebar-list-item">
                     <i className="mdi mdi-chevron-double-right align-middle right" />
@@ -83,6 +93,7 @@ SectionButtons.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     sectionsLength: PropTypes.number.isRequired,
     setSectionIndex: PropTypes.func.isRequired,
+    callBack: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
     // eslint-disable-next-line react/forbid-prop-types

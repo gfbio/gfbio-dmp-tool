@@ -48,7 +48,7 @@ function DmptSection(props) {
         token
     );
 
-    console.log('DmptSection | section: ', section);
+    // console.log('DmptSection | section: ', section);
 
     if (processing) {
         return (
@@ -78,16 +78,6 @@ function DmptSection(props) {
                     handleInputChange={handleInputChange}
                     inputs={inputs}
                 />
-                <div className="row g-3">
-                    <div className="col-12">
-                        <button
-                            className="w-100 btn btn-secondary btn-green"
-                            type="submit"
-                        >
-                            Form Submit ...
-                        </button>
-                    </div>
-                </div>
             </form>
         </div>
     );
