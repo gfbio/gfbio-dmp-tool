@@ -22,7 +22,7 @@ const postProject = async (token, catalogId, data) => {
         .catch((error) => {
             if (error.response) {
                 res.status = error.response.status;
-                res.statusText = error.message
+                res.statusText = error.message;
             }
             console.log(error.toJSON());
         });

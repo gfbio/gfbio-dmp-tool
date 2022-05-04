@@ -6,7 +6,7 @@ import { SECTIONS_ROOT } from '../../constants/api/api_constants';
 import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
-import postProject from '../api/formdata';
+import SectionButtons from './sectionButtons';
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -34,26 +34,6 @@ const useDmptSectionNavigation = (catalogId, token) => {
 
 const fakeSubmit = () => {
     console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
-};
-
-const submitHandler = (token, catalogId, inputs) => {
-    console.log('submitHandler | inputs ', inputs);
-    console.log('submitHandler | post ..... ');
-    postProject(token, catalogId, inputs).then((res) => {
-        console.log('submitHandler | post res:  ', res);
-    });
-};
-
-const continueHandler = (val, maxVal, valHandler) => {
-    if (val < maxVal - 1) {
-        valHandler(val + 1);
-    }
-};
-
-const backHandler = (val, valHandler) => {
-    if (val - 1 >= 0) {
-        valHandler(val - 1);
-    }
 };
 
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
@@ -104,35 +84,6 @@ function DmptSectionNavigation(props) {
     const sectionsLength = sectionList.length;
 
     // console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `, sectionIndex);
-
-    let continueButton = (
-        <button
-            type="button"
-            className="list-group-item list-group-item-action text-end"
-            onClick={() =>
-                continueHandler(sectionIndex, sectionsLength, setSectionIndex)
-            }
-        >
-            <h6 className="sidebar-list-item">
-                <i className="mdi mdi-chevron-double-right align-middle right" />
-                <br /> Next Section
-            </h6>
-        </button>
-    );
-    if (sectionIndex === sectionsLength - 1) {
-        continueButton = (
-            <button
-                type="button"
-                className="list-group-item list-group-item-action text-end"
-                onClick={() => submitHandler(token, catalogId, inputs)}
-            >
-                <h6 className="sidebar-list-item">
-                    <i className="mdi mdi-chevron-double-right align-middle right" />
-                    <br /> Submit Plan
-                </h6>
-            </button>
-        );
-    }
 
     if (processing) {
         return <DmptLoading />;
@@ -192,25 +143,14 @@ function DmptSectionNavigation(props) {
                             {/* </div> */}
                             {/* TODO: end of commented sidebar actions, do not remove. */}
 
-                            <div className="list-group list-group-flush list-group-horizontal mt-5">
-                                <button
-                                    type="button"
-                                    className="list-group-item list-group-item-action text-start"
-                                    onClick={() =>
-                                        backHandler(
-                                            sectionIndex,
-                                            setSectionIndex
-                                        )
-                                    }
-                                >
-                                    <h6 className="sidebar-list-item">
-                                        <i className="mdi mdi-chevron-double-left align-middle" />
-                                        <br />
-                                        Previous Section
-                                    </h6>
-                                </button>
-                                {continueButton}
-                            </div>
+                            <SectionButtons
+                                sectionIndex={sectionIndex}
+                                sectionsLength={sectionsLength}
+                                setSectionIndex={setSectionIndex}
+                                token={token}
+                                catalogId={catalogId}
+                                inputs={inputs}
+                            />
                         </div>
                     </Sticky>
                 </div>
@@ -229,22 +169,14 @@ function DmptSectionNavigation(props) {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="list-group list-group-flush list-group-horizontal mt-5">
-                            <button
-                                type="button"
-                                className="list-group-item list-group-item-action text-start"
-                                onClick={() =>
-                                    backHandler(sectionIndex, setSectionIndex)
-                                }
-                            >
-                                <h6 className="sidebar-list-item">
-                                    <i className="mdi mdi-chevron-double-left align-middle" />
-                                    <br />
-                                    Previous Section
-                                </h6>
-                            </button>
-                            {continueButton}
-                        </div>
+                        <SectionButtons
+                            sectionIndex={sectionIndex}
+                            sectionsLength={sectionsLength}
+                            setSectionIndex={setSectionIndex}
+                            token={token}
+                            catalogId={catalogId}
+                            inputs={inputs}
+                        />
                     </div>
                 </div>
             </div>
