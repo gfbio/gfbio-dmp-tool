@@ -41,22 +41,22 @@ function DmptFormFields(props) {
                             input = <CheckBox question={question} handleChange={handleInputChange} />;
                         }
 
-                    return (
-                        <div className="col-12">
-                            <label
-                                aria-label={question.text}
-                                htmlFor="username"
-                                className="form-label"
-                            >
-                                {question.text}
-                            </label>
-                            {input}
-                            <small className="form-text text-muted">
-                                {question.help} {mandatoryMessage}
-                            </small>
-                        </div>
-                    );
-                })}
+                        return (
+                            <div className="col-12">
+                                <label
+                                    aria-label={question.text}
+                                    htmlFor="username"
+                                    className="form-label"
+                                >
+                                    {question.text}
+                                </label>
+                                {input}
+                                <small className="form-text text-muted">
+                                    {question.help} {mandatoryMessage}
+                                </small>
+                            </div>
+                        );
+                    })}
             </div>
         );
     });

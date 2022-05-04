@@ -13,7 +13,7 @@ function FormTextArea(props) {
     const val = formFieldInit(value, rdmoContext, item);
     console.log('val ', val);
     const { headerText, helpText } = markFormFieldMandatory(item);
-
+    // {item.is_optional ? "" : "required"}
     return (
         <div className="form-group" key={item.id}>
             <label htmlFor={item.key}>
@@ -26,7 +26,6 @@ function FormTextArea(props) {
                 className="form-control"
                 rows="3"
                 onChange={(e) => handleChange(e, item, value.id)}
-                { item.is_optional ? '' : 'required' }
             >
                 {val}
             </textarea>

@@ -6,6 +6,7 @@ import { SECTIONS_ROOT } from '../../constants/api/api_constants';
 import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
+import postProject from '../api/formdata';
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -31,16 +32,16 @@ const useDmptSectionNavigation = (catalogId, token) => {
     return [processing, sectionList];
 };
 
-const fakeSubmit = (inputs) => {
+const fakeSubmit = () => {
     console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
 };
 
-const submitHandler = (inputs) => {
+const submitHandler = (token, catalogId, inputs) => {
     console.log('submitHandler | inputs ', inputs);
-    // assuming fresh start:
-    // create project (tmp/rdmo)
-    // post form data, as it is and process in backend
-    // maybe, do create project and add values in one view ? -> nope if wanting to use model crate view on rdmo project
+    console.log('submitHandler | post ..... ');
+    postProject(token, catalogId, inputs).then((res) => {
+        console.log('submitHandler | post res:  ', res);
+    });
 };
 
 const continueHandler = (val, maxVal, valHandler) => {
@@ -104,13 +105,6 @@ function DmptSectionNavigation(props) {
 
     // console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `, sectionIndex);
 
-    // let continueText = "Next Section";
-    // // let submitOnContinue = false;
-    // if (sectionIndex === sectionsLength - 1) {
-    //     continueText = "Submit Plan";
-    //     // submitOnContinue = true;
-    // }
-
     let continueButton = (
         <button
             type="button"
@@ -130,7 +124,7 @@ function DmptSectionNavigation(props) {
             <button
                 type="button"
                 className="list-group-item list-group-item-action text-end"
-                onClick={() => submitHandler(inputs)}
+                onClick={() => submitHandler(token, catalogId, inputs)}
             >
                 <h6 className="sidebar-list-item">
                     <i className="mdi mdi-chevron-double-right align-middle right" />
@@ -144,7 +138,6 @@ function DmptSectionNavigation(props) {
         return <DmptLoading />;
     }
 
-    // TODO: wrap sidebar and tabnavi+section in extra compoment if needed.
     return (
         <div id="section-navigation">
             <div className="row">
@@ -156,45 +149,48 @@ function DmptSectionNavigation(props) {
             <div className="row" id="section-wrapper-row">
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
+                        {/* TODO: wrap sidebar and tabnavi+section in extra compoment if needed. */}
+                        {/* TODO: put sidenavi action into comments, because Ivo doesn't like cool ideas ... */}
                         <div className="row">
-                            <div className="list-group list-group-flush">
-                                <button
-                                    type="button"
-                                    className="list-group-item list-group-item-action"
-                                >
-                                    <h6 className="sidebar-list-item">
-                                        <i className="mdi mdi-content-save-all-outline align-middle" />
-                                        Save Project
-                                    </h6>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="list-group-item list-group-item-action"
-                                >
-                                    <h6 className="sidebar-list-item">
-                                        <i className="mdi mdi-trash-can-outline align-middle" />
-                                        Discard & Exit ?
-                                    </h6>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="list-group-item list-group-item-action"
-                                >
-                                    <h6 className="sidebar-list-item">
-                                        <i className="mdi mdi-file-pdf-box align-middle" />
-                                        Download PDF
-                                    </h6>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="list-group-item list-group-item-action"
-                                >
-                                    <h6 className="sidebar-list-item">
-                                        <i className="mdi mdi-account-question-outline align-middle" />
-                                        Request Support
-                                    </h6>
-                                </button>
-                            </div>
+                            {/* <div className="list-group list-group-flush"> */}
+                            {/*     <button */}
+                            {/*         type="button" */}
+                            {/*         className="list-group-item list-group-item-action" */}
+                            {/*     > */}
+                            {/*         <h6 className="sidebar-list-item"> */}
+                            {/*             <i className="mdi mdi-content-save-all-outline align-middle" /> */}
+                            {/*             Save Project */}
+                            {/*         </h6> */}
+                            {/*     </button> */}
+                            {/*     <button */}
+                            {/*         type="button" */}
+                            {/*         className="list-group-item list-group-item-action" */}
+                            {/*     > */}
+                            {/*         <h6 className="sidebar-list-item"> */}
+                            {/*             <i className="mdi mdi-trash-can-outline align-middle" /> */}
+                            {/*             Discard & Exit ? */}
+                            {/*         </h6> */}
+                            {/*     </button> */}
+                            {/*     <button */}
+                            {/*         type="button" */}
+                            {/*         className="list-group-item list-group-item-action" */}
+                            {/*     > */}
+                            {/*         <h6 className="sidebar-list-item"> */}
+                            {/*             <i className="mdi mdi-file-pdf-box align-middle" /> */}
+                            {/*             Download PDF */}
+                            {/*         </h6> */}
+                            {/*     </button> */}
+                            {/*     <button */}
+                            {/*         type="button" */}
+                            {/*         className="list-group-item list-group-item-action" */}
+                            {/*     > */}
+                            {/*         <h6 className="sidebar-list-item"> */}
+                            {/*             <i className="mdi mdi-account-question-outline align-middle" /> */}
+                            {/*             Request Support */}
+                            {/*         </h6> */}
+                            {/*     </button> */}
+                            {/* </div> */}
+                            {/* TODO: end of commented sidebar actions, do not remove. */}
 
                             <div className="list-group list-group-flush list-group-horizontal mt-5">
                                 <button

@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 function TextArea(props) {
     const { question, handleChange, initialValue } = props;
 
+    // { question.is_optional ? "" : "required"}
     return (
         <textarea
             className="form-control"
             id={`question-${question.id}`}
             name={question.key}
             rows="3"
-            { question.is_optional ? "" : "required"}
             onChange={(e) => handleChange(e)}
         >
             {initialValue}
@@ -22,14 +22,14 @@ TextArea.propTypes = {
     question: PropTypes.shape({
         key: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
-        is_optional: PropTypes.bool.isRequired
+        is_optional: PropTypes.bool.isRequired,
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
-    initialValue: PropTypes.string
+    initialValue: PropTypes.string,
 };
 
 TextArea.defaultProps = {
-    initialValue: ""
+    initialValue: '',
 };
 
 export default TextArea;
