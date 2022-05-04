@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import RdmoContext from '../RdmoContext';
 import checkBackendParameters from '../../utils/backend_context';
 
