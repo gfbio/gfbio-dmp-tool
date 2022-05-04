@@ -25,8 +25,8 @@ function FormTextArea(props) {
                 id={item.key}
                 className="form-control"
                 rows="3"
-                onChange={(e) => handleChange(e, item, value.id)}
-                { item.is_optional ? '' : 'required' }
+                onChange={(event) => handleChange(event, item, value.id)}
+                required={item.is_optional}
             >
                 {val}
             </textarea>
