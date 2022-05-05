@@ -21,7 +21,7 @@ import { PROJECT_API_ROOT } from './constants';
 // }
 
 const postDmptProject = async (token, userId, rdmoProjectId) => {
-    const res = {};
+    const res = { data: {} };
     console.log('postDmptProject | token: ', token);
     await axios
         .post(
@@ -40,6 +40,7 @@ const postDmptProject = async (token, userId, rdmoProjectId) => {
         .then((response) => {
             res.status = response.status;
             res.statusText = response.statusText;
+            res.data = response.data;
         })
         .catch((error) => {
             if (error.response) {
