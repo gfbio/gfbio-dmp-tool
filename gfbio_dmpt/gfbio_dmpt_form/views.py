@@ -183,8 +183,8 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
         for form_field in form_data:
             question_key = form_field
             # this applies to option-247 and optionset-54
-            if form_field.startswith('option'):
-                sub_fields = form_field.split('____')
+            if form_field.startswith("option"):
+                sub_fields = form_field.split("____")
                 if len(sub_fields) == 2:
                     question_key = sub_fields[1]
                     question = Question.objects.get(key=question_key)
@@ -209,65 +209,20 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             )
 
     def post(self, request, format=None):
-<<<<<<< Updated upstream
-=======
-        print("RdmoProjectValuesCreateView | POST | ")
->>>>>>> Stashed changes
         serializer = RdmoProjectValuesSerializer(data=request.data)
         if serializer.is_valid():
-<<<<<<< Updated upstream
-            catalog = Catalog.objects.get(id=serializer.data.get('catalog'))
-            project = Project.objects.create(catalog=catalog, title=serializer.data.get('title'))
-
-            form_data = serializer.data.get('form_data', {})
-            self._create_values_from_form_data(form_data, project)
-
-            data = serializer.data
-            data['rdmo_project_id'] = project.id
-
-            return Response(data=data, status=HTTP_201_CREATED)
-=======
             catalog = Catalog.objects.get(id=serializer.data.get("catalog"))
             project = Project.objects.create(
                 catalog=catalog, title=serializer.data.get("title")
             )
-            print(
-                "RdmoProjectValuesCreateView | POST | valid | catalog: ",
-                catalog,
-                " | project : ",
-                project,
-            )
+
             form_data = serializer.data.get("form_data", {})
-            questions = Question.objects.filter(key__in=form_data).prefetch_related(
-                "attribute"
-            )
-            print("\t | question ", questions)
-            # TODO: how to deal with options ? more context inf formdata from app ?
-            for q in questions:
-                value = Value.objects.create(
-                    project_id=project.id,
-                    attribute=q.attribute,
-                    text=form_data.get(q.key),
-                    value_type=q.value_type,
-                    unit=q.unit,
-                )
-                print("\t\t | created value ", value.project_id)
-            # for field in serializer.data.get('form_data', {}):
-            #     print('\t | field ', field)
+            self._create_values_from_form_data(form_data, project)
 
-            #  const d = {
-            #         attribute: formItem.question.attribute,
-            #         text: `${formItem.value}`,
-            #         value_type: formItem.question.value_type,
-            #         unit: formItem.question.unit,
-            #     };
-            #
-            #     if (formItem.option) {
-            #         d.option = formItem.option;
-            #     }
+            data = serializer.data
+            data["rdmo_project_id"] = project.id
 
-            return Response(data=serializer.data, status=HTTP_200_OK)
->>>>>>> Stashed changes
+            return Response(data=data, status=HTTP_201_CREATED)
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
