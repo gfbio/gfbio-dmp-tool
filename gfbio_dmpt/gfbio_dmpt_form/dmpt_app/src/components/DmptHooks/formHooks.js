@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import validator from 'validator';
+import { useState } from "react";
 
 // https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
 const useDmptSectionForm = (callback) => {
