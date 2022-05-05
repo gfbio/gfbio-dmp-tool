@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 // TODO: column sorting. data, type etc. -> dedicated view with triggers ?
 // TODO: admin style search ? how does admin know what field to search ?
 export default function Welcome() {
-    console.info('Welcome render ....');
+    console.info('__Welcome render ....');
     return (
         <div>
             <h1>Welcome to GFBio DMPT</h1>

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
-import formFieldInit, { markFormFieldMandatory } from '../../utils/form_utils';
+import formFieldInit, { markFormFieldMandatory } from '../../utils/__form_utils';
 
 function FormGenericInput(props) {
     const { item, value, handleChange } = props;

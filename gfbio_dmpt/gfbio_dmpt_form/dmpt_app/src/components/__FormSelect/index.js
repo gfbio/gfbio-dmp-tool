@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
-import formFieldInit, { markFormFieldMandatory } from '../../utils/form_utils';
+import formFieldInit, { markFormFieldMandatory } from '../../utils/__form_utils';
 
 function FormSelect(props) {
     const { item, options, value, handleChange } = props;

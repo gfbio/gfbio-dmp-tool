@@ -58,7 +58,7 @@ function SupportForm(props) {
                 }
             )
             .then((res) => {
-                // console.log('SupportForm');
+                // console.log('__SupportForm');
                 // console.log(res);
                 rdmoContext.assignIssue(res.data.issue_key);
                 setIssueKey(res.data.issue_key);

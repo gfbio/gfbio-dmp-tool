@@ -1,18 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import axios from 'axios';
-import PropTypes from 'prop-types';
-import ScrollToTop from '../ScrollToTop';
-import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
-import RdmoContext from '../RdmoContext';
-import {
-    checkBackendParameters,
-    resetContext,
-} from '../../utils/backend_context';
-import UserLoggedInRouter from '../UserLoggedInRouter';
-import SupportForm from '../SupportForm';
-// import DmptStart from '../DmptStart';
-// import UserLoggedInRouter from '../UserLoggedInRouter';
+import React, { useContext, useState } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import axios from "axios";
+import PropTypes from "prop-types";
+import ScrollToTop from "../ScrollToTop";
+import { PROJECT_API_ROOT } from "../../constants/api/api_constants";
+import RdmoContext from "../RdmoContext";
+import checkBackendParameters, { resetContext } from "../../utils/backend_context";
+import SupportForm from "../__SupportForm";
 
 // FIXME: refactor move to general module
 function getCookie(name) {
@@ -203,8 +197,10 @@ function Summary(props) {
         // console.log('Redirect from summary');
         // return <Redirect push
         //     to={`${URL_PREFIX}start`} />;
-        return <UserLoggedInRouter />;
-        // return <DmptStart />;
+
+        // return <UserLoggedInRouter />;
+
+        // return <__DmptStart />;
     }
 
     const downloadPdfSection = (

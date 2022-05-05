@@ -8,7 +8,7 @@ import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import postProject from "../api/formdata";
-import Welcome from "../Welcome";
+import Welcome from "../__Welcome";
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);

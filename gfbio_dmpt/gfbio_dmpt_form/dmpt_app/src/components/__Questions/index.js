@@ -5,11 +5,11 @@ import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import { API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
-import FormGenericInput from '../FormGenericInput';
-import FormRadio from '../FormRadio';
-import FormSelect from '../FormSelect';
-import FormTextArea from '../FormTextArea';
-import FormCheckBox from '../FormCheckBox';
+import FormGenericInput from '../__FormGenericInput';
+import FormRadio from '../__FormRadio';
+import FormSelect from '../__FormSelect';
+import FormTextArea from '../__FormTextArea';
+import FormCheckBox from '../__FormCheckBox';
 import ScrollToTop from '../ScrollToTop';
 
 const fetchQuestion = async (q, token) => {

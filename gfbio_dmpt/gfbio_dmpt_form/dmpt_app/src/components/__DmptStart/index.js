@@ -6,11 +6,11 @@ import { SolarSystemLoading } from 'react-loadingg';
 import { useParams } from 'react-router-dom';
 import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
 import RdmoContext from '../RdmoContext';
-import Questions from '../Questions';
-import ActionButton from '../ActionButton';
+import Questions from '../__Questions';
+import ActionButton from '../__ActionButton';
 import ScrollToTop from '../ScrollToTop';
 import checkBackendParameters from '../../utils/backend_context';
-import Summary from '../Summary';
+import Summary from '../__Summary';
 import useDmptForm from './dmptFormHooks';
 
 // FIXME: refactor move to general module
@@ -115,7 +115,7 @@ const putValue = (projectId, formItem, token) => {
 //   But this means formdata will not be reset when no submit happens
 const submitValues = async (projectId, rdmoContext, token) => {
     console.log(
-        '\nDmptStart | submitValues | context form data ',
+        '\n__DmptStart | submitValues | context form data ',
         rdmoContext.form_data
     );
     try {
@@ -130,7 +130,7 @@ const submitValues = async (projectId, rdmoContext, token) => {
                     // eslint-disable-next-line no-await-in-loop
                     await putValue(projectId, formItem, token).then((res) => {
                         console.log(
-                            'DmptStart | submitValues | PUT | ',
+                            '__DmptStart | submitValues | PUT | ',
                             projectId,
                             ' ',
                             formItem,
@@ -142,7 +142,7 @@ const submitValues = async (projectId, rdmoContext, token) => {
                     // eslint-disable-next-line no-await-in-loop
                     await postValue(projectId, formItem, token).then((res) => {
                         console.log(
-                            'DmptStart | submitValues | POST | ',
+                            '__DmptStart | submitValues | POST | ',
                             projectId,
                             ' ',
                             formItem,
@@ -156,7 +156,7 @@ const submitValues = async (projectId, rdmoContext, token) => {
     } catch (e) {
         console.error(e);
     } finally {
-        // console.log('DmptStart | submitValues | finally: reset form ');
+        // console.log('__DmptStart | submitValues | finally: reset form ');
         // rdmoContext.assignFormData({});#
     }
 };
@@ -247,7 +247,7 @@ function DmptStart(props) {
     const [submitOnNext, setSubmitOnNext] = useState(false);
 
     const nextSectionHandler = () => {
-        // console.log('DmptStart | nextSectionHandler | ', inputs);
+        // console.log('__DmptStart | nextSectionHandler | ', inputs);
         setPreviousButtonVisibility(rdmoContext.sections_index === -1);
         if (rdmoContext.sections_index < rdmoContext.sections_size - 1) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index + 1);
@@ -265,7 +265,7 @@ function DmptStart(props) {
     };
 
     const prevSectionHandler = () => {
-        // console.log('DmptStart | prevSectionHandler |');
+        // console.log('__DmptStart | prevSectionHandler |');
         setPreviousButtonVisibility(rdmoContext.sections_index === 0);
         if (rdmoContext.sections_index > 0) {
             rdmoContext.assingSectionsIndex(rdmoContext.sections_index - 1);
@@ -280,7 +280,7 @@ function DmptStart(props) {
     // TODO: refactor to own compononent
     // TODO: add to component hook
     const submitAllHandler = () => {
-        // console.log('DmptStart | submitAllHandler |');
+        // console.log('__DmptStart | submitAllHandler |');
         let contextProjectId = rdmoContext.project_id;
         let name = '';
         if (

@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 
 import PropTypes from 'prop-types';
 import RdmoContext from '../RdmoContext';
-import formFieldInit, { markFormFieldMandatory } from '../../utils/form_utils';
+import formFieldInit, { markFormFieldMandatory } from '../../utils/__form_utils';
 
 function FormTextArea(props) {
     const { item, value, handleChange } = props;
     const rdmoContext = useContext(RdmoContext);
 
-    console.log('FormTextArea | value: ', value);
+    console.log('__FormTextArea | value: ', value);
 
     const val = formFieldInit(value, rdmoContext, item);
     console.log('val ', val);

@@ -5,7 +5,7 @@ import RdmoContext from '../RdmoContext';
 import formFieldInit, {
     formFieldCheckBoxInit,
     markFormFieldMandatory,
-} from '../../utils/form_utils';
+} from '../../utils/__form_utils';
 
 function FormCheckBox(props) {
     const { item, options, value, handleChange, handleCheck } = props;
