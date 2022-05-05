@@ -30,8 +30,15 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
-from .serializers.dmpt_serializers import DmptProjectSerializer, RdmoProjectSerializer, RdmoProjectValuesSerializer
-from .serializers.extended_serializers import DmptSectionNestedSerializer, DmptSectionSerializer
+from .serializers.dmpt_serializers import (
+    DmptProjectSerializer,
+    RdmoProjectSerializer,
+    RdmoProjectValuesSerializer,
+)
+from .serializers.extended_serializers import (
+    DmptSectionNestedSerializer,
+    DmptSectionSerializer,
+)
 
 
 class CSRFViewMixin(View):
@@ -159,6 +166,7 @@ class DmptSupportView(View):
 
 # REFACTORING BELOW --------------------------------------------------------------
 
+
 class RdmoProjectCreateView(generics.CreateAPIView):
     serializer_class = RdmoProjectSerializer
 
@@ -175,8 +183,8 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
         for form_field in form_data:
             question_key = form_field
             # this applies to option-247 and optionset-54
-            if form_field.startswith('option'):
-                sub_fields = form_field.split('____')
+            if form_field.startswith("option"):
+                sub_fields = form_field.split("____")
                 if len(sub_fields) == 2:
                     question_key = sub_fields[1]
                     question = Question.objects.get(key=question_key)
@@ -203,14 +211,16 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
     def post(self, request, format=None):
         serializer = RdmoProjectValuesSerializer(data=request.data)
         if serializer.is_valid():
-            catalog = Catalog.objects.get(id=serializer.data.get('catalog'))
-            project = Project.objects.create(catalog=catalog, title=serializer.data.get('title'))
+            catalog = Catalog.objects.get(id=serializer.data.get("catalog"))
+            project = Project.objects.create(
+                catalog=catalog, title=serializer.data.get("title")
+            )
 
-            form_data = serializer.data.get('form_data', {})
+            form_data = serializer.data.get("form_data", {})
             self._create_values_from_form_data(form_data, project)
 
             data = serializer.data
-            data['rdmo_project_id'] = project.id
+            data["rdmo_project_id"] = project.id
 
             return Response(data=data, status=HTTP_201_CREATED)
 
@@ -226,9 +236,9 @@ class DmptSectionListView(generics.GenericAPIView):
 
     def get(self, request, catalog_id):
         try:
-            catalog = Catalog.objects.prefetch_related('sections').get(id=catalog_id)
+            catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
         except Catalog.DoesNotExist as e:
-            return Response(data=f'{e}', status=HTTP_400_BAD_REQUEST)
+            return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
         sections = catalog.sections.all()
         serializer = DmptSectionSerializer(sections, many=True)
         return Response(data=serializer.data, status=HTTP_200_OK)
@@ -244,29 +254,35 @@ class DmptSectionDetailView(generics.GenericAPIView):
         IsOwner,
     )
 
-    def get(self, request, catalog_id, section_index, format='json'):
+    def get(self, request, catalog_id, section_index, format="json"):
 
         # print('DmptFormDataView | GET | catalog_id: ', catalog_id, ' | section_index: ', section_index)
 
         try:
             catalog = Catalog.objects.prefetch_related(
-                'sections',
-                Prefetch('sections__questionsets',
-                         queryset=QuestionSet.objects.filter(questionset=None).prefetch_related(
-                             'conditions',
-                             'questions',
-                             'questions__attribute',
-                             'questions__optionsets',
-                             'questionsets',
-                             'questions__optionsets__options',
-                         ))
+                "sections",
+                Prefetch(
+                    "sections__questionsets",
+                    queryset=QuestionSet.objects.filter(
+                        questionset=None
+                    ).prefetch_related(
+                        "conditions",
+                        "questions",
+                        "questions__attribute",
+                        "questions__optionsets",
+                        "questionsets",
+                        "questions__optionsets__options",
+                    ),
+                ),
             ).get(id=catalog_id)
         except Catalog.DoesNotExist as e:
-            return Response(data=f'{e}', status=HTTP_400_BAD_REQUEST)
+            return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
         sections = catalog.sections.all()
         if section_index >= len(sections):
-            return Response(data=f'faulty index: {section_index}', status=HTTP_400_BAD_REQUEST)
+            return Response(
+                data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
+            )
 
         serializer = DmptSectionNestedSerializer(sections[section_index])
         return Response(data=serializer.data, status=HTTP_200_OK)

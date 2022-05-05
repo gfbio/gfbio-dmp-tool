@@ -18,14 +18,14 @@ function TextInput(props) {
 TextInput.propTypes = {
     question: PropTypes.shape({
         key: PropTypes.string.isRequired,
-        id: PropTypes.number.isRequired
+        id: PropTypes.number.isRequired,
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
-    initialValue: PropTypes.string
+    initialValue: PropTypes.string,
 };
 
 TextInput.defaultProps = {
-    initialValue: ""
+    initialValue: '',
 };
 
 export default TextInput;

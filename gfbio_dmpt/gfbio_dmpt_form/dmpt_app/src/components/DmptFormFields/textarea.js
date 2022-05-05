@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 function TextArea(props) {
@@ -24,6 +24,7 @@ TextArea.propTypes = {
         key: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
         is_optional: PropTypes.bool.isRequired,
+        value_type: PropTypes.string,
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
     initialValue: PropTypes.string,

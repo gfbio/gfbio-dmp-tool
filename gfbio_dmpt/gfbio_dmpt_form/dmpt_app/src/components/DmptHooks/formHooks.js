@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import validator from 'validator';
 
 // https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
 const useDmptSectionForm = (callback) => {
@@ -19,11 +20,15 @@ const useDmptSectionForm = (callback) => {
     const handleInputChange = (event) => {
         // const handleInputChange = (event) => {
         event.persist();
-        setInputs((inputs) => ({
-            ...inputs,
+        setInputs((prevInput) => ({
+            ...prevInput,
             [event.target.name]: event.target.value,
         }));
-        // console.log('formHooks | useDmptSectionForm | handleChange | inputs: ', inputs);
+
+        // console.log(
+        //     'formHooks | useDmptSectionForm | handleChange | inputs: ',
+        //     inputs
+        // );
     };
     return {
         handleSubmit,

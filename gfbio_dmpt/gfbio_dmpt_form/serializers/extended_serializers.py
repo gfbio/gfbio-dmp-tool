@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 from rdmo.conditions.serializers.v1 import ConditionSerializer
 from rdmo.options.models import Option
-from rdmo.options.serializers.v1 import OptionSetNestedSerializer, OptionNestedSerializer
+from rdmo.options.serializers.v1 import (
+    OptionSetNestedSerializer,
+    OptionNestedSerializer,
+)
 from rdmo.questions.models import Question, Section
-from rdmo.questions.serializers.v1 import QuestionNestedSerializer, QuestionSetNestedSerializer, \
-    SectionNestedSerializer
+from rdmo.questions.serializers.v1 import (
+    QuestionNestedSerializer,
+    QuestionSetNestedSerializer,
+    SectionNestedSerializer,
+)
 from rest_framework import serializers
 
 
@@ -12,16 +18,16 @@ class DmptOptionNestedSerializer(OptionNestedSerializer):
     class Meta:
         model = Option
         fields = (
-            'id',
-            'key',
-            'uri',
-            'uri_prefix',
-            'path',
-            'locked',
-            'order',
-            'text',
-            'warning',
-            'xml_url'
+            "id",
+            "key",
+            "uri",
+            "uri_prefix",
+            "path",
+            "locked",
+            "order",
+            "text",
+            "warning",
+            "xml_url",
         )
 
 
@@ -35,24 +41,25 @@ class DmptQuestionNestedSerializer(QuestionNestedSerializer):
     class Meta:
         model = Question
         fields = (
-            'id',
-            'key',
-            'uri',
-            'uri_prefix',
-            'path',
-            'locked',
-            'order',
-            'text',
-            'help',
-            'attribute',
-            'conditions',
-            'optionsets',
-            'is_collection',
-            'is_optional',
-            'unit',
-            'widget_type',
-            'warning',
-            'xml_url'
+            "id",
+            "key",
+            "uri",
+            "uri_prefix",
+            "path",
+            "locked",
+            "order",
+            "text",
+            "help",
+            "attribute",
+            "conditions",
+            "optionsets",
+            "is_collection",
+            "is_optional",
+            "unit",
+            "widget_type",
+            "value_type",
+            "warning",
+            "xml_url",
         )
 
 
@@ -66,16 +73,15 @@ class DmptSectionNestedSerializer(SectionNestedSerializer):
 
 
 class DmptSectionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Section
         fields = (
-            'id',
-            'uri',
-            'uri_prefix',
-            'key',
-            'path',
-            'locked',
-            'order',
-            'title',
+            "id",
+            "uri",
+            "uri_prefix",
+            "key",
+            "path",
+            "locked",
+            "order",
+            "title",
         )
