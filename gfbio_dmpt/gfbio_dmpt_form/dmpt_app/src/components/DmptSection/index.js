@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import PropTypes from 'prop-types';
-import { Col, Row } from 'react-bootstrap';
-import { SolarSystemLoading } from 'react-loadingg';
-import { SECTION_ROOT } from '../../constants/api/api_constants';
-import DmptFormFields from '../DmptFormFields';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { Col, Row } from "react-bootstrap";
+import { SolarSystemLoading } from "react-loadingg";
+import { SECTION_ROOT } from "../api/constants";
+import DmptFormFields from "../DmptFormFields";
 
 // TODO: maybe change to adapted section detail view. compare TODO in views.py
 const useDmptSection = (catalogId, sectionIndex, token) => {
@@ -53,7 +53,6 @@ function DmptSection(props) {
     if (processing) {
         return (
             <div id="section">
-                {/* <h2>DmptSection</h2> */}
                 <Row>
                     <Col lg={12}>
                         <SolarSystemLoading

@@ -7,7 +7,7 @@ import useSupportForm from './formHooks';
 import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
 
-import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import { PROJECT_API_ROOT } from '../api/constants';
 
 // FIXME: refactor move to general module
 function getCookie(name) {

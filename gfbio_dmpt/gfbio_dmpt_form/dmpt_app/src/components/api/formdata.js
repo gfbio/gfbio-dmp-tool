@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { nanoid } from 'nanoid';
-import { PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import { PROJECT_API_ROOT } from './constants';
 
 const postProject = async (token, catalogId, data) => {
     const res = {};
@@ -24,7 +24,7 @@ const postProject = async (token, catalogId, data) => {
                 res.status = error.response.status;
                 res.statusText = error.message;
             }
-            console.log(error.toJSON());
+            console.error(error.toJSON());
         });
     return res;
 };

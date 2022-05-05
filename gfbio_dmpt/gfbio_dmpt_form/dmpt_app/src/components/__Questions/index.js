@@ -3,7 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
-import { API_ROOT } from '../../constants/api/api_constants';
+import { API_ROOT } from '../api/constants';
 import RdmoContext from '../RdmoContext';
 import FormGenericInput from '../__FormGenericInput';
 import FormRadio from '../__FormRadio';

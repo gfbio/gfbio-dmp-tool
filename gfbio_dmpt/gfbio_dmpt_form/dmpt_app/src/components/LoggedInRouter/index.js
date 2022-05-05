@@ -10,6 +10,10 @@ function LoggedInRouter() {
     if (backend.isLoggedIn === 'false') {
         return <h1>user not logged in</h1>;
     }
+
+    // console.log("LoggedInRouter | backend: ", backend);
+    // console.log("LoggedInRouter | context: ", rdmoContext);
+
     return (
         <DmptSectionNavigation
             token={backend.token}

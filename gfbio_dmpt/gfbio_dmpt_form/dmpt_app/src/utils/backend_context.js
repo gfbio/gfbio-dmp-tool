@@ -1,5 +1,3 @@
-// import React from 'react';
-
 export default function checkBackendParameters(rdmoContext) {
     let backend = {};
     backend.isLoggedIn = 'false';

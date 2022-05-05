@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
 import { useParams } from 'react-router-dom';
-import { API_ROOT, PROJECT_API_ROOT } from '../../constants/api/api_constants';
+import { API_ROOT, PROJECT_API_ROOT } from '../api/constants';
 import RdmoContext from '../RdmoContext';
 import Questions from '../__Questions';
 import ActionButton from '../__ActionButton';

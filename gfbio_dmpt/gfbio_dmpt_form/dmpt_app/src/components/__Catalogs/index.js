@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_ROOT } from '../../constants/api/api_constants';
+import { API_ROOT } from '../api/constants';
 
 function useCatalogs() {
     const [catalogs, setCatalogs] = useState({});

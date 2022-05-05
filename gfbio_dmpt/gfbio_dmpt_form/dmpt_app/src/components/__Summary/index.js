@@ -3,7 +3,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import ScrollToTop from "../ScrollToTop";
-import { PROJECT_API_ROOT } from "../../constants/api/api_constants";
+import { PROJECT_API_ROOT } from "../api/constants";
 import RdmoContext from "../RdmoContext";
 import checkBackendParameters, { resetContext } from "../../utils/backend_context";
 import SupportForm from "../__SupportForm";
