@@ -27,7 +27,7 @@ const submitProjectData = (token, catalogId, inputs, callBack) => {
     console.log('submitHandler | post ..... ');
     postProject(token, catalogId, inputs).then((res) => {
         console.log('submitHandler | post res:  ', res);
-        callBack(true);
+        callBack(res.rdmoProjectId);
     });
 };
 

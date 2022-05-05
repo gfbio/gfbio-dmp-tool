@@ -7,8 +7,7 @@ import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
-import postProject from "../api/formdata";
-import Welcome from "../__Welcome";
+import DmptSummary from '../DmptSummary';
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -83,7 +82,8 @@ function DmptSectionNavigation(props) {
         token
     );
     const [sectionIndex, setSectionIndex] = useState(0);
-    const [rdmoProjectSubmitted, setRdmoProjectSubmitted] = useState(false);
+    // const [rdmoProjectSubmitted, setRdmoProjectSubmitted] = useState(false);
+    const [rdmoProjectId, setRdmoProjectId] = useState(-1);
 
     const { inputs, handleInputChange, handleSubmit } =
         useDmptSectionForm(fakeSubmit);
@@ -95,15 +95,21 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    console.log(`DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `, sectionIndex, ' | rdmoProjectSubmitted: ', rdmoProjectSubmitted);
+    console.log(
+        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+        sectionIndex,
+        ' | rdmoProjectId: ',
+        rdmoProjectId
+    );
 
     if (processing) {
         return <DmptLoading />;
     }
 
-    if (rdmoProjectSubmitted) {
-        return <Welcome />;
-    };
+    // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
+    if (rdmoProjectId > 0) {
+        return <DmptSummary rdmoProjectId={rdmoProjectId} />;
+    }
 
     return (
         <div id="section-navigation">
@@ -163,7 +169,7 @@ function DmptSectionNavigation(props) {
                                 sectionIndex={sectionIndex}
                                 sectionsLength={sectionsLength}
                                 setSectionIndex={setSectionIndex}
-                                callBack={setRdmoProjectSubmitted}
+                                callBack={setRdmoProjectId}
                                 token={token}
                                 catalogId={catalogId}
                                 inputs={inputs}
@@ -190,7 +196,7 @@ function DmptSectionNavigation(props) {
                             sectionIndex={sectionIndex}
                             sectionsLength={sectionsLength}
                             setSectionIndex={setSectionIndex}
-                            callBack={setRdmoProjectSubmitted}
+                            callBack={setRdmoProjectId}
                             token={token}
                             catalogId={catalogId}
                             inputs={inputs}
