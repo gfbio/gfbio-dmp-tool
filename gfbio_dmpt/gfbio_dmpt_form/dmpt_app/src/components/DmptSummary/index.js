@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SaveDmpt from './save';
+import DiscardAndExit from './discard';
 
 function DmptSummary(props) {
     const { rdmoProjectId } = props;
@@ -24,7 +25,7 @@ function DmptSummary(props) {
                     <h2>Request Help</h2>
                 </div>
                 <div className="col-6">
-                    <h2>Discard & exit</h2>
+                    <DiscardAndExit />
                 </div>
             </div>
         </div>
