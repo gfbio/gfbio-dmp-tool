@@ -11,7 +11,8 @@ function TextArea(props) {
             id={`question-${question.id}`}
             name={question.key}
             rows="3"
-            onChange={(e) => handleChange(e)}
+            required={question.is_optional}
+            onChange={(event) => handleChange(event)}
         >
             {initialValue}
         </textarea>
