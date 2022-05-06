@@ -1,6 +1,7 @@
 .mandatory {
   color: $contrast-2;
 }
+
 span.mandatory {
   color: $contrast-1;
 }
@@ -58,6 +59,37 @@ textarea {
   }
 }
 
+.btn-green-sidebar {
+
+  @include sans-serif-font-2;
+  font-weight: 400;
+
+  border-color: darken($gfbio-green, .2);
+
+  background-color: $white;
+  color: $gfbio-green !important;
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:hover, &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    &:focus {
+      box-shadow: none;
+    }
+
+    border-color: darken($gfbio-green, .2);
+    background-color: $gfbio-green;
+    color: $white !important;
+    box-shadow: none;
+  }
+
+  i {
+    //margin-right: .75rem;
+  }
+}
+
 
 label {
   margin-bottom: .5rem;
@@ -109,6 +141,7 @@ div#projectDetail {
   }
 }
 
+// TODO: maybe obsolete after reafactoring, remove then
 div#summary {
   i {
     color: $gfbio-blue;
@@ -120,4 +153,22 @@ div#summary {
     font-size: 1rem;
     font-weight: 500;
   }
+}
+
+
+h6.sidebar-list-item {
+  margin: 0 !important;
+  padding-top: 0.5rem;
+  padding-bottom: 0.45rem;
+
+  i {
+    margin-right: 1rem;
+    font-size: 1.6rem;
+  }
+
+  i.right {
+    margin-right: 0;
+    margin-left: 1.6rem;
+  }
+
 }

@@ -156,3 +156,61 @@
   }
 }
 
+// react app:
+// ----------
+
+
+//ul.nav-tabs {
+//  li.nav-item {
+//    .nav-link {
+//      font-size: 0.9rem;
+//      color: $gfbio-light-blue;
+//
+//      &:hover {
+//        border-color: $gfbio-blue-0-1;
+//        background-color: $gfbio-green-0-1;
+//      }
+//    }
+//
+//    .nav-link.active {
+//      color: $gfbio-light-blue;
+//      font-weight: bolder;
+//    }
+//  }
+//}
+
+
+ul.sub-navi {
+  padding: 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid $gray-light-1;
+  include: sans-serif-font-2;
+
+  .nav-link {
+    font-size: .9rem;
+    color: $gray-darker;
+
+    i {
+      padding-right: .5rem;
+    }
+
+    &:hover {
+      background-color: $gfbio-light-blue;
+      color: $white;
+    }
+
+    &:focus {
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+  }
+
+  .nav-link.active {
+    font-weight: bold;
+    border-left-color: $gray-light-1;
+    border-right-color: $gray-light-1;
+    border-top-color: $gray-light-1;
+  }
+
+}

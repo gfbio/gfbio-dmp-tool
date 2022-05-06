@@ -6,7 +6,7 @@ import { SolarSystemLoading } from 'react-loadingg';
 import {
     PROJECT_API_ROOT,
     URL_PREFIX,
-} from '../../constants/api/api_constants';
+} from '../api/constants';
 import RdmoContext from '../RdmoContext';
 import { checkBackendParameters } from '../../utils/backend_context';
 

@@ -18,4 +18,9 @@ urlpatterns = [
         "export/<int:pk>/<str:format>", views.DmpExportView.as_view(), name="dmp-detail"
     ),
     path("support/", views.DmptSupportView.as_view(), name="dmpt_support"),
+    path("sections/<int:catalog_id>/", views.DmptSectionListView.as_view(), name="dmpt_sections"),
+    path("section/<int:catalog_id>/<int:section_index>/", views.DmptSectionDetailView.as_view(), name="dmpt_section_detail"),
+
+    path("projects/", views.RdmoProjectCreateView.as_view(), name="dmpt_rdmo_projects"),
+    path("projects/values/", views.DmptRdmoProjectCreateView.as_view(), name="dmpt_rdmo_values"),
 ]
