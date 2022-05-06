@@ -65,7 +65,7 @@ function SectionButtons(props) {
             >
                 <h6 className="sidebar-list-item">
                     <i className="mdi mdi-chevron-double-right align-middle right" />
-                    <br /> Submit Plan
+                    <br /> Finalize DMP
                 </h6>
             </button>
         );
