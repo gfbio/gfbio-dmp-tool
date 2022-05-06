@@ -7,7 +7,7 @@ from . import views
 app_name = "gfbio_dmpt_form"
 urlpatterns = [
     url("create/", views.DmptFrontendView.as_view(), name="create_dmp"),
-    url("create/start", views.DmptFrontendView.as_view(), name="create_dmp_start"),
+    # url("create/start", views.DmptFrontendView.as_view(), name="create_dmp_start"),
     path("dmptprojects/", views.DmptProjectListView.as_view(), name="dmpt_projects"),
     path(
         "dmptprojects/<int:pk>/",
