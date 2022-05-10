@@ -85,8 +85,13 @@ function DmptSectionNavigation(props) {
     // const [rdmoProjectSubmitted, setRdmoProjectSubmitted] = useState(false);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
 
-    const { inputs, handleInputChange, handleSubmit } =
-        useDmptSectionForm(fakeSubmit);
+    const {
+        inputs,
+        handleInputChange,
+        handleSubmit,
+        validationErrors,
+        disabledNavigation,
+    } = useDmptSectionForm(fakeSubmit);
 
     const sections = sectionsAsListElements(
         sectionList,
@@ -95,12 +100,12 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    console.log(
-        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-        sectionIndex,
-        ' | rdmoProjectId: ',
-        rdmoProjectId
-    );
+    // console.log(
+    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+    //     sectionIndex,
+    //     ' | rdmoProjectId: ',
+    //     rdmoProjectId
+    // );
 
     if (processing) {
         return <DmptLoading />;
@@ -173,6 +178,8 @@ function DmptSectionNavigation(props) {
                                 token={token}
                                 catalogId={catalogId}
                                 inputs={inputs}
+                                validationErrors={validationErrors}
+                                disabled={disabledNavigation}
                             />
                         </div>
                     </Sticky>
@@ -188,6 +195,7 @@ function DmptSectionNavigation(props) {
                                 handleInputChange={handleInputChange}
                                 handleSubmit={handleSubmit}
                                 inputs={inputs}
+                                validationErrors={validationErrors}
                             />
                         </div>
                     </div>
@@ -200,6 +208,7 @@ function DmptSectionNavigation(props) {
                             token={token}
                             catalogId={catalogId}
                             inputs={inputs}
+                            disabled={disabledNavigation}
                         />
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import postProject from '../api/formdata';
 
@@ -40,17 +40,20 @@ function SectionButtons(props) {
         token,
         catalogId,
         inputs,
+        disabled,
     } = props;
 
     let continueButton = (
         <button
             type="button"
-            className="list-group-item list-group-item-action text-end"
+            className={`list-group-item list-group-item-action text-end ${
+                disabled ? 'disabled' : ''
+            }`}
             onClick={() =>
                 continueHandler(sectionIndex, sectionsLength, setSectionIndex)
             }
         >
-            <h6 className="sidebar-list-item">
+            <h6 className={`sidebar-list-item ${disabled ? 'text-muted' : ''}`}>
                 <i className="mdi mdi-chevron-double-right align-middle right" />
                 <br /> Next Section
             </h6>
@@ -60,10 +63,18 @@ function SectionButtons(props) {
         continueButton = (
             <button
                 type="button"
-                className="list-group-item list-group-item-action text-end"
-                onClick={() => submitProjectData(token, catalogId, inputs, callBack)}
+                className={`list-group-item list-group-item-action text-end ${
+                    disabled ? 'disabled' : ''
+                }`}
+                onClick={() =>
+                    submitProjectData(token, catalogId, inputs, callBack)
+                }
             >
-                <h6 className="sidebar-list-item">
+                <h6
+                    className={`sidebar-list-item ${
+                        disabled ? 'text-muted' : ''
+                    }`}
+                >
                     <i className="mdi mdi-chevron-double-right align-middle right" />
                     <br /> Submit Plan
                 </h6>
@@ -75,10 +86,16 @@ function SectionButtons(props) {
         <div className="list-group list-group-flush list-group-horizontal mt-5">
             <button
                 type="button"
-                className="list-group-item list-group-item-action text-start"
+                className={`list-group-item list-group-item-action text-start ${
+                    disabled ? 'disabled' : ''
+                }`}
                 onClick={() => backHandler(sectionIndex, setSectionIndex)}
             >
-                <h6 className="sidebar-list-item">
+                <h6
+                    className={`sidebar-list-item ${
+                        disabled ? 'text-muted' : ''
+                    }`}
+                >
                     <i className="mdi mdi-chevron-double-left align-middle" />
                     <br />
                     Previous Section
@@ -98,6 +115,7 @@ SectionButtons.propTypes = {
     catalogId: PropTypes.number.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     inputs: PropTypes.object.isRequired,
+    disabled: PropTypes.bool.isRequired,
 };
 
 export default SectionButtons;
