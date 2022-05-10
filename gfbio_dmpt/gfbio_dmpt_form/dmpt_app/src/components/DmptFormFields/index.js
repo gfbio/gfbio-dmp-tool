@@ -77,7 +77,11 @@ function DmptFormFields(props) {
                     // TODO: <09-05-22, claas> //
                     // extract the array into a static variable. These could
                     // also be passed later from the backend
-                    if (['email', 'url'].includes(question.value_type)) {
+                    if (
+                        ['email', 'url', 'phone', 'integer', 'float'].includes(
+                            question.value_type
+                        )
+                    ) {
                         if (question.key in validationErrors) {
                             validationMessage = (
                                 <span className="mandatory">
