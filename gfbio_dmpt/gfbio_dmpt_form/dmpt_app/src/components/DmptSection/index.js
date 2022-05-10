@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import PropTypes from "prop-types";
-import { Col, Row } from "react-bootstrap";
-import { SolarSystemLoading } from "react-loadingg";
-import { SECTION_ROOT } from "../api/constants";
-import DmptFormFields from "../DmptFormFields";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import { Col, Row } from 'react-bootstrap';
+import { SolarSystemLoading } from 'react-loadingg';
+import { SECTION_ROOT } from '../api/constants';
+import DmptFormFields from '../DmptFormFields';
 
 // TODO: maybe change to adapted section detail view. compare TODO in views.py
 const useDmptSection = (catalogId, sectionIndex, token) => {
@@ -41,6 +41,7 @@ function DmptSection(props) {
         handleInputChange,
         handleSubmit,
         inputs,
+        validationErrors,
     } = props;
     const [processing, section] = useDmptSection(
         catalogId,
@@ -76,6 +77,7 @@ function DmptSection(props) {
                     section={section}
                     handleInputChange={handleInputChange}
                     inputs={inputs}
+                    validationErrors={validationErrors}
                 />
             </form>
         </div>
@@ -90,6 +92,8 @@ DmptSection.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     inputs: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    validationErrors: PropTypes.object.isRequired,
 };
 
 export default DmptSection;
