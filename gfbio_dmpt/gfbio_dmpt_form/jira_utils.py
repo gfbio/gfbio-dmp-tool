@@ -150,6 +150,9 @@ def create_support_issue_in_view(form_data={}):
     issue = create_support_issue(rdmo_project, reporter, message)
     if issue is None:
         return {"error": f"no issue could be created"}
-    return {"issue_key": issue.key, "issue_url": issue.self}
+    return {
+        "issue_key": issue.key,
+        "issue_url": f"https://helpdesk.gfbio.org/browse/{issue.key}",
+    }
     # TODO: only for testing, to avoid creating too many real issues in the helpdesk
     # return {"issue_key": "SAND-1661", "issue_url": "https://www.example.com/rest/api/2/issue/16814"}
