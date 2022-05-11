@@ -79,12 +79,10 @@ def create_support_issue(rdmo_project, reporter, message=""):
         issue = jira.create_issue(
             fields={
                 "project": {"key": settings.JIRA_PROJECT},
-                "summary": "DMP Support Request for rdmo project {0}".format(
-                    rdmo_project.pk
-                ),
-                "description": f"Would you please be so kind to help me with my "
-                f'Data Management Plan named "{rdmo_project.title}" '
-                f'using the "{rdmo_project.catalog}" catalog\n\n{message}',
+                "summary": "DMP Support Request",
+                "description": f"Would you please be so nice to help me with my "
+                f'data management plan named "{rdmo_project.title}" '
+                f'using the "{rdmo_project.catalog}" catalogue\n\n{message}',
                 "reporter": {"name": reporter},
                 "issuetype": {"name": "DMP"},
             }
