@@ -44,7 +44,8 @@ const dmpsAsListElements = (dmpList) => {
             <Link
                 className="list-group-item-action"
                 id={index}
-                to={`${URL_PREFIX}${dmp.id}`}
+                // to={`${URL_PREFIX}${dmp.id}`}
+                to={`${dmp.id}`}
             >
                 {dmp.title}
             </Link>
@@ -65,6 +66,7 @@ function DmptList(props) {
         <div id="dmp-list">
             <div className="row">
                 <div className="col-12">
+                    <Link to='new'>New</Link>
                     <div className="list-group">{dmps}</div>
                 </div>
             </div>

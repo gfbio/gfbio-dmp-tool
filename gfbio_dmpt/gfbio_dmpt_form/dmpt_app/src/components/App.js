@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import RdmoContext from './RdmoContext';
-import ProjectList from './__ProjectList';
 import { URL_PREFIX } from './api/constants';
 import LoggedInRouter from './LoggedInRouter';
-import DmptList from "./DmptList";
 
 const App = () => {
     // https://www.savaslabs.com/blog/using-react-global-state-hooks-and-context
@@ -21,23 +19,12 @@ const App = () => {
     return (
         <RdmoContext.Provider value={rdmoContext}>
             <Switch>
-                {/* <Route exact path={`${URL_PREFIX}`} */}
-                {/*     component={LoggedInRouter} /> */}
                 <Route
                     exact
                     path={`${URL_PREFIX}`}
                     component={LoggedInRouter}
                 />
-                {/* <Route */}
-                {/*     exact */}
-                {/*     path={`${URL_PREFIX}list`} */}
-                {/*     component={DmptList} */}
-                {/* /> */}
-                {/* <Route */}
-                {/*     path={`${URL_PREFIX}start/:projectId`} */}
-                {/*     component={DmptStart} */}
-                {/* /> */}
-                <Route path={`${URL_PREFIX}projects`} component={ProjectList} />
+                <Route path={`${URL_PREFIX}:id`} component={LoggedInRouter} />
             </Switch>
         </RdmoContext.Provider>
     );

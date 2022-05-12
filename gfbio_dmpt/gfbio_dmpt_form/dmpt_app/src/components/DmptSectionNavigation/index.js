@@ -66,7 +66,7 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 };
 
 function DmptSectionNavigation(props) {
-    const { catalogId, token } = props;
+    const { catalogId, token, dmptProjectId } = props;
 
     const [processing, sectionList] = useDmptSectionNavigation(
         catalogId,
@@ -91,12 +91,12 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    // console.log(
-    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-    //     sectionIndex,
-    //     ' | rdmoProjectId: ',
-    //     rdmoProjectId
-    // );
+    console.log(
+        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+        sectionIndex,
+        ' | dmptProjectId: ',
+        dmptProjectId
+    );
 
     if (processing) {
         return <DmptLoading />;
@@ -209,9 +209,14 @@ function DmptSectionNavigation(props) {
     );
 }
 
+DmptSectionNavigation.defaultProps = {
+    dmptProjectId: -1,
+};
+
 DmptSectionNavigation.propTypes = {
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
+    dmptProjectId: PropTypes.number,
 };
 
 export default DmptSectionNavigation;
