@@ -210,6 +210,7 @@ class TestDmptProjectDetailView(TestCase):
             'option-325____principal_investigators': '325'
         }, content.get('form_data', {}))
 
+    # FIXME: change of radio button fieldname 12.04
     def test_no_values(self):
         dp = DmptProject.objects.first()
         response = self.client_1.get("/dmp/dmptprojects/{}/".format(dp.pk))

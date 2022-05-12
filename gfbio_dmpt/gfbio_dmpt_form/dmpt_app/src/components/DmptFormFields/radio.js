@@ -2,18 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Radio(props) {
-    const { question, handleChange } = props;
+    const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
+        const radioFieldName = `optionset-${optionSet.id}____${question.key}`;
+        let initialOptionId = '';
+        if (radioFieldName in inputs) {
+            initialOptionId = inputs[radioFieldName];
+        }
+
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
                 <div className="form-check">
                     <input
                         type="radio"
                         className="form-check-input"
-                        name={`option-${optionSetOption.id}____${question.key}`}
+                        name={radioFieldName}
                         id={`option-${optionSetOption.id}`}
                         value={optionSetOption.id}
                         onChange={(e) => handleChange(e)}
+                        checked={`${optionSetOption.id}` === initialOptionId}
                     />
                     <label
                         className="form-check-label"
@@ -24,6 +31,7 @@ function Radio(props) {
                 </div>
             );
         });
+
         return (
             <div id={`optionset-${optionSet.id}`} name={optionSet.key}>
                 {optionSetOptions}
@@ -36,6 +44,10 @@ function Radio(props) {
         </div>
     );
 }
+
+Radio.defaultProps = {
+    inputs: {},
+};
 
 Radio.propTypes = {
     question: PropTypes.shape({
@@ -53,6 +65,7 @@ Radio.propTypes = {
         }).isRequired,
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
+    inputs: PropTypes.shape({}),
 };
 
 export default Radio;

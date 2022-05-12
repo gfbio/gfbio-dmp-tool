@@ -34,7 +34,6 @@ function DmptFormFields(props) {
                             question={question}
                             handleChange={handleInputChange}
                             initialValue={initialTextValue}
-                            // inputs={inputs}
                         />
                     );
                     if (question.widget_type === 'textarea') {
@@ -58,6 +57,7 @@ function DmptFormFields(props) {
                             <Radio
                                 question={question}
                                 handleChange={handleInputChange}
+                                inputs={inputs}
                             />
                         );
                     } else if (question.widget_type === 'checkbox') {
