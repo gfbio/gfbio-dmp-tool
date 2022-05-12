@@ -74,7 +74,6 @@ function DmptSectionNavigation(props) {
         token
     );
     const [sectionIndex, setSectionIndex] = useState(0);
-    // const [rdmoProjectSubmitted, setRdmoProjectSubmitted] = useState(false);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
 
     const {
@@ -83,7 +82,7 @@ function DmptSectionNavigation(props) {
         handleSubmit,
         validationErrors,
         disabledNavigation,
-    } = useDmptSectionForm(fakeSubmit);
+    } = useDmptSectionForm(fakeSubmit, dmptProjectData.form_data);
 
     const sections = sectionsAsListElements(
         sectionList,
@@ -92,12 +91,12 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    console.log(
-        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-        sectionIndex,
-        ' | dmptProjectData: ',
-        dmptProjectData
-    );
+    // console.log(
+    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+    //     sectionIndex,
+    //     ' | dmptProjectData: ',
+    //     dmptProjectData
+    // );
 
     if (processing) {
         return <DmptLoading />;
@@ -211,7 +210,7 @@ function DmptSectionNavigation(props) {
 }
 
 DmptSectionNavigation.defaultProps = {
-    dmptProjectData: {},
+    dmptProjectData: {form_data: {}},
 };
 
 DmptSectionNavigation.propTypes = {

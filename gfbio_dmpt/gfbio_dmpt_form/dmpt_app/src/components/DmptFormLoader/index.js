@@ -37,12 +37,6 @@ function DmptFormLoader(props) {
         token
     );
 
-    console.log(
-        `DmptFormLoader |  processing: ${processing} | `,
-        ' | dmptProjectData: ',
-        dmptProjectData
-    );
-
     if (processing) {
         return <DmptLoading />;
     }

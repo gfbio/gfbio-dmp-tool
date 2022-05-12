@@ -2,8 +2,8 @@ import { useState } from 'react';
 import validator from 'validator';
 
 // https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
-const useDmptSectionForm = (callback) => {
-    const [inputs, setInputs] = useState({});
+const useDmptSectionForm = (callback, initialInputValues) => {
+    const [inputs, setInputs] = useState(initialInputValues);
     const [validationErrors, setValidationErros] = useState({});
     const [disabledNavigation, setDisabledNavigation] = useState(false);
 
@@ -11,10 +11,6 @@ const useDmptSectionForm = (callback) => {
         if (event) {
             event.preventDefault();
         }
-        console.log(
-            'formHooks | useDmptSectionForm | handleSubmit | inputs: ',
-            inputs
-        );
         callback();
     };
 
@@ -97,12 +93,8 @@ const useDmptSectionForm = (callback) => {
             }));
         }
         handleValidation(event, fieldType);
-
-        console.log(
-            'formHooks | useDmptSectionForm | handleChange | inputs: ',
-            inputs
-        );
     };
+
     return {
         handleSubmit,
         handleInputChange,
