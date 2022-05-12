@@ -37,15 +37,6 @@ const fakeSubmit = () => {
     console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
 };
 
-// const submitProjectData = (token, catalogId, inputs) => {
-//     console.log('submitHandler | inputs ', inputs);
-//     console.log('submitHandler | post ..... ');
-//     postProject(token, catalogId, inputs).then((res) => {
-//         console.log('submitHandler | post res:  ', res);
-//
-//     });
-// };
-
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     const maxLength = 25;
     return sectionList.map((section, index) => {

@@ -76,7 +76,7 @@ function SectionButtons(props) {
                     }`}
                 >
                     <i className="mdi mdi-chevron-double-right align-middle right" />
-                    <br /> Submit Plan
+                    <br /> Finalize DMP
                 </h6>
             </button>
         );

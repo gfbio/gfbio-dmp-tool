@@ -1,4 +1,5 @@
 export default function checkBackendParameters(rdmoContext) {
+    console.log('checkBackendParameters ', rdmoContext);
     let backend = {};
     backend.isLoggedIn = 'false';
     if (window.props !== undefined) {

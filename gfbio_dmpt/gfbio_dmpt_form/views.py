@@ -88,6 +88,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_email": f"{user.email}",
             "catalog_id": catalog_id,
         }
+        print('\nBACKEND ', context['backend'])
         return self.render_to_response(context)
 
 
