@@ -34,7 +34,7 @@ function DmptFormFields(props) {
                             question={question}
                             handleChange={handleInputChange}
                             initialValue={initialTextValue}
-                            inputs={inputs}
+                            // inputs={inputs}
                         />
                     );
                     if (question.widget_type === 'textarea') {
@@ -50,6 +50,7 @@ function DmptFormFields(props) {
                             <Select
                                 question={question}
                                 handleChange={handleInputChange}
+                                inputs={inputs}
                             />
                         );
                     } else if (question.widget_type === 'radio') {

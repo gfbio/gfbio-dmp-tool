@@ -93,10 +93,10 @@ const useDmptSectionForm = (callback) => {
         }));
         handleValidation(event, fieldType);
 
-        // console.log(
-        //     'formHooks | useDmptSectionForm | handleChange | inputs: ',
-        //     inputs
-        // );
+        console.log(
+            'formHooks | useDmptSectionForm | handleChange | inputs: ',
+            inputs
+        );
     };
     return {
         handleSubmit,
