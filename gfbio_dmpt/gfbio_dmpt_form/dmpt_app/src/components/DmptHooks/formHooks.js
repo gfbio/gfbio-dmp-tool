@@ -85,12 +85,17 @@ const useDmptSectionForm = (callback) => {
 
     // TODO: enrich data in form with more information from questions and options
     const handleInputChange = (event, fieldType) => {
-        // const handleInputChange = (event) => {
         event.persist();
-        setInputs((prevInput) => ({
-            ...prevInput,
-            [event.target.name]: event.target.value,
-        }));
+        if (event.target.type === 'checkbox' && event.target.name in inputs) {
+            const inputData = inputs;
+            delete inputData[event.target.name];
+            setInputs(inputData);
+        } else {
+            setInputs((prevInput) => ({
+                ...prevInput,
+                [event.target.name]: event.target.value,
+            }));
+        }
         handleValidation(event, fieldType);
 
         console.log(

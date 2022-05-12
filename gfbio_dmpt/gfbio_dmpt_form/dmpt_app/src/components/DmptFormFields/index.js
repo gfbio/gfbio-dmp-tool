@@ -65,6 +65,7 @@ function DmptFormFields(props) {
                             <CheckBox
                                 question={question}
                                 handleChange={handleInputChange}
+                                inputs={inputs}
                             />
                         );
                     }
