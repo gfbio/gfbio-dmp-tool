@@ -1,14 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
-import { Col, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { SolarSystemLoading } from 'react-loadingg';
-import {
-    PROJECT_API_ROOT,
-    URL_PREFIX,
-} from '../api/constants';
+import { PROJECT_API_ROOT, URL_PREFIX } from '../api/constants';
 import RdmoContext from '../RdmoContext';
-import { checkBackendParameters } from '../../utils/backend_context';
+import checkBackendParameters from '../../utils/backend_context';
 
 function useProjectList(token) {
     const [projectList, setProjectList] = useState({});
@@ -43,7 +40,7 @@ function ProjectList() {
     const backendContext = checkBackendParameters(rdmoContext);
     const [loading, projectList] = useProjectList(backendContext.token);
 
-    // console.log('ProjectList');
+    // console.log('__ProjectList');
 
     if (backendContext.isLoggedIn === 'false') {
         return <Redirect push to={`${URL_PREFIX}`} />;
