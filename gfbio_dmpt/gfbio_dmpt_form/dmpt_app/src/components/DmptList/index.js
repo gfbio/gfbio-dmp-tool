@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { PROJECT_API_ROOT, URL_PREFIX } from '../api/constants';
+import { PROJECT_API_ROOT } from '../api/constants';
 import DmptLoading from '../DmptLoading';
 
 const useDmpList = (token) => {
@@ -10,6 +10,7 @@ const useDmpList = (token) => {
     const [dmpList, setDmpList] = useState([]);
     useEffect(() => {
         async function fetchProjectList() {
+            setProcessing(true);
             try {
                 const result = await axios.get(
                     `${PROJECT_API_ROOT}dmptprojects/`,

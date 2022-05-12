@@ -14,6 +14,7 @@ const useDmptSectionNavigation = (catalogId, token) => {
     const [sectionList, setSectionList] = useState([]);
     useEffect(() => {
         async function prepareDmptSectionList() {
+            setProcessing(true);
             try {
                 const result = await axios.get(
                     `${SECTIONS_ROOT}${catalogId}/`,
@@ -66,7 +67,7 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 };
 
 function DmptSectionNavigation(props) {
-    const { catalogId, token, dmptProjectId } = props;
+    const { catalogId, token, dmptProjectData } = props;
 
     const [processing, sectionList] = useDmptSectionNavigation(
         catalogId,
@@ -94,8 +95,8 @@ function DmptSectionNavigation(props) {
     console.log(
         `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
         sectionIndex,
-        ' | dmptProjectId: ',
-        dmptProjectId
+        ' | dmptProjectData: ',
+        dmptProjectData
     );
 
     if (processing) {
@@ -210,13 +211,13 @@ function DmptSectionNavigation(props) {
 }
 
 DmptSectionNavigation.defaultProps = {
-    dmptProjectId: -1,
+    dmptProjectData: {},
 };
 
 DmptSectionNavigation.propTypes = {
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
-    dmptProjectId: PropTypes.number,
+    dmptProjectData: PropTypes.shape({form_data: PropTypes.shape({})}),
 };
 
 export default DmptSectionNavigation;

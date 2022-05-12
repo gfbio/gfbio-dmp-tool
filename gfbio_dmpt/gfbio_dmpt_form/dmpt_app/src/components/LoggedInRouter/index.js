@@ -4,6 +4,7 @@ import RdmoContext from '../RdmoContext';
 import checkBackendParameters from '../../utils/backend_context';
 import DmptList from '../DmptList';
 import DmptSectionNavigation from '../DmptSectionNavigation';
+import DmptFormLoader from '../DmptFormLoader';
 
 function LoggedInRouter() {
     const rdmoContext = useContext(RdmoContext);
@@ -25,7 +26,7 @@ function LoggedInRouter() {
     }
     if (id !== undefined) {
         return (
-            <DmptSectionNavigation
+            <DmptFormLoader
                 token={backend.token}
                 catalogId={backend.catalog_id}
                 dmptProjectId={id}
