@@ -16,7 +16,7 @@ from rdmo.projects.models import Project, Value
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import QuestionSet, Question
 from rdmo.questions.models.catalog import Catalog
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, mixins
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -29,6 +29,7 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
+from .rdmo_db_utils import get_catalog_with_sections, build_form_content
 from .serializers.dmpt_serializers import (
     DmptProjectSerializer,
     RdmoProjectSerializer,
@@ -122,6 +123,23 @@ class DmpExportView(ProjectAnswersView):
         )
 
 
+class DmptSupportView(View):
+    form_class = DmptSupportForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            result = create_support_issue_in_view(form.cleaned_data)
+            return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
+        else:
+            return HttpResponse(
+                status=HTTP_400_BAD_REQUEST, content=form.errors.as_json()
+            )
+
+
+# REFACTORING BELOW --------------------------------------------------------------
+
 # TODO: add issue key to serialization when available. to show in list in frontend
 class DmptProjectListView(generics.ListCreateAPIView):
     queryset = DmptProject.objects.all()
@@ -140,7 +158,7 @@ class DmptProjectListView(generics.ListCreateAPIView):
         return DmptProject.objects.filter(user=user).order_by("-modified")
 
 
-class DmptProjectDetailView(generics.RetrieveAPIView):
+class DmptProjectDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
     queryset = DmptProject.objects.all()
     serializer_class = DmptProjectSerializer
     authentication_classes = (TokenAuthentication, BasicAuthentication)
@@ -149,23 +167,18 @@ class DmptProjectDetailView(generics.RetrieveAPIView):
         IsOwner,
     )
 
-
-class DmptSupportView(View):
-    form_class = DmptSupportForm
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            result = create_support_issue_in_view(form.cleaned_data)
-            return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
-        else:
-            return HttpResponse(
-                status=HTTP_400_BAD_REQUEST, content=form.errors.as_json()
-            )
-
-
-# REFACTORING BELOW --------------------------------------------------------------
+    def get(self, request, *args, **kwargs):
+        response = self.retrieve(request, *args, **kwargs)
+        obj = self.get_object()
+        form_data = {}
+        try:
+            catalog_id = None if not obj.rdmo_project.catalog else obj.rdmo_project.catalog.id
+            catalog = get_catalog_with_sections(catalog_id)
+            form_data = build_form_content(catalog.sections.all(), obj)
+        except Catalog.DoesNotExist as e:
+            pass
+        response.data['form_data'] = form_data
+        return response
 
 
 class RdmoProjectCreateView(generics.CreateAPIView):
@@ -245,6 +258,13 @@ class DmptSectionListView(generics.GenericAPIView):
         return Response(data=serializer.data, status=HTTP_200_OK)
 
 
+# class DmptProjectFormDataView(generics.GenericAPIView):
+#     authentication_classes = (TokenAuthentication, BasicAuthentication)
+#     permission_classes = (
+#         permissions.IsAuthenticated,
+#         IsOwner,
+#     )
+
 # TODO: maybe it is better to access section directly via id, since we now work with section tab navi in react app
 class DmptSectionDetailView(generics.GenericAPIView):
     # TODO: maybe this view becomes restricted
@@ -257,22 +277,7 @@ class DmptSectionDetailView(generics.GenericAPIView):
 
     def get(self, request, catalog_id, section_index, format="json"):
         try:
-            catalog = Catalog.objects.prefetch_related(
-                "sections",
-                Prefetch(
-                    "sections__questionsets",
-                    queryset=QuestionSet.objects.filter(
-                        questionset=None
-                    ).prefetch_related(
-                        "conditions",
-                        "questions",
-                        "questions__attribute",
-                        "questions__optionsets",
-                        "questionsets",
-                        "questions__optionsets__options",
-                    ),
-                ),
-            ).get(id=catalog_id)
+            catalog = get_catalog_with_sections(catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
