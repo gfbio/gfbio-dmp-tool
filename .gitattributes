@@ -8,6 +8,14 @@
 *.css              text
 *.html             text
 
+## BASH SCRIPTS WITHOUT .sh
+backup             text eol=lf
+backups            text eol=lf
+restore            text eol=lf
+start              text eol=lf
+ci_start           text eol=lf
+entrypoint         text eol=lf
+
 ## CONFIG
 .gitattributes     text export-ignore
 .gitignore         text export-ignore
