@@ -123,6 +123,7 @@ class DmpExportView(ProjectAnswersView):
         )
 
 
+# TODO: add issue key to serialization when available. to show in list in frontend
 class DmptProjectListView(generics.ListCreateAPIView):
     queryset = DmptProject.objects.all()
     serializer_class = DmptProjectSerializer

@@ -31,14 +31,23 @@ const useDmpList = (token) => {
     return [processing, dmpList];
 };
 
+// [
+//     {
+//         "id": 29,  --> DMPTProject id/pk
+//         "user": 1,
+//         "rdmo_project": 156, rdmo_project id/pk
+//         "title": "tmp_6IHLMd4G9wpesxX7s6ZA3"
+//     },
 const dmpsAsListElements = (dmpList) => {
     return dmpList.map((dmp, index) => {
         return (
-            <li>
-                <Link id={index} to={`${URL_PREFIX}${dmp.id}`}>
-                    {dmp.title}
-                </Link>
-            </li>
+            <Link
+                className="list-group-item-action"
+                id={index}
+                to={`${URL_PREFIX}${dmp.id}`}
+            >
+                {dmp.title}
+            </Link>
         );
     });
 };
@@ -56,7 +65,7 @@ function DmptList(props) {
         <div id="dmp-list">
             <div className="row">
                 <div className="col-12">
-                    <ul>{dmps}</ul>
+                    <div className="list-group">{dmps}</div>
                 </div>
             </div>
         </div>

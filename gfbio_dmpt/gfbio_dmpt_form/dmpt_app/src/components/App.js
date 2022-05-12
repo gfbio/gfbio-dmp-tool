@@ -28,11 +28,11 @@ const App = () => {
                     path={`${URL_PREFIX}`}
                     component={LoggedInRouter}
                 />
-                <Route
-                    exact
-                    path={`${URL_PREFIX}list`}
-                    component={DmptList}
-                />
+                {/* <Route */}
+                {/*     exact */}
+                {/*     path={`${URL_PREFIX}list`} */}
+                {/*     component={DmptList} */}
+                {/* /> */}
                 {/* <Route */}
                 {/*     path={`${URL_PREFIX}start/:projectId`} */}
                 {/*     component={DmptStart} */}
