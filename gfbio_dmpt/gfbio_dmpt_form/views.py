@@ -2,7 +2,6 @@
 import json
 import random
 import string
-from multiprocessing import Value
 
 from django.contrib.auth.models import Group
 from django.db.models import Prefetch
@@ -257,9 +256,6 @@ class DmptSectionDetailView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id, section_index, format="json"):
-
-        # print('DmptFormDataView | GET | catalog_id: ', catalog_id, ' | section_index: ', section_index)
-
         try:
             catalog = Catalog.objects.prefetch_related(
                 "sections",

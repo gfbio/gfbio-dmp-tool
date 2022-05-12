@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
 from inspect import Attribute
+from pprint import pp, pprint
 
+from django.db.models import Prefetch
 from django.test import TestCase
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Project, Value
-from rdmo.questions.models import Catalog
+from rdmo.questions.models import Catalog, QuestionSet
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
@@ -108,3 +110,94 @@ class TestDmptFormDataView(TestCase):
         values = Value.objects.filter(project=projects.first())
         self.assertEqual(6, len(values))
         self.assertEqual(4, len(Value.objects.filter(project=projects.first()).filter(option_id__isnull=False)))
+
+    def test_handle_form_init(self):
+        catalog_id = 18  # ???
+        catalog = Catalog.objects.get(id=catalog_id)
+        data = {
+            'catalog': catalog.id,
+            'title': 'Le Title',
+            'form_data': {
+                'project_name': 'Project Title',
+                'optionset-54____categoryType': '317',
+                'option-247____is_data_reproducible': '247',
+                'option-248____is_data_reproducible': '248',
+                'PersonName': 'Contact for data',
+                'option-325____principal_investigators': '325'
+            }
+        }
+        self.std_client.post('/dmp/projects/values/', data, format='json')
+
+        # print(values)
+        # for v in values:
+        #     pprint(v.__dict__)
+
+        # section_index = 0
+        # response = self.std_client.get(f'/dmp/section/{catalog_id}/{section_index}/')
+        # content = json.loads(response.content)
+        # pprint(content)
+
+        # formdata in app:
+        #   - text & textarea -> field.name = question.key :  value is text
+        #   - select -> <select> field.name = {`optionset-${optionSet.id}____${question.key}`}
+        #            -> <option> field.name = {optionSetOption.key} == option.key
+        #            -> <option> field.value = option.id
+        #   - radio -> fieldname={`option-${optionSetOption.id}____${question.key}`} : value is option.key
+        #   - checkbox -> name={`option-${optionSetOption.id}____${question.key}`} : value is option.key
+        #               -> question key can occur multiple times
+
+        # for qs in content['questionsets']:
+        #     # pprint(qs)
+        #     for q in qs['questions']:
+        #         # pprint(q)
+        #         if q['widget_type'] in ['text', 'textarea']:
+        #             print('formdata key would be: ', q['key'], ' |  attribute | ', q['attribute'])
+
+        catalog = Catalog.objects.prefetch_related(
+            "sections",
+            Prefetch(
+                "sections__questionsets",
+                queryset=QuestionSet.objects.filter(
+                    questionset=None
+                ).prefetch_related(
+                    "conditions",
+                    "questions",
+                    "questions__attribute",
+                    "questions__optionsets",
+                    "questionsets",
+                    "questions__optionsets__options",
+                ),
+            ),
+        ).get(id=catalog_id)
+        sections = catalog.sections.all()
+
+        # values = Value.objects.filter(project=Project.objects.get(title=data['title']))
+        project = Project.objects.get(title=data['title'])
+        project_values = project.values.all()
+
+        # section_index = 0
+        for section_index in range(0, len(sections)):
+            print(section_index)
+            section = sections[section_index]
+            for qs in section.questionsets.all():
+                for q in qs.questions.all():
+                    q_values = project_values.filter(attribute=q.attribute)
+                    if len(q_values):
+                        print('\tquestion: ', q.key, ' | values available ')
+                        if q.widget_type in ['text', 'textarea']:
+                            f_key = q.key
+                            print('\t\t\tformdata key would be: ', f_key, ' | value: ', q_values.first().text)
+                        elif q.widget_type == 'select':
+                            for qv in q_values:
+                                if qv.option is not None:
+                                    f_key = f'optionset-{qv.option.optionset.id}____{q.key}'
+                                    print('\t\t\tformdata key would be: ', f_key, ' | value: ', f'{qv.option.id}')
+                        elif q.widget_type == 'checkbox':
+                            for qv in q_values:
+                                if qv.option is not None:
+                                    f_key = f'option-{qv.option.id}____{q.key}'
+                                    print('\t\t\tformdata key would be: ', f_key, ' | value: ', f'{qv.option.id}')
+                        elif q.widget_type == 'radio':
+                            val = q_values.first()
+                            f_key = f'option-{val.option.id}____{q.key}'
+                            print('\t\t\tformdata key would be: ', f_key, ' | value: ', f'{val.option.id}')

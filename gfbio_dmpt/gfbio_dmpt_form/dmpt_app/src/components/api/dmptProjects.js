@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { PROJECT_API_ROOT } from './constants';
 
-export const postDmptProject = async (token, userId, rdmoProjectId) => {
+const postDmptProject = async (token, userId, rdmoProjectId) => {
     const res = { data: {} };
     await axios
         .post(
@@ -55,4 +55,4 @@ export const postDmptProject = async (token, userId, rdmoProjectId) => {
 //         });
 // };
 
-// export default postDmptProject;
+export default postDmptProject;
