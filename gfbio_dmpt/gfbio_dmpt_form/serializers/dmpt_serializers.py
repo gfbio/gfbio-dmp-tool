@@ -48,3 +48,18 @@ class RdmoProjectValuesSerializer(serializers.Serializer):
         if len(catalogs) != 1:
             raise serializers.ValidationError({'catalog': 'catalog not found for this id'})
         return data
+
+
+class RdmpProjectValuesUpdateSerializer(serializers.Serializer):
+    dmpt_project = serializers.IntegerField(required=True)
+    title = serializers.CharField(required=True)
+    form_data = serializers.JSONField(required=True)
+
+    class Meta:
+        fields = ['title', 'dmpt_project', 'form_data']
+
+    def validate(self, data):
+        dmpt_projects = DmptProject.objects.filter(id=data.get('dmpt_project', None))
+        if len(dmpt_projects) != 1:
+            raise serializers.ValidationError({'dmpt_project': 'no dmptproject found for this id'})
+        return data

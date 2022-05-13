@@ -68,6 +68,7 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 
 function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
+    const dmptProjectId = dmptProjectData.id;
 
     const [processing, sectionList] = useDmptSectionNavigation(
         catalogId,
@@ -91,12 +92,14 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    // console.log(
-    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-    //     sectionIndex,
-    //     ' | dmptProjectData: ',
-    //     dmptProjectData
-    // );
+    console.log(
+        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+        sectionIndex,
+        '| dmptProjectId ',
+        dmptProjectId,
+        ' | dmptProjectData: ',
+        dmptProjectData
+    );
 
     if (processing) {
         return <DmptLoading />;
@@ -161,6 +164,8 @@ function DmptSectionNavigation(props) {
                             {/* </div> */}
                             {/* TODO: end of commented sidebar actions, do not remove. */}
 
+                            {/* ---> TODO: continue with PUT for existing dmps and check re-load/re-put consistency */}
+
                             <SectionButtons
                                 sectionIndex={sectionIndex}
                                 sectionsLength={sectionsLength}
@@ -171,6 +176,7 @@ function DmptSectionNavigation(props) {
                                 inputs={inputs}
                                 validationErrors={validationErrors}
                                 disabled={disabledNavigation}
+                                dmptProjectId={dmptProjectId}
                             />
                         </div>
                     </Sticky>
@@ -200,6 +206,7 @@ function DmptSectionNavigation(props) {
                             catalogId={catalogId}
                             inputs={inputs}
                             disabled={disabledNavigation}
+                            dmptProjectId={dmptProjectId}
                         />
                     </div>
                 </div>
@@ -210,13 +217,16 @@ function DmptSectionNavigation(props) {
 }
 
 DmptSectionNavigation.defaultProps = {
-    dmptProjectData: {form_data: {}},
+    dmptProjectData: { form_data: {}, id: -1 },
 };
 
 DmptSectionNavigation.propTypes = {
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
-    dmptProjectData: PropTypes.shape({form_data: PropTypes.shape({})}),
+    dmptProjectData: PropTypes.shape({
+        form_data: PropTypes.shape({}),
+        id: PropTypes.number,
+    }),
 };
 
 export default DmptSectionNavigation;

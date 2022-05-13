@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import postProject from '../api/formdata';
 
@@ -14,21 +14,19 @@ const backHandler = (val, valHandler) => {
     }
 };
 
-// const submitHandler = (token, catalogId, inputs) => {
-//     console.log('submitHandler | inputs ', inputs);
-//     console.log('submitHandler | post ..... ');
-//     postProject(token, catalogId, inputs).then((res) => {
-//         console.log('submitHandler | post res:  ', res);
-//     });
-// };
-
-const submitProjectData = (token, catalogId, inputs, callBack) => {
+const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
     console.log('submitHandler | inputs ', inputs);
-    console.log('submitHandler | post ..... ');
-    postProject(token, catalogId, inputs).then((res) => {
-        console.log('submitHandler | post res:  ', res);
-        callBack(res.rdmoProjectId);
-    });
+
+    if (dmptProjectId > -1) {
+        console.log('submitHandler | put ..... ');
+    }
+    else {
+        console.log('submitHandler | post ..... ');
+        postProject(token, catalogId, inputs).then((res) => {
+            console.log('submitHandler | post res:  ', res);
+            callBack(res.rdmoProjectId);
+        });
+    }
 };
 
 function SectionButtons(props) {
@@ -41,7 +39,10 @@ function SectionButtons(props) {
         catalogId,
         inputs,
         disabled,
+        dmptProjectId,
     } = props;
+
+    const submitText = dmptProjectId < 0 ? "Finalize DMP" : "Update DMP";
 
     let continueButton = (
         <button
@@ -67,7 +68,7 @@ function SectionButtons(props) {
                     disabled ? 'disabled' : ''
                 }`}
                 onClick={() =>
-                    submitProjectData(token, catalogId, inputs, callBack)
+                    submitProjectData(token, catalogId, inputs, callBack, dmptProjectId)
                 }
             >
                 <h6
@@ -76,7 +77,7 @@ function SectionButtons(props) {
                     }`}
                 >
                     <i className="mdi mdi-chevron-double-right align-middle right" />
-                    <br /> Finalize DMP
+                    <br /> {submitText}
                 </h6>
             </button>
         );
@@ -106,6 +107,10 @@ function SectionButtons(props) {
     );
 }
 
+SectionButtons.defaultProps = {
+    dmptProjectId: -1,
+};
+
 SectionButtons.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     sectionsLength: PropTypes.number.isRequired,
@@ -116,6 +121,7 @@ SectionButtons.propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     inputs: PropTypes.object.isRequired,
     disabled: PropTypes.bool.isRequired,
+    dmptProjectId: PropTypes.number,
 };
 
 export default SectionButtons;
