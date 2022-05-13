@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import postProject from '../api/formdata';
+import postProject, { putProject } from "../api/formdata";
 
 const continueHandler = (val, maxVal, valHandler) => {
     if (val < maxVal - 1) {
@@ -14,17 +14,23 @@ const backHandler = (val, valHandler) => {
     }
 };
 
-const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
+const submitProjectData = (token, catalogId, inputs, postCallBack, putCallBack, dmptProjectId) => {
     console.log('submitHandler | inputs ', inputs);
 
     if (dmptProjectId > -1) {
         console.log('submitHandler | put ..... ');
+        putProject(token, dmptProjectId, inputs).then((res) => {
+            console.log('submitHandler | put res:  ', res);
+            putCallBack(res.status);
+            // TODO: second callback for updates ?
+        });
     }
     else {
         console.log('submitHandler | post ..... ');
         postProject(token, catalogId, inputs).then((res) => {
             console.log('submitHandler | post res:  ', res);
-            callBack(res.rdmoProjectId);
+            postCallBack(res.rdmoProjectId);
+            // TODO: rename if second callback added
         });
     }
 };
@@ -34,7 +40,8 @@ function SectionButtons(props) {
         sectionIndex,
         sectionsLength,
         setSectionIndex,
-        callBack,
+        postCallBack,
+        putCallBack,
         token,
         catalogId,
         inputs,
@@ -68,7 +75,7 @@ function SectionButtons(props) {
                     disabled ? 'disabled' : ''
                 }`}
                 onClick={() =>
-                    submitProjectData(token, catalogId, inputs, callBack, dmptProjectId)
+                    submitProjectData(token, catalogId, inputs, postCallBack, putCallBack, dmptProjectId)
                 }
             >
                 <h6
@@ -115,7 +122,8 @@ SectionButtons.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     sectionsLength: PropTypes.number.isRequired,
     setSectionIndex: PropTypes.func.isRequired,
-    callBack: PropTypes.func.isRequired,
+    postCallBack: PropTypes.func.isRequired,
+    putCallBack: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
     // eslint-disable-next-line react/forbid-prop-types

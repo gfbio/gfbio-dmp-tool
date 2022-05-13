@@ -8,6 +8,7 @@ import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import DmptSummary from '../DmptSummary';
+import DmptList from "../DmptList";
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -76,6 +77,7 @@ function DmptSectionNavigation(props) {
     );
     const [sectionIndex, setSectionIndex] = useState(0);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
+    const [updateResponseStatus, setUpdateResponseStatus] = useState(0);
 
     const {
         inputs,
@@ -92,19 +94,22 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    console.log(
-        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-        sectionIndex,
-        '| dmptProjectId ',
-        dmptProjectId,
-        ' | dmptProjectData: ',
-        dmptProjectData
-    );
+    // console.log(
+    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+    //     sectionIndex,
+    //     '| dmptProjectId ',
+    //     dmptProjectId,
+    //     ' | dmptProjectData: ',
+    //     dmptProjectData
+    // );
 
     if (processing) {
         return <DmptLoading />;
     }
 
+    if (updateResponseStatus > 0) {
+        return <DmptList token={token}  updateStatusCode={updateResponseStatus}/>;
+    }
     // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
     if (rdmoProjectId > 0) {
         return <DmptSummary rdmoProjectId={rdmoProjectId} />;
@@ -121,56 +126,13 @@ function DmptSectionNavigation(props) {
             <div className="row" id="section-wrapper-row">
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
-                        {/* TODO: wrap sidebar and tabnavi+section in extra compoment if needed. */}
-                        {/* TODO: put sidenavi action into comments, because Ivo doesn't like cool ideas ... */}
                         <div className="row">
-                            {/* <div className="list-group list-group-flush"> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-content-save-all-outline align-middle" /> */}
-                            {/*             Save Project */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-trash-can-outline align-middle" /> */}
-                            {/*             Discard & Exit ? */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-file-pdf-box align-middle" /> */}
-                            {/*             Download PDF */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-account-question-outline align-middle" /> */}
-                            {/*             Request Support */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/* </div> */}
-                            {/* TODO: end of commented sidebar actions, do not remove. */}
-
-                            {/* ---> TODO: continue with PUT for existing dmps and check re-load/re-put consistency */}
-
                             <SectionButtons
                                 sectionIndex={sectionIndex}
                                 sectionsLength={sectionsLength}
                                 setSectionIndex={setSectionIndex}
-                                callBack={setRdmoProjectId}
+                                postCallBack={setRdmoProjectId}
+                                putCallBack={setUpdateResponseStatus}
                                 token={token}
                                 catalogId={catalogId}
                                 inputs={inputs}
@@ -201,7 +163,8 @@ function DmptSectionNavigation(props) {
                             sectionIndex={sectionIndex}
                             sectionsLength={sectionsLength}
                             setSectionIndex={setSectionIndex}
-                            callBack={setRdmoProjectId}
+                            postCallBack={setRdmoProjectId}
+                            putCallBack={setUpdateResponseStatus}
                             token={token}
                             catalogId={catalogId}
                             inputs={inputs}

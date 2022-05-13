@@ -29,4 +29,26 @@ const postProject = async (token, catalogId, data) => {
     return res;
 };
 
+export const putProject = async (token, dmptProjectId, data) => {
+    const res  = {};
+    const payload = {};
+    payload.dmpt_project = dmptProjectId;
+    payload.title = data.project_name === undefined ? `tmp_${nanoid()}` : data.project_name;
+    payload.form_data =  data;
+    await axios.put(`${PROJECT_API_ROOT}projects/values/`, payload, {
+        headers: { Authorization: `Token ${token}` },
+    }).then((response)=>{
+        res.status = response.status;
+        res.statusText = response.statusText;
+        res.dmptProjectId = response.data.dmpt_project;
+    }).catch((error)=>{
+        if (error.response) {
+            res.status = error.response.status;
+            res.statusText = error.message;
+        }
+        console.error(error.toJSON());
+    });
+    return res;
+};
+
 export default postProject;
