@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 
 function TextInput(props) {
     const { question, handleChange, initialValue, validationErrors } = props;
+
+    // This not the best way, but increases readability of data in requests
+    const fieldName = `${question.key}____${question.id}`;
     return (
         <input
             type="text"
             className="form-control"
             id={`question-${question.id}`}
-            name={question.key}
+            name={fieldName}
             value={initialValue}
             onChange={(event) =>
                 handleChange(event, question.value_type, question.is_optional)

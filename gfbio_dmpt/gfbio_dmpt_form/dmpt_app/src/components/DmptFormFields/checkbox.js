@@ -5,7 +5,7 @@ function CheckBox(props) {
     const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
-            const checkBoxFieldName = `option-${optionSetOption.id}____${question.key}`;
+            const checkBoxFieldName = `option-${optionSetOption.id}____${question.key}____${question.id}`;
             let initialOptionId = '';
             if (checkBoxFieldName in inputs) {
                 initialOptionId = inputs[checkBoxFieldName];

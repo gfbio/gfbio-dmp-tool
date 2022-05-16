@@ -22,10 +22,11 @@ function DmptFormFields(props) {
                         mandatoryMessage = <span />;
                     }
 
-                    // TODO: this is a template to solve init of textbased fields, compare textarea
+                    // This not the best way, but increases readability of data in requests
+                    const fieldName = `${question.key}____${question.id}`;
                     let initialTextValue = '';
-                    if (inputs[question.key] !== undefined) {
-                        initialTextValue = inputs[question.key];
+                    if (inputs[fieldName] !== undefined) {
+                        initialTextValue = inputs[fieldName];
                     }
                     // TODO: add a way to do this for option based fields, like radio, select, checkbox
 

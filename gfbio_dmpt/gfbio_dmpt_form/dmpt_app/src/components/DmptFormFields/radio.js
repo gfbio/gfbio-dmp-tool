@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 function Radio(props) {
     const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
-        const radioFieldName = `optionset-${optionSet.id}____${question.key}`;
+        const radioFieldName = `optionset-${optionSet.id}____${question.key}____${question.id}`;
         let initialOptionId = '';
         if (radioFieldName in inputs) {
             initialOptionId = inputs[radioFieldName];

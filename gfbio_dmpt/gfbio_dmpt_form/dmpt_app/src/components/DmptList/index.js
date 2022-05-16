@@ -69,8 +69,6 @@ function DmptList(props) {
         message = <div className="alert alert-success alert-dismissible fade show" role="alert">
             <h4 className="alert-heading">Update Successful !</h4>
             <p>Your Data Management Plan has been successfully updated.</p>
-            {/* <hr /> */}
-            {/* <p className="mb-0"></p> */}
             <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" />
         </div>;
     }

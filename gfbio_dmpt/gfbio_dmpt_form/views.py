@@ -194,45 +194,63 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
     )
 
     @staticmethod
-    def _create_text_value(text_value, project_id, question_key):
-        question = Question.objects.get(key=question_key)
-        Value.objects.create(
-            project_id=project_id,
-            attribute=question.attribute,
-            text=text_value,
-            value_type=question.value_type,
-            unit=question.unit,
-        )
+    def _create_text_value(text_value, project_id, question_id):
+        print('_create_text_value | question_id : ', question_id)
+        try:
+            question = Question.objects.get(id=question_id)
+            Value.objects.create(
+                project_id=project_id,
+                attribute=question.attribute,
+                text=text_value,
+                value_type=question.value_type,
+                unit=question.unit,
+            )
+        except Question.DoesNotExist as e:
+            pass
 
     @staticmethod
-    def _create_option_value(option_value, project_id, question_key):
-        question = Question.objects.get(key=question_key)
-        option = Option.objects.get(id=int(option_value))
-        Value.objects.create(
-            project_id=project_id,
-            attribute=question.attribute,
-            option=option,
-            value_type=question.value_type,
-            unit=question.unit,
-        )
+    def _create_option_value(option_value, project_id, question_id):
+        print('_create_option_value | question_id : ', question_id)
+        try:
+            question = Question.objects.get(id=question_id)
+            option = Option.objects.get(id=int(option_value))
+            Value.objects.create(
+                project_id=project_id,
+                attribute=question.attribute,
+                option=option,
+                value_type=question.value_type,
+                unit=question.unit,
+            )
+        except Question.DoesNotExist as e:
+            pass
+        except Option.DoesNotExist as oe:
+            pass
 
     def _create_values_from_form_data(self, form_data, project_id):
+        print('_create_values_from_form_data ', form_data, ' | project id ', project_id)
+        separator = "____"
         for form_field in form_data:
-            question_key = form_field
-            # this applies to option-247 and optionset-54
-            if form_field.startswith("option"):
-                sub_fields = form_field.split("____")
-                if len(sub_fields) == 2:
-                    question_key = sub_fields[1]
-                    self._create_option_value(form_data[form_field], project_id, question_key)
-                    continue
-                else:
-                    continue
-            self._create_text_value(form_data[form_field], project_id, question_key)
+            print('form_field : ', form_field)
+            sub_fields = form_field.split(separator)
+
+            # question_key = form_field
+            # # this applies to option-247 and optionset-54
+            if form_field.startswith("option") and len(sub_fields) == 3:
+                # sub_fields = form_field.split(separator)
+                # if len(sub_fields) == 3:
+                question_id = sub_fields[2]
+                self._create_option_value(form_data[form_field], project_id, question_id)
+                continue
+            elif len(sub_fields) == 2:
+                question_id = sub_fields[1]
+                self._create_text_value(form_data[form_field], project_id, question_id)
+                continue
+            else:
+                continue
+
 
     def _update_values_from_form_data(self, form_data, dmpt_project):
         related_values = dmpt_project.rdmo_project.values.all()
-        # pprint(related_values)
         related_values.delete()
         self._create_values_from_form_data(form_data, dmpt_project.rdmo_project.id)
         # 0. strictly: what comes via a put request ressemble the new state of objects

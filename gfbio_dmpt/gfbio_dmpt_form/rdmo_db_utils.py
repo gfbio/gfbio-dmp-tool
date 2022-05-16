@@ -32,14 +32,15 @@ def build_form_content(sections, dmpt_project):
                 if len(related_values):
                     if question.widget_type == 'select':
                         for val in related_values.exclude(option=None):
-                            form_data[f'optionset-{val.option.optionset.id}____{question.key}'] = str(val.option.id)
+                            form_data[f'optionset-{val.option.optionset.id}____{question.key}____{question.id}'] = str(
+                                val.option.id)
                     elif question.widget_type == 'checkbox':
                         for val in related_values.exclude(option=None):
-                            form_data[f'option-{val.option.id}____{question.key}'] = str(val.option.id)
+                            form_data[f'option-{val.option.id}____{question.key}____{question.id}'] = str(val.option.id)
                     elif question.widget_type == 'radio':
                         val = related_values.first()
-                        form_data[f'option-{val.option.id}____{question.key}'] = str(val.option.id)
+                        form_data[f'optionset-{val.option.optionset.id}____{question.key}____{question.id}'] = str(val.option.id)
                     else:
                         # if question.widget_type in ['text', 'textarea']:
-                        form_data[question.key] = related_values.first().text
+                        form_data[f'{question.key}____{question.id}'] = related_values.first().text
     return form_data

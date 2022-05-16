@@ -85,6 +85,16 @@ class TestDmptFormDataView(TestCase):
         #     "PersonName": "Contact for data",
         #     "option-325____principal_investigators": "325"
         # }
+        # PersonName____493: "qqqq"
+        # additional_information____490: "bbbbb"
+        # option-227____Options____491: "227"
+        # option-229____Options____491: "229"
+        # option-247____is_data_reproducible____489: "247"
+        # option-249____is_data_reproducible____489: "249"
+        # optionset-40____funder_or_programme_title____497: "237"
+        # optionset-54____categoryType____488: "317"
+        # optionset-55____principal_investigators____496: "325"
+        # project_name____487: "aaa"
         # project = Project.objects.first()
         catalog_id = 18  # ???
         catalog = Catalog.objects.get(id=catalog_id)
@@ -92,12 +102,12 @@ class TestDmptFormDataView(TestCase):
             "catalog": catalog.id,
             "title": "Le Title",
             "form_data": {
-                "project_name": "Project Title",
-                "optionset-54____categoryType": "317",
-                "option-247____is_data_reproducible": "247",
-                "option-248____is_data_reproducible": "248",
-                "PersonName": "Contact for data",
-                "option-325____principal_investigators": "325",
+                "project_name____487": "Project Title",
+                "optionset-54____categoryType____488": "317",
+                "option-247____is_data_reproducible____489": "247",
+                "option-249____is_data_reproducible____489": "248",
+                "PersonName____493": "Contact for data",
+                "optionset-55____principal_investigators____496": "325",
             },
         }
         response = self.std_client.post("/dmp/projects/values/", data, format="json")
@@ -120,6 +130,21 @@ class TestDmptFormDataView(TestCase):
             ),
         )
 
+    def test_post_invalid_question_id_value(self):
+        catalog_id = 18
+        catalog = Catalog.objects.get(id=catalog_id)
+        data = {
+            "catalog": catalog.id,
+            "title": "Le Title",
+            "form_data": {
+                "project_name____666": "Project Title",
+                "optionset-54____categoryType____999": "317",
+                "option-247____is_data_reproducible____333": "247",
+            },
+        }
+        response = self.std_client.post("/dmp/projects/values/", data, format="json")
+        self.assertEqual(201, response.status_code)
+
     def test_put_value(self):
         catalog_id = 18
         catalog = Catalog.objects.get(id=catalog_id)
@@ -127,12 +152,12 @@ class TestDmptFormDataView(TestCase):
             "catalog": catalog.id,
             "title": "Le Title",
             "form_data": {
-                "project_name": "Project Title",
-                "optionset-54____categoryType": "317",
-                "option-247____is_data_reproducible": "247",
-                "option-248____is_data_reproducible": "248",
-                "PersonName": "Contact for data",
-                "option-325____principal_investigators": "325",
+                "project_name____487": "Project Title",
+                "optionset-54____categoryType____488": "317",
+                "option-247____is_data_reproducible____489": "247",
+                "option-249____is_data_reproducible____489": "248",
+                "PersonName____493": "Contact for data",
+                "optionset-55____principal_investigators____496": "325",
             },
         }
         response = self.std_client.post("/dmp/projects/values/", data, format="json")

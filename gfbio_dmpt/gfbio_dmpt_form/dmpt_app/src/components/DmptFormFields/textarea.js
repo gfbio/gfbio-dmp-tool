@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 function TextArea(props) {
     const { question, handleChange, initialValue } = props;
 
     // { question.is_optional ? "" : "required"}
+
+    // This not the best way, but increases readability of data in requests
+    const fieldName = `${question.key}____${question.id}`;
     return (
         <textarea
             className="form-control"
             id={`question-${question.id}`}
-            name={question.key}
+            name={fieldName}
             rows="3"
             required={question.is_optional}
             onChange={(event) =>

@@ -92,6 +92,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
                 [event.target.name]: event.target.value,
             }));
         }
+        console.log('formHooks.js | handleInputChange | inputs : ', inputs);
         handleValidation(event, fieldType);
     };
 
