@@ -79,7 +79,6 @@ const useDmptSectionForm = (callback, initialInputValues) => {
         }
     };
 
-    // TODO: enrich data in form with more information from questions and options
     const handleInputChange = (event, fieldType) => {
         event.persist();
         if (event.target.type === 'checkbox' && event.target.name in inputs) {
@@ -92,7 +91,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
                 [event.target.name]: event.target.value,
             }));
         }
-        console.log('formHooks.js | handleInputChange | inputs : ', inputs);
+        // console.log('formHooks.js | handleInputChange | inputs : ', inputs);
         handleValidation(event, fieldType);
     };
 

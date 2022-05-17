@@ -1,24 +1,76 @@
-import React from 'react';
+// I dont know why the linter is still complaining about this, all lablels and
+// inputs are related by id & htmlFor
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import useSupportForm from '../DmptHooks/supportFormHooks';
+import postSupportRequest from '../api/support';
+import RdmoContext from '../RdmoContext';
 
-const submitRequest = (inputs) => {
-    console.log('DmptSummary | support.js | submit | inputs ', inputs);
-};
+function SupportRequest(props) {
+    const { rdmoProjectId } = props;
+    const rdmoContext = useContext(RdmoContext);
 
-function SupportRequest() {
-    const { inputs, handleInputChange, handleSubmit } =
-        useSupportForm(submitRequest);
+    const [issue, setIssue] = useState({
+        status: -1,
+        issue_key: '',
+        issue_url: '',
+    });
+
+    const submitRequest = (inputs) => {
+        const data = inputs;
+        data.rdmo_project_id = rdmoProjectId;
+        postSupportRequest(data, rdmoContext.backend_context.token).then(
+            (res) => {
+                console.log(res);
+                setIssue({
+                    status: res.status,
+                    issue_key: res.issue_key,
+                    issue_url: res.issue_url,
+                });
+            }
+        );
+    };
+
+    const { inputs, handleInputChange, handleSubmit } = useSupportForm(
+        submitRequest,
+        {
+            email: rdmoContext.backend_context.user_email,
+        }
+    );
+
+    let message = <></>;
+    if (issue.status >= 400) {
+        message = <h5>An error occurred, please try again later ...</h5>;
+    } else if (issue.status >= 200 && issue.status < 300) {
+        return (
+            <div>
+                <h6 className="sidebar-list-item">
+                    <i className="mdi mdi-account-voice align-middle" />
+                    Request Support
+                </h6>
+                <h5>Your request was recieved</h5>
+                <p>You will soon be contacted by our helpdesk staff.</p>
+                <p>
+                    Your issue key is <b>{issue.issue_key}</b>. Please refer to
+                    it in any future communication. To access your issue, please
+                    visit <a href={issue.issue_url}>{issue.issue_url}</a>
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <h6 className="sidebar-list-item">
                 <i className="mdi mdi-account-voice align-middle" />
                 Request Support
             </h6>
-
+            {message}
             <form
                 id="supportForm"
-                onSubmit={handleSubmit}
                 className="text-start"
+                onSubmit={handleSubmit}
             >
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">
@@ -34,9 +86,6 @@ function SupportRequest() {
                         value={inputs.email}
                         required
                     />
-                    {/* <div id="emailHelp" className="form-text"> */}
-                    {/*     We will never share your email with anyone else. */}
-                    {/* </div> */}
                 </div>
 
                 <div className="mb-3">
@@ -51,7 +100,7 @@ function SupportRequest() {
                         rows="4"
                         id="message"
                         name="message"
-                        placeholder=""
+                        // placeholder=""
                         onChange={handleInputChange}
                         value={inputs.message}
                         required
@@ -189,5 +238,9 @@ function SupportRequest() {
         </div>
     );
 }
+
+SupportRequest.propTypes = {
+    rdmoProjectId: PropTypes.number.isRequired,
+};
 
 export default SupportRequest;

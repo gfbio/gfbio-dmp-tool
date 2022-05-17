@@ -34,7 +34,7 @@ function DmptSummary(props) {
                 <div className="col-6">
                     <div className="row">
                         <div className="col-12 ps-5 ms-5">
-                            <SupportRequest />
+                            <SupportRequest rdmoProjectId={rdmoProjectId} />
                         </div>
                     </div>
                 </div>
