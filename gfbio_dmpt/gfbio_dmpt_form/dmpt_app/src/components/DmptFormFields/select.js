@@ -2,8 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Select(props) {
-    const { question, handleChange } = props;
+    const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
+
+
+        const selectFieldName = `optionset-${optionSet.id}____${question.key}____${question.id}`;
+        let initialOptionId = '';
+        if (selectFieldName in inputs) {
+            initialOptionId = inputs[selectFieldName];
+        }
+
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             return (
                 <option
@@ -11,16 +19,18 @@ function Select(props) {
                     id={`option-${optionSetOption.id}`}
                     name={optionSetOption.key}
                     value={optionSetOption.id}
+                    selected={`${optionSetOption.id}` === initialOptionId}
                 >
                     {optionSetOption.text}
                 </option>
             );
         });
+
         return (
             <select
                 className="form-control"
                 id={`optionset-${optionSet.id}`}
-                name={`optionset-${optionSet.id}____${question.key}`}
+                name={selectFieldName}
                 onChange={(e) => handleChange(e)}
             >
                 {optionSetOptions}
@@ -33,6 +43,10 @@ function Select(props) {
         </div>
     );
 }
+
+Select.defaultProps = {
+    inputs: {},
+};
 
 Select.propTypes = {
     question: PropTypes.shape({
@@ -50,6 +64,7 @@ Select.propTypes = {
         }).isRequired,
     }).isRequired,
     handleChange: PropTypes.func.isRequired,
+    inputs: PropTypes.shape({}),
 };
 
 export default Select;

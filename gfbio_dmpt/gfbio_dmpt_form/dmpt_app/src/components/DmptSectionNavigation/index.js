@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Sticky from 'react-stickynode';
-import { SECTIONS_ROOT } from '../api/constants';
+import { SECTIONS_ROOT, URL_PREFIX } from '../api/constants';
 import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import DmptSummary from '../DmptSummary';
+import DmptList from '../DmptList';
+import { Redirect } from 'react-router-dom';
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
     const [sectionList, setSectionList] = useState([]);
     useEffect(() => {
         async function prepareDmptSectionList() {
+            setProcessing(true);
             try {
                 const result = await axios.get(
                     `${SECTIONS_ROOT}${catalogId}/`,
@@ -36,15 +39,6 @@ const useDmptSectionNavigation = (catalogId, token) => {
 const fakeSubmit = () => {
     console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
 };
-
-// const submitProjectData = (token, catalogId, inputs) => {
-//     console.log('submitHandler | inputs ', inputs);
-//     console.log('submitHandler | post ..... ');
-//     postProject(token, catalogId, inputs).then((res) => {
-//         console.log('submitHandler | post res:  ', res);
-//
-//     });
-// };
 
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     const maxLength = 25;
@@ -75,15 +69,16 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 };
 
 function DmptSectionNavigation(props) {
-    const { catalogId, token } = props;
+    const { catalogId, token, dmptProjectData } = props;
+    const dmptProjectId = dmptProjectData.id;
 
     const [processing, sectionList] = useDmptSectionNavigation(
         catalogId,
         token
     );
     const [sectionIndex, setSectionIndex] = useState(0);
-    // const [rdmoProjectSubmitted, setRdmoProjectSubmitted] = useState(false);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
+    const [updateResponseStatus, setUpdateResponseStatus] = useState(0);
 
     const {
         inputs,
@@ -91,7 +86,7 @@ function DmptSectionNavigation(props) {
         handleSubmit,
         validationErrors,
         disabledNavigation,
-    } = useDmptSectionForm(fakeSubmit);
+    } = useDmptSectionForm(fakeSubmit, dmptProjectData.form_data);
 
     const sections = sectionsAsListElements(
         sectionList,
@@ -103,14 +98,20 @@ function DmptSectionNavigation(props) {
     // console.log(
     //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
     //     sectionIndex,
-    //     ' | rdmoProjectId: ',
-    //     rdmoProjectId
+    //     '| dmptProjectId ',
+    //     dmptProjectId,
+    //     ' | dmptProjectData: ',
+    //     dmptProjectData
     // );
 
     if (processing) {
         return <DmptLoading />;
     }
 
+    // TODO: this is not working properly ...
+    if (updateResponseStatus > 0) {
+        return <DmptList token={token}  updateStatusCode={updateResponseStatus}/>;
+    }
     // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
     if (rdmoProjectId > 0) {
         return <DmptSummary rdmoProjectId={rdmoProjectId} />;
@@ -127,59 +128,19 @@ function DmptSectionNavigation(props) {
             <div className="row" id="section-wrapper-row">
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
-                        {/* TODO: wrap sidebar and tabnavi+section in extra compoment if needed. */}
-                        {/* TODO: put sidenavi action into comments, because Ivo doesn't like cool ideas ... */}
                         <div className="row">
-                            {/* <div className="list-group list-group-flush"> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-content-save-all-outline align-middle" /> */}
-                            {/*             Save Project */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-trash-can-outline align-middle" /> */}
-                            {/*             Discard & Exit ? */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-file-pdf-box align-middle" /> */}
-                            {/*             Download PDF */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/*     <button */}
-                            {/*         type="button" */}
-                            {/*         className="list-group-item list-group-item-action" */}
-                            {/*     > */}
-                            {/*         <h6 className="sidebar-list-item"> */}
-                            {/*             <i className="mdi mdi-account-question-outline align-middle" /> */}
-                            {/*             Request Support */}
-                            {/*         </h6> */}
-                            {/*     </button> */}
-                            {/* </div> */}
-                            {/* TODO: end of commented sidebar actions, do not remove. */}
-
                             <SectionButtons
                                 sectionIndex={sectionIndex}
                                 sectionsLength={sectionsLength}
                                 setSectionIndex={setSectionIndex}
-                                callBack={setRdmoProjectId}
+                                postCallBack={setRdmoProjectId}
+                                putCallBack={setUpdateResponseStatus}
                                 token={token}
                                 catalogId={catalogId}
                                 inputs={inputs}
                                 validationErrors={validationErrors}
                                 disabled={disabledNavigation}
+                                dmptProjectId={dmptProjectId}
                             />
                         </div>
                     </Sticky>
@@ -204,11 +165,13 @@ function DmptSectionNavigation(props) {
                             sectionIndex={sectionIndex}
                             sectionsLength={sectionsLength}
                             setSectionIndex={setSectionIndex}
-                            callBack={setRdmoProjectId}
+                            postCallBack={setRdmoProjectId}
+                            putCallBack={setUpdateResponseStatus}
                             token={token}
                             catalogId={catalogId}
                             inputs={inputs}
                             disabled={disabledNavigation}
+                            dmptProjectId={dmptProjectId}
                         />
                     </div>
                 </div>
@@ -218,9 +181,17 @@ function DmptSectionNavigation(props) {
     );
 }
 
+DmptSectionNavigation.defaultProps = {
+    dmptProjectData: { form_data: {}, id: -1 },
+};
+
 DmptSectionNavigation.propTypes = {
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
+    dmptProjectData: PropTypes.shape({
+        form_data: PropTypes.shape({}),
+        id: PropTypes.number,
+    }),
 };
 
 export default DmptSectionNavigation;

@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import postDmptProject from '../api/dmptProjects';
+import { Link } from 'react-router-dom';
 import RdmoContext from '../RdmoContext';
+import postDmptProject from '../api/dmptProjects';
+import { URL_PREFIX } from "../api/constants";
 
 const saveDmpt = (token, userId, rdmoProjectId, setPostResult) => {
     setPostResult({ processing: true, posted: false, result: {} });
@@ -31,7 +33,7 @@ function SaveDmpt(props) {
             messageSection = (
                 <p>
                     You can access a list of your saved data management plans
-                    here: <a href="TODO">DMPs</a> with the option to edit the
+                    here: <Link to={URL_PREFIX}>DMPs</Link> with the option to edit the
                     content.
                 </p>
             );

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import postProject from '../api/formdata';
+import postProject, { putProject } from "../api/formdata";
 
 const continueHandler = (val, maxVal, valHandler) => {
     if (val < maxVal - 1) {
@@ -14,21 +14,25 @@ const backHandler = (val, valHandler) => {
     }
 };
 
-// const submitHandler = (token, catalogId, inputs) => {
-//     console.log('submitHandler | inputs ', inputs);
-//     console.log('submitHandler | post ..... ');
-//     postProject(token, catalogId, inputs).then((res) => {
-//         console.log('submitHandler | post res:  ', res);
-//     });
-// };
-
-const submitProjectData = (token, catalogId, inputs, callBack) => {
+const submitProjectData = (token, catalogId, inputs, postCallBack, putCallBack, dmptProjectId) => {
     console.log('submitHandler | inputs ', inputs);
-    console.log('submitHandler | post ..... ');
-    postProject(token, catalogId, inputs).then((res) => {
-        console.log('submitHandler | post res:  ', res);
-        callBack(res.rdmoProjectId);
-    });
+
+    if (dmptProjectId > -1) {
+        console.log('submitHandler | put ..... ');
+        putProject(token, dmptProjectId, inputs).then((res) => {
+            console.log('submitHandler | put res:  ', res);
+            putCallBack(res.status);
+            // TODO: second callback for updates ?
+        });
+    }
+    else {
+        console.log('submitHandler | post ..... ');
+        postProject(token, catalogId, inputs).then((res) => {
+            console.log('submitHandler | post res:  ', res);
+            postCallBack(res.rdmoProjectId);
+            // TODO: rename if second callback added
+        });
+    }
 };
 
 function SectionButtons(props) {
@@ -36,12 +40,16 @@ function SectionButtons(props) {
         sectionIndex,
         sectionsLength,
         setSectionIndex,
-        callBack,
+        postCallBack,
+        putCallBack,
         token,
         catalogId,
         inputs,
         disabled,
+        dmptProjectId,
     } = props;
+
+    const submitText = dmptProjectId < 0 ? "Finalize DMP" : "Update DMP";
 
     let continueButton = (
         <button
@@ -67,7 +75,7 @@ function SectionButtons(props) {
                     disabled ? 'disabled' : ''
                 }`}
                 onClick={() =>
-                    submitProjectData(token, catalogId, inputs, callBack)
+                    submitProjectData(token, catalogId, inputs, postCallBack, putCallBack, dmptProjectId)
                 }
             >
                 <h6
@@ -76,7 +84,7 @@ function SectionButtons(props) {
                     }`}
                 >
                     <i className="mdi mdi-chevron-double-right align-middle right" />
-                    <br /> Submit Plan
+                    <br /> {submitText}
                 </h6>
             </button>
         );
@@ -106,16 +114,22 @@ function SectionButtons(props) {
     );
 }
 
+SectionButtons.defaultProps = {
+    dmptProjectId: -1,
+};
+
 SectionButtons.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     sectionsLength: PropTypes.number.isRequired,
     setSectionIndex: PropTypes.func.isRequired,
-    callBack: PropTypes.func.isRequired,
+    postCallBack: PropTypes.func.isRequired,
+    putCallBack: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     inputs: PropTypes.object.isRequired,
     disabled: PropTypes.bool.isRequired,
+    dmptProjectId: PropTypes.number,
 };
 
 export default SectionButtons;

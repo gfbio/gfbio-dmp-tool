@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import TextInput from './textinput';
 import TextArea from './textarea';
@@ -22,10 +22,11 @@ function DmptFormFields(props) {
                         mandatoryMessage = <span />;
                     }
 
-                    // TODO: this is a template to solve init of textbased fields, compare textarea
+                    // This not the best way, but increases readability of data in requests
+                    const fieldName = `${question.key}____${question.id}`;
                     let initialTextValue = '';
-                    if (inputs[question.key] !== undefined) {
-                        initialTextValue = inputs[question.key];
+                    if (inputs[fieldName] !== undefined) {
+                        initialTextValue = inputs[fieldName];
                     }
                     // TODO: add a way to do this for option based fields, like radio, select, checkbox
 
@@ -34,7 +35,6 @@ function DmptFormFields(props) {
                             question={question}
                             handleChange={handleInputChange}
                             initialValue={initialTextValue}
-                            inputs={inputs}
                         />
                     );
                     if (question.widget_type === 'textarea') {
@@ -50,6 +50,7 @@ function DmptFormFields(props) {
                             <Select
                                 question={question}
                                 handleChange={handleInputChange}
+                                inputs={inputs}
                             />
                         );
                     } else if (question.widget_type === 'radio') {
@@ -57,6 +58,7 @@ function DmptFormFields(props) {
                             <Radio
                                 question={question}
                                 handleChange={handleInputChange}
+                                inputs={inputs}
                             />
                         );
                     } else if (question.widget_type === 'checkbox') {
@@ -64,6 +66,7 @@ function DmptFormFields(props) {
                             <CheckBox
                                 question={question}
                                 handleChange={handleInputChange}
+                                inputs={inputs}
                             />
                         );
                     }

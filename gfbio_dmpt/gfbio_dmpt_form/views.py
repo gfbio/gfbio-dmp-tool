@@ -2,10 +2,8 @@
 import json
 import random
 import string
-from multiprocessing import Value
 
 from django.contrib.auth.models import Group
-from django.db.models import Prefetch
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -15,9 +13,9 @@ from django.views.generic import TemplateView
 from rdmo.options.models import Option
 from rdmo.projects.models import Project, Value
 from rdmo.projects.views import ProjectAnswersView
-from rdmo.questions.models import QuestionSet, Question
+from rdmo.questions.models import Question
 from rdmo.questions.models.catalog import Catalog
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, mixins
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -30,10 +28,11 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
+from .rdmo_db_utils import get_catalog_with_sections, build_form_content
 from .serializers.dmpt_serializers import (
     DmptProjectSerializer,
     RdmoProjectSerializer,
-    RdmoProjectValuesSerializer,
+    RdmoProjectValuesSerializer, RdmpProjectValuesUpdateSerializer,
 )
 from .serializers.extended_serializers import (
     DmptSectionNestedSerializer,
@@ -88,6 +87,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_email": f"{user.email}",
             "catalog_id": catalog_id,
         }
+        print("\nBACKEND ", context["backend"])
         return self.render_to_response(context)
 
 
@@ -122,33 +122,6 @@ class DmpExportView(ProjectAnswersView):
         )
 
 
-class DmptProjectListView(generics.ListCreateAPIView):
-    queryset = DmptProject.objects.all()
-    serializer_class = DmptProjectSerializer
-    authentication_classes = (TokenAuthentication, BasicAuthentication)
-    permission_classes = (
-        permissions.IsAuthenticated,
-        IsOwner,
-    )
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def get_queryset(self):
-        user = self.request.user
-        return DmptProject.objects.filter(user=user).order_by("-modified")
-
-
-class DmptProjectDetailView(generics.RetrieveAPIView):
-    queryset = DmptProject.objects.all()
-    serializer_class = DmptProjectSerializer
-    authentication_classes = (TokenAuthentication, BasicAuthentication)
-    permission_classes = (
-        permissions.IsAuthenticated,
-        IsOwner,
-    )
-
-
 class DmptSupportView(View):
     form_class = DmptSupportForm
 
@@ -166,6 +139,48 @@ class DmptSupportView(View):
 
 # REFACTORING BELOW --------------------------------------------------------------
 
+# TODO: add issue key to serialization when available. to show in list in frontend
+class DmptProjectListView(generics.ListCreateAPIView):
+    queryset = DmptProject.objects.all()
+    serializer_class = DmptProjectSerializer
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsOwner,
+    )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        user = self.request.user
+        return DmptProject.objects.filter(user=user).order_by("-modified")
+
+
+class DmptProjectDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = DmptProject.objects.all()
+    serializer_class = DmptProjectSerializer
+    authentication_classes = (TokenAuthentication, BasicAuthentication)
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsOwner,
+    )
+
+    def get(self, request, *args, **kwargs):
+        response = self.retrieve(request, *args, **kwargs)
+        obj = self.get_object()
+        form_data = {}
+        try:
+            catalog_id = (
+                None if not obj.rdmo_project.catalog else obj.rdmo_project.catalog.id
+            )
+            catalog = get_catalog_with_sections(catalog_id)
+            form_data = build_form_content(catalog.sections.all(), obj)
+        except Catalog.DoesNotExist as e:
+            pass
+        response.data["form_data"] = form_data
+        return response
+
 
 class RdmoProjectCreateView(generics.CreateAPIView):
     serializer_class = RdmoProjectSerializer
@@ -179,34 +194,76 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
     )
 
     @staticmethod
-    def _create_values_from_form_data(form_data, project):
-        for form_field in form_data:
-            question_key = form_field
-            # this applies to option-247 and optionset-54
-            if form_field.startswith("option"):
-                sub_fields = form_field.split("____")
-                if len(sub_fields) == 2:
-                    question_key = sub_fields[1]
-                    question = Question.objects.get(key=question_key)
-                    option = Option.objects.get(id=int(form_data[form_field]))
-                    Value.objects.create(
-                        project_id=project.id,
-                        attribute=question.attribute,
-                        option=option,
-                        value_type=question.value_type,
-                        unit=question.unit,
-                    )
-                    continue
-                else:
-                    continue
-            question = Question.objects.get(key=question_key)
+    def _create_text_value(text_value, project_id, question_id):
+        print('_create_text_value | question_id : ', question_id)
+        try:
+            question = Question.objects.get(id=question_id)
             Value.objects.create(
-                project_id=project.id,
+                project_id=project_id,
                 attribute=question.attribute,
-                text=form_data[form_field],
+                text=text_value,
                 value_type=question.value_type,
                 unit=question.unit,
             )
+        except Question.DoesNotExist as e:
+            pass
+
+    @staticmethod
+    def _create_option_value(option_value, project_id, question_id):
+        print('_create_option_value | question_id : ', question_id)
+        try:
+            question = Question.objects.get(id=question_id)
+            option = Option.objects.get(id=int(option_value))
+            Value.objects.create(
+                project_id=project_id,
+                attribute=question.attribute,
+                option=option,
+                value_type=question.value_type,
+                unit=question.unit,
+            )
+        except Question.DoesNotExist as e:
+            pass
+        except Option.DoesNotExist as oe:
+            pass
+
+    def _create_values_from_form_data(self, form_data, project_id):
+        print('_create_values_from_form_data ', form_data, ' | project id ', project_id)
+        separator = "____"
+        for form_field in form_data:
+            print('form_field : ', form_field)
+            sub_fields = form_field.split(separator)
+
+            # question_key = form_field
+            # # this applies to option-247 and optionset-54
+            if form_field.startswith("option") and len(sub_fields) == 3:
+                # sub_fields = form_field.split(separator)
+                # if len(sub_fields) == 3:
+                question_id = sub_fields[2]
+                self._create_option_value(form_data[form_field], project_id, question_id)
+                continue
+            elif len(sub_fields) == 2:
+                question_id = sub_fields[1]
+                self._create_text_value(form_data[form_field], project_id, question_id)
+                continue
+            else:
+                continue
+
+
+    def _update_values_from_form_data(self, form_data, dmpt_project):
+        related_values = dmpt_project.rdmo_project.values.all()
+        related_values.delete()
+        self._create_values_from_form_data(form_data, dmpt_project.rdmo_project.id)
+        # 0. strictly: what comes via a put request ressemble the new state of objects
+        #   thus delete values and create new ones should be ok, and may be a lot easier
+        #    below is more like patch request
+
+        # 1. if there is no value for this question, but a key from the form is available,
+        #   this means to create a new value, like in the initial post method
+
+        # 2. if there is/are values for this question and a key from the form is available
+        #   this means that a) the value needs update in cases of text values. b) a change in
+        #   which option is selected in case of radio/select/checkbox. c) a delete of a value
+        #   if the formerly selected option in now de-selected e.g. no checkbox checked anymore
 
     def post(self, request, format=None):
         serializer = RdmoProjectValuesSerializer(data=request.data)
@@ -217,12 +274,26 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             )
 
             form_data = serializer.data.get("form_data", {})
-            self._create_values_from_form_data(form_data, project)
+            self._create_values_from_form_data(form_data, project.id)
 
             data = serializer.data
             data["rdmo_project_id"] = project.id
 
             return Response(data=data, status=HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    def put(self, request, format=None):
+        serializer = RdmpProjectValuesUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            dmpt_project = DmptProject.objects.get(id=serializer.data.get("dmpt_project"))
+            dmpt_project.rdmo_project.title = serializer.data.get("title")
+            dmpt_project.rdmo_project.save()
+
+            form_data = serializer.data.get("form_data", {})
+            self._update_values_from_form_data(form_data, dmpt_project)
+
+            return Response(data=serializer.data, status=HTTP_200_OK)
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -244,6 +315,13 @@ class DmptSectionListView(generics.GenericAPIView):
         return Response(data=serializer.data, status=HTTP_200_OK)
 
 
+# class DmptProjectFormDataView(generics.GenericAPIView):
+#     authentication_classes = (TokenAuthentication, BasicAuthentication)
+#     permission_classes = (
+#         permissions.IsAuthenticated,
+#         IsOwner,
+#     )
+
 # TODO: maybe it is better to access section directly via id, since we now work with section tab navi in react app
 class DmptSectionDetailView(generics.GenericAPIView):
     # TODO: maybe this view becomes restricted
@@ -255,26 +333,8 @@ class DmptSectionDetailView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id, section_index, format="json"):
-
-        # print('DmptFormDataView | GET | catalog_id: ', catalog_id, ' | section_index: ', section_index)
-
         try:
-            catalog = Catalog.objects.prefetch_related(
-                "sections",
-                Prefetch(
-                    "sections__questionsets",
-                    queryset=QuestionSet.objects.filter(
-                        questionset=None
-                    ).prefetch_related(
-                        "conditions",
-                        "questions",
-                        "questions__attribute",
-                        "questions__optionsets",
-                        "questionsets",
-                        "questions__optionsets__options",
-                    ),
-                ),
-            ).get(id=catalog_id)
+            catalog = get_catalog_with_sections(catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
