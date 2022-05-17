@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SaveDmpt from './save';
 import DiscardAndExit from './discard';
+import SupportRequest from './support';
 
 function DmptSummary(props) {
     const { rdmoProjectId } = props;
@@ -12,20 +13,30 @@ function DmptSummary(props) {
                     <h1>Summary: {rdmoProjectId}</h1>
                 </div>
             </div>
-            <div className="row mt-3">
+            <div className="row">
                 <div className="col-6">
-                    <SaveDmpt rdmoProjectId={rdmoProjectId} />
+                    <div className="row mt-3">
+                        <div className="col-12">
+                            <SaveDmpt rdmoProjectId={rdmoProjectId} />
+                        </div>
+                    </div>
+                    <div className="row mt-3">
+                        <div className="col-12">
+                            <h2>Export PDF</h2>
+                        </div>
+                    </div>
+                    <div className="row mt-3">
+                        <div className="col-12">
+                            <DiscardAndExit />
+                        </div>
+                    </div>
                 </div>
                 <div className="col-6">
-                    <h2>Export PDF</h2>
-                </div>
-            </div>
-            <div className="row mt-5">
-                <div className="col-6">
-                    <h2>Request Help</h2>
-                </div>
-                <div className="col-6">
-                    <DiscardAndExit />
+                    <div className="row">
+                        <div className="col-12 ps-5 ms-5">
+                            <SupportRequest />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
