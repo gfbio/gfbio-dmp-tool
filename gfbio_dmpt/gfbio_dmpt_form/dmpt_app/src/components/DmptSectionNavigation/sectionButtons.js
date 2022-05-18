@@ -14,23 +14,15 @@ const backHandler = (val, valHandler) => {
     }
 };
 
-const submitProjectData = (token, catalogId, inputs, postCallBack, putCallBack, dmptProjectId) => {
-    console.log('submitHandler | inputs ', inputs);
-
+const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
     if (dmptProjectId > -1) {
-        console.log('submitHandler | put ..... ');
         putProject(token, dmptProjectId, inputs).then((res) => {
-            console.log('submitHandler | put res:  ', res);
-            putCallBack(res.status);
-            // TODO: second callback for updates ?
+            callBack(res.rdmoProjectId);
         });
     }
     else {
-        console.log('submitHandler | post ..... ');
         postProject(token, catalogId, inputs).then((res) => {
-            console.log('submitHandler | post res:  ', res);
-            postCallBack(res.rdmoProjectId);
-            // TODO: rename if second callback added
+            callBack(res.rdmoProjectId);
         });
     }
 };
@@ -40,8 +32,7 @@ function SectionButtons(props) {
         sectionIndex,
         sectionsLength,
         setSectionIndex,
-        postCallBack,
-        putCallBack,
+        callBack,
         token,
         catalogId,
         inputs,
@@ -75,7 +66,7 @@ function SectionButtons(props) {
                     disabled ? 'disabled' : ''
                 }`}
                 onClick={() =>
-                    submitProjectData(token, catalogId, inputs, postCallBack, putCallBack, dmptProjectId)
+                    submitProjectData(token, catalogId, inputs, callBack, dmptProjectId)
                 }
             >
                 <h6
@@ -122,12 +113,10 @@ SectionButtons.propTypes = {
     sectionIndex: PropTypes.number.isRequired,
     sectionsLength: PropTypes.number.isRequired,
     setSectionIndex: PropTypes.func.isRequired,
-    postCallBack: PropTypes.func.isRequired,
-    putCallBack: PropTypes.func.isRequired,
+    callBack: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
     catalogId: PropTypes.number.isRequired,
-    // eslint-disable-next-line react/forbid-prop-types
-    inputs: PropTypes.object.isRequired,
+    inputs: PropTypes.shape({}).isRequired,
     disabled: PropTypes.bool.isRequired,
     dmptProjectId: PropTypes.number,
 };

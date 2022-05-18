@@ -6,7 +6,17 @@ import SupportRequest from './support';
 import PdfExport from './pdf';
 
 function DmptSummary(props) {
-    const { rdmoProjectId } = props;
+    const { rdmoProjectId, dmptProjectId } = props;
+    const saveDmpt =
+        dmptProjectId < 0 ? (
+            <div className="row mt-3">
+                <div className="col-12">
+                    <SaveDmpt rdmoProjectId={rdmoProjectId} />
+                </div>
+            </div>
+        ) : (
+            <></>
+        );
     return (
         <div id={`summary-${rdmoProjectId}`} className="text-center">
             <div className="row">
@@ -16,11 +26,7 @@ function DmptSummary(props) {
             </div>
             <div className="row">
                 <div className="col-6">
-                    <div className="row mt-3">
-                        <div className="col-12">
-                            <SaveDmpt rdmoProjectId={rdmoProjectId} />
-                        </div>
-                    </div>
+                    {saveDmpt}
                     <div className="row mt-3">
                         <div className="col-12">
                             <PdfExport rdmoProjectId={rdmoProjectId} />
@@ -44,8 +50,13 @@ function DmptSummary(props) {
     );
 }
 
+DmptSummary.defaultProps = {
+    dmptProjectId: -1,
+};
+
 DmptSummary.propTypes = {
     rdmoProjectId: PropTypes.number.isRequired,
+    dmptProjectId: PropTypes.number,
 };
 
 export default DmptSummary;

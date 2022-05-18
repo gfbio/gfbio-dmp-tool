@@ -58,6 +58,7 @@ export const putProject = async (token, dmptProjectId, data) => {
             res.status = response.status;
             res.statusText = response.statusText;
             res.dmptProjectId = response.data.dmpt_project;
+            res.rdmoProjectId = response.data.rdmo_project_id;
         })
         .catch((error) => {
             if (error.response) {

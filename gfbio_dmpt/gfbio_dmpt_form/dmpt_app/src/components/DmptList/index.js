@@ -55,7 +55,7 @@ const dmpsAsListElements = (dmpList) => {
 };
 
 function DmptList(props) {
-    const { token, updateStatusCode } = props;
+    const { token } = props;
 
     const [processing, dmpList] = useDmpList(token);
     const dmps = dmpsAsListElements(dmpList);
@@ -64,18 +64,18 @@ function DmptList(props) {
         return <DmptLoading />;
     }
 
-    let message = <></>;
-    if (updateStatusCode >= 200 && updateStatusCode < 300) {
-        message = <div className="alert alert-success alert-dismissible fade show" role="alert">
-            <h4 className="alert-heading">Update Successful !</h4>
-            <p>Your Data Management Plan has been successfully updated.</p>
-            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" />
-        </div>;
-    }
+    // let message = <></>;
+    // if (updateStatusCode >= 200 && updateStatusCode < 300) {
+    //     message = <div className="alert alert-success alert-dismissible fade show" role="alert">
+    //         <h4 className="alert-heading">Update Successful !</h4>
+    //         <p>Your Data Management Plan has been successfully updated.</p>
+    //         <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" />
+    //     </div>;
+    // }
 
     return (
         <>
-            {message}
+            {/* {message} */}
             <div id="dmp-list">
                 <div className="row">
                     <div className="col-12">
@@ -88,13 +88,13 @@ function DmptList(props) {
     );
 }
 
-DmptList.defaultProps = {
-    updateStatusCode: 0,
-};
+// DmptList.defaultProps = {
+//     updateStatusCode: 0,
+// };
 
 DmptList.propTypes = {
     token: PropTypes.string.isRequired,
-    updateStatusCode: PropTypes.number,
+    // updateStatusCode: PropTypes.number,
 };
 
 export default DmptList;
