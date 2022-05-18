@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SaveDmpt from './save';
 import DiscardAndExit from './discard';
 import SupportRequest from './support';
+import PdfExport from './pdf';
 
 function DmptSummary(props) {
     const { rdmoProjectId } = props;
@@ -22,7 +23,7 @@ function DmptSummary(props) {
                     </div>
                     <div className="row mt-3">
                         <div className="col-12">
-                            <h2>Export PDF</h2>
+                            <PdfExport rdmoProjectId={rdmoProjectId} />
                         </div>
                     </div>
                     <div className="row mt-3">
