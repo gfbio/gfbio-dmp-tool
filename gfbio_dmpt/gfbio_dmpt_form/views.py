@@ -128,7 +128,6 @@ class DmptSupportView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             result = create_support_issue_in_view(form.cleaned_data)
             return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
         else:
@@ -247,7 +246,6 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
                 continue
             else:
                 continue
-
 
     def _update_values_from_form_data(self, form_data, dmpt_project):
         related_values = dmpt_project.rdmo_project.values.all()
