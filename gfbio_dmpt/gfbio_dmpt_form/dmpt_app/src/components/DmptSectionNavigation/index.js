@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Sticky from 'react-stickynode';
+import { Redirect } from 'react-router-dom';
 import { SECTIONS_ROOT, URL_PREFIX } from '../api/constants';
 import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
@@ -9,7 +10,6 @@ import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import DmptSummary from '../DmptSummary';
 import DmptList from '../DmptList';
-import { Redirect } from 'react-router-dom';
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -110,7 +110,9 @@ function DmptSectionNavigation(props) {
 
     // TODO: this is not working properly ...
     if (updateResponseStatus > 0) {
-        return <DmptList token={token}  updateStatusCode={updateResponseStatus}/>;
+        return (
+            <DmptList token={token} updateStatusCode={updateResponseStatus} />
+        );
     }
     // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
     if (rdmoProjectId > 0) {
