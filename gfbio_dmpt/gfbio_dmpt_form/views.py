@@ -32,7 +32,7 @@ from .rdmo_db_utils import get_catalog_with_sections, build_form_content
 from .serializers.dmpt_serializers import (
     DmptProjectSerializer,
     RdmoProjectSerializer,
-    RdmoProjectValuesSerializer, RdmpProjectValuesUpdateSerializer,
+    RdmoProjectValuesSerializer, RdmoProjectValuesUpdateSerializer,
 )
 from .serializers.extended_serializers import (
     DmptSectionNestedSerializer,
@@ -128,7 +128,6 @@ class DmptSupportView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             result = create_support_issue_in_view(form.cleaned_data)
             return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
         else:
@@ -248,7 +247,6 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             else:
                 continue
 
-
     def _update_values_from_form_data(self, form_data, dmpt_project):
         related_values = dmpt_project.rdmo_project.values.all()
         related_values.delete()
@@ -284,7 +282,7 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def put(self, request, format=None):
-        serializer = RdmpProjectValuesUpdateSerializer(data=request.data)
+        serializer = RdmoProjectValuesUpdateSerializer(data=request.data)
         if serializer.is_valid():
             dmpt_project = DmptProject.objects.get(id=serializer.data.get("dmpt_project"))
             dmpt_project.rdmo_project.title = serializer.data.get("title")
@@ -293,7 +291,10 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             form_data = serializer.data.get("form_data", {})
             self._update_values_from_form_data(form_data, dmpt_project)
 
-            return Response(data=serializer.data, status=HTTP_200_OK)
+            data = serializer.data
+            data["rdmo_project_id"] = dmpt_project.rdmo_project.id
+
+            return Response(data=data, status=HTTP_200_OK)
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 

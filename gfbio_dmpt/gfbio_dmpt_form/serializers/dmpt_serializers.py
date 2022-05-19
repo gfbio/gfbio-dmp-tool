@@ -50,7 +50,7 @@ class RdmoProjectValuesSerializer(serializers.Serializer):
         return data
 
 
-class RdmpProjectValuesUpdateSerializer(serializers.Serializer):
+class RdmoProjectValuesUpdateSerializer(serializers.Serializer):
     dmpt_project = serializers.IntegerField(required=True)
     title = serializers.CharField(required=True)
     form_data = serializers.JSONField(required=True)
