@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { URL_PREFIX } from "../api/constants";
 
 function DiscardAndExit() {
     const [confirm, setConfirm] = useState(false);
     const [discard, setDiscard] = useState(false);
+    const history = useHistory();
 
     if (discard) {
-        // TODO: add a proper callback to dmptsectionavigation, resetting
-        //  sectionIndex and rdmoProjectId to triggere re-render when
-        //  form re-init is implemlented. for now I silence the linter here.
-        // eslint-disable-next-line no-restricted-globals
-        location.reload();
+        history.push(`${URL_PREFIX}new`);
     }
 
     let button = (
