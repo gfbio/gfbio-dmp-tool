@@ -5,7 +5,7 @@ from rdmo.options.serializers.v1 import (
     OptionSetNestedSerializer,
     OptionNestedSerializer,
 )
-from rdmo.questions.models import Question, Section
+from rdmo.questions.models import Question, QuestionSet, Section
 from rdmo.questions.serializers.v1 import (
     QuestionNestedSerializer,
     QuestionSetNestedSerializer,
@@ -20,6 +20,7 @@ class DmptOptionNestedSerializer(OptionNestedSerializer):
         fields = (
             "id",
             "key",
+            "comment",
             "uri",
             "uri_prefix",
             "path",
@@ -66,6 +67,29 @@ class DmptQuestionNestedSerializer(QuestionNestedSerializer):
 class DmptQuestionSetNestedSerializer(QuestionSetNestedSerializer):
     questions = DmptQuestionNestedSerializer(many=True, read_only=True)
     conditions = ConditionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = QuestionSet
+        fields = (
+            "comment",
+            "id",
+            "help",
+            "uri",
+            "uri_prefix",
+            "path",
+            "locked",
+            "order",
+            "title",
+            "attribute",
+            "conditions",
+            "is_collection",
+            "section",
+            "questionset",
+            "questionsets",
+            "questions",
+            "warning",
+            "xml_url",
+        )
 
 
 class DmptSectionNestedSerializer(SectionNestedSerializer):
