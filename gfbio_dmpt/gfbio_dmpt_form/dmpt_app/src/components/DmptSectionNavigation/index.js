@@ -109,7 +109,12 @@ function DmptSectionNavigation(props) {
 
     // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
     if (rdmoProjectId > 0) {
-        return <DmptSummary rdmoProjectId={rdmoProjectId} dmptProjectId={dmptProjectId}/>;
+        return (
+            <DmptSummary
+                rdmoProjectId={rdmoProjectId}
+                dmptProjectId={dmptProjectId}
+            />
+        );
     }
 
     return (

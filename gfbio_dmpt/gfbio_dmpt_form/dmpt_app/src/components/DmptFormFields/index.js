@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import TextInput from './textinput';
 import TextArea from './textarea';
 import Select from './select';
@@ -11,7 +13,15 @@ function DmptFormFields(props) {
     const inputFields = section.questionsets.map((questionset) => {
         return (
             <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
-                <h5>{questionset.title}</h5>
+                <div className="questionHelp">
+                    <h5>{questionset.title}</h5>
+                    {questionset.help !== '' && (
+                        <Tooltip title={questionset.help} placement="right">
+                            <i className="mdi mdi-help-circle-outline" />
+                        </Tooltip>
+                    )}
+                </div>
+
                 {questionset.questions.map((question) => {
                     let mandatoryMessage = (
                         <span className="mandatory">
@@ -71,10 +81,6 @@ function DmptFormFields(props) {
                         );
                     }
 
-                    // TODO: Hier bitte die validations errors für den question key mit verarbeiten
-                    // dann kann man hier basierend auf dem status die anzeige anpassen und den validierungs
-                    // fehler anzeigen
-
                     let validationMessage = <span />;
 
                     // TODO: <09-05-22, claas> //
@@ -102,11 +108,18 @@ function DmptFormFields(props) {
                                 className="form-label"
                             >
                                 {question.text}
+                                {question.help !== '' && (
+                                    <Tooltip
+                                        title={question.help}
+                                        placement="right"
+                                    >
+                                        <i className="labelHelpIcon mdi mdi-help-circle-outline" />
+                                    </Tooltip>
+                                )}
                             </label>
                             {input}
                             <small className="form-text text-muted">
-                                {question.help} {mandatoryMessage}{' '}
-                                {validationMessage}
+                                {mandatoryMessage} {validationMessage}
                             </small>
                         </div>
                     );

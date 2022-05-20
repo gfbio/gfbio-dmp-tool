@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 function Select(props) {
     const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
-
-
         const selectFieldName = `optionset-${optionSet.id}____${question.key}____${question.id}`;
         let initialOptionId = '';
         if (selectFieldName in inputs) {

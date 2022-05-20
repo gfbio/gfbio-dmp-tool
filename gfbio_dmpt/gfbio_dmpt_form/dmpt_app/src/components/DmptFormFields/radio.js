@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function Radio(props) {
     const { question, handleChange, inputs } = props;
@@ -27,6 +28,14 @@ function Radio(props) {
                         htmlFor={`option-${optionSetOption.id}`}
                     >
                         {optionSetOption.text}
+                        {optionSetOption.comment !== '' && (
+                            <Tooltip
+                                title={optionSetOption.comment}
+                                placement="right"
+                            >
+                                <i className="labelHelpIcon mdi mdi-help-circle-outline" />
+                            </Tooltip>
+                        )}
                     </label>
                 </div>
             );
