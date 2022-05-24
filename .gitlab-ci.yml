@@ -80,6 +80,8 @@ web_test_update:
     - cp -r /home/gitlab-runner/.gfbio_dmp_envs/ ./.envs/
     - sed -i s/DJANGO_ALLOWED_HOSTS=.*/DJANGO_ALLOWED_HOSTS=\.$TEST_NAME\.test.gfbio\.dev/g .envs/.production/.django
     - sed -i s/BRANCH/${TEST_NAME}/g $COMPOSE_FILE
+    # remove email verification requirements from web-test
+    - sed -i 's/ACCOUNT_EMAIL_VERIFICATION = "mandatory"/ACCOUNT_EMAIL_VERIFICATION = "none"/g' config/settings/base.py
     # set super user credentials from GitLab CI/CD Variables
     - sed -i s/ADMIN_NICKNAME=/ADMIN_NICKNAME=${ADMIN_NICKNAME}/g ./compose/production/django/ci_start
     - sed -i s/ADMIN_EMAIL=/ADMIN_EMAIL=${ADMIN_EMAIL}/g ./compose/production/django/ci_start
