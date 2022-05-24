@@ -18,6 +18,12 @@ User = get_user_model();
 User.objects.create_superuser("${ADMIN_NICKNAME}", "${ADMIN_EMAIL}", "${ADMIN_PASSWORD}")
 EOF
 
+python /app/manage.py shell << EOF
+from django.contrib.auth import get_user_model;
+User = get_user_model();
+User.objects.create_user("testuser", "testuser@testuser.com", "testuser")
+EOF
+
 python /app/manage.py loaddata /app/web-test-data.json
 
 compress_enabled() {
