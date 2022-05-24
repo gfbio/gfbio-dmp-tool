@@ -1,10 +1,5 @@
 version: '3'
 
-volumes:
-  production_postgres_data: { }
-  production_postgres_data_backups: { }
-  production_traefik: { }
-
 networks:
   local:
   internalProxy:
@@ -12,8 +7,8 @@ networks:
       name: internalProxy
 
 services:
-
-  django: &django
+  django:
+    &django
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
@@ -27,12 +22,13 @@ services:
     networks:
       - local
       - internalProxy
+    volumes:
+      - ./web-test-data.json:/app/web-test-data.json
     labels:
       - traefik.enable=true
       - traefik.http.routers.BRANCH-django.rule=Host(`BRANCH.test.gfbio.dev`)
       - traefik.http.routers.BRANCH-django.entrypoints=web
       - traefik.http.services.BRANCH-django.loadbalancer.server.port=5000
-
     command: /ci_start
 
   postgres:
@@ -40,9 +36,6 @@ services:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: gfbio_dmpt_production_postgres
-    volumes:
-      - production_postgres_data:/var/lib/postgresql/data:Z
-      - production_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.production/.postgres
     networks:
@@ -50,11 +43,15 @@ services:
 
   redis:
     image: redis:5.0
+    networks:
+      - local
 
   celeryworker:
     <<: *django
     image: gfbio_dmpt_production_celeryworker
     command: /start-celeryworker
+    networks:
+      - local
     labels:
       - foo
 
@@ -62,6 +59,8 @@ services:
     <<: *django
     image: gfbio_dmpt_production_celerybeat
     command: /start-celerybeat
+    networks:
+      - local
     labels:
       - foo
 
@@ -69,5 +68,7 @@ services:
     <<: *django
     image: gfbio_dmpt_production_flower
     command: /start-flower
+    networks:
+      - local
     labels:
       - foo
