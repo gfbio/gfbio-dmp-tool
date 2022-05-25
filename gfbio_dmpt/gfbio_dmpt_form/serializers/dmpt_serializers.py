@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.core.exceptions import ObjectDoesNotExist
 from rdmo.projects.models import Project
 from rdmo.questions.models import Catalog
 from rest_framework import serializers
@@ -20,13 +21,20 @@ class UserSerializer(serializers.ModelSerializer):
 
 class DmptProjectSerializer(serializers.ModelSerializer):
     title = serializers.SerializerMethodField()
+    issue = serializers.SerializerMethodField()
 
     class Meta:
         model = DmptProject
-        fields = ['id', 'user', 'rdmo_project', 'title']
+        fields = ['id', 'user', 'rdmo_project', 'title', 'issue']
 
     def get_title(self, obj):
         return obj.rdmo_project.title
+
+    def get_issue(self, obj):
+        try:
+            return obj.issue.issue_key
+        except ObjectDoesNotExist as e:
+            return ''
 
 
 class RdmoProjectSerializer(serializers.ModelSerializer):
