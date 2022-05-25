@@ -128,7 +128,9 @@ class DmptSupportView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            result = create_support_issue_in_view(form.cleaned_data)
+            # result = create_support_issue_in_view(form.cleaned_data)
+            # return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
+            result = {"issue_key": "SAND-1661", "issue_url": "https://helpdesk.gfbio.org/browse/SAND-1661"}
             return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
         else:
             return HttpResponse(
