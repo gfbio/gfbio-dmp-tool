@@ -12,6 +12,7 @@ import DmptSummary from '../DmptSummary';
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
     const [sectionList, setSectionList] = useState([]);
+    const [mandatoryFields, setMandatoryFields] = useState([]);
     useEffect(() => {
         async function prepareDmptSectionList() {
             setProcessing(true);
@@ -22,7 +23,8 @@ const useDmptSectionNavigation = (catalogId, token) => {
                         headers: { Authorization: `Token ${token}` },
                     }
                 );
-                setSectionList(result.data);
+                setSectionList(result.data.sections);
+                setMandatoryFields(result.data.mandatory_fields)
                 setProcessing(false);
             } catch (error) {
                 console.error(error);
@@ -31,7 +33,7 @@ const useDmptSectionNavigation = (catalogId, token) => {
 
         prepareDmptSectionList();
     }, []);
-    return [processing, sectionList];
+    return [processing, sectionList, mandatoryFields];
 };
 
 const fakeSubmit = () => {
@@ -70,7 +72,7 @@ function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
 
-    const [processing, sectionList] = useDmptSectionNavigation(
+    const [processing, sectionList, mandatoryFields] = useDmptSectionNavigation(
         catalogId,
         token
     );

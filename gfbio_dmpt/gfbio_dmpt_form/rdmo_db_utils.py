@@ -23,6 +23,20 @@ def get_catalog_with_sections(catalog_id):
     return catalog
 
 
+def get_mandatory_form_fields(sections):
+    mandatory_field_names = []
+    for section in sections:
+        question_sets = section.questionsets.all()
+        for qs in question_sets:
+            mandatory_questions = qs.questions.filter(is_optional=False)
+            for mandatory_question in mandatory_questions:
+                if mandatory_question.widget_type == 'select' or mandatory_question.widget_type == 'checkbox' or mandatory_question.widget_type == 'radio':
+                    mandatory_field_names.append(f'option-based_{mandatory_question.key}____{mandatory_question.id}')
+                else:
+                    mandatory_field_names.append(f'{mandatory_question.key}____{mandatory_question.id}')
+    return mandatory_field_names
+
+
 def build_form_content(sections, dmpt_project):
     form_data = {}
     for section_index in range(0, len(sections)):
@@ -39,8 +53,8 @@ def build_form_content(sections, dmpt_project):
                             form_data[f'option-{val.option.id}____{question.key}____{question.id}'] = str(val.option.id)
                     elif question.widget_type == 'radio':
                         val = related_values.first()
-                        form_data[f'optionset-{val.option.optionset.id}____{question.key}____{question.id}'] = str(val.option.id)
+                        form_data[f'optionset-{val.option.optionset.id}____{question.key}____{question.id}'] = str(
+                            val.option.id)
                     else:
-                        # if question.widget_type in ['text', 'textarea']:
                         form_data[f'{question.key}____{question.id}'] = related_values.first().text
     return form_data

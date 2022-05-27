@@ -8,19 +8,21 @@ const useDmptSectionForm = (callback, initialInputValues) => {
     const [disabledNavigation, setDisabledNavigation] = useState(false);
 
     const handleSubmit = (event) => {
+        // console.log('formHooks | handleSubmit | event ', event);
         if (event) {
             event.preventDefault();
         }
-        console.log('formHooks | handleSubmit | event ', event);
+        // console.log('formHooks | handleSubmit | event ', event);
         callback();
     };
 
     let validity;
-    const handleValidation = (event, fieldType) => {
+    const handleValidation = (eventTarget, fieldType) => {
+        // console.log('formHooks | handleValidation | fieldType ', fieldType, ' | eventTarget ', eventTarget);
         if (fieldType === 'url') {
             if (
-                !validator.isURL(event.target.value) &&
-                event.target.value !== ''
+                !validator.isURL(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -28,8 +30,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'email') {
             if (
-                !validator.isEmail(event.target.value) &&
-                event.target.value !== ''
+                !validator.isEmail(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -37,8 +39,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'phone') {
             if (
-                !validator.isMobilePhone(event.target.value) &&
-                event.target.value !== ''
+                !validator.isMobilePhone(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -46,8 +48,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'integer') {
             if (
-                !validator.isInt(event.target.value) &&
-                event.target.value !== ''
+                !validator.isInt(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -55,8 +57,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'float') {
             if (
-                !validator.isFloat(event.target.value) &&
-                event.target.value !== ''
+                !validator.isFloat(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -67,13 +69,13 @@ const useDmptSectionForm = (callback, initialInputValues) => {
         if (validity === false) {
             setValidationErros((prevValidationErrors) => ({
                 ...prevValidationErrors,
-                [event.target.name]: false,
+                [eventTarget.name]: false,
             }));
             setDisabledNavigation(true);
         } else {
             setValidationErros((currentErrors) => {
                 const copy = { ...currentErrors };
-                delete copy[event.target.name];
+                delete copy[eventTarget.name];
                 return copy;
             });
             setDisabledNavigation(false);
@@ -82,7 +84,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
 
     const handleInputChange = (event, fieldType) => {
         event.persist();
-        // console.log('formHooks.js | handleInputChange | event.target : ', event.target);
+        // console.log('formHooks.js | handleInputChange | event : ', event);
         if (event.target.type === 'checkbox' && event.target.name in inputs) {
             const inputData = inputs;
             delete inputData[event.target.name];
@@ -93,8 +95,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
                 [event.target.name]: event.target.value,
             }));
         }
-        // console.log('formHooks.js | handleInputChange | inputs : ', inputs);
-        handleValidation(event, fieldType);
+        console.log('formHooks.js | handleInputChange | inputs : ', inputs);
+        handleValidation(event.target, fieldType);
     };
 
     return {

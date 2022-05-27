@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import postProject, { putProject } from "../api/formdata";
 
 const continueHandler = (val, maxVal, valHandler) => {
+    // val==sectionIndex
+    // const form = document.getElementById(`form-section-${val}`);
+    // form.submit();
     if (val < maxVal - 1) {
         valHandler(val + 1);
     }
@@ -15,16 +18,18 @@ const backHandler = (val, valHandler) => {
 };
 // <form id={`form-section-${sectionIndex}`} onSubmit={handleSubmit}>
 const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
-    if (dmptProjectId > -1) {
-        putProject(token, dmptProjectId, inputs).then((res) => {
-            callBack(res.rdmoProjectId);
-        });
-    }
-    else {
-        postProject(token, catalogId, inputs).then((res) => {
-            callBack(res.rdmoProjectId);
-        });
-    }
+    console.log('sectionButtons.js | instanced in DmptSectionNavigation | submitProjectData (post/put) | inputs ', inputs);
+    // TODO: only deactivate for prototyping
+    // if (dmptProjectId > -1) {
+    //     putProject(token, dmptProjectId, inputs).then((res) => {
+    //         callBack(res.rdmoProjectId);
+    //     });
+    // }
+    // else {
+    //     postProject(token, catalogId, inputs).then((res) => {
+    //         callBack(res.rdmoProjectId);
+    //     });
+    // }
 };
 
 function SectionButtons(props) {

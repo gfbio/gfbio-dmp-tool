@@ -3,7 +3,6 @@ import json
 from inspect import Attribute
 
 from django.test import TestCase
-from pprint import pprint
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Project, Value
 from rdmo.questions.models import Catalog
@@ -61,7 +60,10 @@ class TestDmptFormDataView(TestCase):
         catalog_id = 18  # ???
         response = self.std_client.get(f"/dmp/sections/{catalog_id}/")
         self.assertEqual(200, response.status_code)
-        self.assertIsInstance(json.loads(response.content), list)
+        content = json.loads(response.content)
+        self.assertIsInstance(content, dict)
+        self.assertIn('sections', content.keys())
+        self.assertIn('mandatory_fields', content.keys())
 
     def test_post_rdmo_project(self):
         catalog_id = 18  # ???
