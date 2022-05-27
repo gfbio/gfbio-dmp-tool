@@ -26,3 +26,5 @@ export const URL_PREFIX = '/dmp/create/';
 // CONSTANTS USED BY REFACTORED CODE BELOW:
 export const SECTION_ROOT = `${PROJECT_API_ROOT}section/`;
 export const SECTIONS_ROOT = `${PROJECT_API_ROOT}sections/`;
+
+export const HELPDESK_ROOT = 'https://helpdesk.gfbio.org/browse/';

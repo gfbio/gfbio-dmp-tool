@@ -6,9 +6,10 @@ import PropTypes from 'prop-types';
 import useSupportForm from '../DmptHooks/supportFormHooks';
 import postSupportRequest from '../api/support';
 import RdmoContext from '../RdmoContext';
+import { HELPDESK_ROOT } from '../api/constants';
 
 function SupportRequest(props) {
-    const { rdmoProjectId } = props;
+    const { rdmoProjectId, issueKey } = props;
     const rdmoContext = useContext(RdmoContext);
 
     const [issue, setIssue] = useState({
@@ -55,6 +56,25 @@ function SupportRequest(props) {
                     Your issue key is <b>{issue.issue_key}</b>. Please refer to
                     it in any future communication. To access your issue, please
                     visit <a href={issue.issue_url}>{issue.issue_url}</a>
+                </p>
+            </div>
+        );
+    }
+
+    if (issueKey !== '') {
+        return (
+            <div>
+                <h6 className="sidebar-list-item">
+                    <i className="mdi mdi-account-voice align-middle" />
+                    Request Support
+                </h6>
+                <h5>You have already send a request for Support !</h5>
+                <p>
+                    Your issue key is <b>{issueKey}</b>. Please refer to it in
+                    any future communication. To access your issue, please visit{' '}
+                    <a
+                        href={`${HELPDESK_ROOT}${issueKey}`}
+                    >{`${HELPDESK_ROOT}${issueKey}`}</a>
                 </p>
             </div>
         );
@@ -239,8 +259,12 @@ function SupportRequest(props) {
     );
 }
 
+SupportRequest.defaultProps = {
+    issueKey: '',
+};
 SupportRequest.propTypes = {
     rdmoProjectId: PropTypes.number.isRequired,
+    issueKey: PropTypes.string,
 };
 
 export default SupportRequest;
