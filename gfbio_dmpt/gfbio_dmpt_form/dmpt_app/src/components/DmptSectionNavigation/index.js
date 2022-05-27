@@ -92,14 +92,14 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    console.log(
-        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-        sectionIndex,
-        '| dmptProjectId ',
-        dmptProjectId,
-        ' | dmptProjectData: ',
-        dmptProjectData
-    );
+    // console.log(
+    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+    //     sectionIndex,
+    //     '| dmptProjectId ',
+    //     dmptProjectId,
+    //     ' | dmptProjectData: ',
+    //     dmptProjectData
+    // );
 
     if (processing) {
         return <DmptLoading />;

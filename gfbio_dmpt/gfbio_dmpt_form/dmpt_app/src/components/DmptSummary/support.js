@@ -18,7 +18,6 @@ function SupportRequest(props) {
         issue_key: '',
         issue_url: '',
     });
-
     const [processing, setProcessing] = useState(false);
 
     const submitRequest = (inputs) => {
@@ -29,7 +28,6 @@ function SupportRequest(props) {
             rdmoContext.backend_context.token,
             setProcessing
         ).then((res) => {
-            console.log(res);
             setIssue({
                 status: res.status,
                 issue_key: res.issue_key,
