@@ -2,6 +2,7 @@
 import json
 import random
 import string
+import time
 
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
@@ -130,6 +131,7 @@ class DmptSupportView(View):
         if form.is_valid():
             # result = create_support_issue_in_view(form.cleaned_data)
             # return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
+            time.sleep(3)
             result = {"issue_key": "SAND-1661", "issue_url": "https://helpdesk.gfbio.org/browse/SAND-1661"}
             return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
         else:

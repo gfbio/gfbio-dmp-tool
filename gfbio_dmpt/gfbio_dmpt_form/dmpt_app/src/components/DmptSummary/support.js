@@ -1,12 +1,13 @@
 // I dont know why the linter is still complaining about this, all lablels and
 // inputs are related by id & htmlFor
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
-import useSupportForm from '../DmptHooks/supportFormHooks';
-import postSupportRequest from '../api/support';
-import RdmoContext from '../RdmoContext';
-import { HELPDESK_ROOT } from '../api/constants';
+import React, { useContext, useState } from "react";
+import PropTypes from "prop-types";
+import useSupportForm from "../DmptHooks/supportFormHooks";
+import postSupportRequest from "../api/support";
+import RdmoContext from "../RdmoContext";
+import { HELPDESK_ROOT } from "../api/constants";
+import DmptLoading from "../DmptLoading";
 
 function SupportRequest(props) {
     const { rdmoProjectId, issueKey } = props;
@@ -18,19 +19,23 @@ function SupportRequest(props) {
         issue_url: '',
     });
 
+    const [processing, setProcessing] = useState(false);
+
     const submitRequest = (inputs) => {
         const data = inputs;
         data.rdmo_project_id = rdmoProjectId;
-        postSupportRequest(data, rdmoContext.backend_context.token).then(
-            (res) => {
-                console.log(res);
-                setIssue({
-                    status: res.status,
-                    issue_key: res.issue_key,
-                    issue_url: res.issue_url,
-                });
-            }
-        );
+        postSupportRequest(
+            data,
+            rdmoContext.backend_context.token,
+            setProcessing
+        ).then((res) => {
+            console.log(res);
+            setIssue({
+                status: res.status,
+                issue_key: res.issue_key,
+                issue_url: res.issue_url,
+            });
+        });
     };
 
     const { inputs, handleInputChange, handleSubmit } = useSupportForm(
@@ -39,6 +44,10 @@ function SupportRequest(props) {
             email: rdmoContext.backend_context.user_email,
         }
     );
+
+    if (processing) {
+        return <DmptLoading text="Processing request for support ..." />;
+    }
 
     let message = <></>;
     if (issue.status >= 400) {
