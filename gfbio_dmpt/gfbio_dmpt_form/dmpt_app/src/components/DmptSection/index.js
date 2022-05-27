@@ -72,7 +72,7 @@ function DmptSection(props) {
     return (
         <div id="section">
             <h2>{section.title}</h2>
-            <form id={`section-${section.id}`} onSubmit={handleSubmit}>
+            <form id={`form-section-${sectionIndex}`} onSubmit={handleSubmit}>
                 <DmptFormFields
                     section={section}
                     handleInputChange={handleInputChange}

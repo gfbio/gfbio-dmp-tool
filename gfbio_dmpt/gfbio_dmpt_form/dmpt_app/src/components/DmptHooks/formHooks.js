@@ -11,6 +11,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
         if (event) {
             event.preventDefault();
         }
+        console.log('formHooks | handleSubmit | event ', event);
         callback();
     };
 
@@ -81,6 +82,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
 
     const handleInputChange = (event, fieldType) => {
         event.persist();
+        // console.log('formHooks.js | handleInputChange | event.target : ', event.target);
         if (event.target.type === 'checkbox' && event.target.name in inputs) {
             const inputData = inputs;
             delete inputData[event.target.name];

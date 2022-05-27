@@ -13,7 +13,7 @@ const backHandler = (val, valHandler) => {
         valHandler(val - 1);
     }
 };
-
+// <form id={`form-section-${sectionIndex}`} onSubmit={handleSubmit}>
 const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
     if (dmptProjectId > -1) {
         putProject(token, dmptProjectId, inputs).then((res) => {

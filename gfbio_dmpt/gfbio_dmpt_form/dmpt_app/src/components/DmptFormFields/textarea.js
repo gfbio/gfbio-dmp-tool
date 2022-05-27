@@ -5,6 +5,7 @@ function TextArea(props) {
     const { question, handleChange, initialValue } = props;
 
     // { question.is_optional ? "" : "required"}
+    // console.log('TextArea | question: ', question);
 
     // This not the best way, but increases readability of data in requests
     const fieldName = `${question.key}____${question.id}`;
@@ -14,7 +15,7 @@ function TextArea(props) {
             id={`question-${question.id}`}
             name={fieldName}
             rows="3"
-            required={question.is_optional}
+            required={!question.is_optional}
             onChange={(event) =>
                 handleChange(event, question.value_type, question.is_optional)
             }
