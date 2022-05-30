@@ -80,8 +80,8 @@ def create_support_issue(rdmo_project, reporter, message=""):
             fields={
                 "project": {"key": settings.JIRA_PROJECT},
                 "summary": "DMP Support Request",
-                "description": f"Would you please be so nice to help me with my "
-                f'data management plan named "{rdmo_project.title}" '
+                "description": f"Help request for"
+                f'data management plan "{rdmo_project.title}" '
                 f'using the "{rdmo_project.catalog}" catalogue\n\n{message}',
                 "reporter": {"name": reporter},
                 "issuetype": {"name": "DMP"},
@@ -121,6 +121,7 @@ def _add_interests_to_message(form_data, message):
     if form_data.get("data_management_training", False):
         message += """- Data Management Training
            """
+    return message
 
 
 def create_support_issue_in_view(form_data={}):
@@ -139,12 +140,15 @@ def create_support_issue_in_view(form_data={}):
 
     reporter = get_issue_reporter(form_data.get("email"), form_data.get("user_id"))
     message = f"""
+    Message: 
+
     {form_data.get('message')}
 
     I am interested in:
 
     """
-    _add_interests_to_message(form_data, message)
+    message = _add_interests_to_message(form_data, message)
+
     issue = create_support_issue(rdmo_project, reporter, message)
     if issue is None:
         return {"error": f"no issue could be created"}
