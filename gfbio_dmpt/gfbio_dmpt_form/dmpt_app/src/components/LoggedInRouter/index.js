@@ -13,7 +13,12 @@ function LoggedInRouter() {
     const { id } = useParams();
 
     if (backend.isLoggedIn === 'false') {
-        return <h1>user not logged in</h1>;
+        return (
+            <DmptSectionNavigation
+                token={backend.token}
+                catalogId={backend.catalog_id}
+            />
+        );
     }
 
     if (id === 'new') {
@@ -33,9 +38,6 @@ function LoggedInRouter() {
             />
         );
     }
-
-    // console.log('LoggedInRouter | backend: ', backend);
-    // console.log('LoggedInRouter | context: ', rdmoContext);
 
     return <DmptList token={backend.token} />;
 }
