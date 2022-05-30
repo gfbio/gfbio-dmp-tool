@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import postProject, { putProject } from "../api/formdata";
 
 const continueHandler = (val, maxVal, valHandler) => {
     // val==sectionIndex
-    // const form = document.getElementById(`form-section-${val}`);
-    // form.submit();
     if (val < maxVal - 1) {
         valHandler(val + 1);
     }
@@ -16,9 +13,51 @@ const backHandler = (val, valHandler) => {
         valHandler(val - 1);
     }
 };
-// <form id={`form-section-${sectionIndex}`} onSubmit={handleSubmit}>
-const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
-    console.log('sectionButtons.js | instanced in DmptSectionNavigation | submitProjectData (post/put) | inputs ', inputs);
+
+const checkMandatoryFields = (mandatoryFields, inputs) => {
+    const mandatoryFieldsErrors = [];
+    mandatoryFields.forEach((mandatory) => {
+        if (!(mandatory in inputs && inputs[mandatory].length > 0)) {
+            mandatoryFieldsErrors.push(mandatory);
+        } else if (mandatory.startsWith('option-based')) {
+            const mandatorySplit = mandatory.split('option-based_');
+            let optionFieldError = true;
+            if (mandatorySplit.length === 2) {
+                Object.entries(inputs).forEach((inputField) => {
+                    if (
+                        inputField[0].endsWith(mandatorySplit[1]) &&
+                        inputField[1].length > 0
+                    ) {
+                        optionFieldError = false;
+                    }
+                });
+            }
+            if (optionFieldError) {
+                mandatoryFieldsErrors.push(mandatory);
+            }
+        }
+    });
+    return mandatoryFieldsErrors;
+};
+
+const submitProjectData = (
+    token,
+    catalogId,
+    inputs,
+    callBack,
+    dmptProjectId,
+    mandatoryFields
+) => {
+    console.log(
+        'sectionButtons.js | instanced in DmptSectionNavigation | submitProjectData (post/put) | inputs ',
+        inputs
+    );
+    const mandatoryFieldsErrors = checkMandatoryFields(mandatoryFields, inputs);
+    console.log(
+        'sectionButtons.js |  submitProjectData (post/put) | mandatoryFieldErrors ',
+        mandatoryFieldsErrors
+    );
+
     // TODO: only deactivate for prototyping
     // if (dmptProjectId > -1) {
     //     putProject(token, dmptProjectId, inputs).then((res) => {
@@ -43,9 +82,10 @@ function SectionButtons(props) {
         inputs,
         disabled,
         dmptProjectId,
+        mandatoryFields,
     } = props;
 
-    const submitText = dmptProjectId < 0 ? "Finalize DMP" : "Update DMP";
+    const submitText = dmptProjectId < 0 ? 'Finalize DMP' : 'Update DMP';
 
     let continueButton = (
         <button
@@ -71,7 +111,14 @@ function SectionButtons(props) {
                     disabled ? 'disabled' : ''
                 }`}
                 onClick={() =>
-                    submitProjectData(token, catalogId, inputs, callBack, dmptProjectId)
+                    submitProjectData(
+                        token,
+                        catalogId,
+                        inputs,
+                        callBack,
+                        dmptProjectId,
+                        mandatoryFields
+                    )
                 }
             >
                 <h6
@@ -112,6 +159,7 @@ function SectionButtons(props) {
 
 SectionButtons.defaultProps = {
     dmptProjectId: -1,
+    mandatoryFields: [],
 };
 
 SectionButtons.propTypes = {
@@ -124,6 +172,7 @@ SectionButtons.propTypes = {
     inputs: PropTypes.shape({}).isRequired,
     disabled: PropTypes.bool.isRequired,
     dmptProjectId: PropTypes.number,
+    mandatoryFields: PropTypes.shape([]),
 };
 
 export default SectionButtons;

@@ -140,6 +140,7 @@ function DmptSectionNavigation(props) {
                                 validationErrors={validationErrors}
                                 disabled={disabledNavigation}
                                 dmptProjectId={dmptProjectId}
+                                mandatoryFields={mandatoryFields}
                             />
                         </div>
                     </Sticky>
@@ -170,6 +171,7 @@ function DmptSectionNavigation(props) {
                             inputs={inputs}
                             disabled={disabledNavigation}
                             dmptProjectId={dmptProjectId}
+                            mandatoryFields={mandatoryFields}
                         />
                     </div>
                 </div>
