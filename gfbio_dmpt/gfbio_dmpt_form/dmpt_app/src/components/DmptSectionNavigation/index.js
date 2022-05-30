@@ -24,7 +24,7 @@ const useDmptSectionNavigation = (catalogId, token) => {
                     }
                 );
                 setSectionList(result.data.sections);
-                setMandatoryFields(result.data.mandatory_fields)
+                setMandatoryFields(result.data.mandatory_fields);
                 setProcessing(false);
             } catch (error) {
                 console.error(error);
@@ -68,6 +68,36 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     });
 };
 
+const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
+    console.log(
+        'DmptSectionNavigation | mandatoryValidationErrorsAsList | ',
+        mandatoryFieldErrors
+    );
+    let validation = <h2>validation here ?</h2>;
+    const validationElements = Object.values(mandatoryFieldErrors).map(
+        (mandatoryQuestion) => {
+            // ObjectmandatoryFieldErrors.map((fieldError)=>{
+            //     console.log('DmptSectionNavigation | mandatoryValidationErrorsAsList | map | mandatoryQuestion ', mandatoryQuestion);
+            return <li>{mandatoryQuestion.text}</li>;
+        }
+    );
+    console.log(
+        'DmptSectionNavigation | mandatoryValidationErrorsAsList | validationElements ',
+        validationElements.length
+    );
+    if (validationElements.length > 0) {
+        validation = (
+            <div className="row">
+                <div className="col-12">
+                    <h5>Mandatory Field Errors</h5>
+                    <ul>{validationElements}</ul>
+                </div>
+            </div>
+        );
+    }
+    return validation;
+};
+
 function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
@@ -78,6 +108,9 @@ function DmptSectionNavigation(props) {
     );
     const [sectionIndex, setSectionIndex] = useState(0);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
+    const [mandatoryValidationErrors, setMandatoryValidationErrors] = useState(
+        {}
+    );
 
     const {
         inputs,
@@ -92,6 +125,11 @@ function DmptSectionNavigation(props) {
         sectionIndex,
         setSectionIndex
     );
+
+    const mandatoryValidation = mandatoryValidationErrorsAsList(
+        mandatoryValidationErrors
+    );
+
     const sectionsLength = sectionList.length;
 
     // console.log(
@@ -102,6 +140,7 @@ function DmptSectionNavigation(props) {
     //     ' | dmptProjectData: ',
     //     dmptProjectData
     // );
+    // console.log('DmptSectionNavigation | useDmptSectionNavigation | mandatoryFields ', mandatoryFields);
 
     if (processing) {
         return <DmptLoading />;
@@ -125,6 +164,13 @@ function DmptSectionNavigation(props) {
                 </div>
             </div>
 
+            {/* <div className="row"> */}
+            {/*     <div className="col-12"> */}
+            {/*         <h4>Mandatory Field Errors</h4> */}
+            {mandatoryValidation}
+            {/* </div> */}
+            {/* </div> */}
+
             <div className="row" id="section-wrapper-row">
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
@@ -141,6 +187,9 @@ function DmptSectionNavigation(props) {
                                 disabled={disabledNavigation}
                                 dmptProjectId={dmptProjectId}
                                 mandatoryFields={mandatoryFields}
+                                setMandatoryErrors={
+                                    setMandatoryValidationErrors
+                                }
                             />
                         </div>
                     </Sticky>
@@ -172,6 +221,7 @@ function DmptSectionNavigation(props) {
                             disabled={disabledNavigation}
                             dmptProjectId={dmptProjectId}
                             mandatoryFields={mandatoryFields}
+                            setMandatoryErrors={setMandatoryValidationErrors}
                         />
                     </div>
                 </div>

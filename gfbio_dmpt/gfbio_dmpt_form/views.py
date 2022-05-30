@@ -247,17 +247,6 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
         related_values = dmpt_project.rdmo_project.values.all()
         related_values.delete()
         self._create_values_from_form_data(form_data, dmpt_project.rdmo_project.id)
-        # 0. strictly: what comes via a put request ressemble the new state of objects
-        #   thus delete values and create new ones should be ok, and may be a lot easier
-        #    below is more like patch request
-
-        # 1. if there is no value for this question, but a key from the form is available,
-        #   this means to create a new value, like in the initial post method
-
-        # 2. if there is/are values for this question and a key from the form is available
-        #   this means that a) the value needs update in cases of text values. b) a change in
-        #   which option is selected in case of radio/select/checkbox. c) a delete of a value
-        #   if the formerly selected option in now de-selected e.g. no checkbox checked anymore
 
     def post(self, request, format=None):
         serializer = RdmoProjectValuesSerializer(data=request.data)
