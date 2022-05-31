@@ -87,7 +87,6 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_email": f"{user.email}",
             "catalog_id": catalog_id,
         }
-        print("\nBACKEND ", context["backend"])
         return self.render_to_response(context)
 
 
@@ -128,6 +127,9 @@ class DmptSupportView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
+            # useful mock for local testing with the dmpt app
+            # return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(
+            #     {"issue_key": "SAND-1661", "issue_url": "https://helpdesk.gfbio.org/browse/SAND-1661"}))
             result = create_support_issue_in_view(form.cleaned_data)
             return HttpResponse(status=HTTP_201_CREATED, content=json.dumps(result))
         else:
