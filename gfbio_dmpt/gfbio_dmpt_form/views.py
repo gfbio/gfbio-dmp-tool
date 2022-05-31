@@ -2,7 +2,6 @@
 import json
 import random
 import string
-import time
 
 from django.contrib.auth.models import Group
 from django.http import HttpResponse
@@ -29,7 +28,7 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject
 from .permissions import IsOwner
-from .rdmo_db_utils import get_catalog_with_sections, build_form_content
+from .rdmo_db_utils import get_catalog_with_sections, build_form_content, get_mandatory_form_fields
 from .serializers.dmpt_serializers import (
     DmptProjectSerializer,
     RdmoProjectSerializer,
@@ -195,7 +194,6 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
 
     @staticmethod
     def _create_text_value(text_value, project_id, question_id):
-        print('_create_text_value | question_id : ', question_id)
         try:
             question = Question.objects.get(id=question_id)
             Value.objects.create(
@@ -210,7 +208,6 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
 
     @staticmethod
     def _create_option_value(option_value, project_id, question_id):
-        print('_create_option_value | question_id : ', question_id)
         try:
             question = Question.objects.get(id=question_id)
             option = Option.objects.get(id=int(option_value))
@@ -227,12 +224,9 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             pass
 
     def _create_values_from_form_data(self, form_data, project_id):
-        print('_create_values_from_form_data ', form_data, ' | project id ', project_id)
         separator = "____"
         for form_field in form_data:
-            print('form_field : ', form_field)
             sub_fields = form_field.split(separator)
-
             # question_key = form_field
             # # this applies to option-247 and optionset-54
             if form_field.startswith("option") and len(sub_fields) == 3:
@@ -252,17 +246,6 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
         related_values = dmpt_project.rdmo_project.values.all()
         related_values.delete()
         self._create_values_from_form_data(form_data, dmpt_project.rdmo_project.id)
-        # 0. strictly: what comes via a put request ressemble the new state of objects
-        #   thus delete values and create new ones should be ok, and may be a lot easier
-        #    below is more like patch request
-
-        # 1. if there is no value for this question, but a key from the form is available,
-        #   this means to create a new value, like in the initial post method
-
-        # 2. if there is/are values for this question and a key from the form is available
-        #   this means that a) the value needs update in cases of text values. b) a change in
-        #   which option is selected in case of radio/select/checkbox. c) a delete of a value
-        #   if the formerly selected option in now de-selected e.g. no checkbox checked anymore
 
     def post(self, request, format=None):
         serializer = RdmoProjectValuesSerializer(data=request.data)
@@ -313,8 +296,13 @@ class DmptSectionListView(generics.GenericAPIView):
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
         sections = catalog.sections.all()
+        mandatory = get_mandatory_form_fields(sections)
         serializer = DmptSectionSerializer(sections, many=True)
-        return Response(data=serializer.data, status=HTTP_200_OK)
+        data = {
+            'sections': serializer.data,
+            'mandatory_fields': mandatory,
+        }
+        return Response(data=data, status=HTTP_200_OK)
 
 
 # class DmptProjectFormDataView(generics.GenericAPIView):

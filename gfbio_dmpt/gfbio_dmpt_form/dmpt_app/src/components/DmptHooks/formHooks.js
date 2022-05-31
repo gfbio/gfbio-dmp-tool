@@ -15,11 +15,11 @@ const useDmptSectionForm = (callback, initialInputValues) => {
     };
 
     let validity;
-    const handleValidation = (event, fieldType) => {
+    const handleValidation = (eventTarget, fieldType) => {
         if (fieldType === 'url') {
             if (
-                !validator.isURL(event.target.value) &&
-                event.target.value !== ''
+                !validator.isURL(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -27,8 +27,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'email') {
             if (
-                !validator.isEmail(event.target.value) &&
-                event.target.value !== ''
+                !validator.isEmail(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -36,8 +36,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'phone') {
             if (
-                !validator.isMobilePhone(event.target.value) &&
-                event.target.value !== ''
+                !validator.isMobilePhone(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -45,8 +45,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'integer') {
             if (
-                !validator.isInt(event.target.value) &&
-                event.target.value !== ''
+                !validator.isInt(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -54,8 +54,8 @@ const useDmptSectionForm = (callback, initialInputValues) => {
             }
         } else if (fieldType === 'float') {
             if (
-                !validator.isFloat(event.target.value) &&
-                event.target.value !== ''
+                !validator.isFloat(eventTarget.value) &&
+                eventTarget.value !== ''
             ) {
                 validity = false;
             } else {
@@ -66,13 +66,13 @@ const useDmptSectionForm = (callback, initialInputValues) => {
         if (validity === false) {
             setValidationErros((prevValidationErrors) => ({
                 ...prevValidationErrors,
-                [event.target.name]: false,
+                [eventTarget.name]: false,
             }));
             setDisabledNavigation(true);
         } else {
             setValidationErros((currentErrors) => {
                 const copy = { ...currentErrors };
-                delete copy[event.target.name];
+                delete copy[eventTarget.name];
                 return copy;
             });
             setDisabledNavigation(false);
@@ -91,8 +91,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
                 [event.target.name]: event.target.value,
             }));
         }
-        // console.log('formHooks.js | handleInputChange | inputs : ', inputs);
-        handleValidation(event, fieldType);
+        handleValidation(event.target, fieldType);
     };
 
     return {

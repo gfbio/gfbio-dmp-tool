@@ -12,6 +12,7 @@ import DmptSummary from '../DmptSummary';
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
     const [sectionList, setSectionList] = useState([]);
+    const [mandatoryFields, setMandatoryFields] = useState([]);
     useEffect(() => {
         async function prepareDmptSectionList() {
             setProcessing(true);
@@ -22,7 +23,8 @@ const useDmptSectionNavigation = (catalogId, token) => {
                         headers: { Authorization: `Token ${token}` },
                     }
                 );
-                setSectionList(result.data);
+                setSectionList(result.data.sections);
+                setMandatoryFields(result.data.mandatory_fields);
                 setProcessing(false);
             } catch (error) {
                 console.error(error);
@@ -31,7 +33,7 @@ const useDmptSectionNavigation = (catalogId, token) => {
 
         prepareDmptSectionList();
     }, []);
-    return [processing, sectionList];
+    return [processing, sectionList, mandatoryFields];
 };
 
 const fakeSubmit = () => {
@@ -66,16 +68,41 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     });
 };
 
+const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
+    let validation = <></>;
+    const validationElements = Object.values(mandatoryFieldErrors).map(
+        (mandatoryQuestion) => {
+            return <li>{mandatoryQuestion.text} (in &quot;{mandatoryQuestion.section_name}&quot;)</li>;
+        }
+    );
+    if (validationElements.length > 0) {
+        validation = (
+            <div className="row">
+                <div className="col-12">
+                    <h5 className="mandatory">Mandatory fields missing</h5>
+                    <p>The following form fields are mandatory and are required to proceed in submitting your data management plan</p>
+                    <ul className="list-group-numbered list-unstyled mandatory">{validationElements}</ul>
+                    <p>Please fill the required fields and submit again</p>
+                </div>
+            </div>
+        );
+    }
+    return validation;
+};
+
 function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
 
-    const [processing, sectionList] = useDmptSectionNavigation(
+    const [processing, sectionList, mandatoryFields] = useDmptSectionNavigation(
         catalogId,
         token
     );
     const [sectionIndex, setSectionIndex] = useState(0);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
+    const [mandatoryValidationErrors, setMandatoryValidationErrors] = useState(
+        {}
+    );
 
     const {
         inputs,
@@ -90,27 +117,23 @@ function DmptSectionNavigation(props) {
         sectionIndex,
         setSectionIndex
     );
-    const sectionsLength = sectionList.length;
 
-    // console.log(
-    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-    //     sectionIndex,
-    //     '| dmptProjectId ',
-    //     dmptProjectId,
-    //     ' | dmptProjectData: ',
-    //     dmptProjectData
-    // );
+    const mandatoryValidation = mandatoryValidationErrorsAsList(
+        mandatoryValidationErrors
+    );
+
+    const sectionsLength = sectionList.length;
 
     if (processing) {
         return <DmptLoading />;
     }
 
-    // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
     if (rdmoProjectId > 0) {
         return (
             <DmptSummary
                 rdmoProjectId={rdmoProjectId}
                 dmptProjectId={dmptProjectId}
+                resetRdmoProjectId={setRdmoProjectId}
                 issueKey={dmptProjectData.issue}
             />
         );
@@ -123,7 +146,6 @@ function DmptSectionNavigation(props) {
                     <ul className="nav nav-tabs sub-navi">{sections}</ul>
                 </div>
             </div>
-
             <div className="row" id="section-wrapper-row">
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
@@ -139,12 +161,17 @@ function DmptSectionNavigation(props) {
                                 validationErrors={validationErrors}
                                 disabled={disabledNavigation}
                                 dmptProjectId={dmptProjectId}
+                                mandatoryFields={mandatoryFields}
+                                setMandatoryErrors={
+                                    setMandatoryValidationErrors
+                                }
                             />
                         </div>
                     </Sticky>
                 </div>
 
                 <div className="col-9" id="section-content">
+                    {mandatoryValidation}
                     <div className="row">
                         <div className="col-12">
                             <DmptSection
@@ -169,6 +196,8 @@ function DmptSectionNavigation(props) {
                             inputs={inputs}
                             disabled={disabledNavigation}
                             dmptProjectId={dmptProjectId}
+                            mandatoryFields={mandatoryFields}
+                            setMandatoryErrors={setMandatoryValidationErrors}
                         />
                     </div>
                 </div>

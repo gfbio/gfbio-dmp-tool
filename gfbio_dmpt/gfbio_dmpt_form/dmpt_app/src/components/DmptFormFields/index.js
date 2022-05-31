@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import TextInput from './textinput';
 import TextArea from './textarea';
 import Select from './select';
@@ -23,14 +22,13 @@ function DmptFormFields(props) {
                 </div>
 
                 {questionset.questions.map((question) => {
-                    let mandatoryMessage = (
+                    const mandatoryMessage = question.is_optional ? (
+                        <span />
+                    ) : (
                         <span className="mandatory">
                             (This field is mandatory)
                         </span>
                     );
-                    if (question.is_optional) {
-                        mandatoryMessage = <span />;
-                    }
 
                     // This not the best way, but increases readability of data in requests
                     const fieldName = `${question.key}____${question.id}`;

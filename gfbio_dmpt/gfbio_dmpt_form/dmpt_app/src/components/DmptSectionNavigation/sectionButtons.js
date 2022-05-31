@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import postProject, { putProject } from "../api/formdata";
+import postProject, { putProject } from '../api/formdata';
 
 const continueHandler = (val, maxVal, valHandler) => {
     if (val < maxVal - 1) {
@@ -14,16 +14,66 @@ const backHandler = (val, valHandler) => {
     }
 };
 
-const submitProjectData = (token, catalogId, inputs, callBack, dmptProjectId) => {
-    if (dmptProjectId > -1) {
-        putProject(token, dmptProjectId, inputs).then((res) => {
-            callBack(res.rdmoProjectId);
-        });
-    }
-    else {
-        postProject(token, catalogId, inputs).then((res) => {
-            callBack(res.rdmoProjectId);
-        });
+const checkMandatoryFields = (mandatoryFields, inputs, setMandatoryErrors) => {
+    const mandatoryFieldsErrors = {};
+    Object.entries(mandatoryFields).forEach(
+        ([mandatoryFieldKey, mandatoryQuestion]) => {
+            if (mandatoryFieldKey.startsWith('option-based')) {
+                const mandatorySplit = mandatoryFieldKey.split('option-based_');
+                if (mandatorySplit.length === 2) {
+                    let optionFieldError = true;
+                    Object.entries(inputs).forEach((inputField) => {
+                        if (
+                            inputField[0].endsWith(mandatorySplit[1]) &&
+                            inputField[1].length > 0
+                        ) {
+                            optionFieldError = false;
+                        }
+                    });
+                    if (optionFieldError) {
+                        mandatoryFieldsErrors[mandatoryFieldKey] =
+                            mandatoryQuestion;
+                    }
+                }
+            } else if (
+                !(
+                    mandatoryFieldKey in inputs &&
+                    inputs[mandatoryFieldKey].length > 0
+                )
+            ) {
+                mandatoryFieldsErrors[mandatoryFieldKey] = mandatoryQuestion;
+            }
+        }
+    );
+    setMandatoryErrors(mandatoryFieldsErrors);
+    return mandatoryFieldsErrors;
+};
+
+const submitProjectData = (
+    token,
+    catalogId,
+    inputs,
+    callBack,
+    dmptProjectId,
+    mandatoryFields,
+    setMandatoryErrors
+) => {
+    const mandatoryFieldsErrors = checkMandatoryFields(
+        mandatoryFields,
+        inputs,
+        setMandatoryErrors
+    );
+
+    if (Object.keys(mandatoryFieldsErrors).length <= 0) {
+        if (dmptProjectId > -1) {
+            putProject(token, dmptProjectId, inputs).then((res) => {
+                callBack(res.rdmoProjectId);
+            });
+        } else {
+            postProject(token, catalogId, inputs).then((res) => {
+                callBack(res.rdmoProjectId);
+            });
+        }
     }
 };
 
@@ -38,9 +88,11 @@ function SectionButtons(props) {
         inputs,
         disabled,
         dmptProjectId,
+        mandatoryFields,
+        setMandatoryErrors,
     } = props;
 
-    const submitText = dmptProjectId < 0 ? "Finalize DMP" : "Update DMP";
+    const submitText = dmptProjectId < 0 ? 'Finalize DMP' : 'Update DMP';
 
     let continueButton = (
         <button
@@ -66,7 +118,15 @@ function SectionButtons(props) {
                     disabled ? 'disabled' : ''
                 }`}
                 onClick={() =>
-                    submitProjectData(token, catalogId, inputs, callBack, dmptProjectId)
+                    submitProjectData(
+                        token,
+                        catalogId,
+                        inputs,
+                        callBack,
+                        dmptProjectId,
+                        mandatoryFields,
+                        setMandatoryErrors
+                    )
                 }
             >
                 <h6
@@ -119,6 +179,8 @@ SectionButtons.propTypes = {
     inputs: PropTypes.shape({}).isRequired,
     disabled: PropTypes.bool.isRequired,
     dmptProjectId: PropTypes.number,
+    mandatoryFields: PropTypes.shape([]).isRequired,
+    setMandatoryErrors: PropTypes.func.isRequired,
 };
 
 export default SectionButtons;

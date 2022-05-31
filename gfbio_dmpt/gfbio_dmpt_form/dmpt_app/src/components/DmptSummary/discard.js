@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { URL_PREFIX } from "../api/constants";
+import PropTypes from 'prop-types';
+import { URL_PREFIX } from '../api/constants';
 
-function DiscardAndExit() {
+function DiscardAndExit(props) {
+    const { resetRdmoProjectId } = props;
     const [confirm, setConfirm] = useState(false);
     const [discard, setDiscard] = useState(false);
     const history = useHistory();
 
     if (discard) {
-        history.push(`${URL_PREFIX}new`);
+        resetRdmoProjectId(-1);
+        history.push(`${URL_PREFIX}`);
     }
 
     let button = (
@@ -54,5 +57,9 @@ function DiscardAndExit() {
 
     return <>{button}</>;
 }
+
+DiscardAndExit.propTypes = {
+    resetRdmoProjectId: PropTypes.func.isRequired,
+};
 
 export default DiscardAndExit;
