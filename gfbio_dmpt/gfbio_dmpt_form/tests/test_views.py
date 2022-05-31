@@ -195,6 +195,28 @@ class TestDmptProjectViews(TestCase):
         content = json.loads(response.content)
         self.assertIn("title", content[0].keys())
         self.assertIn("rdmo_project", content[0].keys())
+        self.assertIn("issue", content[0].keys())
+        self.assertEqual(0, len(content[0].get('issue')))
+
+    def test_get_content_structure_with_issue(self):
+        dp = Project.objects.create(title="Unit Test")
+        self.std_client.post(
+            "/dmp/dmptprojects/",
+            {
+                "rdmo_project": dp.id,
+                "user": self.std_user.id,
+            },
+        )
+        dmpt_project = DmptProject.objects.first()
+        issue_key = 'TEST-123'
+        DmptIssue.objects.create(issue_key=issue_key, dmpt_project=dmpt_project,
+                                 rdmo_project=dmpt_project.rdmo_project)
+        response = self.std_client.get("/dmp/dmptprojects/")
+        content = json.loads(response.content)
+        self.assertIn("title", content[0].keys())
+        self.assertIn("rdmo_project", content[0].keys())
+        self.assertIn("issue", content[0].keys())
+        self.assertEqual(issue_key, content[0].get('issue'))
 
     def test_user_get_multiple_projects(self):
         self.assertEqual(0, len(Project.objects.all()))

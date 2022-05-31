@@ -1,14 +1,16 @@
 // I dont know why the linter is still complaining about this, all lablels and
 // inputs are related by id & htmlFor
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext, useState } from 'react';
-import PropTypes from 'prop-types';
-import useSupportForm from '../DmptHooks/supportFormHooks';
-import postSupportRequest from '../api/support';
-import RdmoContext from '../RdmoContext';
+import React, { useContext, useState } from "react";
+import PropTypes from "prop-types";
+import useSupportForm from "../DmptHooks/supportFormHooks";
+import postSupportRequest from "../api/support";
+import RdmoContext from "../RdmoContext";
+import { HELPDESK_ROOT } from "../api/constants";
+import DmptLoading from "../DmptLoading";
 
 function SupportRequest(props) {
-    const { rdmoProjectId } = props;
+    const { rdmoProjectId, issueKey } = props;
     const rdmoContext = useContext(RdmoContext);
 
     const [issue, setIssue] = useState({
@@ -16,20 +18,22 @@ function SupportRequest(props) {
         issue_key: '',
         issue_url: '',
     });
+    const [processing, setProcessing] = useState(false);
 
     const submitRequest = (inputs) => {
         const data = inputs;
         data.rdmo_project_id = rdmoProjectId;
-        postSupportRequest(data, rdmoContext.backend_context.token).then(
-            (res) => {
-                console.log(res);
-                setIssue({
-                    status: res.status,
-                    issue_key: res.issue_key,
-                    issue_url: res.issue_url,
-                });
-            }
-        );
+        postSupportRequest(
+            data,
+            rdmoContext.backend_context.token,
+            setProcessing
+        ).then((res) => {
+            setIssue({
+                status: res.status,
+                issue_key: res.issue_key,
+                issue_url: res.issue_url,
+            });
+        });
     };
 
     const { inputs, handleInputChange, handleSubmit } = useSupportForm(
@@ -38,6 +42,10 @@ function SupportRequest(props) {
             email: rdmoContext.backend_context.user_email,
         }
     );
+
+    if (processing) {
+        return <DmptLoading text="Processing request for support ..." />;
+    }
 
     let message = <></>;
     if (issue.status >= 400) {
@@ -55,6 +63,25 @@ function SupportRequest(props) {
                     Your issue key is <b>{issue.issue_key}</b>. Please refer to
                     it in any future communication. To access your issue, please
                     visit <a href={issue.issue_url}>{issue.issue_url}</a>
+                </p>
+            </div>
+        );
+    }
+
+    if (issueKey !== '') {
+        return (
+            <div>
+                <h6 className="sidebar-list-item">
+                    <i className="mdi mdi-account-voice align-middle" />
+                    Request Support
+                </h6>
+                <h5>You have already send a request for Support !</h5>
+                <p>
+                    Your issue key is <b>{issueKey}</b>. Please refer to it in
+                    any future communication. To access your issue, please visit{' '}
+                    <a
+                        href={`${HELPDESK_ROOT}${issueKey}`}
+                    >{`${HELPDESK_ROOT}${issueKey}`}</a>
                 </p>
             </div>
         );
@@ -239,8 +266,12 @@ function SupportRequest(props) {
     );
 }
 
+SupportRequest.defaultProps = {
+    issueKey: '',
+};
 SupportRequest.propTypes = {
     rdmoProjectId: PropTypes.number.isRequired,
+    issueKey: PropTypes.string,
 };
 
 export default SupportRequest;

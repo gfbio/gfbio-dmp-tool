@@ -3,9 +3,10 @@ import * as QueryString from 'querystring';
 import { PROJECT_API_ROOT } from './constants';
 import getCookie from './cookie';
 
-const postSupportRequest = async (data, token) => {
+const postSupportRequest = async (data, token, setProcessing) => {
     const res = { issue_key: '', issue_url: '' };
     const csrftoken = getCookie('csrftoken');
+    setProcessing(true);
     await axios
         .post(`${PROJECT_API_ROOT}support/`, QueryString.stringify(data), {
             headers: {
@@ -26,6 +27,7 @@ const postSupportRequest = async (data, token) => {
             }
             console.error(error.toJSON());
         });
+    setProcessing(false);
     return res;
 };
 

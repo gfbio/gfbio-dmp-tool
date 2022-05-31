@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Sticky from 'react-stickynode';
-import { SECTIONS_ROOT, URL_PREFIX } from '../api/constants';
+import { SECTIONS_ROOT } from '../api/constants';
 import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import DmptSummary from '../DmptSummary';
-import DmptList from '../DmptList';
-import { Redirect } from 'react-router-dom';
 
 const useDmptSectionNavigation = (catalogId, token) => {
     const [processing, setProcessing] = useState(true);
@@ -94,14 +92,14 @@ function DmptSectionNavigation(props) {
     );
     const sectionsLength = sectionList.length;
 
-    console.log(
-        `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-        sectionIndex,
-        '| dmptProjectId ',
-        dmptProjectId,
-        ' | dmptProjectData: ',
-        dmptProjectData
-    );
+    // console.log(
+    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
+    //     sectionIndex,
+    //     '| dmptProjectId ',
+    //     dmptProjectId,
+    //     ' | dmptProjectData: ',
+    //     dmptProjectData
+    // );
 
     if (processing) {
         return <DmptLoading />;
@@ -113,6 +111,7 @@ function DmptSectionNavigation(props) {
             <DmptSummary
                 rdmoProjectId={rdmoProjectId}
                 dmptProjectId={dmptProjectId}
+                issueKey={dmptProjectData.issue}
             />
         );
     }
@@ -180,7 +179,7 @@ function DmptSectionNavigation(props) {
 }
 
 DmptSectionNavigation.defaultProps = {
-    dmptProjectData: { form_data: {}, id: -1 },
+    dmptProjectData: { form_data: {}, id: -1, issue: '' },
 };
 
 DmptSectionNavigation.propTypes = {
@@ -189,6 +188,7 @@ DmptSectionNavigation.propTypes = {
     dmptProjectData: PropTypes.shape({
         form_data: PropTypes.shape({}),
         id: PropTypes.number,
+        issue: PropTypes.string,
     }),
 };
 
