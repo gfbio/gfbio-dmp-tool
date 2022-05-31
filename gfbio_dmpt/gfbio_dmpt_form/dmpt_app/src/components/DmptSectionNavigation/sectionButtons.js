@@ -16,38 +16,35 @@ const backHandler = (val, valHandler) => {
 
 const checkMandatoryFields = (mandatoryFields, inputs, setMandatoryErrors) => {
     const mandatoryFieldsErrors = {};
-    // console.log('sectionButtons | checkMandatoryFields | mandatoryFields ', mandatoryFields);
     Object.entries(mandatoryFields).forEach(
         ([mandatoryFieldKey, mandatoryQuestion]) => {
-            // console.log('sectionButtons | checkMandatoryFields | mandatoryFieldKey ', mandatoryFieldKey);
             if (mandatoryFieldKey.startsWith('option-based')) {
                 const mandatorySplit = mandatoryFieldKey.split('option-based_');
-                // console.log('\t | mandatorySplit ', mandatorySplit);
-
                 if (mandatorySplit.length === 2) {
                     let optionFieldError = true;
-                    // console.log('\t\t | mandatorySplit is 2 :  ', mandatorySplit.length);
                     Object.entries(inputs).forEach((inputField) => {
-                        // console.log('\tmap | mandatoryFields | inputField ', inputField, ' | endswith ', mandatorySplit[1], ' ', inputField[0].endsWith(mandatorySplit[1]), ' | length ', inputField[1].length);
-                        if (inputField[0].endsWith(mandatorySplit[1]) && inputField[1].length > 0) {
+                        if (
+                            inputField[0].endsWith(mandatorySplit[1]) &&
+                            inputField[1].length > 0
+                        ) {
                             optionFieldError = false;
-                            // console.log('\t\t ... set optionalFieldError to false : ', optionFieldError);
                         }
                     });
-                    // console.log('optional field error ', optionFieldError);
                     if (optionFieldError) {
                         mandatoryFieldsErrors[mandatoryFieldKey] =
                             mandatoryQuestion;
                     }
                 }
-
-            }
-            else if ( !(mandatoryFieldKey in inputs && inputs[mandatoryFieldKey].length > 0)) {
+            } else if (
+                !(
+                    mandatoryFieldKey in inputs &&
+                    inputs[mandatoryFieldKey].length > 0
+                )
+            ) {
                 mandatoryFieldsErrors[mandatoryFieldKey] = mandatoryQuestion;
             }
         }
     );
-    // console.log(' execute setMandatoryErrors with : ', mandatoryFieldsErrors);
     setMandatoryErrors(mandatoryFieldsErrors);
     return mandatoryFieldsErrors;
 };
@@ -61,19 +58,11 @@ const submitProjectData = (
     mandatoryFields,
     setMandatoryErrors
 ) => {
-    // console.log(
-    //     'sectionButtons.js | instanced in DmptSectionNavigation | submitProjectData (post/put) | inputs ',
-    //     inputs
-    // );
     const mandatoryFieldsErrors = checkMandatoryFields(
         mandatoryFields,
         inputs,
         setMandatoryErrors
     );
-    // console.log(
-    //     'sectionButtons.js |  submitProjectData (post/put) | mandatoryFieldErrors ',
-    //     Object.keys(mandatoryFieldsErrors).length
-    // );
 
     if (Object.keys(mandatoryFieldsErrors).length <= 0) {
         if (dmptProjectId > -1) {

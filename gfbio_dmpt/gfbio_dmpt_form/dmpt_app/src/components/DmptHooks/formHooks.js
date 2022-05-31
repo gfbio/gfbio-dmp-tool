@@ -8,17 +8,14 @@ const useDmptSectionForm = (callback, initialInputValues) => {
     const [disabledNavigation, setDisabledNavigation] = useState(false);
 
     const handleSubmit = (event) => {
-        // console.log('formHooks | handleSubmit | event ', event);
         if (event) {
             event.preventDefault();
         }
-        // console.log('formHooks | handleSubmit | event ', event);
         callback();
     };
 
     let validity;
     const handleValidation = (eventTarget, fieldType) => {
-        // console.log('formHooks | handleValidation | fieldType ', fieldType, ' | eventTarget ', eventTarget);
         if (fieldType === 'url') {
             if (
                 !validator.isURL(eventTarget.value) &&
@@ -84,7 +81,6 @@ const useDmptSectionForm = (callback, initialInputValues) => {
 
     const handleInputChange = (event, fieldType) => {
         event.persist();
-        // console.log('formHooks.js | handleInputChange | event : ', event);
         if (event.target.type === 'checkbox' && event.target.name in inputs) {
             const inputData = inputs;
             delete inputData[event.target.name];
@@ -95,7 +91,6 @@ const useDmptSectionForm = (callback, initialInputValues) => {
                 [event.target.name]: event.target.value,
             }));
         }
-        console.log('formHooks.js | handleInputChange | inputs : ', inputs);
         handleValidation(event.target, fieldType);
     };
 

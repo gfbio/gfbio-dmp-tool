@@ -32,27 +32,4 @@ const postDmptProject = async (token, userId, rdmoProjectId) => {
     return res;
 };
 
-// export const getDmptProjects = async (token) => {
-//     const res = { data: {} };
-//     console.log('getDmptProjects | token: ', token);
-//     await axios
-//         .get(`${PROJECT_API_ROOT}dmptprojects/`, {
-//             headers: {
-//                 Authorization: `Token ${token}`,
-//             },
-//         })
-//         .then((response) => {
-//             res.status = response.status;
-//             res.statusText = response.statusText;
-//             res.data = response.data;
-//         })
-//         .catch((error) => {
-//             if (error.response) {
-//                 res.status = error.response.status;
-//                 res.statusText = error.message;
-//             }
-//             console.error(error.toJSON());
-//         });
-// };
-
 export default postDmptProject;

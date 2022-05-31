@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 function TextArea(props) {
     const { question, handleChange, initialValue } = props;
 
-    // { question.is_optional ? "" : "required"}
-    // console.log('TextArea | question: ', question);
-
     // This not the best way, but increases readability of data in requests
     const fieldName = `${question.key}____${question.id}`;
     return (

@@ -22,7 +22,6 @@ function SupportRequest(props) {
         data.rdmo_project_id = rdmoProjectId;
         postSupportRequest(data, rdmoContext.backend_context.token).then(
             (res) => {
-                console.log(res);
                 setIssue({
                     status: res.status,
                     issue_key: res.issue_key,

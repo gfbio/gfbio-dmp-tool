@@ -8,7 +8,6 @@ import { URL_PREFIX } from "../api/constants";
 const saveDmpt = (token, userId, rdmoProjectId, setPostResult) => {
     setPostResult({ processing: true, posted: false, result: {} });
     postDmptProject(token, userId, rdmoProjectId).then((res) => {
-        console.log('DmptSummary | save.js | saveDmpt | post res: ', res);
         setPostResult({ processing: false, posted: true, result: res });
     });
 };

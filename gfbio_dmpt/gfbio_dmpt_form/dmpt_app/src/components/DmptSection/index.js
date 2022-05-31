@@ -49,8 +49,6 @@ function DmptSection(props) {
         token
     );
 
-    // console.log('DmptSection | section: ', section);
-
     if (processing) {
         return (
             <div id="section">

@@ -31,6 +31,7 @@ function Select(props) {
                 name={selectFieldName}
                 onChange={(e) => handleChange(e)}
             >
+                <option value="" disabled selected />
                 {optionSetOptions}
             </select>
         );

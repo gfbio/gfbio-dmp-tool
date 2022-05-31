@@ -69,22 +69,12 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 };
 
 const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
-    console.log(
-        'DmptSectionNavigation | mandatoryValidationErrorsAsList | ',
-        mandatoryFieldErrors
-    );
     let validation = <></>;
     const validationElements = Object.values(mandatoryFieldErrors).map(
         (mandatoryQuestion) => {
-            // ObjectmandatoryFieldErrors.map((fieldError)=>{
-            //     console.log('DmptSectionNavigation | mandatoryValidationErrorsAsList | map | mandatoryQuestion ', mandatoryQuestion);
             return <li>{mandatoryQuestion.text} (in &quot;{mandatoryQuestion.section_name}&quot;)</li>;
         }
     );
-    // console.log(
-    //     'DmptSectionNavigation | mandatoryValidationErrorsAsList | validationElements ',
-    //     validationElements.length
-    // );
     if (validationElements.length > 0) {
         validation = (
             <div className="row">
@@ -133,16 +123,6 @@ function DmptSectionNavigation(props) {
     );
 
     const sectionsLength = sectionList.length;
-
-    // console.log(
-    //     `DmptSectionNavigation | useDmptSectionNavigation | processing: ${processing} | section list length: ${sectionsLength} | index: `,
-    //     sectionIndex,
-    //     '| dmptProjectId ',
-    //     dmptProjectId,
-    //     ' | dmptProjectData: ',
-    //     dmptProjectData
-    // );
-    // console.log('DmptSectionNavigation | useDmptSectionNavigation | mandatoryFields ', mandatoryFields);
 
     if (processing) {
         return <DmptLoading />;
