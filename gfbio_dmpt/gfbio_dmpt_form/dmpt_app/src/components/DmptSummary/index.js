@@ -7,7 +7,7 @@ import PdfExport from './pdf';
 import RdmoContext from '../RdmoContext';
 
 function DmptSummary(props) {
-    const { rdmoProjectId, dmptProjectId } = props;
+    const { rdmoProjectId, dmptProjectId, resetRdmoProjectId } = props;
     const rdmoContext = useContext(RdmoContext);
 
     const saveDmpt =
@@ -60,7 +60,7 @@ function DmptSummary(props) {
                     </div>
                     <div className="row mt-3">
                         <div className="col-12">
-                            <DiscardAndExit />
+                            <DiscardAndExit resetRdmoProjectId={resetRdmoProjectId} />
                         </div>
                     </div>
                     {saveInfo}
@@ -83,6 +83,7 @@ DmptSummary.defaultProps = {
 
 DmptSummary.propTypes = {
     rdmoProjectId: PropTypes.number.isRequired,
+    resetRdmoProjectId: PropTypes.func.isRequired,
     dmptProjectId: PropTypes.number,
 };
 

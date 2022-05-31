@@ -128,12 +128,12 @@ function DmptSectionNavigation(props) {
         return <DmptLoading />;
     }
 
-    // TODO: maybe add a dedicated loading animation for projectPosts if requests taka too long
     if (rdmoProjectId > 0) {
         return (
             <DmptSummary
                 rdmoProjectId={rdmoProjectId}
                 dmptProjectId={dmptProjectId}
+                resetRdmoProjectId={setRdmoProjectId}
             />
         );
     }
@@ -145,14 +145,6 @@ function DmptSectionNavigation(props) {
                     <ul className="nav nav-tabs sub-navi">{sections}</ul>
                 </div>
             </div>
-
-            {/* <div className="row"> */}
-            {/*     <div className="col-12"> */}
-            {/*         <h4>Mandatory Field Errors</h4> */}
-            {/* {mandatoryValidation} */}
-            {/* </div> */}
-            {/* </div> */}
-
             <div className="row" id="section-wrapper-row">
                 <div className="col-3 pt-2" id="section-sub-navi">
                     <Sticky top={80}>
