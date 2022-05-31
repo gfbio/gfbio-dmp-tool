@@ -73,24 +73,26 @@ const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
         'DmptSectionNavigation | mandatoryValidationErrorsAsList | ',
         mandatoryFieldErrors
     );
-    let validation = <h2>validation here ?</h2>;
+    let validation = <></>;
     const validationElements = Object.values(mandatoryFieldErrors).map(
         (mandatoryQuestion) => {
             // ObjectmandatoryFieldErrors.map((fieldError)=>{
             //     console.log('DmptSectionNavigation | mandatoryValidationErrorsAsList | map | mandatoryQuestion ', mandatoryQuestion);
-            return <li>{mandatoryQuestion.text}</li>;
+            return <li>{mandatoryQuestion.text} (in &quot;{mandatoryQuestion.section_name}&quot;)</li>;
         }
     );
-    console.log(
-        'DmptSectionNavigation | mandatoryValidationErrorsAsList | validationElements ',
-        validationElements.length
-    );
+    // console.log(
+    //     'DmptSectionNavigation | mandatoryValidationErrorsAsList | validationElements ',
+    //     validationElements.length
+    // );
     if (validationElements.length > 0) {
         validation = (
             <div className="row">
                 <div className="col-12">
-                    <h5>Mandatory Field Errors</h5>
-                    <ul>{validationElements}</ul>
+                    <h5 className="mandatory">Mandatory fields missing</h5>
+                    <p>The following form fields are mandatory and are required to proceed in submitting your data management plan</p>
+                    <ul className="list-group-numbered list-unstyled mandatory">{validationElements}</ul>
+                    <p>Please fill the required fields and submit again</p>
                 </div>
             </div>
         );
@@ -167,7 +169,7 @@ function DmptSectionNavigation(props) {
             {/* <div className="row"> */}
             {/*     <div className="col-12"> */}
             {/*         <h4>Mandatory Field Errors</h4> */}
-            {mandatoryValidation}
+            {/* {mandatoryValidation} */}
             {/* </div> */}
             {/* </div> */}
 
@@ -196,6 +198,7 @@ function DmptSectionNavigation(props) {
                 </div>
 
                 <div className="col-9" id="section-content">
+                    {mandatoryValidation}
                     <div className="row">
                         <div className="col-12">
                             <DmptSection
