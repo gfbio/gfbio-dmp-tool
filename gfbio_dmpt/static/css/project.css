@@ -11979,6 +11979,41 @@ h6.sidebar-list-item i.right, .sidebar-list-item.h6 i.right {
   margin-left: 1.6rem;
 }
 
+.submission-list i.dmp {
+  color: #3CACE4;
+  font-size: 1.25rem;
+}
+.submission-list ul {
+  padding: 0;
+}
+.submission-list ul li {
+  border: 1px solid #cccccc;
+  border-top-width: 1px !important;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  margin: 0.5rem 0 0.5rem 0;
+  padding: 0.3rem 0.2rem;
+}
+.submission-list ul li a {
+  color: #343434;
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+.submission-list ul li a.action {
+  font-size: 0.8rem;
+  color: #343434;
+}
+.submission-list ul li:hover {
+  color: #fff;
+  background-color: #3CACE4;
+}
+.submission-list ul li:hover a {
+  color: #fff;
+}
+.submission-list ul li:hover a i {
+  color: #fff;
+}
+
 section.page-title {
   background-color: #f8f8f8;
 }

@@ -172,3 +172,52 @@ h6.sidebar-list-item {
   }
 
 }
+
+.submission-list {
+
+  i.dmp {
+    color: $gfbio-light-blue;
+    font-size: 1.25rem;
+  }
+
+  ul {
+
+    padding: 0;
+
+    li {
+      border: 1px solid $gray-light-2;
+      border-top-width: 1px !important;
+      border-radius: 4px;
+      background-color: $gray-100;
+      margin: .5rem 0 .5rem 0;
+      padding: .3rem .2rem;
+
+      a {
+        color: $gray-darker;
+        font-weight: 300;
+        font-size: .9rem;
+      }
+
+      a.action {
+        font-size: .8rem;
+        color: $gray-darker;
+      }
+
+      &:hover {
+        color: $white;
+        background-color: $gfbio-light-blue;
+
+        a {
+          color: $white;
+
+          i {
+            color: $white;
+          }
+        }
+      }
+    }
+
+
+  }
+
+}
