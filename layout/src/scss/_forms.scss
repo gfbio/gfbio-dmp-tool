@@ -59,6 +59,37 @@ textarea {
   }
 }
 
+.btn-green-inverted {
+
+  @include sans-serif-font-2;
+  font-weight: 500;
+
+  border-color: darken($gfbio-green, .2);
+  background-color: $white;
+  color: $gfbio-green !important;
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:hover, &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    &:focus {
+      box-shadow: none;
+    }
+
+    border-color: darken($gfbio-green, .2);
+    background-color: $gfbio-green;
+    color: $white !important;
+    box-shadow: none;
+  }
+
+  i {
+    margin-right: .75rem;
+  }
+}
+
+
 .btn-green-sidebar {
 
   @include sans-serif-font-2;
@@ -173,7 +204,12 @@ h6.sidebar-list-item {
 
 }
 
-.submission-list {
+.new-dmp {
+  text-transform: uppercase;
+}
+
+.dmp-list {
+
 
   i.dmp {
     color: $gfbio-light-blue;
@@ -188,7 +224,7 @@ h6.sidebar-list-item {
       border: 1px solid $gray-light-2;
       border-top-width: 1px !important;
       border-radius: 4px;
-      background-color: $gray-100;
+      background-color: $gray-10;
       margin: .5rem 0 .5rem 0;
       padding: .3rem .2rem;
 

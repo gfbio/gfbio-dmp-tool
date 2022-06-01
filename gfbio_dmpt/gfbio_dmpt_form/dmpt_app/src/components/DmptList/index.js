@@ -53,25 +53,8 @@ const dmpsAsListElements = (dmpList) => {
                     {`${dmp.issue}`}
                 </a>
             );
-        // const support =
-        //     dmp.issue !== '' ? (
-        //         <></>
-        //     ) : (
-        //         <a className="d-inline-block" href="EDIT">
-        //             <i className="mdi mdi-account-voice" />
-        //             Request Support
-        //         </a>
-        //     );
 
         return (
-            // <Link
-            //     className="list-group-item-action"
-            //     id={index}
-            //     // to={`${URL_PREFIX}${dmp.id}`}
-            //     to={`${dmp.id}`}
-            // >
-            //     {dmp.title}
-            // </Link>
             <li className="list-group-item">
                 <div className="row wrapping-row no-gutters">
                     <div className="col-8">
@@ -84,13 +67,9 @@ const dmpsAsListElements = (dmpList) => {
                                 <i className="mdi mdi-text-box-outline ms-4 me-4 dmp align-middle" />
                                 <span className="">{title}</span>
                             </div>
-                            {/* <div className="col-3 align-self-center"> */}
-                            {/*     {issue} */}
-                            {/* </div> */}
                         </Link>
                     </div>
                     <div className="col-4 align-self-center text-start">
-                        {/* {support} */}
                         {issue}
                         <a
                             className="action"
@@ -120,9 +99,21 @@ function DmptList(props) {
 
     return (
         <>
-            <div id="dmp-list">
+            <div id="dmp-list" className="">
+                <div className="row mb-5">
+                    <div className="col-12">
+                        <div className="d-grid gap-2">
+                            <Link
+                                className="btn btn-secondary btn-green-inverted new-dmp"
+                                to="new"
+                            >
+                                Start a new Data Management Plan
+                            </Link>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
-                    <div className="col-12 submission-list">
+                    <div className="col-12 dmp-list">
                         <div className="row no-gutters">
                             <div className="col-12">
                                 <div className="row no-gutters">
@@ -137,13 +128,9 @@ function DmptList(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-2"></div>
-                        </div>
 
-                        <ul>{dmps}</ul>
-                        {/* <hr /> */}
-                        {/* <Link to="new">New</Link> */}
-                        {/* <div className="list-group">{dmps}</div> */}
+                            <ul>{dmps}</ul>
+                        </div>
                     </div>
                 </div>
             </div>
