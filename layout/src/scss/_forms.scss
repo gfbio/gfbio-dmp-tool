@@ -211,9 +211,26 @@ h6.sidebar-list-item {
 .dmp-list {
 
 
+  .modal-content {
+    color: $gray-darker;
+
+    .modal-header {
+      .modal-title {
+        text-transform: none;
+        font-weight: 400;
+        letter-spacing: normal;
+        font-size: 1.25rem;
+      }
+    }
+
+    a {
+      color: $gfbio-light-blue !important;
+    }
+  }
+
   i.dmp {
     color: $gfbio-light-blue;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
 
   ul {
@@ -234,14 +251,24 @@ h6.sidebar-list-item {
         font-size: .9rem;
       }
 
-      a.action {
+      .action {
         font-size: .8rem;
+        font-weight: 300;
         color: $gray-darker;
+        text-decoration: none;
       }
 
       &:hover {
         color: $white;
         background-color: $gfbio-light-blue;
+
+        button {
+          color: $white;
+
+          i {
+            color: $white;
+          }
+        }
 
         a {
           color: $white;

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { HELPDESK_ROOT, PROJECT_API_ROOT } from '../api/constants';
 import DmptLoading from '../DmptLoading';
+import SupportModal from './supportModal';
 
 const useDmpList = (token) => {
     const [processing, setProcessing] = useState(true);
@@ -38,16 +39,33 @@ const dmpsAsListElements = (dmpList) => {
             dmp.title.length > 60
                 ? `${dmp.title.substring(0, 58)} (...)`
                 : dmp.title;
+
+        // TODO: add support.js component in popup or accordion, triggered by link for "Request Support"
         const issue =
             dmp.issue === '' ? (
-                <a className="action me-4" href="EDIT">
-                    <i className="mdi mdi-message-reply-text-outline dmp align-middle me-2" />
-                    Request Support
-                </a>
+                <>
+                    <button
+                        type="button"
+                        className="btn btn-link action p-0 border-0 me-4"
+                        data-bs-toggle="modal"
+                        data-bs-target={`#supportFor${dmp.id}`}
+                    >
+                        <i className="mdi mdi-message-reply-text-outline dmp align-middle me-2" />
+                        Request Support
+                    </button>
+                    <SupportModal
+                        target={`supportFor${dmp.id}`}
+                        rdmoProjectId={dmp.rdmo_project}
+                        title={title}
+                        issueKey={dmp.issue}
+                    />
+                </>
             ) : (
                 <a
                     className="action me-4"
                     href={`${HELPDESK_ROOT}${dmp.issue}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
                     <i className="mdi mdi-message-reply-text-outline dmp align-middle me-2" />
                     {`${dmp.issue}`}
