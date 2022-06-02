@@ -7,20 +7,22 @@ import PdfExport from './pdf';
 import RdmoContext from '../RdmoContext';
 
 function DmptSummary(props) {
-    const { rdmoProjectId, dmptProjectId, issueKey, resetRdmoProjectId } = props;
+    const { rdmoProjectId, dmptProjectId, issueKey, resetRdmoProjectId } =
+        props;
+
     const rdmoContext = useContext(RdmoContext);
 
     const saveDmpt =
         dmptProjectId < 0 &&
         rdmoContext.backend_context.isLoggedIn !== 'false' ? (
-                <div className="row mt-3">
-                    <div className="col-12">
-                        <SaveDmpt rdmoProjectId={rdmoProjectId} />
-                    </div>
+            <div className="row mt-3">
+                <div className="col-12">
+                    <SaveDmpt rdmoProjectId={rdmoProjectId} />
                 </div>
-            ) : (
-                <></>
-            );
+            </div>
+        ) : (
+            <></>
+        );
 
     const saveInfo =
         rdmoContext.backend_context.isLoggedIn === 'false' ? (
@@ -47,7 +49,7 @@ function DmptSummary(props) {
         <div id={`summary-${rdmoProjectId}`} className="text-center">
             <div className="row">
                 <div className="col-12">
-                    <h1>Summary: {rdmoProjectId}</h1>
+                    <h1>Finalize DMP</h1>
                 </div>
             </div>
             <div className="row">
@@ -60,7 +62,9 @@ function DmptSummary(props) {
                     </div>
                     <div className="row mt-3">
                         <div className="col-12">
-                            <DiscardAndExit resetRdmoProjectId={resetRdmoProjectId} />
+                            <DiscardAndExit
+                                resetRdmoProjectId={resetRdmoProjectId}
+                            />
                         </div>
                     </div>
                     {saveInfo}
@@ -90,6 +94,8 @@ DmptSummary.propTypes = {
     resetRdmoProjectId: PropTypes.func.isRequired,
     dmptProjectId: PropTypes.number,
     issueKey: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    inputs: PropTypes.object.isRequired,
 };
 
 export default DmptSummary;
