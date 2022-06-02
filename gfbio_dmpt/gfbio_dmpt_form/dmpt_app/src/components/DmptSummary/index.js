@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import SaveDmpt from './save';
 import DiscardAndExit from './discard';
@@ -6,23 +6,61 @@ import SupportRequest from './support';
 import PdfExport from './pdf';
 import RdmoContext from '../RdmoContext';
 
+import postDmptProject from '../api/dmptProjects';
+const saveDmpHanlder = (token, userId, rdmoProjectId, setPostResult) => {
+    setPostResult({ processing: true, posted: false, result: {} });
+    postDmptProject(token, userId, rdmoProjectId).then((res) => {
+        setPostResult({ processing: false, posted: true, result: res });
+    });
+};
+
 function DmptSummary(props) {
     const { rdmoProjectId, dmptProjectId, issueKey, resetRdmoProjectId } =
         props;
-
     const rdmoContext = useContext(RdmoContext);
 
-    const saveDmpt =
+    const [postResult, setPostResult] = useState({
+        processing: false,
+        posted: false,
+        result: {},
+    });
+
+    const saveDmp =
         dmptProjectId < 0 &&
         rdmoContext.backend_context.isLoggedIn !== 'false' ? (
             <div className="row mt-3">
                 <div className="col-12">
-                    <SaveDmpt rdmoProjectId={rdmoProjectId} />
+                    <SaveDmpt
+                        rdmoProjectId={rdmoProjectId}
+                        onSave={saveDmpHanlder}
+                        postResult={postResult}
+                        setPostResult={setPostResult}
+                    />
                 </div>
             </div>
         ) : (
             <></>
         );
+
+    let discardAndExit =
+        dmptProjectId < 0 &&
+        rdmoContext.backend_context.isLoggedIn !== 'false' ? (
+            <div className="row mt-3">
+                <div className="col-12">
+                    <DiscardAndExit resetRdmoProjectId={resetRdmoProjectId} />
+                </div>
+            </div>
+        ) : (
+            <></>
+        );
+
+    /* NOTE:  <02-06-22, claas> This hides away the discard and exit when
+     * the dmp is successfully saved */
+    if (postResult.result !== {}) {
+        if (postResult.result.status === 201) {
+            discardAndExit = <></>;
+        }
+    }
 
     const saveInfo =
         rdmoContext.backend_context.isLoggedIn === 'false' ? (
@@ -54,19 +92,13 @@ function DmptSummary(props) {
             </div>
             <div className="row">
                 <div className="col-6">
-                    {saveDmpt}
+                    {saveDmp}
                     <div className="row mt-3">
                         <div className="col-12">
                             <PdfExport rdmoProjectId={rdmoProjectId} />
                         </div>
                     </div>
-                    <div className="row mt-3">
-                        <div className="col-12">
-                            <DiscardAndExit
-                                resetRdmoProjectId={resetRdmoProjectId}
-                            />
-                        </div>
-                    </div>
+                    {discardAndExit}
                     {saveInfo}
                 </div>
                 <div className="col-6">

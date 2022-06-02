@@ -2,25 +2,11 @@ import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import RdmoContext from '../RdmoContext';
-import postDmptProject from '../api/dmptProjects';
-import { URL_PREFIX } from "../api/constants";
-
-const saveDmpt = (token, userId, rdmoProjectId, setPostResult) => {
-    setPostResult({ processing: true, posted: false, result: {} });
-    postDmptProject(token, userId, rdmoProjectId).then((res) => {
-        setPostResult({ processing: false, posted: true, result: res });
-    });
-};
+import { URL_PREFIX } from '../api/constants';
 
 function SaveDmpt(props) {
-    const { rdmoProjectId } = props;
+    const { rdmoProjectId, onSave, postResult, setPostResult } = props;
     const rdmoContext = useContext(RdmoContext);
-
-    const [postResult, setPostResult] = useState({
-        processing: false,
-        posted: false,
-        result: {},
-    });
 
     let buttonText = 'Save Project';
     let messageSection = <></>;
@@ -32,8 +18,8 @@ function SaveDmpt(props) {
             messageSection = (
                 <p>
                     You can access a list of your saved data management plans
-                    here: <Link to={URL_PREFIX}>DMPs</Link> with the option to edit the
-                    content.
+                    here: <Link to={URL_PREFIX}>DMPs</Link> with the option to
+                    edit the content.
                 </p>
             );
         }
@@ -48,7 +34,7 @@ function SaveDmpt(props) {
                 type="button"
                 className="list-group-item list-group-item-action "
                 onClick={() =>
-                    saveDmpt(
+                    onSave(
                         rdmoContext.backend_context.token,
                         rdmoContext.backend_context.user_id,
                         rdmoProjectId,
@@ -69,6 +55,14 @@ function SaveDmpt(props) {
 
 SaveDmpt.propTypes = {
     rdmoProjectId: PropTypes.number.isRequired,
+    onSave: PropTypes.func.isRequired,
+    setPostResult: PropTypes.func.isRequired,
+    postResult: PropTypes.shape({
+        processing: PropTypes.bool.isRequired,
+        posted: PropTypes.bool.isRequired,
+        // eslint-disable-next-line react/forbid-prop-types
+        result: PropTypes.object.isRequired,
+    }).isRequired,
 };
 
 export default SaveDmpt;
