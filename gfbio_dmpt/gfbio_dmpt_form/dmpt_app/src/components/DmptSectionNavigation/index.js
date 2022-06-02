@@ -72,7 +72,12 @@ const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
     let validation = <></>;
     const validationElements = Object.values(mandatoryFieldErrors).map(
         (mandatoryQuestion) => {
-            return <li>{mandatoryQuestion.text} (in &quot;{mandatoryQuestion.section_name}&quot;)</li>;
+            return (
+                <li>
+                    {mandatoryQuestion.text} (in &quot;
+                    {mandatoryQuestion.section_name}&quot;)
+                </li>
+            );
         }
     );
     if (validationElements.length > 0) {
@@ -80,8 +85,13 @@ const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
             <div className="row">
                 <div className="col-12">
                     <h5 className="mandatory">Mandatory fields missing</h5>
-                    <p>The following form fields are mandatory and are required to proceed in submitting your data management plan</p>
-                    <ul className="list-group-numbered list-unstyled mandatory">{validationElements}</ul>
+                    <p>
+                        The following form fields are mandatory and are required
+                        to proceed in submitting your data management plan
+                    </p>
+                    <ul className="list-group-numbered list-unstyled mandatory">
+                        {validationElements}
+                    </ul>
                     <p>Please fill the required fields and submit again</p>
                 </div>
             </div>
