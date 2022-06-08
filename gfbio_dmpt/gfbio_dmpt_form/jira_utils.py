@@ -81,13 +81,16 @@ def create_support_issue(rdmo_project, reporter, message=""):
                 "project": {"key": settings.JIRA_PROJECT},
                 "summary": "DMP Support Request",
                 "description": f"Help request for"
-                f'data management plan "{rdmo_project.title}" '
-                f'using the "{rdmo_project.catalog}" catalogue\n\n{message}',
+                               f'data management plan "{rdmo_project.title}" '
+                               f'using the "{rdmo_project.catalog}" catalogue\n\n{message}',
                 "reporter": {"name": reporter},
                 "issuetype": {"name": "DMP"},
             }
         )
-        DmptIssue.objects.create(rdmo_project=rdmo_project, issue_key=issue.key)
+        dmpt_project = None
+        if hasattr(rdmo_project, 'dmptproject'):
+            dmpt_project = rdmo_project.dmptproject
+        DmptIssue.objects.create(rdmo_project=rdmo_project, issue_key=issue.key, dmpt_project=dmpt_project)
         logger.info(
             f"jira_utils.py | create_support_issue | " f"issue created | issue={issue}"
         )
@@ -140,7 +143,7 @@ def create_support_issue_in_view(form_data={}):
 
     reporter = get_issue_reporter(form_data.get("email"), form_data.get("user_id"))
     message = f"""
-    Message: 
+    Message:
 
     {form_data.get('message')}
 

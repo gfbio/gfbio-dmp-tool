@@ -257,9 +257,17 @@ class TestDmptProjectViews(TestCase):
 
 
 class TestDmptSupportView(TestCase):
+
     @classmethod
     def setUpTestData(cls):
         cls.issue_json = _get_jira_issue_response()
+        cls.std_user = User.objects.create_user(
+            username="john",
+            email="john@doe.de",
+            password="secret",
+            is_staff=False,
+            is_superuser=False,
+        )
 
     @staticmethod
     def _add_gfbio_helpdesk_user_service_response(
@@ -316,6 +324,28 @@ class TestDmptSupportView(TestCase):
         response = self.client.post("/dmp/support/", data)
         self.assertEqual(201, response.status_code)
         self.assertEqual(1, len(DmptIssue.objects.all()))
+
+    @responses.activate
+    def test_valid_post_with_existing_dmp_project(self):
+        self._add_create_ticket_response()
+        rdmo_project = Project.objects.create(title="Support View Test 1")
+        dmpt_project = DmptProject.objects.create(rdmo_project=rdmo_project, user=self.std_user)
+        data = {
+            "rdmo_project_id": rdmo_project.id,
+            "email": "horst@horst.de",
+            "message": "foo bar",
+            "data_collection_and_assurance": False,
+            "data_curation": True,
+        }
+
+        response = self.client.post("/dmp/support/", data)
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(1, len(DmptIssue.objects.all()))
+        dmpt_issue = DmptIssue.objects.first()
+        rdmo_project = Project.objects.get(id=rdmo_project.id)
+        dmpt_project = DmptProject.objects.get(id=dmpt_project.id)
+        self.assertEqual(dmpt_issue, dmpt_project.issue)
+        self.assertEqual(dmpt_issue, rdmo_project.dmptproject.issue)
 
     def test_invalid_post(self):
         data = {
