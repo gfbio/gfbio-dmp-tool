@@ -256,28 +256,26 @@ h6.sidebar-list-item {
         font-weight: 300;
         color: $gray-darker;
         text-decoration: none;
+
+        &:hover {
+          color: $gfbio-light-blue;
+          font-weight: 600;
+        }
+      }
+
+      .list-title {
+        &:hover {
+          color: $gfbio-light-blue;
+          font-weight: 600;
+        }
       }
 
       &:hover {
-        color: $white;
-        background-color: $gfbio-light-blue;
-
-        button {
-          color: $white;
-
-          i {
-            color: $white;
-          }
-        }
-
-        a {
-          color: $white;
-
-          i {
-            color: $white;
-          }
-        }
+        background-color: $white;
+        border-color: $gfbio-light-blue;
       }
+
+
     }
 
 

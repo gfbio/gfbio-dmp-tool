@@ -76,16 +76,18 @@ const dmpsAsListElements = (dmpList) => {
             <li className="list-group-item">
                 <div className="row wrapping-row no-gutters">
                     <div className="col-8">
-                        <Link
-                            className="row no-gutters"
-                            id={index}
-                            to={`${dmp.id}`}
-                        >
-                            <div className="col-9 align-self-center">
-                                <i className="mdi mdi-text-box-outline ms-4 me-4 dmp align-middle" />
-                                <span className="">{title}</span>
-                            </div>
-                        </Link>
+                        <div className="col-9 align-self-center">
+                            <Link
+                                className="row no-gutters"
+                                id={index}
+                                to={`${dmp.id}`}
+                            >
+                                <div className="list-title">
+                                    <i className="mdi mdi-text-box-outline ms-4 me-4 dmp align-middle" />
+                                    <span className="">{title}</span>
+                                </div>
+                            </Link>
+                        </div>
                     </div>
                     <div className="col-4 align-self-center text-start">
                         {issue}
@@ -122,7 +124,7 @@ function DmptList(props) {
                     <div className="col-12">
                         <div className="d-grid gap-2">
                             <Link
-                                className="btn btn-secondary btn-green-inverted new-dmp"
+                                className="btn btn-secondary btn-green new-dmp"
                                 to="new"
                             >
                                 Start a new Data Management Plan

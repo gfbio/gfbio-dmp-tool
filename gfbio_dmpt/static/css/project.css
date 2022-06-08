@@ -12044,21 +12044,17 @@ h6.sidebar-list-item i.right, .sidebar-list-item.h6 i.right {
   color: #343434;
   text-decoration: none;
 }
+.dmp-list ul li .action:hover {
+  color: #3CACE4;
+  font-weight: 600;
+}
+.dmp-list ul li .list-title:hover {
+  color: #3CACE4;
+  font-weight: 600;
+}
 .dmp-list ul li:hover {
-  color: #fff;
-  background-color: #3CACE4;
-}
-.dmp-list ul li:hover button {
-  color: #fff;
-}
-.dmp-list ul li:hover button i {
-  color: #fff;
-}
-.dmp-list ul li:hover a {
-  color: #fff;
-}
-.dmp-list ul li:hover a i {
-  color: #fff;
+  background-color: #fff;
+  border-color: #3CACE4;
 }
 
 section.page-title {
