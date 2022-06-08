@@ -12067,6 +12067,12 @@ section.content .header p {
   margin: 0 0 0 1rem;
   color: #666;
 }
+section.content .questionHelp {
+  display: flex;
+}
+section.content .labelHelpIcon {
+  padding-left: 3px;
+}
 section.content .header-right .section-title::before,
 section.content .header-left .section-title::after {
   display: inline-block;
@@ -12121,7 +12127,8 @@ section.content table {
   margin-bottom: 2rem;
   margin-top: 1rem;
 }
-section.content table td, section.content table th {
+section.content table td,
+section.content table th {
   font-size: 0.9rem;
 }
 section.content table td p {

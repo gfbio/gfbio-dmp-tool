@@ -1,7 +1,6 @@
 section.page-title {
   background-color: $gray-100;
 
-
   h1 {
     color: $standard-dark;
     font-size: 2rem;
@@ -15,12 +14,10 @@ section.page-title {
       padding-right: 2.4rem;
       color: $gray;
     }
-
   }
 }
 
 section.content {
-
   min-height: 90vh;
 
   .blue-stroke {
@@ -34,7 +31,6 @@ section.content {
   .green-stroke {
     -webkit-text-stroke-color: $gfbio-green;
   }
-
 
   /* H1 --------------------------------------------------------------------- */
 
@@ -73,14 +69,14 @@ section.content {
     text-transform: uppercase;
     font-size: 1.5rem;
     font-weight: 400;
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
     margin-bottom: 1.6rem;
   }
 
   .header {
     letter-spacing: 2px;
     border-bottom: 1px solid $gray-dark-2;
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
     margin-bottom: 1.6rem;
 
     h3 {
@@ -99,22 +95,27 @@ section.content {
       text-transform: lowercase;
       margin: 0 0 0 1rem;
       color: $gray-dark;
-
-
     }
+  }
+
+  .questionHelp {
+    display: flex;
+  }
+
+  .labelHelpIcon {
+    padding-left: 3px;
   }
 
   .header-right .section-title::before,
   .header-left .section-title::after {
     display: inline-block;
-    content: '';
+    content: "";
 
     margin: 0 6px;
 
     width: 3px;
     height: 3px;
   }
-
 
   /* H4 --------------------------------------------------------------------- */
 
@@ -139,7 +140,6 @@ section.content {
     margin-bottom: 1.6rem;
   }
 
-
   /* H6 --------------------------------------------------------------------- */
 
   h6 {
@@ -147,7 +147,7 @@ section.content {
     text-transform: uppercase;
     letter-spacing: 2px;
     font-weight: 700;
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1.5rem;
     margin-bottom: 1.5rem;
 
@@ -156,13 +156,12 @@ section.content {
       border-top: 1px solid $standard-dark;
       width: 100%;
     }
-
   }
 
   /* Paragraph -------------------------------------------------------------- */
 
   p {
-    font-size: .9rem;
+    font-size: 0.9rem;
     margin: 0 1rem 1.5rem 0;
     line-height: 1.5rem;
   }
@@ -180,8 +179,9 @@ section.content {
     margin-bottom: 2rem;
     margin-top: 1rem;
 
-    td, th {
-      font-size: .9rem;
+    td,
+    th {
+      font-size: 0.9rem;
     }
 
     td {
@@ -203,16 +203,13 @@ section.content {
   /* Accordion specific ----------------------------------------------------- */
 
   .accordion {
-
     h3 {
       font-size: 1.2rem;
     }
 
     .accordion-collapse {
       border: 2px solid $gfbio-green-0-3;
-      border-radius: .5rem;
+      border-radius: 0.5rem;
     }
-
   }
-
 }
