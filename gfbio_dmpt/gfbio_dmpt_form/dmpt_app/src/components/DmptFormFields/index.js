@@ -16,7 +16,7 @@ function DmptFormFields(props) {
                     <h5>{questionset.title}</h5>
                     {questionset.help !== '' && (
                         <Tooltip title={questionset.help} placement="right">
-                            <i className="mdi mdi-help-circle-outline" />
+                            <i className="labelHelpIcon mdi mdi-help-circle-outline" />
                         </Tooltip>
                     )}
                 </div>
