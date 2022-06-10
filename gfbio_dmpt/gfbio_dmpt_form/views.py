@@ -4,6 +4,7 @@ import random
 import string
 
 from django.contrib.auth.models import Group
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -11,7 +12,7 @@ from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from rdmo.options.models import Option
-from rdmo.projects.models import Project, Value
+from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import Question
 from rdmo.questions.models.catalog import Catalog
@@ -253,8 +254,11 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
         if serializer.is_valid():
             catalog = Catalog.objects.get(id=serializer.data.get("catalog"))
             project = Project.objects.create(
-                catalog=catalog, title=serializer.data.get("title")
+                catalog=catalog, title=serializer.data.get("title"), site=get_current_site(self.request)
             )
+            # add current user as owner
+            membership = Membership(project=project, user=self.request.user, role='owner')
+            membership.save()
 
             form_data = serializer.data.get("form_data", {})
             self._create_values_from_form_data(form_data, project.id)
