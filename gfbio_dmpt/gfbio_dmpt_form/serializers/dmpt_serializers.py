@@ -22,10 +22,14 @@ class UserSerializer(serializers.ModelSerializer):
 class DmptProjectSerializer(serializers.ModelSerializer):
     title = serializers.SerializerMethodField()
     issue = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
 
     class Meta:
         model = DmptProject
-        fields = ['id', 'user', 'rdmo_project', 'title', 'issue']
+        fields = ['id', 'user', 'username', 'rdmo_project', 'title', 'issue']
+
+    def get_username(self, obj):
+        return obj.user.username
 
     def get_title(self, obj):
         return obj.rdmo_project.title

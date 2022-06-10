@@ -11896,6 +11896,29 @@ input:focus, textarea:focus {
   margin-right: 0.75rem;
 }
 
+.btn-green-inverted {
+  font-family: "Raleway", sans-serif;
+  font-weight: 500;
+  border-color: #80b148;
+  background-color: #fff;
+  color: #81B248 !important;
+}
+.btn-green-inverted:focus {
+  box-shadow: none;
+}
+.btn-green-inverted:hover, .btn-green-inverted:not(:disabled):not(.disabled):active, .btn-green-inverted:not(:disabled):not(.disabled).active {
+  border-color: #80b148;
+  background-color: #81B248;
+  color: #fff !important;
+  box-shadow: none;
+}
+.btn-green-inverted:hover:focus, .btn-green-inverted:not(:disabled):not(.disabled):active:focus, .btn-green-inverted:not(:disabled):not(.disabled).active:focus {
+  box-shadow: none;
+}
+.btn-green-inverted i {
+  margin-right: 0.75rem;
+}
+
 .btn-green-sidebar {
   font-family: "Raleway", sans-serif;
   font-weight: 400;
@@ -11977,6 +12000,61 @@ h6.sidebar-list-item i, .sidebar-list-item.h6 i {
 h6.sidebar-list-item i.right, .sidebar-list-item.h6 i.right {
   margin-right: 0;
   margin-left: 1.6rem;
+}
+
+.new-dmp {
+  text-transform: uppercase;
+}
+
+.dmp-list .modal-content {
+  color: #343434;
+}
+.dmp-list .modal-content .modal-header .modal-title {
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: normal;
+  font-size: 1.25rem;
+}
+.dmp-list .modal-content a {
+  color: #3CACE4 !important;
+}
+.dmp-list i.dmp {
+  color: #3CACE4;
+  font-size: 1.1rem;
+}
+.dmp-list ul {
+  padding: 0;
+}
+.dmp-list ul li {
+  border: 1px solid #cccccc;
+  border-top-width: 1px !important;
+  border-radius: 4px;
+  background-color: #fafafa;
+  margin: 0.5rem 0 0.5rem 0;
+  padding: 0.3rem 0.2rem;
+}
+.dmp-list ul li a {
+  color: #343434;
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+.dmp-list ul li .action {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: #343434;
+  text-decoration: none;
+}
+.dmp-list ul li .action:hover {
+  color: #3CACE4;
+  font-weight: 600;
+}
+.dmp-list ul li .list-title:hover {
+  color: #3CACE4;
+  font-weight: 600;
+}
+.dmp-list ul li:hover {
+  background-color: #fff;
+  border-color: #3CACE4;
 }
 
 section.page-title {

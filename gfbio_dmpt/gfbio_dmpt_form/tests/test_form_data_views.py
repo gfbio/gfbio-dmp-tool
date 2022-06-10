@@ -175,7 +175,7 @@ class TestDmptFormDataView(TestCase):
             "title": "Le Title (update)",
             "dmpt_project": dmpt_project.id,
             "form_data": {
-                "project_name": "Project Title (update)",
+                "project_name____487": "Project Title (update)",
             }
         }
         response = self.std_client.put("/dmp/projects/values/", update_data, format="json")
@@ -226,12 +226,12 @@ class TestDmptProjectDetailView(TestCase):
             "catalog": catalog.id,
             "title": "Le Title",
             "form_data": {
-                "project_name": "Project Title",
-                "optionset-54____categoryType": "317",
-                "option-247____is_data_reproducible": "247",
-                "option-248____is_data_reproducible": "248",
-                "PersonName": "Contact for data",
-                "option-325____principal_investigators": "325",
+                "project_name____487": "Project Title",
+                "optionset-54____categoryType____488": "317",
+                "option-247____is_data_reproducible____489": "247",
+                "option-249____is_data_reproducible____489": "248",
+                "PersonName____493": "Contact for data",
+                "optionset-55____principal_investigators____496": "325",
             },
         }
         self.client_1.post("/dmp/projects/values/", data, format="json")
@@ -279,12 +279,12 @@ class TestDmptProjectDetailView(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertDictEqual(
             {
-                "project_name": "Project Title",
-                "optionset-54____categoryType": "317",
-                "option-247____is_data_reproducible": "247",
-                "option-248____is_data_reproducible": "248",
-                "PersonName": "Contact for data",
-                "option-325____principal_investigators": "325",
+                "project_name____487": "Project Title",
+                "optionset-54____categoryType____488": "317",
+                "option-247____is_data_reproducible____489": "247",
+                "option-248____is_data_reproducible____489": "248",
+                "PersonName____493": "Contact for data",
+                "optionset-55____principal_investigators____496": "325",
             },
             content.get("form_data", {}),
         )
