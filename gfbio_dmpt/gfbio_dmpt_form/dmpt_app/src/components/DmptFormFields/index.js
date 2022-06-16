@@ -89,7 +89,11 @@ function DmptFormFields(props) {
                             question.value_type
                         )
                     ) {
-                        if (question.key in validationErrors) {
+                        if (
+                            Object.keys(validationErrors).filter((k) =>
+                                k.startsWith(question.key)
+                            ).length > 0
+                        ) {
                             validationMessage = (
                                 <span className="mandatory">
                                     (not a valid {question.value_type})
