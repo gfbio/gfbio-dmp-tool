@@ -278,18 +278,15 @@ class TestDmptProjectDetailView(TestCase):
         content = json.loads(response.content)
         self.assertEqual(200, response.status_code)
         self.assertDictEqual(
-            {
-                "project_name____487": "Project Title",
-                "optionset-54____categoryType____488": "317",
-                "option-247____is_data_reproducible____489": "247",
-                "option-248____is_data_reproducible____489": "248",
-                "PersonName____493": "Contact for data",
-                "optionset-55____principal_investigators____496": "325",
-            },
+            {'project_name____487': 'Project Title',
+             'optionset-54____categoryType____488': '317',
+             'option-247____is_data_reproducible____489': '247',
+             'option-248____is_data_reproducible____489': '248',
+             'PersonName____493': 'Contact for data',
+             'optionset-55____principal_investigators____496': '325'},
             content.get("form_data", {}),
         )
 
-    # FIXME: change of radio button fieldname 12.04
     def test_no_values(self):
         dp = DmptProject.objects.first()
         response = self.client_1.get("/dmp/dmptprojects/{}/".format(dp.pk))
