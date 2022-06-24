@@ -103,10 +103,12 @@
             <a class="nav-link" href="{{ url }}">Home</a>
           </li>
 
-          {% url 'dmpt:create_dmp' as url %}
-          <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
-            <a class="nav-link" href="{{ url }}">Create DMP</a>
-          </li>
+          {% if request.user.is_authenticated %}
+            {% url 'dmpt:create_dmp' as url %}
+            <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
+              <a class="nav-link" href="{{ url }}">My DMPs</a>
+            </li>
+          {% endif %}
                                       
           {% if request.user.is_authenticated %}
             {% if request.user.is_staff %}
