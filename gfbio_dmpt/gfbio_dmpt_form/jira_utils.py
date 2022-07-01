@@ -55,7 +55,7 @@ def get_issue_reporter(email, user_id):
                 f"jira_utils.py | get_issue_reporter | "
                 f"error getting user by user_id | {e}"
             )
-    user_name = JIRA_FALLBACK_USERNAME if user is None else user.username
+    user_name = email if user is None else user.username
     response = _get_gfbio_helpdesk_username(
         user_name=user_name,
         email=email,
