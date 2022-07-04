@@ -312,6 +312,10 @@ class TestDmptSupportView(TestCase):
     @responses.activate
     def test_valid_post(self):
         self._add_create_ticket_response()
+        url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php?username={0}&email={1}'.format('horst@horst.de',
+                                                                                                      'horst@horst.de', )
+        responses.add(responses.GET, url, body=b'deleteMe', status=200)
+
         rdmo_project = Project.objects.create(title="Support View Test 1")
         data = {
             "rdmo_project_id": rdmo_project.id,
@@ -328,6 +332,9 @@ class TestDmptSupportView(TestCase):
     @responses.activate
     def test_valid_post_with_existing_dmp_project(self):
         self._add_create_ticket_response()
+        url = 'https://helpdesk.gfbio.org/internal/getorcreateuser.php?username={0}&email={1}'.format('horst@horst.de',
+                                                                                                      'horst@horst.de', )
+        responses.add(responses.GET, url, body=b'deleteMe', status=200)
         rdmo_project = Project.objects.create(title="Support View Test 1")
         dmpt_project = DmptProject.objects.create(rdmo_project=rdmo_project, user=self.std_user)
         data = {
