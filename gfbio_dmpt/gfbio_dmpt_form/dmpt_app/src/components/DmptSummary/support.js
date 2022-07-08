@@ -1,13 +1,13 @@
 // I dont know why the linter is still complaining about this, all lablels and
 // inputs are related by id & htmlFor
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useContext, useState } from "react";
-import PropTypes from "prop-types";
-import useSupportForm from "../DmptHooks/supportFormHooks";
-import postSupportRequest from "../api/support";
-import RdmoContext from "../RdmoContext";
-import { HELPDESK_ROOT } from "../api/constants";
-import DmptLoading from "../DmptLoading";
+import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
+import useSupportForm from '../DmptHooks/supportFormHooks';
+import postSupportRequest from '../api/support';
+import RdmoContext from '../RdmoContext';
+import { HELPDESK_ROOT } from '../api/constants';
+import DmptLoading from '../DmptLoading';
 
 function SupportRequest(props) {
     const { rdmoProjectId, issueKey } = props;
@@ -57,7 +57,7 @@ function SupportRequest(props) {
                     <i className="mdi mdi-account-voice align-middle" />
                     Request Support
                 </h6>
-                <h5>Your request was recieved</h5>
+                <h5>Your request was received</h5>
                 <p>You will soon be contacted by our helpdesk staff.</p>
                 <p>
                     Your issue key is <b>{issue.issue_key}</b>. Please refer to
