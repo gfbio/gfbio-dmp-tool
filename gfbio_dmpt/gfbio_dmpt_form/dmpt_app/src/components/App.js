@@ -5,7 +5,6 @@ import { URL_PREFIX } from './api/constants';
 import LoggedInRouter from './LoggedInRouter';
 import customMaterialTheme from './CustomMaterialTheme.js'
 import { ThemeProvider } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 const App = () => {
     // https://www.savaslabs.com/blog/using-react-global-state-hooks-and-context
