@@ -23,6 +23,7 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
                 );
                 setSection(result.data);
                 setProcessing(false);
+                window.scrollTo({top:0, behavior:"smooth"});
             } catch (error) {
                 console.error(error);
             }
