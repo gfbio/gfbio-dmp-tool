@@ -50,8 +50,8 @@ const dmpsAsListElements = (dmpList) => {
                         data-bs-toggle="modal"
                         data-bs-target={`#supportFor${dmp.id}`}
                     >
-                        <i className="mdi mdi-message-reply-text-outline dmp align-middle me-2" />
-                        Request Support
+                        <i className="mdi mdi-message-reply-text-outline dmp me-2 align-middle" />
+                        <span>Request Support</span>
                     </button>
                     <SupportModal
                         target={`supportFor${dmp.id}`}
@@ -67,8 +67,10 @@ const dmpsAsListElements = (dmpList) => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <i className="mdi mdi-message-reply-text-outline dmp align-middle me-2" />
-                    {`${dmp.issue}`}
+                    <i className="mdi mdi-message-reply-text-outline dmp me-2 align-middle" />
+                    <span>
+                        {`${dmp.issue}`}
+                    </span>
                 </a>
             );
 
@@ -83,22 +85,24 @@ const dmpsAsListElements = (dmpList) => {
                                 to={`${dmp.id}`}
                             >
                                 <div className="list-title">
-                                    <i className="mdi mdi-text-box-outline ms-4 me-4 dmp align-middle" />
-                                    <span className="">{title}</span>
+                                    <i className="mdi mdi-text-box-outline ms-1 me-2 dmp align-middle" />
+                                    <span>{title}</span>
                                 </div>
                             </Link>
                         </div>
                     </div>
-                    <div className="col-4 align-self-center text-start">
+                    <div className="col-2 align-self-center text-start">
                         {issue}
+                    </div>
+                    <div className="col-2 align-self-center text-start">
                         <a
                             className="action"
                             href={`${PROJECT_API_ROOT}export/${dmp.rdmo_project}/pdf?username=${dmp.username}`}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <i className="mdi mdi-file-pdf-box dmp me-2" />
-                            Export to PDF
+                            <i className="mdi mdi-file-pdf-box dmp me-2 align-middle" />
+                            <span>Export to PDF</span>
                         </a>
                     </div>
                 </div>
@@ -119,7 +123,7 @@ function DmptList(props) {
 
     return (
         <>
-            <div id="dmp-list" className="">
+            <div id="dmp-list">
                 <div className="row mb-5">
                     <div className="col-12">
                         <div className="d-grid gap-2">
