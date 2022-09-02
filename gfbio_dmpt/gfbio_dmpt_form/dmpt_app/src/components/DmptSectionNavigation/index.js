@@ -156,63 +156,33 @@ function DmptSectionNavigation(props) {
                     <ul className="nav nav-tabs sub-navi">{sections}</ul>
                 </div>
             </div>
-            <div className="row" id="section-wrapper-row">
-                <div className="col-3 pt-2" id="section-sub-navi">
-                    <Sticky top={80}>
-                        <div className="row">
-                            <SectionButtons
-                                sectionIndex={sectionIndex}
-                                sectionsLength={sectionsLength}
-                                setSectionIndex={setSectionIndex}
-                                callBack={setRdmoProjectId}
-                                token={token}
-                                catalogId={catalogId}
-                                inputs={inputs}
-                                validationErrors={validationErrors}
-                                disabled={disabledNavigation}
-                                dmptProjectId={dmptProjectId}
-                                mandatoryFields={mandatoryFields}
-                                setMandatoryErrors={
-                                    setMandatoryValidationErrors
-                                }
-                            />
-                        </div>
-                    </Sticky>
-                </div>
-
-                <div className="col-9" id="section-content">
-                    {mandatoryValidation}
-                    <div className="row">
-                        <div className="col-12">
-                            <DmptSection
-                                token={token}
-                                catalogId={catalogId}
-                                sectionIndex={sectionIndex}
-                                handleInputChange={handleInputChange}
-                                handleSubmit={handleSubmit}
-                                inputs={inputs}
-                                validationErrors={validationErrors}
-                            />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <SectionButtons
-                            sectionIndex={sectionIndex}
-                            sectionsLength={sectionsLength}
-                            setSectionIndex={setSectionIndex}
-                            callBack={setRdmoProjectId}
-                            token={token}
-                            catalogId={catalogId}
-                            inputs={inputs}
-                            disabled={disabledNavigation}
-                            dmptProjectId={dmptProjectId}
-                            mandatoryFields={mandatoryFields}
-                            setMandatoryErrors={setMandatoryValidationErrors}
-                        />
-                    </div>
-                </div>
+            <div className="row" id="section-content">
+                {mandatoryValidation}
+                    <DmptSection
+                        token={token}
+                        catalogId={catalogId}
+                        sectionIndex={sectionIndex}
+                        handleInputChange={handleInputChange}
+                        handleSubmit={handleSubmit}
+                        inputs={inputs}
+                        validationErrors={validationErrors}
+                    />
             </div>
-            {/* end wrapper row */}
+            <div className="row">
+                <SectionButtons
+                    sectionIndex={sectionIndex}
+                    sectionsLength={sectionsLength}
+                    setSectionIndex={setSectionIndex}
+                    callBack={setRdmoProjectId}
+                    token={token}
+                    catalogId={catalogId}
+                    inputs={inputs}
+                    disabled={disabledNavigation}
+                    dmptProjectId={dmptProjectId}
+                    mandatoryFields={mandatoryFields}
+                    setMandatoryErrors={setMandatoryValidationErrors}
+                />
+            </div>
         </div>
     );
 }
