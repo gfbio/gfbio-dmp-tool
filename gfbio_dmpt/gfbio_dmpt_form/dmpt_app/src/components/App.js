@@ -3,6 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 import RdmoContext from './RdmoContext';
 import { URL_PREFIX } from './api/constants';
 import LoggedInRouter from './LoggedInRouter';
+import customMaterialTheme from './CustomMaterialTheme.js'
+import { ThemeProvider } from '@material-ui/styles';
 
 const App = () => {
     // https://www.savaslabs.com/blog/using-react-global-state-hooks-and-context
@@ -17,16 +19,18 @@ const App = () => {
     };
 
     return (
-        <RdmoContext.Provider value={rdmoContext}>
-            <Switch>
-                <Route
-                    exact
-                    path={`${URL_PREFIX}`}
-                    component={LoggedInRouter}
-                />
-                <Route path={`${URL_PREFIX}:id`} component={LoggedInRouter} />
-            </Switch>
-        </RdmoContext.Provider>
+        <ThemeProvider theme={customMaterialTheme}>
+            <RdmoContext.Provider value={rdmoContext}>
+                <Switch>
+                    <Route
+                        exact
+                        path={`${URL_PREFIX}`}
+                        component={LoggedInRouter}
+                    />
+                    <Route path={`${URL_PREFIX}:id`} component={LoggedInRouter} />
+                </Switch>
+            </RdmoContext.Provider>
+        </ThemeProvider>
     );
 };
 
