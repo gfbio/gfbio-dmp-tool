@@ -1,5 +1,4 @@
 # as documented here https://gitlab.gwdg.de/gfbio/cicd :
-
 include:
   - project: gfbio/cicd
     file:
@@ -31,17 +30,17 @@ stages:
 #  after_script:
 #    - sudo rm -rf .pytest_cache
 #  tags:
-#    - gfbio-dmpt-dev
+#    - gfbio-dmp-prod
 
 create_merge_request:
   tags:
-    - gfbio-dmpt-dev
+    - gfbio-dmp-prod
 
 tag_release_check:
   variables:
     MAIN_BRANCH_NAME: "master"
   tags:
-    - gfbio-dmpt-dev
+    - gfbio-dmp-prod
 
 tag_release:
   script:
@@ -59,7 +58,7 @@ tag_release:
     name: production
     url: https://dmp.gfbio.dev
   tags:
-    - gfbio-dmpt-dev
+    - gfbio-dmp-prod
 
 # ------------------------- WEBTEST ---------------------------
 # add your commands under "your custom commands" section
