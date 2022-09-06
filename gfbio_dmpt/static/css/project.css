@@ -2196,9 +2196,6 @@ progress {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -12226,6 +12223,9 @@ section.content .accordion h3, section.content .accordion .h3 {
 section.content .accordion .accordion-collapse {
   border: 2px solid rgba(129, 178, 72, 0.3);
   border-radius: 0.5rem;
+}
+section.content .helpicon-pin {
+  font-size: 0.9rem;
 }
 
 #account .gfbio_login, #account .gfbio_signup {
