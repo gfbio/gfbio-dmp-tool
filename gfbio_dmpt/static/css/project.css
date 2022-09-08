@@ -12227,6 +12227,10 @@ section.content .accordion .accordion-collapse {
 section.content .helpicon-pin {
   font-size: 0.9rem;
 }
+section.content .validation-field {
+  display: inline-block;
+  line-height: 1rem;
+}
 
 #account .gfbio_login, #account .gfbio_signup {
   margin-bottom: 5rem;
