@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
 import TextInput from './textinput';
 import TextArea from './textarea';
 import Select from './select';
 import Radio from './radio';
 import CheckBox from './checkbox';
+import PinnableTooltip from './pinnableTooltip'
 
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors } = props;
@@ -14,11 +14,7 @@ function DmptFormFields(props) {
             <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
                 <div className="questionHelp">
                     <h5>{questionset.title}</h5>
-                    {questionset.help !== '' && (
-                        <Tooltip title={questionset.help} placement="right">
-                            <i className="labelHelpIcon mdi mdi-help-circle-outline" />
-                        </Tooltip>
-                    )}
+                    <PinnableTooltip helptext={questionset.help} />
                 </div>
 
                 {questionset.questions.map((question) => {
@@ -110,17 +106,10 @@ function DmptFormFields(props) {
                                 className="form-label"
                             >
                                 {question.text}
-                                {question.help !== '' && (
-                                    <Tooltip
-                                        title={question.help}
-                                        placement="right"
-                                    >
-                                        <i className="labelHelpIcon mdi mdi-help-circle-outline" />
-                                    </Tooltip>
-                                )}
+                                <PinnableTooltip helptext={questionset.help} />
                             </label>
                             {input}
-                            <small className="form-text text-muted">
+                            <small className="form-text text-muted validation-field ">
                                 {mandatoryMessage} {validationMessage}
                             </small>
                         </div>

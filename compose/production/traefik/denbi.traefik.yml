@@ -23,28 +23,44 @@ https://gitlab-pe:
       org:
         git:
 
+#certificatesResolvers:
+#  letsencrypt:
+#    # https://docs.traefik.io/master/https/acme/#lets-encrypt
+#    acme:
+#      email: "mweber@gfbio.org"
+#      storage: /etc/traefik/acme/acme.json
+#      # https://docs.traefik.io/master/https/acme/#httpchallenge
+#      httpChallenge:
+#        entryPoint: web
+
 http:
   routers:
     web-secure-router:
       rule: "Host(`dmp.gfbio.dev`)"
       entryPoints:
-        - web
+        - web-secure
       middlewares:
         - csrf
       service: django
+#      tls:
+#        # https://docs.traefik.io/master/routing/routers/#certresolver
+#        certResolver: letsencrypt
 
     flower-secure-router:
       rule: "Host(`dmp.gfbio.dev`)"
       entryPoints:
         - flower
       service: flower
+#      tls:
+#        # https://docs.traefik.io/master/routing/routers/#certresolver
+#        certResolver: letsencrypt
 
   middlewares:
     csrf:
       # https://docs.traefik.io/master/middlewares/headers/#hostsproxyheaders
       # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
       headers:
-        hostsProxyHeaders: [ "X-CSRFToken" ]
+        hostsProxyHeaders: ["X-CSRFToken"]
 
   services:
     django:

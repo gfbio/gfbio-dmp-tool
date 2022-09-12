@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
+import PinnableTooltip from './pinnableTooltip'
 
-function CheckBox(props) {
+function CheckBox(props) {  
     const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
@@ -26,19 +26,14 @@ function CheckBox(props) {
                     />
 
                     <label
-                        className="questionHelp form-check-label"
+                        className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}
                     >
                         {optionSetOption.text}
-                        {optionSetOption.comment !== '' && (
-                            <Tooltip
-                                title={optionSetOption.comment}
-                                placement="right"
-                            >
-                                <i className="labelHelpIcon mdi mdi-help-circle-outline" />
-                            </Tooltip>
-                        )}
                     </label>
+                    <PinnableTooltip
+                        helptext={optionSetOption.comment}
+                    />
                 </div>
             );
         });
