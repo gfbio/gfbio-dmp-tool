@@ -106,6 +106,15 @@ section.content {
     padding-left: 3px;
   }
 
+  .helpicon-pin {
+    font-size: 0.9rem;
+  }
+  
+  .validation-field {
+    display: inline-block;
+    line-height: 1rem;
+  }
+
   .header-right .section-title::before,
   .header-left .section-title::after {
     display: inline-block;
@@ -211,5 +220,11 @@ section.content {
       border: 2px solid $gfbio-green-0-3;
       border-radius: 0.5rem;
     }
+  }
+
+  select.form-control {
+    -webkit-appearance: auto !important;
+      -moz-appearance: auto !important;
+            appearance: auto !important;
   }
 }
