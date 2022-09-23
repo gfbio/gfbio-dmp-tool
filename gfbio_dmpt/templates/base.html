@@ -109,7 +109,7 @@
               <a class="nav-link" href="{{ url }}">My DMPs</a>
             </li>
           {% endif %}
-                                      
+
           {% if request.user.is_authenticated %}
             {% if request.user.is_staff %}
               {% url 'home_rdmo' as url %}
@@ -244,7 +244,8 @@
             </p>
           </div>
           <div class="mt-2">
-            <a href="">
+            <a href="https://www.dfg.de/" target="_blank"
+               rel="noopener noreferrer">
               <img src="{% static 'assets/img/dfg_logo_schriftzug_weiss_foerderung_en.gif' %}"
                    width="300">
             </a>
@@ -258,9 +259,10 @@
               <h4>Want to know more ?</h4>
               <ul class="list-group">
                 <a class="list-group-item list-group-item-action"
-                   href="#">Training</a>
+                   href="/training">Training</a>
                 <a class="list-group-item list-group-item-action"
-                   href="#">FAQ's</a>
+                   href="https://kb.gfbio.org/" target="_blank"
+                   rel="noopener noreferrer">FAQ's</a>
               </ul>
             </div>
 
@@ -285,7 +287,8 @@
               </p>
               <br>
               <p>
-                <a href="#" class="btn btn-primary btn-footer">Create
+                <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
+                   class="btn btn-primary btn-footer">Create
                   an account
                   !</a>
               </p>
@@ -308,7 +311,9 @@
           <p>
             Prepare a custom Data Management Plan (DMP).
           </p>
-          <a class="stretched-link" href="/plan"></a>
+          <a class="stretched-link" href="https://dmp.gfbio.dev/"
+             target="_blank"
+             rel="noopener noreferrer"></a>
         </div>
 
         <div class="col-3 mid-row-item">
@@ -319,7 +324,9 @@
           <p>
             Submit your data to GFBio.
           </p>
-          <a class="stretched-link" href="/submit"></a>
+          <a class="stretched-link"
+             href="https://submissions.gfbio.org" target="_blank"
+             rel="noopener noreferrer"></a>
         </div>
 
         <div class="col-3 mid-row-item">
@@ -330,7 +337,9 @@
           <p>
             Search the GFBio data pool.
           </p>
-          <a class="stretched-link" href="/search"></a>
+          <a class="stretched-link" href="https://search.gfbio.dev"
+             target="_blank"
+             rel="noopener noreferrer"></a>
         </div>
 
         <div class="col-3 mid-row-item">
@@ -342,7 +351,8 @@
             Dynamically integrate, analyze and
             visualize GFBio datasets.
           </p>
-          <a class="stretched-link" href="/visualize"></a>
+          <a class="stretched-link" href="https://vat.gfbio.org/" target="_blank"
+             rel="noopener noreferrer"></a>
         </div>
       </div>
     </div>
@@ -356,13 +366,13 @@
           <div class="col-8 d-flex align-items-center">
             <ul class="list-group list-group-horizontal align-middle">
               <li class="list-group-item">
-                <a href="/">Terms of use</a>
+                <a href="https://gfbio.dev/terms-of-use">Terms of use</a>
               </li>
               <li class="list-group-item">
-                <a href="/">Legal Notice</a>
+                <a href="https://gfbio.dev/legal-notice">Legal Notice</a>
               </li>
               <li class="list-group-item">
-                <a href="/">Privacy Policy</a>
+                <a href="https://gfbio.dev/privacy-policy">Privacy Policy</a>
               </li>
             </ul>
           </div>
@@ -395,6 +405,7 @@
   </footer>
 {% endblock footer %}
 <!-- ======= End Footer ======= -->
+
 
 {% block modal %}{% endblock modal %}
 
