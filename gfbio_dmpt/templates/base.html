@@ -103,6 +103,11 @@
             <a class="nav-link" href="{{ url }}">Home</a>
           </li>
 
+          <li class="nav-item {% if request.path == url %}active{% endif %}">
+            <a class="nav-link" href="https://gfbio.dev/services/}" target="_blank"
+                     rel="noopener noreferrer">GFBio Services</a>
+          </li>
+
           {% if request.user.is_authenticated %}
             {% url 'dmpt:create_dmp' as url %}
             <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
