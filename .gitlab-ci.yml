@@ -2,8 +2,8 @@
 include:
   - project: gfbio/cicd
     file:
-      - '.create_merge_request_v2.yml'
-      - '.web-test.yml'
+      - '.create_merge_request_v3.yml'
+      - '.web_test_v2.yml'
       - '.tag_release.yml'
 
 # TODO: unit-tests is conflicting with release, since both currently run on the same machine and cause errors when using the same docker network
@@ -14,7 +14,6 @@ stages:
   - tag_release
   - web_test_check
   - web_test_update
-  - web_test_update_env_url
   - web_test_stop
 
 
@@ -33,14 +32,16 @@ stages:
 #    - gfbio-dmp-prod
 
 create_merge_request:
+  variables:
+    PROJECT_NAME: "gfbio-dmp"
   tags:
-    - gfbio-dmp-prod
+    - dev-denbi
 
 tag_release_check:
   variables:
     MAIN_BRANCH_NAME: "master"
   tags:
-    - gfbio-dmp-prod
+    - dev-denbi
 
 tag_release:
   script:
@@ -93,11 +94,6 @@ web_test_update:
     - docker stack rm $TEST_NAME || true
     - while [[ $(docker ps | grep $TEST_NAME | wc -l) > 0 ]]; do sleep 1; done
     - docker stack deploy -c $COMPOSE_FILE $TEST_NAME
-
-# will set correct url for environmnet so you can 'view environment' in gitlab
-web_test_update_env_url:
-  variables:
-    PROJECT_NAME: "gfbio-dmp"
 
 # will stop running environmnet
 web_test_stop:
