@@ -7,7 +7,7 @@ entryPoints:
     address: ":80"
     forwardedHeaders:
       trustedIPs:
-        - "192.168.0.216/32"
+        - "192.168.0.13/32"
 
   web-secure:
     # https
