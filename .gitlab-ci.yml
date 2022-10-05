@@ -73,7 +73,7 @@ web_test_update:
     COMPOSE_FILE: "web-test.yml"
   script:
     # get issue id and test name
-    - ISSUE_ID=$(awk -F- '{print $1}' <<< ${CI_COMMIT_REF_NAME})
+    - ISSUE_ID=$(awk -F- '{print $2}' <<< ${CI_COMMIT_REF_NAME})
     - TEST_NAME=$ISSUE_ID-$PROJECT_NAME
     # your custom commands
     - rm -r ./.envs/
