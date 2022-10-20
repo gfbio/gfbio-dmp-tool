@@ -6,6 +6,10 @@ font-family: 'Roboto Slab', serif;
 font-family: 'Rubik', sans-serif;
 */
 
+@mixin work-sans() {
+  font-family: 'Work Sans', serif, Arial, sans-serif;
+}
+
 @mixin nunito() {
   font-family: 'Nunito Sans', sans-serif;
 }
@@ -27,29 +31,26 @@ font-family: 'Rubik', sans-serif;
 }
 
 @mixin roboto-slab() {
-  ont-family: 'Roboto Slab', serif;
+  font-family: 'Roboto Slab', serif;
 }
 
 
 /* -------------------------------------------------------------------------- */
 
 @mixin sans-serif-font() {
-  font-family: 'Nunito Sans', sans-serif;
-  //font-family: 'Open Sans', sans-serif;
-  //font-family: 'Lato', sans-serif;
+  @include work-sans();
 }
 
 @mixin header-sans-serif-font() {
-  //font-family: 'Rubik', sans-serif;
-  font-family: 'Raleway', sans-serif;
+  @include work-sans();
 }
 
 @mixin sans-serif-font-2() {
-  font-family: 'Raleway', sans-serif;
+  @include work-sans();
 }
 
 @mixin sans-serif-font-3() {
-  font-family: 'Open Sans', sans-serif;
+  @include work-sans();
 }
 
 @mixin serif-font() {
