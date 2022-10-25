@@ -6,10 +6,6 @@ font-family: 'Roboto Slab', serif;
 font-family: 'Rubik', sans-serif;
 */
 
-@mixin work-sans() {
-  font-family: 'Work Sans', Arial, sans-serif;
-}
-
 @mixin nunito() {
   font-family: 'Nunito Sans', sans-serif;
 }
@@ -19,7 +15,7 @@ font-family: 'Rubik', sans-serif;
 }
 
 @mixin open-sans() {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', Arial, sans-serif;
 }
 
 @mixin lato() {
@@ -38,19 +34,19 @@ font-family: 'Rubik', sans-serif;
 /* -------------------------------------------------------------------------- */
 
 @mixin sans-serif-font() {
-  @include work-sans();
+  @include open-sans();
 }
 
 @mixin header-sans-serif-font() {
-  @include work-sans();
+  @include open-sans();
 }
 
 @mixin sans-serif-font-2() {
-  @include work-sans();
+  @include open-sans();
 }
 
 @mixin sans-serif-font-3() {
-  @include work-sans();
+  @include open-sans();
 }
 
 @mixin serif-font() {

@@ -10871,13 +10871,13 @@ font-family: 'Rubik', sans-serif;
 */
 /* -------------------------------------------------------------------------- */
 body, html {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   overflow-x: hidden;
   color: #666;
 }
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 a {
@@ -10895,7 +10895,7 @@ section {
 }
 
 .font-secondary {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .compensate-nav {
@@ -10956,7 +10956,7 @@ section {
   background-color: #fff;
   border-bottom: 0;
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05);
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   transition: all 0.2s;
   min-height: 62px;
 }
@@ -11105,7 +11105,7 @@ section.masthead {
   background-size: cover;
 }
 section.masthead h1, section.masthead .h1, section.masthead h3, section.masthead .h3 {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   color: #292929;
 }
 section.masthead h1 small, section.masthead .h1 small, section.masthead h1 .small, section.masthead .h1 .small, section.masthead h3 small, section.masthead .h3 small, section.masthead h3 .small, section.masthead .h3 .small {
@@ -11286,14 +11286,14 @@ section#twitter h3, section#twitter .h3 {
 	Footer
 ==============================================================*/
 footer {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   background-color: rgba(52, 90, 162, 0.8);
   color: #fff;
   font-weight: 300;
   padding-top: 3rem;
 }
 footer h3, footer .h3, footer h4, footer .h4 {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-weight: 300;
 }
 footer h3, footer .h3 {
@@ -11441,7 +11441,7 @@ input:focus, textarea:focus {
 }
 
 .btn-green {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-weight: 500;
   border-color: #80b148;
   background-color: #81B248;
@@ -11464,7 +11464,7 @@ input:focus, textarea:focus {
 }
 
 .btn-green-inverted {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-weight: 500;
   border-color: #80b148;
   background-color: #fff;
@@ -11487,7 +11487,7 @@ input:focus, textarea:focus {
 }
 
 .btn-green-sidebar {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-weight: 400;
   border-color: #80b148;
   background-color: #fff;
@@ -11736,7 +11736,7 @@ section.content h4, section.content .h4 {
   color: #212529;
 }
 section.content h5, section.content .h5 {
-  font-family: "Work Sans", Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   text-transform: uppercase;
   font-size: 1rem;
   font-weight: 400;
