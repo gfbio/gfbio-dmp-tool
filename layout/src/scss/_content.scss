@@ -112,7 +112,15 @@ section.content {
 
   .labelHelpIcon {
     padding-left: 3px;
-    line-height: 1 !important;
+  }
+
+  .helpicon-pin {
+    font-size: 0.9rem;
+  }
+  
+  .validation-field {
+    display: inline-block;
+    line-height: 1rem;
   }
 
   .header-right .section-title::before,
@@ -220,5 +228,11 @@ section.content {
       border: 2px solid $gfbio-green-0-3;
       border-radius: 0.5rem;
     }
+  }
+
+  select.form-control {
+    -webkit-appearance: auto !important;
+      -moz-appearance: auto !important;
+            appearance: auto !important;
   }
 }
