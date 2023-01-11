@@ -12,14 +12,13 @@ mozilla-django-oidc==2.0.0
 
 # Django
 # ------------------------------------------------------------------------------
-django==3.2.5 # https://www.djangoproject.com/
+django==3.2.14 # https://www.djangoproject.com/
 django-environ==0.8.1  # https://github.com/joke2k/django-environ
 django-model-utils==4.2.0  # https://github.com/jazzband/django-model-utils
-django-allauth~=0.45.0  # https://github.com/pennersr/django-allauth
+django-allauth~=0.51.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.14.0  # https://github.com/django-crispy-forms/django-crispy-forms
 
-django-compressor==2.4.1  # https://github.com/django-compressor/django-compressor
-# django-compressor==3.1  # https://github.com/django-compressor/django-compressor
+django-compressor==4.0.0 # https://github.com/django-compressor/django-compressor
 
 django-redis==5.2.0  # https://github.com/jazzband/django-redis
 
@@ -35,26 +34,26 @@ jira==3.1.1
 # RDMO
 # ------------------------------------------------------------------------------
 
-defusedcsv~=1.1.0
+defusedcsv~=2.0.0
 defusedxml~=0.7.1
-django-cleanup~=5.2.0
-django-extensions~=3.1.5
-django-filter~=2.4.0
+django-cleanup~=6.0.0
+django-extensions~=3.2.0
+django-filter~=21.1.0
 django-libsass==0.9
 django-mathfilters~=1.0.0
-django-mptt~=0.12.0
+django-mptt~=0.13.4
 django-rest-swagger~=2.2.0
 django-settings-export~=1.2.1
 django-widget-tweaks~=1.4.12
 drf-extensions~=0.7.1
-iso8601~=0.1.14
+iso8601~=1.0.2
 jsonfield~=3.1.0
-Markdown~=3.3.6
-pypandoc==1.6.3
+Markdown~=3.3.7
+pypandoc==1.8.1
 pytest-cov~=2.12.1
 pytest-dotenv~=0.5.2
 pytest-mock~=3.6.1
 pytest-pythonpath~=0.7.4
-rules==3.0
+rules==3.3
 
-rdmo~=1.8
+rdmo~=1.9
