@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /*!
 * GFBio Layout - GFBio DMP v0.0.1 (https://dmp.gfbio.dev)
-* Copyright 2021-2022 GFBio e.V.
+* Copyright 2021-2023 GFBio e.V.
 * Licensed under MIT
 */
 /*!
@@ -10862,6 +10862,10 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.list-item-placeholder {
+  border: none;
+}
+
 /*
 font-family: 'Nunito Sans', sans-serif;
 font-family: 'Open Sans', sans-serif;

@@ -19,6 +19,18 @@ Moved to settings_.
 
 .. _settings: http://cookiecutter-django.readthedocs.io/en/latest/settings.html
 
+CSS/Styling
+-----------
+Don't change directly the /gfbio_dmpt/static/css/project.css to change styling.
+Instead add your changes in the respective scss in /layout/src/scss/.
+To generate the css-files set your terminal to /layout and run 
+
+::
+
+    $ npm run build
+
+    $ ./copy_to_static
+
 Basic Commands
 --------------
 
