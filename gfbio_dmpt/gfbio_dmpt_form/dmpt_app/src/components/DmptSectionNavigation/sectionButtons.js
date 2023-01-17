@@ -94,6 +94,26 @@ function SectionButtons(props) {
 
     const submitText = dmptProjectId < 0 ? 'Finalize DMP' : 'Update DMP';
 
+    let previousButton = (
+        <button
+            type="button"
+            className={`list-group-item list-group-item-action text-start ${
+                disabled ? 'disabled' : ''
+            }`}
+            onClick={() => backHandler(sectionIndex, setSectionIndex)}
+        >
+            <h6
+                className={`sidebar-list-item ${
+                    disabled ? 'text-muted' : ''
+                }`}
+            >
+                <i className="mdi mdi-chevron-double-left align-middle" />
+                <br />
+                Previous Section
+            </h6>
+        </button>
+    );
+
     let continueButton = (
         <button
             type="button"
@@ -110,6 +130,10 @@ function SectionButtons(props) {
             </h6>
         </button>
     );
+
+    if (sectionIndex == 0) {
+        previousButton = <div className="list-group-item list-group-item-action disabled list-item-placeholder"></div>;
+    }
     if (sectionIndex === sectionsLength - 1) {
         continueButton = (
             <button
@@ -143,23 +167,7 @@ function SectionButtons(props) {
 
     return (
         <div className="list-group list-group-flush list-group-horizontal mt-5">
-            <button
-                type="button"
-                className={`list-group-item list-group-item-action text-start ${
-                    disabled ? 'disabled' : ''
-                }`}
-                onClick={() => backHandler(sectionIndex, setSectionIndex)}
-            >
-                <h6
-                    className={`sidebar-list-item ${
-                        disabled ? 'text-muted' : ''
-                    }`}
-                >
-                    <i className="mdi mdi-chevron-double-left align-middle" />
-                    <br />
-                    Previous Section
-                </h6>
-            </button>
+            {previousButton}
             {continueButton}
         </div>
     );
