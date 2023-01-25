@@ -15,6 +15,7 @@ stages:
   - web_test_check
   - web_test_update
   - web_test_stop
+  - deploy_dev
 
 
 #run_unit_tests:
@@ -57,7 +58,7 @@ tag_release:
     - docker-compose -f production.yml up -d
   environment:
     name: production
-    url: https://dmp.gfbio.dev
+    url: https://dmp.gfbio.org
   tags:
     - gfbio-dmp-prod
 
@@ -100,3 +101,25 @@ web_test_stop:
   variables:
     MAIN_BRANCH_NAME: "master"
     PROJECT_NAME: "gfbio-dmp"
+
+deploy_dev:
+  stage: deploy_dev
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "DASS-424-dev-server-for-dmp" && $CI_COMMIT_MESSAGE =~ /.*Merge branch.*\w+-\d+.*into.*/'
+  script:
+    - rsync -a /home/gitlab-runner/.envs .
+    - docker-compose -f production.yml down
+    - docker-compose -f production.yml build
+    - docker-compose -f production.yml up -d postgres
+    - docker-compose -f production.yml run --rm postgres backup
+    - docker-compose -f production.yml run --rm django python manage.py migrate
+    # - TODO: add js built and copy commands here
+    - docker-compose -f production.yml run --rm django python manage.py collectstatic --noinput
+    - docker-compose -f production.yml down
+    - docker-compose -f production.yml up -d
+  environment:
+    name: development
+    url: https://dmp.gfbio.dev
+  tags:
+    - gfbio-dmp-dev
+
