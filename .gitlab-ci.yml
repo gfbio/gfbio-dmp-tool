@@ -105,7 +105,7 @@ web_test_stop:
 deploy_dev:
   stage: deploy_dev
   rules:
-    - if: '$CI_COMMIT_BRANCH == "DASS-424-dev-server-for-dmp" && $CI_COMMIT_MESSAGE =~ /.*Merge branch.*\w+-\d+.*into.*/'
+    - if: '$CI_COMMIT_BRANCH == $MAIN_BRANCH_NAME && $CI_COMMIT_MESSAGE =~ /.*Merge branch.*\w+-\d+.*into.*/'
   script:
     - rsync -a /home/gitlab-runner/.envs .
     - docker-compose -f production.yml down
