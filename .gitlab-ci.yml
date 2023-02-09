@@ -104,6 +104,8 @@ web_test_stop:
 
 deploy_dev:
   stage: deploy_dev
+  variables:
+    MAIN_BRANCH_NAME: "master"
   rules:
     - if: '$CI_COMMIT_BRANCH == $MAIN_BRANCH_NAME && $CI_COMMIT_MESSAGE =~ /.*Merge branch.*\w+-\d+.*into.*/'
   script:
