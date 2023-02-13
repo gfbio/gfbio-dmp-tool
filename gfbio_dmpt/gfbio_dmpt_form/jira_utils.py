@@ -151,7 +151,6 @@ def create_support_issue_in_view(form_data={}):
         return {"error": f"no rdmo project found with id: {rdmo_project_id}"}
 
     reporter = get_issue_reporter(form_data.get("email"), form_data.get("user_id"))
-    reporter = "0666113"
     message = f"""
     Message:
 
