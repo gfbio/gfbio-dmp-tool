@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import quote
+from django.urls import reverse
+from django.contrib.sites.models import Site
 
 import requests
 from django.conf import settings
@@ -70,6 +72,11 @@ def get_issue_reporter(email, user_id):
 
 
 def create_support_issue(rdmo_project, reporter, message=""):
+    current_site = Site.objects.get_current()
+    rdmo_project_url = "https://{}{}".format(
+        current_site.domain, f"/rdmo/projects/{rdmo_project.id}"
+    )
+
     jira = JIRA(
         server=settings.JIRA_URL,
         basic_auth=(settings.JIRA_USERNAME, settings.JIRA_PASS),
@@ -81,16 +88,18 @@ def create_support_issue(rdmo_project, reporter, message=""):
                 "project": {"key": settings.JIRA_PROJECT},
                 "summary": "DMP Support Request",
                 "description": f"Help request for"
-                               f'data management plan "{rdmo_project.title}" '
-                               f'using the "{rdmo_project.catalog}" catalogue\n\n{message}',
+                f'data management plan "{rdmo_project.title}" which you can find here {rdmo_project_url} '
+                f'using the "{rdmo_project.catalog}" catalogue\n\n{message}',
                 "reporter": {"name": reporter},
                 "issuetype": {"name": "DMP"},
             }
         )
         dmpt_project = None
-        if hasattr(rdmo_project, 'dmptproject'):
+        if hasattr(rdmo_project, "dmptproject"):
             dmpt_project = rdmo_project.dmptproject
-        DmptIssue.objects.create(rdmo_project=rdmo_project, issue_key=issue.key, dmpt_project=dmpt_project)
+        DmptIssue.objects.create(
+            rdmo_project=rdmo_project, issue_key=issue.key, dmpt_project=dmpt_project
+        )
         logger.info(
             f"jira_utils.py | create_support_issue | " f"issue created | issue={issue}"
         )
