@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div>
+  <h1>Q&A-Section</h1>
+  <div id="qas"></div>
+</div>
+<script>
+  var pageIds = [
+      39256099,
+      25624607,
+      21889104
+  ];
+        
+  //var x = {
+  //  25624607: {"id":"25624607","type":"page","status":"current","title":"Does GFBio offer DOI assignment?","body":{"storage":{"value":"<h3>Short Answer</h3><p>Yes. In GFBio, the assignment of DOIs is a free service of the participating data centers, which is integrated into the data submission process of non-molecular data.</p><h3>Detailed Answer</h3><p>After submission and quality control of the data and metadata, they are published on a landing page together with a DOI. The DOI can then be used to cite the dataset. It remains stable, even if for some reason the address of the landing page changes.</p><p><br /></p>","representation":"storage","_expandable":{"content":"/rest/api/content/25624607"}},"view":{"value":"<h3 id=\"DoesGFBioofferDOIassignment?-ShortAnswer\">Short Answer</h3><p>Yes. In GFBio, the assignment of DOIs is a free service of the participating data centers, which is integrated into the data submission process of non-molecular data.</p><h3 id=\"DoesGFBioofferDOIassignment?-DetailedAnswer\">Detailed Answer</h3><p>After submission and quality control of the data and metadata, they are published on a landing page together with a DOI. The DOI can then be used to cite the dataset. It remains stable, even if for some reason the address of the landing page changes.</p><p><br/></p>","representation":"storage","_expandable":{"webresource":"","content":"/rest/api/content/25624607"}},"_expandable":{"editor":"","export_view":"","styled_view":"","anonymous_export_view":""}},"extensions":{"position":10},"_links":{"webui":"/pages/viewpage.action?pageId=25624607","edit":"/pages/resumedraft.action?draftId=25624607&draftShareId=12292cc3-348d-4927-9d33-3c07323bba4e","tinyui":"/x/HwCHAQ","collection":"/rest/api/content","base":"https://kb.gfbio.org","context":"","self":"https://kb.gfbio.org/rest/api/content/25624607"},"_expandable":{"container":"/rest/api/space/KB","metadata":"","operations":"","children":"/rest/api/content/25624607/child","restrictions":"/rest/api/content/25624607/restriction/byOperation","history":"/rest/api/content/25624607/history","ancestors":"","version":"","descendants":"/rest/api/content/25624607/descendant","space":"/rest/api/space/KB"}},
+  //  39256099: {"id":"39256099","type":"page","status":"current","title":"What is a data curator?","body":{"storage":{"value":"<h3>Short Answer</h3><p>A data curator supports the standardization and enrichment of submitted (meta)data.</p><h3>Detailed Answer</h3><p>After submitting data to GFBio, the data curator of the respective GFBio data center will be the contact person in all further steps to archive and publish the data. She or he is a domain expert and will work closely with the data submitter during the process of <span style=\"color: rgb(37,37,37);text-decoration: none;\">reviewing, enhancing, cleaning, and standardizing metadata and the associated data, respectively.</span></p><p><br /></p><p class=\"auto-cursor-target\"><strong>See also:</strong></p><ul><li class=\"auto-cursor-target\"><ac:link><ri:page ri:content-title=\"Which levels of curation does GFBio support?\" /><ac:plain-text-link-body><![CDATA[FAQ: Which levels of curation does GFBio support?]]></ac:plain-text-link-body></ac:link></li><li class=\"auto-cursor-target\"><ac:link><ri:page ri:content-title=\"What are metadata?\" /><ac:plain-text-link-body><![CDATA[FAQ: What are metadata?]]></ac:plain-text-link-body></ac:link></li><li class=\"auto-cursor-target\"><ac:link><ri:page ri:content-title=\"What is a metadata standard?\" /><ac:plain-text-link-body><![CDATA[FAQ: What is a metadata standard?]]></ac:plain-text-link-body></ac:link></li></ul>","representation":"storage","_expandable":{"content":"/rest/api/content/39256099"}},"view":{"value":"<h3 id=\"Whatisadatacurator?-ShortAnswer\">Short Answer</h3><p>A data curator supports the standardization and enrichment of submitted (meta)data.</p><h3 id=\"Whatisadatacurator?-DetailedAnswer\">Detailed Answer</h3><p>After submitting data to GFBio, the data curator of the respective GFBio data center will be the contact person in all further steps to archive and publish the data. She or he is a domain expert and will work closely with the data submitter during the process of <span style=\"color: rgb(37,37,37);text-decoration: none;\">reviewing, enhancing, cleaning, and standardizing metadata and the associated data, respectively.</span></p><p><br/></p><p class=\"auto-cursor-target\"><strong>See also:</strong></p><ul><li class=\"auto-cursor-target\"><a href=\"/pages/viewpage.action?pageId=39256097\">FAQ: Which levels of curation does GFBio support?</a></li><li class=\"auto-cursor-target\"><a href=\"/pages/viewpage.action?pageId=21889075\">FAQ: What are metadata?</a></li><li class=\"auto-cursor-target\"><a href=\"/pages/viewpage.action?pageId=22970385\">FAQ: What is a metadata standard?</a></li></ul>","representation":"storage","_expandable":{"webresource":"","content":"/rest/api/content/39256099"}},"_expandable":{"editor":"","export_view":"","styled_view":"","anonymous_export_view":""}},"extensions":{"position":55},"_links":{"webui":"/pages/viewpage.action?pageId=39256099","edit":"/pages/resumedraft.action?draftId=39256099&draftShareId=9c8b892f-3e0f-4b48-a85f-13d224e0732c","tinyui":"/x/IwBXAg","collection":"/rest/api/content","base":"https://kb.gfbio.org","context":"","self":"https://kb.gfbio.org/rest/api/content/39256099"},"_expandable":{"container":"/rest/api/space/KB","metadata":"","operations":"","children":"/rest/api/content/39256099/child","restrictions":"/rest/api/content/39256099/restriction/byOperation","history":"/rest/api/content/39256099/history","ancestors":"","version":"","descendants":"/rest/api/content/39256099/descendant","space":"/rest/api/space/KB"}},
+  //  21889104: {"id":"21889104","type":"page","status":"current","title":"Does GFBio recommend any specific Open Access Tools for Data Cleaning?","body":{"storage":{"value":"<h3>Short Answer</h3><p><span>Yes, we recommend <a href=\"https://openrefine.org\">OpenRefine</a>, an open access spreadsheet like tool for cleaning data. </span></p><h3>Detailed Answer</h3><p>OpenRefine provides a graphical spreadsheet like user interface for data cleanup and transformation to other formats. If your data are not already curated in a <a href=\"https://kb.gfbio.org/pages/viewpage.action?pageId=21889134\">workbench or similar management system</a> that offers such features, <span>OpenRefine can be very helpful preparing your data for publishing and improving the data quality. Duplicates, typos or spelling variants in terms and taxon names can be easily detected and corrected. The <a href=\"https://librarycarpentry.org/lc-open-refine/\">Library Carpentry provides a step by step introduction</a></span><span> and a plethora of examples are referenced on <a href=\"https://github.com/OpenRefine/OpenRefine/wiki/External-Resources\">GitHub</a>.</span></p><p><br /></p><p><br /></p><p><br /></p>","representation":"storage","_expandable":{"content":"/rest/api/content/21889104"}},"view":{"value":"<h3 id=\"DoesGFBiorecommendanyspecificOpenAccessToolsforDataCleaning?-ShortAnswer\">Short Answer</h3><p><span>Yes, we recommend <a class=\"external-link\" href=\"https://openrefine.org\" rel=\"nofollow\">OpenRefine</a>, an open access spreadsheet like tool for cleaning data. </span></p><h3 id=\"DoesGFBiorecommendanyspecificOpenAccessToolsforDataCleaning?-DetailedAnswer\">Detailed Answer</h3><p>OpenRefine provides a graphical spreadsheet like user interface for data cleanup and transformation to other formats. If your data are not already curated in a <a href=\"https://kb.gfbio.org/pages/viewpage.action?pageId=21889134\" rel=\"nofollow\">workbench or similar management system</a> that offers such features, <span>OpenRefine can be very helpful preparing your data for publishing and improving the data quality. Duplicates, typos or spelling variants in terms and taxon names can be easily detected and corrected. The <a class=\"external-link\" href=\"https://librarycarpentry.org/lc-open-refine/\" rel=\"nofollow\">Library Carpentry provides a step by step introduction</a></span><span> and a plethora of examples are referenced on <a class=\"external-link\" href=\"https://github.com/OpenRefine/OpenRefine/wiki/External-Resources\" rel=\"nofollow\">GitHub</a>.</span></p><p><br/></p><p><br/></p><p><br/></p>","representation":"storage","_expandable":{"webresource":"","content":"/rest/api/content/21889104"}},"_expandable":{"editor":"","export_view":"","styled_view":"","anonymous_export_view":""}},"extensions":{"position":11},"_links":{"webui":"/pages/viewpage.action?pageId=21889104","edit":"/pages/resumedraft.action?draftId=21889104&draftShareId=744d022c-def0-40f2-9dd6-f715b9d6bc11","tinyui":"/x/UABOAQ","collection":"/rest/api/content","base":"https://kb.gfbio.org","context":"","self":"https://kb.gfbio.org/rest/api/content/21889104"},"_expandable":{"container":"/rest/api/space/KB","metadata":"","operations":"","children":"/rest/api/content/21889104/child","restrictions":"/rest/api/content/21889104/restriction/byOperation","history":"/rest/api/content/21889104/history","ancestors":"","version":"","descendants":"/rest/api/content/21889104/descendant","space":"/rest/api/space/KB"}}
+  //}
+
+  var div = document.getElementById("qas");
+
+  pageIds.forEach(element => {
+      var article = getArticle(element);
+      //var article = createArticle(x[element]);
+      var qaSegment = document.createElement("div");
+      qaSegment.className = "mb-5";
+      var question = document.createElement("h2");
+      question.innerHTML = article.title;
+      qaSegment.appendChild(question);
+
+      var shortAnswer = document.createElement("div");
+      shortAnswer.className = "shortAnswer";
+      shortAnswer.style = "font-weight: bolder";
+      shortAnswer.innerHTML = article.shortAnswer;
+      qaSegment.appendChild(shortAnswer);
+
+      var longAnswer = document.createElement("div");
+      longAnswer.className = "longAnswer";
+      longAnswer.innerHTML = article.longAnswer;
+      longAnswer.setAttribute("style", "display: none");
+      qaSegment.appendChild(longAnswer);
+
+      var longAnswerTeaser = document.createElement("div");
+      longAnswerTeaser.className = "longAnswerTeaser";
+      longAnswerTeaser.innerHTML = "(more details ...)";
+      qaSegment.appendChild(longAnswerTeaser);
+
+      longAnswerTeaser.onclick = () => {
+        if(longAnswer.style.display == "block") {
+          longAnswer.setAttribute("style", "display: none");
+          longAnswerTeaser.innerHTML = "(more details ...)";
+        }
+        else {
+          longAnswer.setAttribute("style", "display: block");
+          longAnswerTeaser.innerHTML = "(show less ...)";
+        }
+      }
+
+      div.appendChild(qaSegment);
+  });
+
+  function getArticle(id) {
+      fetch('https://kb.gfbio.org/rest/api/content/' + id + '?expand=body.storage,body.view')
+          .then(function(response) {
+              return createArticle(response.json());
+          })
+          .then(function(myJson) {
+              console.log(myJson);
+          });
+  }
+  
+  function createArticle(json) {
+        var content = json.body.view.value;
+        var match = /<h3 .*?>Short Answer<\/h3>(.*)<h3 .*>Detailed Answer<\/h3>(.*)/.exec(content);
+        var result = {};
+        result.title = json.title;
+        result.shortAnswer = match[1];
+        result.longAnswer = match[2];
+        return result;
+  }
+
+</script>
+
+{% endblock content %}
