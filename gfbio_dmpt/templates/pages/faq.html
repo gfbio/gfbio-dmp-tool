@@ -22,52 +22,53 @@
   var div = document.getElementById("qas");
 
   pageIds.forEach(element => {
-      var article = getArticle(element);
-      //var article = createArticle(x[element]);
-      var qaSegment = document.createElement("div");
-      qaSegment.className = "mb-5";
-      var question = document.createElement("h2");
-      question.innerHTML = article.title;
-      qaSegment.appendChild(question);
+      getArticle(element, (article) => {
+        //var article = createArticle(x[element]);
+        var qaSegment = document.createElement("div");
+        qaSegment.className = "mb-5";
+        var question = document.createElement("h2");
+        question.innerHTML = article.title;
+        qaSegment.appendChild(question);
 
-      var shortAnswer = document.createElement("div");
-      shortAnswer.className = "shortAnswer";
-      shortAnswer.style = "font-weight: bolder";
-      shortAnswer.innerHTML = article.shortAnswer;
-      qaSegment.appendChild(shortAnswer);
+        var shortAnswer = document.createElement("div");
+        shortAnswer.className = "shortAnswer";
+        shortAnswer.style = "font-weight: bolder";
+        shortAnswer.innerHTML = article.shortAnswer;
+        qaSegment.appendChild(shortAnswer);
 
-      var longAnswer = document.createElement("div");
-      longAnswer.className = "longAnswer";
-      longAnswer.innerHTML = article.longAnswer;
-      longAnswer.setAttribute("style", "display: none");
-      qaSegment.appendChild(longAnswer);
+        var longAnswer = document.createElement("div");
+        longAnswer.className = "longAnswer";
+        longAnswer.innerHTML = article.longAnswer;
+        longAnswer.setAttribute("style", "display: none");
+        qaSegment.appendChild(longAnswer);
 
-      var longAnswerTeaser = document.createElement("div");
-      longAnswerTeaser.className = "longAnswerTeaser";
-      longAnswerTeaser.innerHTML = "(more details ...)";
-      qaSegment.appendChild(longAnswerTeaser);
+        var longAnswerTeaser = document.createElement("div");
+        longAnswerTeaser.className = "longAnswerTeaser";
+        longAnswerTeaser.innerHTML = "(more details ...)";
+        qaSegment.appendChild(longAnswerTeaser);
 
-      longAnswerTeaser.onclick = () => {
-        if(longAnswer.style.display == "block") {
-          longAnswer.setAttribute("style", "display: none");
-          longAnswerTeaser.innerHTML = "(more details ...)";
+        longAnswerTeaser.onclick = () => {
+          if(longAnswer.style.display == "block") {
+            longAnswer.setAttribute("style", "display: none");
+            longAnswerTeaser.innerHTML = "(more details ...)";
+          }
+          else {
+            longAnswer.setAttribute("style", "display: block");
+            longAnswerTeaser.innerHTML = "(show less ...)";
+          }
         }
-        else {
-          longAnswer.setAttribute("style", "display: block");
-          longAnswerTeaser.innerHTML = "(show less ...)";
-        }
-      }
 
-      div.appendChild(qaSegment);
+        div.appendChild(qaSegment);
+      });
   });
 
-  function getArticle(id) {
+  function getArticle(id, onSuccess) {
       fetch('https://kb.gfbio.org/rest/api/content/' + id + '?expand=body.storage,body.view')
           .then(function(response) {
-              return createArticle(response.json());
-          })
-          .then(function(myJson) {
-              console.log(myJson);
+            response.json().then(json => {
+              var article = createArticle(json);
+              onSuccess(article);
+            })
           });
   }
   
