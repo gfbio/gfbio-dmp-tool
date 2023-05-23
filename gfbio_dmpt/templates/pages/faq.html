@@ -1,100 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block thirdPartyJavaScript %}
+{% block css %}
+  {{ block.super }}
+  <link href="{% static 'css/faq-styling.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
   <script defer src="{% static 'js/knowledgebase-connector.js' %}"></script>
-{% endblock thirdPartyJavaScript %}
+{% endblock javascript %}
 
 {% block content %}
 
 <div>
-  <h1>Q&A-Section</h1>
-  <form onsubmit="return search()" >
-    <input id="searchString" />
-    <input type="submit"/>
-  </form>
-  <div id="qas"></div>
+  <h1>Some frequently asked questions</h1>
+  <div id="qnas"></div>
 </div>
 
 <script>
-  var div = document.getElementById("qas");
+  var div = document.getElementById("qnas");
 
   window.onload = function() {
-    var knowledgebaseConnector = KnowledgebaseConnector();
-    knowledgebaseConnector.fetchSubPages(
-      7831613,
-      pageItem => pageItem.getContent(
-        page => {
-          var match = /<h3 .*?>Short Answer<\/h3>(.*)<h3 .*>Detailed Answer<\/h3>(.*)/.exec(page.content);
-          var article = {
-            title: page.title,
-            shortAnswer: match[1],
-            longAnswer: match[2]
-          }
-          createEntry(article);
-        }
-      )
-    )
-  }
-
-
-  function search() {
-    var searchString = document.getElementById("searchString").value;
-    div.innerHTML = "";
-    var knowledgebaseConnector = KnowledgebaseConnector();
-    knowledgebaseConnector.search(
-      searchString,
-      pageItem => pageItem.getContent(
-        page => {
-          var article = {
-            title: page.title,
-            shortAnswer: "",
-            longAnswer: page.content
-          }
-          createEntry(article);
-        }
-      )
-    );
-    return false;
-
-  }
-
-  function createEntry(article) {
-    var qaSegment = document.createElement("div");
-    qaSegment.className = "mb-5";
-    var question = document.createElement("h2");
-    question.innerHTML = article.title;
-    qaSegment.appendChild(question);
-
-    var shortAnswer = document.createElement("div");
-    shortAnswer.className = "shortAnswer";
-    shortAnswer.style = "font-weight: bolder";
-    shortAnswer.innerHTML = article.shortAnswer;
-    qaSegment.appendChild(shortAnswer);
-
-    var longAnswer = document.createElement("div");
-    longAnswer.className = "longAnswer";
-    longAnswer.innerHTML = article.longAnswer;
-    longAnswer.setAttribute("style", "display: none");
-    qaSegment.appendChild(longAnswer);
-
-    var longAnswerTeaser = document.createElement("div");
-    longAnswerTeaser.className = "longAnswerTeaser";
-    longAnswerTeaser.innerHTML = "(more details ...)";
-    qaSegment.appendChild(longAnswerTeaser);
-
-    longAnswerTeaser.onclick = () => {
-      if(longAnswer.style.display == "block") {
-        longAnswer.setAttribute("style", "display: none");
-        longAnswerTeaser.innerHTML = "(more details ...)";
-      }
-      else {
-        longAnswer.setAttribute("style", "display: block");
-        longAnswerTeaser.innerHTML = "(show less ...)";
-      }
-    }
-
-    div.appendChild(qaSegment);
+    var knowledgebaseHtmlCreator = KnowledgebaseHtmlCreator();
+    knowledgebaseHtmlCreator.createWithSearch(div, 7831613);
   }
 </script>
 
