@@ -13,6 +13,7 @@ urlpatterns = [
     #   most flexible way to achive this.
     # path("", RedirectView.as_view(url='/dmp/create'), name='redirect_to_create_dmp'),
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("faq", TemplateView.as_view(template_name="pages/faq.html"), name="faq"),
 
     # RDMO -----------
     path("rdmo/", staff_member_required(home), name="home_rdmo"),
