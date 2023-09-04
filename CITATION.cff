@@ -4,9 +4,6 @@ authors:
 - family-names: "Weber"
   given-names: "Marc"
   orcid: "https://orcid.org/0000-0003-0694-5817"
-- family-names: "Kostadinov"
-  given-names: "Ivaylo"
-  orcid: "https://orcid.org/0000-0003-4476-6764"
 - family-names: "Marinuks"
   given-names: "Deniss"
   orcid: "https://orcid.org/0000-0003-2350-0449"
@@ -16,8 +13,12 @@ authors:
 - family-names: "Pfaff"
   given-names: "Claas-Thido"
   orcid: "https://orcid.org/0000-0003-1572-8590"
-
-title: "Long-term data archival & publication services for Biodiversity, Ecology & Environmental Science"
+- family-names: "Kostadinov"
+  given-names: "Ivaylo"
+  orcid: "https://orcid.org/0000-0003-4476-6764"
+title: "GFBio DMP Tool"
+abstract: "GFBio DMP Tool based on RDMO"
+type: software
 keywords:
   - Research Software
   - Research Data Management
