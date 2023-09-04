@@ -1,5 +1,9 @@
 # GFBio Data Submission and Brokerage System
 
+
+[![DOI](https://zenodo.org/badge/687193434.svg)](https://zenodo.org/badge/latestdoi/687193434)
+
+
 ## Description
 
 The system requires a working connection to an [JIRA Service Management](https://www.atlassian.com/software/jira/service-management) (server/data center) instance, since all communication with the users is organised via JIRA issues. 
