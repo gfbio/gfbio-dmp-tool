@@ -214,3 +214,16 @@ ul.sub-navi {
   }
 
 }
+
+
+.language-chooser {
+  a.click-link {
+    color: $primary;
+    text-align: end;
+    cursor: pointer;
+
+    &:hover {
+      color: darken($primary, .1);
+    }
+  }
+}

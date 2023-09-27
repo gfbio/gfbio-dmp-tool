@@ -8,7 +8,7 @@ import CheckBox from './checkbox';
 import PinnableTooltip from './pinnableTooltip'
 
 function DmptFormFields(props) {
-    const { section, handleInputChange, inputs, validationErrors } = props;
+    const { section, handleInputChange, inputs, validationErrors, language} = props;
     const inputFields = section.questionsets.map((questionset) => {
         return (
             <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
@@ -21,9 +21,15 @@ function DmptFormFields(props) {
                     const mandatoryMessage = question.is_optional ? (
                         <span />
                     ) : (
-                        <span className="mandatory">
-                            (This field is mandatory)
-                        </span>
+                        language?.shortCode == "DE" ? (
+                            <span className="mandatory">
+                                (Dieses Feld ist erforderlich)
+                            </span>
+                        ) : (
+                            <span className="mandatory">
+                                (This field is mandatory)
+                            </span>
+                        )
                     );
 
                     // This not the best way, but increases readability of data in requests
@@ -90,7 +96,11 @@ function DmptFormFields(props) {
                                 k.startsWith(question.key)
                             ).length > 0
                         ) {
-                            validationMessage = (
+                            validationMessage = (language?.shortCode == "DE") ? (
+                                <span className="mandatory">
+                                    (kein valider {question.value_type})
+                                </span>
+                            ) : (
                                 <span className="mandatory">
                                     (not a valid {question.value_type})
                                 </span>
@@ -140,6 +150,7 @@ DmptFormFields.propTypes = {
     inputs: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     validationErrors: PropTypes.object.isRequired,
+    language: PropTypes.object,
 };
 
 export default DmptFormFields;

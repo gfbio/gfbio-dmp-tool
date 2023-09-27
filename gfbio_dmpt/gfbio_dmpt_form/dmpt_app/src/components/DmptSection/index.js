@@ -7,7 +7,7 @@ import { SECTION_ROOT } from '../api/constants';
 import DmptFormFields from '../DmptFormFields';
 
 // TODO: maybe change to adapted section detail view. compare TODO in views.py
-const useDmptSection = (catalogId, sectionIndex, token) => {
+const useDmptSection = (catalogId, sectionIndex, token, language) => {
     const [processing, setProcessing] = useState(true);
     const [section, setSection] = useState({});
 
@@ -18,7 +18,10 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
                 const result = await axios.get(
                     `${SECTION_ROOT}${catalogId}/${sectionIndex}`,
                     {
-                        headers: { Authorization: `Token ${token}` },
+                        headers: { 
+                            Authorization: `Token ${token}`,
+                            "Accept-Language": `${language.acceptLanguageString}`,
+                        },
                     }
                 );
                 setSection(result.data);
@@ -30,7 +33,7 @@ const useDmptSection = (catalogId, sectionIndex, token) => {
         }
 
         prepareDmptSection();
-    }, [sectionIndex]);
+    }, [sectionIndex, language]);
     return [processing, section];
 };
 
@@ -43,11 +46,13 @@ function DmptSection(props) {
         handleSubmit,
         inputs,
         validationErrors,
+        language,
     } = props;
     const [processing, section] = useDmptSection(
         catalogId,
         sectionIndex,
-        token
+        token,
+        language
     );
 
     if (processing) {
@@ -77,6 +82,7 @@ function DmptSection(props) {
                     handleInputChange={handleInputChange}
                     inputs={inputs}
                     validationErrors={validationErrors}
+                    language={language}
                 />
             </form>
         </div>
@@ -93,6 +99,7 @@ DmptSection.propTypes = {
     inputs: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     validationErrors: PropTypes.object.isRequired,
+    language: PropTypes.object
 };
 
 export default DmptSection;

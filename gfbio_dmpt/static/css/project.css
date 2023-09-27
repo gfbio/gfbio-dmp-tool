@@ -11101,6 +11101,15 @@ ul.sub-navi .nav-link.active {
   border-top-color: #a3a3a3;
 }
 
+.language-chooser a.click-link {
+  color: #81B248;
+  text-align: end;
+  cursor: pointer;
+}
+.language-chooser a.click-link:hover {
+  color: #81b248;
+}
+
 section.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 56px);
