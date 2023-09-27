@@ -28,6 +28,7 @@
   ],
   "license": "MIT",
   "title": "GFBio DMP Tool",
+  "description": "GFBio DMP Tool based on RDMO",
   "keywords": [
     "Research Software",
     "Research Data Management",
