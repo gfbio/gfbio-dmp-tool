@@ -235,4 +235,20 @@ section.content {
       -moz-appearance: auto !important;
             appearance: auto !important;
   }
+
+  .language-chooser {
+    display: block;
+    text-align: end;
+    display: none !important /* only english for now. Remove this line when catalog is ready*/;
+
+    a.click-link {
+      color: $primary;
+      text-align: end;
+      cursor: pointer;
+
+      &:hover {
+        color: lighten($primary, 20);
+      }
+    }
+  }
 }

@@ -11101,15 +11101,6 @@ ul.sub-navi .nav-link.active {
   border-top-color: #a3a3a3;
 }
 
-.language-chooser a.click-link {
-  color: #81B248;
-  text-align: end;
-  cursor: pointer;
-}
-.language-chooser a.click-link:hover {
-  color: #81b248;
-}
-
 section.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 56px);
@@ -11818,6 +11809,19 @@ section.content select.form-control {
   -webkit-appearance: auto !important;
   -moz-appearance: auto !important;
   appearance: auto !important;
+}
+section.content .language-chooser {
+  display: block;
+  text-align: end;
+  display: none !important;
+}
+section.content .language-chooser a.click-link {
+  color: #81B248;
+  text-align: end;
+  cursor: pointer;
+}
+section.content .language-chooser a.click-link:hover {
+  color: #b3d18f;
 }
 
 #account .gfbio_login, #account .gfbio_signup {

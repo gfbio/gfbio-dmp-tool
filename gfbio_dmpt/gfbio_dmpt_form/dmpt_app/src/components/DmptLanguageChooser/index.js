@@ -15,7 +15,7 @@ function DmptLanguageChooser(props) {
                         }
                     ); 
                 }}>
-                <i>Switch language to english</i> 🇬🇧
+                <i>Switch language to English</i>
             </a>
         </div>
     }
@@ -31,7 +31,7 @@ function DmptLanguageChooser(props) {
                         }
                     );
                 }}>
-                    <i>Switch language to german</i> 🇩🇪
+                    <i>Switch language to German</i>
                 </a>
             </div>
         );
