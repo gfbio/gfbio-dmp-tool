@@ -8,11 +8,10 @@ import DmptSection from '../DmptSection';
 import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import DmptSummary from '../DmptSummary';
+import DmptLanguageChooser from '../DmptLanguageChooser';
 
-const useDmptSectionNavigation = (catalogId, token) => {
+const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatoryFields, language) => {
     const [processing, setProcessing] = useState(true);
-    const [sectionList, setSectionList] = useState([]);
-    const [mandatoryFields, setMandatoryFields] = useState([]);
     useEffect(() => {
         async function prepareDmptSectionList() {
             setProcessing(true);
@@ -20,7 +19,10 @@ const useDmptSectionNavigation = (catalogId, token) => {
                 const result = await axios.get(
                     `${SECTIONS_ROOT}${catalogId}/`,
                     {
-                        headers: { Authorization: `Token ${token}` },
+                        headers: {
+                            Authorization: `Token ${token}`,
+                            "Accept-Language": `${language.acceptLanguageString}`
+                        },
                     }
                 );
                 setSectionList(result.data.sections);
@@ -32,8 +34,8 @@ const useDmptSectionNavigation = (catalogId, token) => {
         }
 
         prepareDmptSectionList();
-    }, []);
-    return [processing, sectionList, mandatoryFields];
+    }, [language]);
+    return [processing];
 };
 
 const fakeSubmit = () => {
@@ -104,9 +106,20 @@ function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
 
-    const [processing, sectionList, mandatoryFields] = useDmptSectionNavigation(
+    const [language, setLanguage] = useState({
+        name: "english",
+        shortCode: "EN",
+        acceptLanguageString: "en-US; en; q=0.9"
+    });
+
+    const [sectionList, setSectionList] = useState([]);
+    const [mandatoryFields, setMandatoryFields] = useState([]);
+    const [processing] = useDmptSectionNavigation(
         catalogId,
-        token
+        token,
+        setSectionList,
+        setMandatoryFields,
+        language
     );
     const [sectionIndex, setSectionIndex] = useState(0);
     const [rdmoProjectId, setRdmoProjectId] = useState(-1);
@@ -122,11 +135,15 @@ function DmptSectionNavigation(props) {
         disabledNavigation,
     } = useDmptSectionForm(fakeSubmit, dmptProjectData.form_data);
 
-    const sections = sectionsAsListElements(
-        sectionList,
-        sectionIndex,
-        setSectionIndex
-    );
+    const [sections, setSections] = useState([]);
+    useEffect(() => {
+        var elements = sectionsAsListElements(
+            sectionList,
+            sectionIndex,
+            setSectionIndex
+        );
+        setSections(elements);
+    }, [sectionList, sectionIndex]);
 
     const mandatoryValidation = mandatoryValidationErrorsAsList(
         mandatoryValidationErrors
@@ -151,6 +168,10 @@ function DmptSectionNavigation(props) {
 
     return (
         <div id="section-navigation">
+            <DmptLanguageChooser
+                language={language}
+                setLanguage={setLanguage}
+            />
             <div className="row">
                 <div className="col-12">
                     <ul className="nav nav-tabs sub-navi">{sections}</ul>
@@ -166,6 +187,7 @@ function DmptSectionNavigation(props) {
                         handleSubmit={handleSubmit}
                         inputs={inputs}
                         validationErrors={validationErrors}
+                        language={language}
                     />
             </div>
             <div className="row">
