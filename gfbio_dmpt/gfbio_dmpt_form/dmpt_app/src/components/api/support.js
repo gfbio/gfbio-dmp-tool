@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as QueryString from 'querystring';
 import { PROJECT_API_ROOT } from './constants';
-import getCookie from './cookie';
+import { getCookie } from './cookie';
 
 const postSupportRequest = async (data, token, setProcessing) => {
     const res = { issue_key: '', issue_url: '' };
