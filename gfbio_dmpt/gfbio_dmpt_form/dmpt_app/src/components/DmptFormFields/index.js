@@ -21,7 +21,7 @@ function DmptFormFields(props) {
                     const mandatoryMessage = question.is_optional ? (
                         <span />
                     ) : (
-                        language?.shortCode == "DE" ? (
+                        language?.shortCode === "DE" ? (
                             <span className="mandatory">
                                 (Dieses Feld ist erforderlich)
                             </span>
@@ -96,7 +96,7 @@ function DmptFormFields(props) {
                                 k.startsWith(question.key)
                             ).length > 0
                         ) {
-                            validationMessage = (language?.shortCode == "DE") ? (
+                            validationMessage = (language?.shortCode === "DE") ? (
                                 <span className="mandatory">
                                     (kein valider {question.value_type})
                                 </span>

@@ -5,7 +5,7 @@ import availableLanguages from "./availableLanguages";
 function DmptLanguageChooser(props) {
     const { language, setLanguage} = props
     
-    if (language.shortCode != "en") {
+    if (language.shortCode !== "en") {
         return <div className='language-chooser row mb-3'>
             <a className='click-link' onClick={() => {
                 setLanguage(availableLanguages.english);
@@ -14,7 +14,7 @@ function DmptLanguageChooser(props) {
             </a>
         </div>
     }
-    if (language.shortCode != "de") {
+    if (language.shortCode !== "de") {
         return (
             <div className='language-chooser row mb-3'>
                 <a className='click-link' onClick={() => {

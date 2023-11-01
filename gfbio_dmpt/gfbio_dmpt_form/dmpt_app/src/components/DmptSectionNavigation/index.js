@@ -109,7 +109,7 @@ function DmptSectionNavigation(props) {
 
     const [language, setLanguage] = useState(availableLanguages.english);
     const setLanguageCookie = function(newLanguage) {
-        if (newLanguage.shortCode != getCookie("django_language")) {
+        if (newLanguage.shortCode !== getCookie("django_language")) {
             setCookie("django_language", newLanguage.shortCode);
         }
     };
