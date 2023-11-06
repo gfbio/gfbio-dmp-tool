@@ -9,6 +9,8 @@ import useDmptSectionForm from '../DmptHooks/formHooks';
 import SectionButtons from './sectionButtons';
 import DmptSummary from '../DmptSummary';
 import DmptLanguageChooser from '../DmptLanguageChooser';
+import { getCookie, setCookie } from '../api/cookie';
+import availableLanguages from '../DmptLanguageChooser/availableLanguages';
 
 const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatoryFields, language) => {
     const [processing, setProcessing] = useState(true);
@@ -20,8 +22,7 @@ const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatory
                     `${SECTIONS_ROOT}${catalogId}/`,
                     {
                         headers: {
-                            Authorization: `Token ${token}`,
-                            "Accept-Language": `${language.acceptLanguageString}`
+                            Authorization: `Token ${token}`
                         },
                     }
                 );
@@ -34,7 +35,7 @@ const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatory
         }
 
         prepareDmptSectionList();
-    }, [language]);
+    }, [language]);  // though language is not used directly, a change there means a change in cookies the request uses.
     return [processing];
 };
 
@@ -106,11 +107,17 @@ function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
 
-    const [language, setLanguage] = useState({
-        name: "english",
-        shortCode: "EN",
-        acceptLanguageString: "en-US; en; q=0.9"
-    });
+    const [language, setLanguage] = useState(availableLanguages.english);
+    const setLanguageCookie = function(newLanguage) {
+        if (newLanguage.shortCode !== getCookie("django_language")) {
+            setCookie("django_language", newLanguage.shortCode);
+        }
+    };
+    const setLanguageAndCookie = function(newLanguage) {
+        setLanguageCookie(newLanguage);
+        setLanguage(newLanguage);
+    };
+    setLanguageCookie(language);
 
     const [sectionList, setSectionList] = useState([]);
     const [mandatoryFields, setMandatoryFields] = useState([]);
@@ -157,12 +164,18 @@ function DmptSectionNavigation(props) {
 
     if (rdmoProjectId > 0) {
         return (
-            <DmptSummary
-                rdmoProjectId={rdmoProjectId}
-                dmptProjectId={dmptProjectId}
-                resetRdmoProjectId={setRdmoProjectId}
-                issueKey={dmptProjectData.issue}
-            />
+            <>
+                <DmptLanguageChooser
+                    language={language}
+                    setLanguage={setLanguageAndCookie}
+                />
+                <DmptSummary
+                    rdmoProjectId={rdmoProjectId}
+                    dmptProjectId={dmptProjectId}
+                    resetRdmoProjectId={setRdmoProjectId}
+                    issueKey={dmptProjectData.issue}
+                />
+            </>
         );
     }
 
@@ -170,7 +183,7 @@ function DmptSectionNavigation(props) {
         <div id="section-navigation">
             <DmptLanguageChooser
                 language={language}
-                setLanguage={setLanguage}
+                setLanguage={setLanguageAndCookie}
             />
             <div className="row">
                 <div className="col-12">

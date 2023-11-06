@@ -19,8 +19,7 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
                     `${SECTION_ROOT}${catalogId}/${sectionIndex}`,
                     {
                         headers: { 
-                            Authorization: `Token ${token}`,
-                            "Accept-Language": `${language.acceptLanguageString}`,
+                            Authorization: `Token ${token}`
                         },
                     }
                 );
@@ -33,7 +32,7 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
         }
 
         prepareDmptSection();
-    }, [sectionIndex, language]);
+    }, [sectionIndex, language]); // though language is not used directly, a change there means a change in cookies the request uses.
     return [processing, section];
 };
 
