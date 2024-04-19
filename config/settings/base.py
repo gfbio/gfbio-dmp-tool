@@ -647,7 +647,7 @@ SETTINGS_EXPORT = [
     "PROJECT_SEND_ISSUE",
     "PROJECT_QUESTIONS_AUTOSAVE",
     "NESTED_PROJECTS",
-    "SITE",
+    "SITE_ID",
 ]
 
 # GFBio Helpdesk Shadow-Account Service
