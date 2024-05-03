@@ -8,11 +8,11 @@ function linkifyText(text) {
     const urlPattern = /(<)?(https?:\/\/[^\s<>]+)(>)?/g;
     const parts = text.split(urlPattern);
 
-    return parts.map((part, index) => {
+    return parts.map((part) => {
         const isUrl = /^(https?:\/\/[^\s<>]+)$/.test(part);
         if (isUrl) {
-            const regularColor = '#81B248'; // Regular link color
-            const hoverColor = '#678e3a'; // Hover color
+            const regularColor = '#81B248';
+            const hoverColor = '#678e3a';
 
             const handleMouseEnter = (e) => {
                 e.currentTarget.style.color = hoverColor;
@@ -29,7 +29,7 @@ function linkifyText(text) {
                     rel="noopener noreferrer"
                     style={{
                         color: regularColor,
-                        textDecoration: 'none', // Remove underline
+                        textDecoration: 'none',
                     }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
@@ -79,7 +79,7 @@ function PinnableTooltip({ helptext }) {
                     },
                 },
                 style: {
-                    zIndex: 1500, // or any high value to ensure tooltip appears above other content
+                    zIndex: 1500, // high value to ensure tooltip appears above other content
                     pointerEvents: 'auto', // enables the tooltip to capture mouse events
                 },
             }}
