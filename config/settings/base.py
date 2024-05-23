@@ -1,10 +1,12 @@
 """
 Base settings to build other settings files upon.
 """
+
+import os
 from pathlib import Path
 
+import environ
 from django.utils.translation import gettext_lazy as _
-import environ, os
 
 # import default settings from rdmo
 from rdmo.core.settings import *
@@ -227,6 +229,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "gfbio_dmpt.utils.context_processors.settings_context",
+                "gfbio_dmpt.utils.context_processors.prod_env",
             ],
             "libraries": {
                 "staticfiles": "django.templatetags.static",
@@ -665,3 +668,6 @@ JIRA_PROJECT = env("JIRA_ENV", default="SAND")
 JIRA_USERNAME = env("JIRA_USERNAME")
 JIRA_PASS = env("JIRA_PASS")
 JIRA_DEFAULT_REPORTER_EMAIL = env("JIRA_DEFAULT_REPORTER_EMAIL")
+
+# production environment check for Google Analytics
+IS_PROD_ENV = env.bool("IS_PROD_ENV", False)
