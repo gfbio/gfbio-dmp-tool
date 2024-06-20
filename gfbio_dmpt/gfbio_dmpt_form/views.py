@@ -6,7 +6,7 @@ import string
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -27,7 +27,7 @@ from gfbio_dmpt.users.models import User
 from gfbio_dmpt.utils.dmp_export import render_to_format
 from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
-from .models import DmptProject
+from .models import DmptProject, DmptCatalog
 from .permissions import IsOwner
 from .rdmo_db_utils import get_catalog_with_sections, build_form_content, get_mandatory_form_fields
 from .serializers.dmpt_serializers import (
@@ -54,43 +54,74 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         is_authenticated = user.is_authenticated
-        if not user.is_authenticated:
-            # TODO: annonymous need to be/have permission:
-            #   (rdmo) group: api
-            randpart = "".join(
-                random.choice(string.ascii_uppercase + string.digits) for _ in range(20)
-            )
-            user, created = User.objects.get_or_create(
-                username=f"anonymous-{randpart}",
-                defaults={
-                    "username": f"anonymous-{randpart}",
-                    "password": ANONYMOUS_PASS,
-                },
-            )
+        id = kwargs.get('id', None)
 
-        api_group = Group.objects.get(name="api")
-        api_group.user_set.add(user)
-        token, created = Token.objects.get_or_create(user_id=user.id)
+        if not is_authenticated:
+            user = self._create_anonymous_user()
 
-        # NOTE: At the moment we locally use "GFBio test" and on the dev server we
-        # have "GFBio DMP Catalog". That query thus is a little clumsy way of making
-        # both work. In the end we should decide on how we want to handle the selection
-        # of the catalog. Maybe add a field to let the dmp officer activate a catalog
-        # this is then pulled out not matter which one it is and used here.
-        catalog_id = Catalog.objects.filter(title_lang1__startswith="GFBio").first().id
+        self._ensure_user_in_api_group(user)
+        token = self._get_user_token(user)
+
+        catalog_id = self._determine_catalog_id(id)
 
         context = self.get_context_data(**kwargs)
         context["backend"] = {
-            "isLoggedIn": "{}".format(is_authenticated).lower(),
-            "token": "{}".format(token),
-            "user_id": "{}".format(user.id),
-            "user_name": "{}".format(user.username),
-            "user_email": f"{user.email}",
+            "isLoggedIn": str(is_authenticated).lower(),
+            "token": str(token),
+            "user_id": str(user.id),
+            "user_name": str(user.username),
+            "user_email": str(user.email),
             "catalog_id": catalog_id,
         }
+
+        print(f"Context passed to template: {context['backend']}")
+
         return self.render_to_response(context)
 
+    def _create_anonymous_user(self):
+        randpart = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+        user, created = User.objects.get_or_create(
+            username=f"anonymous-{randpart}",
+            defaults={"password": ANONYMOUS_PASS}
+        )
+        return user
 
+    def _ensure_user_in_api_group(self, user):
+        api_group, created = Group.objects.get_or_create(name="api")
+        api_group.user_set.add(user)
+
+    def _get_user_token(self, user):
+        token, created = Token.objects.get_or_create(user=user)
+        return token
+
+    def _determine_catalog_id(self, id):
+        catalog_id = None
+        if id:
+            try:
+                project = DmptProject.objects.get(id=id)
+                rdmo_project = Project.objects.get(id=project.rdmo_project_id)
+                catalog_id = rdmo_project.catalog_id
+                print(f"Project ID: {id}, Catalog ID: {catalog_id}")
+            except DmptProject.DoesNotExist:
+                print(f"DmptProject with ID {id} does not exist.")
+                return HttpResponse("Project not found", status=404)
+            except Project.DoesNotExist:
+                print(f"RDMO Project with ID {project.rdmo_project_id} does not exist.")
+                return HttpResponse("RDMO Project not found", status=404)
+        else:
+            catalog_id = self._get_default_catalog_id()
+        return catalog_id
+
+    def _get_default_catalog_id(self):
+        default_selected_catalog = DmptCatalog.objects.filter(active = True).first()
+        if default_selected_catalog:
+            catalog_id = default_selected_catalog.catalog.id
+            print(f"Default selected catalog ID: {catalog_id}")
+        else:
+            first_catalog = Catalog.objects.first()
+            catalog_id = first_catalog.id if first_catalog else None
+            print(f"Fallback catalog ID: {catalog_id}")
+        return catalog_id
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"

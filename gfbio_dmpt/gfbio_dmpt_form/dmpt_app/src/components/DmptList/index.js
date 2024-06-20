@@ -29,66 +29,49 @@ const useDmpList = (token) => {
         }
 
         fetchProjectList();
-    }, []);
+    }, [token]);
     return [processing, dmpList];
 };
 
 const dmpsAsListElements = (dmpList) => {
     return dmpList.map((dmp, index) => {
-        const title =
-            dmp.title.length > 60
-                ? `${dmp.title.substring(0, 58)} (...)`
-                : dmp.title;
+        const title = dmp.title.length > 60 ? `${dmp.title.substring(0, 58)} (...)` : dmp.title;
 
-        // TODO: add support.js component in popup or accordion, triggered by link for "Request Support"
-        const issue =
-            dmp.issue === '' ? (
-                <>
-                    <button
-                        type="button"
-                        className="btn btn-link action p-0 border-0 me-4"
-                        data-bs-toggle="modal"
-                        data-bs-target={`#supportFor${dmp.id}`}
-                    >
-                        <i className="mdi mdi-message-reply-text-outline dmp me-2 align-middle" />
-                        <span>Request Support</span>
-                    </button>
-                    <SupportModal
-                        target={`supportFor${dmp.id}`}
-                        rdmoProjectId={dmp.rdmo_project}
-                        title={title}
-                        issueKey={dmp.issue}
-                    />
-                </>
-            ) : (
-                <a
-                    className="action me-4"
-                    href={`${HELPDESK_ROOT}${dmp.issue}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+        const issue = dmp.issue === '' ? (
+            <>
+                <button
+                    type="button"
+                    className="btn btn-link action p-0 border-0 me-4"
+                    data-bs-toggle="modal"
+                    data-bs-target={`#supportFor${dmp.id}`}
                 >
                     <i className="mdi mdi-message-reply-text-outline dmp me-2 align-middle" />
-                    <span>
-                        {`${dmp.issue}`}
-                    </span>
-                </a>
-            );
+                    <span>Request Support</span>
+                </button>
+                <SupportModal target={`supportFor${dmp.id}`} rdmoProjectId={dmp.rdmo_project} title={title} issueKey={dmp.issue} />
+            </>
+        ) : (
+            <a className="action me-4" href={`${HELPDESK_ROOT}${dmp.issue}`} target="_blank" rel="noopener noreferrer">
+                <i className="mdi mdi-message-reply-text-outline dmp me-2 align-middle" />
+                <span>{`${dmp.issue}`}</span>
+            </a>
+        );
 
         return (
-            <li className="list-group-item">
+            <li className="list-group-item" key={index}>
                 <div className="row wrapping-row no-gutters">
                     <div className="col-8">
                         <div className="col-9 align-self-center">
-                            <Link
+                            <a
                                 className="row no-gutters"
                                 id={index}
-                                to={`${dmp.id}`}
+                                href={`/dmp/create/${dmp.id}/`}
                             >
                                 <div className="list-title">
                                     <i className="mdi mdi-text-box-outline ms-1 me-2 dmp align-middle" />
                                     <span>{title}</span>
                                 </div>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                     <div className="col-2 align-self-center text-start">
@@ -110,7 +93,6 @@ const dmpsAsListElements = (dmpList) => {
         );
     });
 };
-
 function DmptList(props) {
     const { token } = props;
 

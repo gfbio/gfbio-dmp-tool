@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
 from django.urls import path
+from django.urls import re_path
 
 from . import views
 
 app_name = "gfbio_dmpt_form"
 urlpatterns = [
-    url("create/", views.DmptFrontendView.as_view(), name="create_dmp"),
+    re_path(r'^create(/(?P<id>\d+))?/$', views.DmptFrontendView.as_view(), name='create_dmp'),
     url("create/new", views.DmptFrontendView.as_view(), name="create_dmp_new"),
     path("dmptprojects/", views.DmptProjectListView.as_view(), name="dmpt_projects"),
     path(
