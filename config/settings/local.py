@@ -85,6 +85,9 @@ CELERY_TASK_ALWAYS_EAGER = True
 # ------------------------------------------------------------------------------
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://0.0.0.0:8000/'
+]
 
 
 # https://stackoverflow.com/questions/39254562/csrf-with-django-reactredux-using-axios

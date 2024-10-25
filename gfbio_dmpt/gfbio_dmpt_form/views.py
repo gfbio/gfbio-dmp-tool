@@ -6,7 +6,7 @@ import string
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -35,10 +35,12 @@ from .serializers.dmpt_serializers import (
     RdmoProjectSerializer,
     RdmoProjectValuesSerializer, RdmoProjectValuesUpdateSerializer,
 )
-from .serializers.extended_serializers import (
-    DmptSectionNestedSerializer,
-    DmptSectionSerializer,
-)
+
+
+# from .serializers.extended_serializers import (
+#     DmptSectionNestedSerializer,
+#     DmptSectionSerializer,
+# )
 
 
 class CSRFViewMixin(View):
@@ -327,18 +329,20 @@ class DmptSectionListView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id):
-        try:
-            catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
-        except Catalog.DoesNotExist as e:
-            return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
-        sections = catalog.sections.all()
-        mandatory = get_mandatory_form_fields(sections)
-        serializer = DmptSectionSerializer(sections, many=True)
-        data = {
-            'sections': serializer.data,
-            'mandatory_fields': mandatory,
-        }
-        return Response(data=data, status=HTTP_200_OK)
+        # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
+        # try:
+        #     catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
+        # except Catalog.DoesNotExist as e:
+        #     return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
+        # sections = catalog.sections.all()
+        # mandatory = get_mandatory_form_fields(sections)
+        # serializer = DmptSectionSerializer(sections, many=True)
+        # data = {
+        #     'sections': serializer.data,
+        #     'mandatory_fields': mandatory,
+        # }
+        # return Response(data=data, status=HTTP_200_OK)
+        return Response(data={}, status=HTTP_200_OK)
 
 
 # class DmptProjectFormDataView(generics.GenericAPIView):
@@ -359,19 +363,21 @@ class DmptSectionDetailView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id, section_index, format="json"):
-        try:
-            catalog = get_catalog_with_sections(catalog_id)
-        except Catalog.DoesNotExist as e:
-            return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
-
-        sections = catalog.sections.all()
-        if section_index >= len(sections):
-            return Response(
-                data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
-            )
-
-        serializer = DmptSectionNestedSerializer(sections[section_index])
-        return Response(data=serializer.data, status=HTTP_200_OK)
+        # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
+        # try:
+        #     catalog = get_catalog_with_sections(catalog_id)
+        # except Catalog.DoesNotExist as e:
+        #     return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
+        #
+        # sections = catalog.sections.all()
+        # if section_index >= len(sections):
+        #     return Response(
+        #         data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
+        #     )
+        #
+        # serializer = DmptSectionNestedSerializer(sections[section_index])
+        # return Response(data=serializer.data, status=HTTP_200_OK)
+        return Response(data={}, status=HTTP_200_OK)
 
         # prototyping below ------------------------------
         # # print(Catalog.objects.all())
