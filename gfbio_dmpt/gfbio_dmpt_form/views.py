@@ -37,10 +37,10 @@ from .serializers.dmpt_serializers import (
 )
 
 
-# from .serializers.extended_serializers import (
-#     DmptSectionNestedSerializer,
-#     DmptSectionSerializer,
-# )
+from .serializers.extended_serializers import (
+    DmptSectionNestedSerializer,
+    DmptSectionSerializer,
+)
 
 
 class CSRFViewMixin(View):
@@ -115,7 +115,7 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
         return catalog_id
 
     def _get_default_catalog_id(self):
-        default_selected_catalog = DmptCatalog.objects.filter(active = True).first()
+        default_selected_catalog = DmptCatalog.objects.filter(active=True).first()
         if default_selected_catalog:
             catalog_id = default_selected_catalog.catalog.id
             print(f"Default selected catalog ID: {catalog_id}")
@@ -124,6 +124,8 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             catalog_id = first_catalog.id if first_catalog else None
             print(f"Fallback catalog ID: {catalog_id}")
         return catalog_id
+
+
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
@@ -330,19 +332,19 @@ class DmptSectionListView(generics.GenericAPIView):
 
     def get(self, request, catalog_id):
         # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
-        # try:
-        #     catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
-        # except Catalog.DoesNotExist as e:
-        #     return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
-        # sections = catalog.sections.all()
-        # mandatory = get_mandatory_form_fields(sections)
-        # serializer = DmptSectionSerializer(sections, many=True)
-        # data = {
-        #     'sections': serializer.data,
-        #     'mandatory_fields': mandatory,
-        # }
-        # return Response(data=data, status=HTTP_200_OK)
-        return Response(data={}, status=HTTP_200_OK)
+        try:
+            catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
+        except Catalog.DoesNotExist as e:
+            return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
+        sections = catalog.sections.all()
+        mandatory = get_mandatory_form_fields(sections)
+        serializer = DmptSectionSerializer(sections, many=True)
+        data = {
+            'sections': serializer.data,
+            'mandatory_fields': mandatory,
+        }
+        return Response(data=data, status=HTTP_200_OK)
+        # return Response(data={}, status=HTTP_200_OK)
 
 
 # class DmptProjectFormDataView(generics.GenericAPIView):
@@ -364,20 +366,20 @@ class DmptSectionDetailView(generics.GenericAPIView):
 
     def get(self, request, catalog_id, section_index, format="json"):
         # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
-        # try:
-        #     catalog = get_catalog_with_sections(catalog_id)
-        # except Catalog.DoesNotExist as e:
-        #     return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
-        #
-        # sections = catalog.sections.all()
-        # if section_index >= len(sections):
-        #     return Response(
-        #         data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
-        #     )
-        #
-        # serializer = DmptSectionNestedSerializer(sections[section_index])
-        # return Response(data=serializer.data, status=HTTP_200_OK)
-        return Response(data={}, status=HTTP_200_OK)
+        try:
+            catalog = get_catalog_with_sections(catalog_id)
+        except Catalog.DoesNotExist as e:
+            return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
+
+        sections = catalog.sections.all()
+        if section_index >= len(sections):
+            return Response(
+                data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
+            )
+
+        serializer = DmptSectionNestedSerializer(sections[section_index])
+        return Response(data=serializer.data, status=HTTP_200_OK)
+        # return Response(data={}, status=HTTP_200_OK)
 
         # prototyping below ------------------------------
         # # print(Catalog.objects.all())

@@ -30,11 +30,13 @@ def _get_jira_issue_response():
         return json.load(data_file)
 
 
+# FIXME: Catalog is now different, no key
 class TestDmptFrontendView(TestCase):
     @classmethod
     def setUpTestData(cls):
         Group.objects.create(name="api")
-        Catalog.objects.create(key="GFBio", title_lang1="GFBio test catalog")
+        # Catalog.objects.create(key="GFBio", title_lang1="GFBio test catalog")
+        Catalog.objects.create(uri_path="GFBio", title_lang1="GFBio test catalog")
         cls.std_user = User.objects.create_user(
             username="john",
             email="john@doe.de",
@@ -55,6 +57,7 @@ class TestDmptFrontendView(TestCase):
         self.assertIn(b"{'isLoggedIn': 'true', 'token':", response.content)
 
 
+# FIXME: Catalog is now different, no key
 class TestDmpExportView(TestCase):
     @classmethod
     def setUpTestData(cls):

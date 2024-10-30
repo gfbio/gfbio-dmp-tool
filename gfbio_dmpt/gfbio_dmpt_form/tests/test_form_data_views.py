@@ -40,6 +40,8 @@ class TestDmptFormDataView(TestCase):
         cls.std_client = client
         cls._prepareData()
 
+
+
     def test_get(self):
         catalog_id = 18
         section_index = 0
