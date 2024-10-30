@@ -30,25 +30,25 @@ function DiscardAndExit(props) {
     if (confirm) {
         button = (
             <div>
-                <h5>Are you sure ?</h5>
                 <h6 className="sidebar-list-item">
                     <i className="mdi mdi-trash-can-outline align-middle" />
                     Discard & Exit
                 </h6>
                 <div className="d-grid gap-2 d-md-block">
+                    <h6>Are you sure?</h6>
                     <button
-                        className="btn btn-outline-success"
+                        className="btn btn-outline-danger"
                         type="button"
                         onClick={() => setConfirm(false)}
                     >
                         Cancel
                     </button>
                     <button
-                        className="btn btn-outline-danger"
+                        className="btn btn-outline-success"
                         type="button"
                         onClick={() => setDiscard(true)}
                     >
-                        Confirm !
+                        Confirm!
                     </button>
                 </div>
             </div>
