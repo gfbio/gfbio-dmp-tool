@@ -12767,12 +12767,9 @@ section.content {
 }
 section.content label {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 300;
   color: #212529;
   margin-bottom: 0.4rem;
-}
-section.content label:hover {
-  color: rgb(10.2567567568, 11.5, 12.7432432432);
 }
 section.content .blue-stroke {
   -webkit-text-stroke-color: #345AA2;
@@ -12869,7 +12866,7 @@ section.content h5, section.content .h5 {
   font-weight: 400;
   letter-spacing: 2px;
   color: #212529;
-  margin-bottom: 1rem;
+  margin-bottom: 0.4rem;
 }
 section.content h6, section.content .h6 {
   color: #212529;
