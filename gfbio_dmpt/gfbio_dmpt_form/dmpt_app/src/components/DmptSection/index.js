@@ -18,12 +18,15 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
                 const result = await axios.get(
                     `${SECTION_ROOT}${catalogId}/${sectionIndex}`,
                     {
-                        headers: { 
+                        headers: {
                             Authorization: `Token ${token}`
                         },
                     }
                 );
+                console.log('DmptSection | index.js | useDMptSetcion | result.data ');
+                console.log(result.data)
                 setSection(result.data);
+                console.log('set result.data via setSection ...');
                 setProcessing(false);
                 window.scrollTo({top:0, behavior:"smooth"});
             } catch (error) {

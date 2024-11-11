@@ -1,21 +1,13 @@
 # -*- coding: utf-8 -*-
-import json
-from inspect import Attribute
+
 from pprint import pprint
 
 from django.test import TestCase
-from rdmo.domain.models import Attribute
-from rdmo.projects.models import Project, Value
 from rdmo.questions.models import Catalog
-from rdmo.questions.serializers.v1 import SectionSerializer, PageSerializer, QuestionSerializer
-from rdmo.questions.serializers.v1.page import PageQuestionSerializer
+from rdmo.questions.serializers.v1 import QuestionSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
-from gfbio_dmpt.gfbio_dmpt_form.models import DmptProject
-from gfbio_dmpt.gfbio_dmpt_form.rdmo_db_utils import get_catalog_with_sections
-from gfbio_dmpt.gfbio_dmpt_form.serializers.extended_serializers import DmptSectionNestedSerializer, \
-    DmptSectionSerializer
 from gfbio_dmpt.users.models import User
 
 
@@ -31,25 +23,27 @@ class TestRdmoDbUtils(TestCase):
     #         project=p, attribute=a, text="Test Project Title Value", value_type="text"
     #     )
 
-    # @classmethod
-    # def setUpTestData(cls):
-    #     # cls.std_user = User.objects.create_user(
-    #     #     username="john",
-    #     #     email="john@doe.de",
-    #     #     password="secret",
-    #     #     is_staff=False,
-    #     #     is_superuser=False,
-    #     # )
-    #     # token = Token.objects.create(user=cls.std_user)
-    #     # client = APIClient()
-    #     # client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
-    #     # cls.std_client = client
-    #     pass
-    #     # cls._prepareData()
+    @classmethod
+    def setUpTestData(cls):
+        cls.std_user = User.objects.create_user(
+            username="john",
+            email="john@doe.de",
+            password="secret",
+            is_staff=True,
+            is_superuser=True,
+        )
+        token = Token.objects.create(user=cls.std_user)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        cls.std_client = client
+
+    def test_dmpt_section_detail_view(self):
+        response = self.std_client.get('/dmp/section/18/0/')
+        # pprint(response.content)
 
     def test_get_catalog_with_sections(self):
         # works, query as usual
-        #catalog = Catalog.objects.get(id=18)
+        # catalog = Catalog.objects.get(id=18)
 
         # broken due to rdmo 2
         # catalog = get_catalog_with_sections(catalog_id=18)/
@@ -63,7 +57,6 @@ class TestRdmoDbUtils(TestCase):
         first_section = catalog.sections.all().first()
         # pprint(first_section.__dict__)
         print('-----------------------------------------\n')
-
 
         # TODO: works: see benefits in comment below
         # serializer = SectionSerializer(catalog.sections.all(), many=True)
@@ -85,7 +78,7 @@ class TestRdmoDbUtils(TestCase):
         #   of the imported dump the page has no qsets, but the related questions are accessible via the page, conditions and
         #   options as well
         for p in first_section.pages.all():
-            print('\n---------', p , '----------------')
+            print('\n---------', p, '----------------')
 
             # TODO: works
             # page_serializer = PageSerializer(p)
@@ -108,11 +101,9 @@ class TestRdmoDbUtils(TestCase):
             #     print('\toptionssets:', question.optionsets.all())
             # ---------------------------------------------------
 
-
         # TODO: works: but constraint to field list. see above for alternative
         # serializer =  DmptSectionSerializer(first_section)
         # pprint(serializer.data)
-
 
         # -------------------------------------------------
         # with open('dumps/rdmo_testinstance_dump_for_2.2.2.json', 'r') as f:

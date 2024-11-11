@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import Sticky from 'react-stickynode';
 import { SECTIONS_ROOT } from '../api/constants';
 import DmptLoading from '../DmptLoading';
 import DmptSection from '../DmptSection';
@@ -12,7 +11,13 @@ import DmptLanguageChooser from '../DmptLanguageChooser';
 import { getCookie, setCookie } from '../api/cookie';
 import availableLanguages from '../DmptLanguageChooser/availableLanguages';
 
-const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatoryFields, language) => {
+const useDmptSectionNavigation = (
+    catalogId,
+    token,
+    setSectionList,
+    setMandatoryFields,
+    language
+) => {
     const [processing, setProcessing] = useState(true);
     useEffect(() => {
         async function prepareDmptSectionList() {
@@ -22,12 +27,16 @@ const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatory
                     `${SECTIONS_ROOT}${catalogId}/`,
                     {
                         headers: {
-                            Authorization: `Token ${token}`
+                            Authorization: `Token ${token}`,
                         },
                     }
                 );
+                console.log(
+                    'DmptSectionNavigation | index.js | useDmptSectionNavigation | result.data '
+                );
+                console.log(result.data);
                 setSectionList(result.data.sections);
-                setMandatoryFields(result.data.mandatory_fields);
+                // setMandatoryFields(result.data.mandatory_fields);
                 setProcessing(false);
             } catch (error) {
                 console.error(error);
@@ -35,7 +44,7 @@ const useDmptSectionNavigation = (catalogId, token, setSectionList, setMandatory
         }
 
         prepareDmptSectionList();
-    }, [language]);  // though language is not used directly, a change there means a change in cookies the request uses.
+    }, [language]); // though language is not used directly, a change there means a change in cookies the request uses.
     return [processing];
 };
 
@@ -184,7 +193,7 @@ function DmptSectionNavigation(props) {
 
     const [sections, setSections] = useState([]);
     useEffect(() => {
-        var elements = sectionsAsListElements(
+        const elements = sectionsAsListElements(
             sectionList,
             sectionIndex,
             setSectionIndex

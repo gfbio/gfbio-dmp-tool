@@ -2,6 +2,7 @@
 import json
 import random
 import string
+from pprint import pprint
 
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
@@ -16,6 +17,7 @@ from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import Question
 from rdmo.questions.models.catalog import Catalog
+from rdmo.questions.serializers.v1 import SectionSerializer, QuestionSerializer
 from rest_framework import generics, permissions, mixins
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
@@ -29,17 +31,11 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject, DmptCatalog
 from .permissions import IsOwner
-from .rdmo_db_utils import get_catalog_with_sections, build_form_content, get_mandatory_form_fields
+from .rdmo_db_utils import build_form_content, get_mandatory_form_fields
 from .serializers.dmpt_serializers import (
     DmptProjectSerializer,
     RdmoProjectSerializer,
     RdmoProjectValuesSerializer, RdmoProjectValuesUpdateSerializer,
-)
-
-
-from .serializers.extended_serializers import (
-    DmptSectionNestedSerializer,
-    DmptSectionSerializer,
 )
 
 
@@ -73,7 +69,10 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_id": str(user.id),
             "user_name": str(user.username),
             "user_email": str(user.email),
-            "catalog_id": catalog_id,
+            # "catalog_id": catalog_id,
+            # TODO: remove after testing
+            "catalog_id": 18,
+
         }
 
         print(f"Context passed to template: {context['backend']}")
@@ -114,6 +113,8 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             catalog_id = self._get_default_catalog_id()
         return catalog_id
 
+    # FIXME: DASS-2203 broken due to update to rdmo 2
+    # TODO: discuss approach in general, is this part of the versioning workflow for jimena ?
     def _get_default_catalog_id(self):
         default_selected_catalog = DmptCatalog.objects.filter(active=True).first()
         if default_selected_catalog:
@@ -210,7 +211,9 @@ class DmptProjectDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
             catalog_id = (
                 None if not obj.rdmo_project.catalog else obj.rdmo_project.catalog.id
             )
-            catalog = get_catalog_with_sections(catalog_id)
+            # catalog = get_catalog_with_sections(catalog_id)
+            # FIXME: redundant call & fetching of complete catalog, see line 340
+            catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
             form_data = build_form_content(catalog.sections.all(), obj)
         except Catalog.DoesNotExist as e:
             pass
@@ -331,14 +334,22 @@ class DmptSectionListView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id):
+        print('\n########################\n')
+        print('DmptSectionListView ', catalog_id)
         # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
         try:
-            catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
+            # catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
+            # FIXME: redundant call & fetching of complete catalog, see line 214
+            catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
+
         sections = catalog.sections.all()
+        print('sections ', len(sections))
         mandatory = get_mandatory_form_fields(sections)
-        serializer = DmptSectionSerializer(sections, many=True)
+
+        # FIXME: brute-force fetch, basically everthing ...
+        serializer = SectionSerializer(sections, many=True)
         data = {
             'sections': serializer.data,
             'mandatory_fields': mandatory,
@@ -367,7 +378,9 @@ class DmptSectionDetailView(generics.GenericAPIView):
     def get(self, request, catalog_id, section_index, format="json"):
         # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
         try:
-            catalog = get_catalog_with_sections(catalog_id)
+            # catalog = get_catalog_with_sections(catalog_id)
+            # FIXME: redundant call & fetching of complete catalog, see line 340
+            catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
@@ -377,8 +390,33 @@ class DmptSectionDetailView(generics.GenericAPIView):
                 data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
             )
 
-        serializer = DmptSectionNestedSerializer(sections[section_index])
-        return Response(data=serializer.data, status=HTTP_200_OK)
+        section = sections[section_index]
+        # FIXME: brute force,basically getting everything ..
+        serializer = SectionSerializer(section)
+
+        print('\n\n-------------------')
+        print('DmptSectionDetailView')
+        print('section_index', section_index)
+        # print(type(serializer.data))
+        # pprint(serializer.data)
+
+        data = serializer.data
+        data['pagequestions'] = []
+        for page in section.pages.all():
+            question_serializer = QuestionSerializer(page.questions.all(), many=True)
+            data['pagequestions'].append(question_serializer.data)
+
+        # pprint(data['questionsets'])
+
+        for q in data['pagequestions']:
+            print('\n-----\n')
+            i = 0
+            for question in q:
+                print('question ', i)
+                pprint(question)
+                i += 1
+
+        return Response(data=data, status=HTTP_200_OK)
         # return Response(data={}, status=HTTP_200_OK)
 
         # prototyping below ------------------------------

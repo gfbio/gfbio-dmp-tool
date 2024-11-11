@@ -2,8 +2,7 @@
 
 from django.db.models import Prefetch
 from rdmo.questions.models import Catalog, QuestionSet
-
-from gfbio_dmpt.gfbio_dmpt_form.serializers.extended_serializers import DmptQuestionNestedSerializer
+from rdmo.questions.serializers.v1 import QuestionSerializer
 
 
 def get_catalog_with_sections(catalog_id):
@@ -31,21 +30,27 @@ def get_mandatory_form_fields(sections):
     mandatory_fields = {}
     # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
     for section in sections:
-        question_sets = section.questionsets.all()
-        for qs in question_sets:
-            mandatory_questions = qs.questions.filter(is_optional=False)
-            for mandatory_question in mandatory_questions:
-                # print('\n\nrdmo_db_utils | get_mandatory_form_fields | complete mandatory_question ',)
-
-                if mandatory_question.widget_type == 'select' or mandatory_question.widget_type == 'checkbox' or mandatory_question.widget_type == 'radio':
-                    # mandatory_field_names.append(f'option-based_{mandatory_question.key}____{mandatory_question.id}')
-                    mandatory_field_key = f'option-based_{mandatory_question.key}____{mandatory_question.id}'
+        # question_sets = section.questionsets.all()
+        for page in section.pages.all():
+            for mandatory_question in page.questions.filter(is_optional=False):
+                pass
+        # for qs in question_sets:
+        #     mandatory_questions = qs.questions.filter(is_optional=False)
+        #     for mandatory_question in mandatory_questions:
+        #         # print('\n\nrdmo_db_utils | get_mandatory_form_fields | complete mandatory_question ',)
+        #
+                if mandatory_question.widget_type == 'select' or \
+                    mandatory_question.widget_type == 'checkbox' or \
+                    mandatory_question.widget_type == 'radio':
+                    mandatory_field_key = f'option-based_{mandatory_question.attribute.key}____{mandatory_question.id}'
                 else:
-                    # mandatory_field_names.append(f'{mandatory_question.key}____{mandatory_question.id}')
-                    mandatory_field_key = f'{mandatory_question.key}____{mandatory_question.id}'
-                serializer = DmptQuestionNestedSerializer(mandatory_question)
+                    mandatory_field_key = f'{mandatory_question.attribute.key}____{mandatory_question.id}'
+
+                serializer = QuestionSerializer(mandatory_question)
+
                 # json = JSONRenderer().render(serializer.data)
                 # print(json)
+
                 data = serializer.data
                 data['section_name'] = section.title
                 mandatory_fields[mandatory_field_key] = data
