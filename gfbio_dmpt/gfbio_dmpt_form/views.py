@@ -344,8 +344,15 @@ class DmptSectionListView(generics.GenericAPIView):
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
-        sections = catalog.sections.all()
+        # TODO: testing other access to sections, DASS-2203 vs DASS-2204
+        # sections = catalog.sections.all()
+        sections = catalog.elements
+
+        print(catalog.elements)
         print('sections ', len(sections))
+        # for s in sections:
+        #     # print('\t', s.title,  s.or)
+        #     print(s.__dict__)
         mandatory = get_mandatory_form_fields(sections)
 
         # FIXME: brute-force fetch, basically everthing ...
@@ -394,9 +401,12 @@ class DmptSectionDetailView(generics.GenericAPIView):
         # FIXME: brute force,basically getting everything ..
         serializer = SectionSerializer(section)
 
-        print('\n\n-------------------')
-        print('DmptSectionDetailView')
-        print('section_index', section_index)
+        # print('\n\n-------------------')
+        # print('DmptSectionDetailView')
+        # print('section_index', section_index)
+
+
+
         # print(type(serializer.data))
         # pprint(serializer.data)
 
@@ -408,13 +418,13 @@ class DmptSectionDetailView(generics.GenericAPIView):
 
         # pprint(data['questionsets'])
 
-        for q in data['pagequestions']:
-            print('\n-----\n')
-            i = 0
-            for question in q:
-                print('question ', i)
-                pprint(question)
-                i += 1
+        # for q in data['pagequestions']:
+        #     print('\n-----\n')
+        #     i = 0
+        #     for question in q:
+        #         print('question ', i)
+        #         pprint(question)
+        #         i += 1
 
         return Response(data=data, status=HTTP_200_OK)
         # return Response(data={}, status=HTTP_200_OK)

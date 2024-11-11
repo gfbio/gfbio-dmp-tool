@@ -10,12 +10,12 @@ import PinnableTooltip from './pinnableTooltip';
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language} = props;
     console.log('DmptFormFiields | index.js | nach props');
-    console.log('section from props');
-    console.log(section);
+    // console.log('section from props');
+    // console.log(section);
     const inputFields = section.pagequestions.map((questionset) => {
-        console.log('\t * map pagequestion ', questionset);
+        console.log('\n\t **** map pagequestion -> questionset ', questionset);
         const questions = questionset.map((question)=>{
-            console.log('question ', question);
+            console.log('******************** questionset-->question ', question);
 
             // -------------------------------------------------
             return (
@@ -257,13 +257,12 @@ function DmptFormFields(props) {
         //         })}
         //     </div>
         // );
-    });
 
-    return (
-        <div className="row">
-            {inputFields}
-        </div>
-    );
+
+    }); // iterat pagequestion / as questionset ? --------------
+
+    // --------------------------------------------------------------
+    return <div className="row g-3">{inputFields}</div>;
 }
 
 DmptFormFields.propTypes = {
