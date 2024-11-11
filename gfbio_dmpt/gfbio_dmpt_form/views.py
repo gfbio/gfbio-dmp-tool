@@ -17,7 +17,7 @@ from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import Question
 from rdmo.questions.models.catalog import Catalog
-from rdmo.questions.serializers.v1 import SectionSerializer, QuestionSerializer
+from rdmo.questions.serializers.v1 import SectionSerializer, QuestionSerializer, PageSerializer
 from rest_framework import generics, permissions, mixins
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
@@ -411,14 +411,20 @@ class DmptSectionDetailView(generics.GenericAPIView):
         print('section_index', section_index)
 
         # print(type(serializer.data))
-        pprint(serializer.data)
+        # pprint(serializer.data)
 
 
         data = serializer.data
-        data['pagequestions'] = []
+        # data['pagequestions'] = []
+        data['pages'] = []
         for page in section.pages.all():
+            # print('\npage: ')
+            pprint(page.__dict__)
+            page_data = PageSerializer(page).data
             question_serializer = QuestionSerializer(page.questions.all(), many=True)
-            data['pagequestions'].append(question_serializer.data)
+            # data['pagequestions'].append(question_serializer.data)
+            page_data['pagequestions'] = question_serializer.data
+            data['pages'].append(page_data)
 
         # pprint(data['questionsets'])
 
