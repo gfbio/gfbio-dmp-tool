@@ -340,6 +340,7 @@ class DmptSectionListView(generics.GenericAPIView):
         try:
             # catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
             # FIXME: redundant call & fetching of complete catalog, see line 214
+            # FIXME: reduce to section information only, why mandatory fields  here ?
             catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
@@ -348,8 +349,11 @@ class DmptSectionListView(generics.GenericAPIView):
         # sections = catalog.sections.all()
         sections = catalog.elements
 
-        print(catalog.elements)
+        for e in catalog.elements:
+            print(e, e.id)
         print('sections ', len(sections))
+        for e in sections:
+            print(e, e.id)
         # for s in sections:
         #     # print('\t', s.title,  s.or)
         #     print(s.__dict__)
@@ -391,7 +395,8 @@ class DmptSectionDetailView(generics.GenericAPIView):
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
-        sections = catalog.sections.all()
+        # sections = catalog.sections.all()
+        sections  = catalog.elements
         if section_index >= len(sections):
             return Response(
                 data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
@@ -401,14 +406,13 @@ class DmptSectionDetailView(generics.GenericAPIView):
         # FIXME: brute force,basically getting everything ..
         serializer = SectionSerializer(section)
 
-        # print('\n\n-------------------')
-        # print('DmptSectionDetailView')
-        # print('section_index', section_index)
-
-
+        print('\n\n-------------------')
+        print('DmptSectionDetailView')
+        print('section_index', section_index)
 
         # print(type(serializer.data))
-        # pprint(serializer.data)
+        pprint(serializer.data)
+
 
         data = serializer.data
         data['pagequestions'] = []

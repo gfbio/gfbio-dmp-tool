@@ -10,8 +10,8 @@ import PinnableTooltip from './pinnableTooltip';
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language} = props;
     console.log('DmptFormFiields | index.js | nach props');
-    // console.log('section from props');
-    // console.log(section);
+    console.log('section from props');
+    console.log(section.title);
     const inputFields = section.pagequestions.map((questionset) => {
         console.log('\n\t **** map pagequestion -> questionset ', questionset);
         const questions = questionset.map((question)=>{
