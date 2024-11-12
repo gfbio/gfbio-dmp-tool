@@ -13,6 +13,7 @@ from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from rdmo.options.models import Option
+from rdmo.options.serializers.v1 import OptionSetSerializer, OptionSerializer
 from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import Question
@@ -419,12 +420,59 @@ class DmptSectionDetailView(generics.GenericAPIView):
         data['pages'] = []
         for page in section.pages.all():
             # print('\npage: ')
-            pprint(page.__dict__)
+            # pprint(page.__dict__)
             page_data = PageSerializer(page).data
-            question_serializer = QuestionSerializer(page.questions.all(), many=True)
+            questions = page.questions.all()
+
+
+            question_serializer = QuestionSerializer(questions, many=True)
+
             # data['pagequestions'].append(question_serializer.data)
-            page_data['pagequestions'] = question_serializer.data
+
+            questions_data = question_serializer.data
+
+
+
+            question_list = []
+            for q in questions:
+                question_data = QuestionSerializer(q).data
+                optionsets_list = []
+                optionsets = q.optionsets.all()
+                if len(optionsets):
+                    # print('\t optionsets', optionsets)
+                    # optionsets_data = OptionSetSerializer(optionsets, many=True).data
+                    # print('\t\t ', OptionSetSerializer(optionsets, many=True).data)
+                    # question_data['optionsets'] =
+                    for o in optionsets:
+                        optionset_data = OptionSetSerializer(o).data
+                        options = o.options.all()
+                        # print('\t\t options', options)
+                        optionset_data['options'] = OptionSerializer(options, many=True).data
+                        # print('\t\t ', OptionSerializer(options, many=True).data)
+                        optionsets_list.append(optionset_data)
+                    question_data['optionsets'] = optionsets_list
+                question_list.append(question_data)
+
+
+
+            #     optionsets = q.get('optionsets', [])
+            #     if len(optionsets):
+
+            #
+
+            # recent_question_data = question_data
+
+            # print('##################  QUESTION LIST [0]  ##########################')
+            # pprint(question_list)
+            # print('\n\n####################  QUESTIONs Data [0]  ########################')
+            # pprint(questions_data)
+            # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
+            # page_data['pagequestions'] = questions_data
+            page_data['pagequestions'] = question_list
             data['pages'].append(page_data)
+
+        # pprint(recent_question_data)
 
         # pprint(data['questionsets'])
 

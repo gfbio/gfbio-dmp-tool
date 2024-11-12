@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PinnableTooltip from './pinnableTooltip'
+import PinnableTooltip from './pinnableTooltip';
 
-function CheckBox(props) {  
+function CheckBox(props) {
     const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {

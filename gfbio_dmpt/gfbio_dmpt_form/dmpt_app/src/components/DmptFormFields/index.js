@@ -40,7 +40,7 @@ function DmptFormFields(props) {
 
                 {page.pagequestions.map((question) => {
                     console.log(
-                        '\t*********** map pagequestions -> question ',
+                        '*********** map pagequestions -> question ',
                         question
                     );
 
@@ -65,7 +65,8 @@ function DmptFormFields(props) {
                     // This not the best way, but increases readability of data in requests
                     // FIXME: DASS-2204: .key no longer exists in rdmo 2
                     // const fieldName = `${question.key}____${question.id}`;
-                    const fieldName = `$page-{page.id}____question-${question.id}`;
+                    const fieldName = `page-${page.id}____question-${question.id}`;
+                    console.log('fieldName', fieldName);
                     let initialTextValue = '';
                     if (inputs[fieldName] !== undefined) {
                         initialTextValue = inputs[fieldName];
@@ -87,60 +88,59 @@ function DmptFormFields(props) {
                                 initialValue={initialTextValue}
                             />
                         );
+                    } else if (question.widget_type === 'select') {
+                        input = (
+                            <Select
+                                question={question}
+                                handleChange={handleInputChange}
+                                inputs={inputs}
+                            />
+                        );
+                    } else if (question.widget_type === 'radio') {
+                        input = (
+                            <Radio
+                                question={question}
+                                handleChange={handleInputChange}
+                                inputs={inputs}
+                            />
+                        );
+                    } else if (question.widget_type === 'checkbox') {
+                        input = (
+                            <CheckBox
+                                question={question}
+                                handleChange={handleInputChange}
+                                inputs={inputs}
+                            />
+                        );
                     }
-                    // else if (question.widget_type === 'select') {
-                    //     input = (
-                    //         <Select
-                    //             question={question}
-                    //             handleChange={handleInputChange}
-                    //             inputs={inputs}
-                    //         />
-                    //     );
-                    // } else if (question.widget_type === 'radio') {
-                    //     input = (
-                    //         <Radio
-                    //             question={question}
-                    //             handleChange={handleInputChange}
-                    //             inputs={inputs}
-                    //         />
-                    //     );
-                    // } else if (question.widget_type === 'checkbox') {
-                    //     input = (
-                    //         <CheckBox
-                    //             question={question}
-                    //             handleChange={handleInputChange}
-                    //             inputs={inputs}
-                    //         />
-                    //     );
-                    // }
 
                     let validationMessage = <span />;
 
                     // TODO: <09-05-22, claas>
                     //   extract the array into a static variable. These could
                     //   also be passed later from the backend
-                    // if (
-                    //     ['email', 'url', 'phone', 'integer', 'float'].includes(
-                    //         question.value_type
-                    //     )
-                    // ) {
-                    //     if (
-                    //         Object.keys(validationErrors).filter((k) =>
-                    //             k.startsWith(question.key)
-                    //         ).length > 0
-                    //     ) {
-                    //         validationMessage =
-                    //             language?.shortCode === 'DE' ? (
-                    //                 <span className="mandatory">
-                    //                     (kein valider {question.value_type})
-                    //                 </span>
-                    //             ) : (
-                    //                 <span className="mandatory">
-                    //                     (not a valid {question.value_type})
-                    //                 </span>
-                    //             );
-                    //     }
-                    // }
+                    if (
+                        ['email', 'url', 'phone', 'integer', 'float'].includes(
+                            question.value_type
+                        )
+                    ) {
+                        if (
+                            Object.keys(validationErrors).filter((k) =>
+                                k.startsWith(question.key)
+                            ).length > 0
+                        ) {
+                            validationMessage =
+                                language?.shortCode === 'DE' ? (
+                                    <span className="mandatory">
+                                        (kein valider {question.value_type})
+                                    </span>
+                                ) : (
+                                    <span className="mandatory">
+                                        (not a valid {question.value_type})
+                                    </span>
+                                );
+                        }
+                    }
 
                     return (
                         <div className="col-12">
@@ -157,7 +157,6 @@ function DmptFormFields(props) {
                                 {mandatoryMessage} {validationMessage}
                             </small>
                         </div>
-
                     );
                 })}
 
