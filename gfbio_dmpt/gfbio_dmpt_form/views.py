@@ -2,7 +2,6 @@
 import json
 import random
 import string
-from pprint import pprint
 
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
@@ -13,12 +12,11 @@ from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from rdmo.options.models import Option
-from rdmo.options.serializers.v1 import OptionSetSerializer, OptionSerializer
 from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import Question
 from rdmo.questions.models.catalog import Catalog
-from rdmo.questions.serializers.v1 import SectionSerializer, QuestionSerializer, PageSerializer
+from rdmo.questions.serializers.v1 import SectionSerializer
 from rest_framework import generics, permissions, mixins
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
@@ -38,6 +36,7 @@ from .serializers.dmpt_serializers import (
     RdmoProjectSerializer,
     RdmoProjectValuesSerializer, RdmoProjectValuesUpdateSerializer,
 )
+from .utils.prepare_section_data import get_section_data
 
 
 class CSRFViewMixin(View):
@@ -335,8 +334,6 @@ class DmptSectionListView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id):
-        print('\n########################\n')
-        print('DmptSectionListView ', catalog_id)
         # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
         try:
             # catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
@@ -349,17 +346,7 @@ class DmptSectionListView(generics.GenericAPIView):
         # TODO: testing other access to sections, DASS-2203 vs DASS-2204
         # sections = catalog.sections.all()
         sections = catalog.elements
-
-        for e in catalog.elements:
-            print(e, e.id)
-        print('sections ', len(sections))
-        for e in sections:
-            print(e, e.id)
-        # for s in sections:
-        #     # print('\t', s.title,  s.or)
-        #     print(s.__dict__)
         mandatory = get_mandatory_form_fields(sections)
-
         # FIXME: brute-force fetch, basically everthing ...
         serializer = SectionSerializer(sections, many=True)
         data = {
@@ -367,15 +354,7 @@ class DmptSectionListView(generics.GenericAPIView):
             'mandatory_fields': mandatory,
         }
         return Response(data=data, status=HTTP_200_OK)
-        # return Response(data={}, status=HTTP_200_OK)
 
-
-# class DmptProjectFormDataView(generics.GenericAPIView):
-#     authentication_classes = (TokenAuthentication, BasicAuthentication)
-#     permission_classes = (
-#         permissions.IsAuthenticated,
-#         IsOwner,
-#     )
 
 # TODO: maybe it is better to access section directly via id, since we now work with section tab navi in react app
 class DmptSectionDetailView(generics.GenericAPIView):
@@ -396,155 +375,13 @@ class DmptSectionDetailView(generics.GenericAPIView):
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
-        # sections = catalog.sections.all()
-        sections  = catalog.elements
+        sections = catalog.elements
         if section_index >= len(sections):
             return Response(
                 data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
             )
 
         section = sections[section_index]
-        # FIXME: brute force,basically getting everything ..
-        serializer = SectionSerializer(section)
-
-        print('\n\n-------------------')
-        print('DmptSectionDetailView')
-        print('section_index', section_index)
-
-        # print(type(serializer.data))
-        # pprint(serializer.data)
-
-
-        data = serializer.data
-        # data['pagequestions'] = []
-        data['pages'] = []
-        for page in section.pages.all():
-            # print('\npage: ')
-            # pprint(page.__dict__)
-            page_data = PageSerializer(page).data
-            questions = page.questions.all()
-
-
-            question_serializer = QuestionSerializer(questions, many=True)
-
-            # data['pagequestions'].append(question_serializer.data)
-
-            questions_data = question_serializer.data
-
-
-
-            question_list = []
-            for q in questions:
-                question_data = QuestionSerializer(q).data
-                optionsets_list = []
-                optionsets = q.optionsets.all()
-                if len(optionsets):
-                    # print('\t optionsets', optionsets)
-                    # optionsets_data = OptionSetSerializer(optionsets, many=True).data
-                    # print('\t\t ', OptionSetSerializer(optionsets, many=True).data)
-                    # question_data['optionsets'] =
-                    for o in optionsets:
-                        optionset_data = OptionSetSerializer(o).data
-                        options = o.options.all()
-                        # print('\t\t options', options)
-                        optionset_data['options'] = OptionSerializer(options, many=True).data
-                        # print('\t\t ', OptionSerializer(options, many=True).data)
-                        optionsets_list.append(optionset_data)
-                    question_data['optionsets'] = optionsets_list
-                question_list.append(question_data)
-
-
-
-            #     optionsets = q.get('optionsets', [])
-            #     if len(optionsets):
-
-            #
-
-            # recent_question_data = question_data
-
-            # print('##################  QUESTION LIST [0]  ##########################')
-            # pprint(question_list)
-            # print('\n\n####################  QUESTIONs Data [0]  ########################')
-            # pprint(questions_data)
-            # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
-            # page_data['pagequestions'] = questions_data
-            page_data['pagequestions'] = question_list
-            data['pages'].append(page_data)
-
-        # pprint(recent_question_data)
-
-        # pprint(data['questionsets'])
-
-        # for q in data['pagequestions']:
-        #     print('\n-----\n')
-        #     i = 0
-        #     for question in q:
-        #         print('question ', i)
-        #         pprint(question)
-        #         i += 1
+        data = get_section_data(section)
 
         return Response(data=data, status=HTTP_200_OK)
-        # return Response(data={}, status=HTTP_200_OK)
-
-        # prototyping below ------------------------------
-        # # print(Catalog.objects.all())
-        # # for c in Catalog.objects.all():
-        # #     print(c, ' ', c.id)
-        # catalog_id = 18
-        # catalog = Catalog.objects.prefetch_related(
-        #     'sections',
-        #     Prefetch('sections__questionsets', queryset=QuestionSet.objects.filter(questionset=None).prefetch_related(
-        #         'conditions',
-        #         'questions',
-        #         'questions__attribute',
-        #         'questions__optionsets',
-        #         'questionsets',
-        #         'questions__optionsets__options',
-        #     ))
-        # ).get(id=catalog_id)
-        # print(catalog)
-        # # print(catalog.sections.all())
-        # first_section = catalog.sections.all()[3]
-        # # for s in catalog.sections.all():
-        #
-        # # TODO: for project detail view
-        # project = Project.objects.first()
-        # print('project available ', project)
-        # v = Value.objects.filter(project=project).first()
-        # print('first value for project ', v, ' | text: ', v.text, ' | attribute: ', v.attribute)
-        # serializer = ProjectSerializer(project)
-        # # print('p serializer ', serializer.data)
-        # print('\nfirst section', first_section)
-        #
-        # # questions.v1.serializer
-        # # s_data = SectionSerializer(first_section).data
-        # # ns_data = SectionNestedSerializer(first_section).data
-        # # print('section serializer data: ', s_data)
-        # # print('nested section serializer data: ', ns_data)
-        # # print('\n as json \n', JSONRenderer().render(ns_data))
-        # data = DmptSectionNestedSerializer(first_section).data
-        # print('custom serializer data: ', )
-        # print(JSONRenderer().render(data))
-        #
-        # # for qs in first_section.questionsets.all():
-        # #     print('\n\tquestion_set: ', qs, ' |  attribute: ', qs.attribute)
-        # #     # questions.v1.serializer
-        # #     # qs_data = QuestionSetSerializer(qs).data
-        # #     # print('\tqs serializer: ', qs_data)
-        # #     nqs_data = QuestionSetNestedSerializer(qs).data
-        # #     # print('\tnested qs serializer: ', nqs_data)
-        # #     for c in qs.conditions.all():
-        # #         print('\t\tcondition: ', c, ' |  source (attribute): ', c.source)
-        # #     for q in qs.questions.all():
-        # #         # TODO: for value, when requesting specific project, add manager to get singel val and catch exceptions
-        # #         # TODO: value.text for generic and text area, value.option for radio, select and checkbox
-        # #         print('\t\tquestion: ', q, ' |  widget_type: ', q.widget_type, ' |  attribute: ', q.attribute,
-        # #               ' | value available (for project): ',
-        # #               Value.objects.filter(project=project, attribute=q.attribute))
-        # #         for os in q.optionsets.all():
-        # #             print('\t\t\toption_set: ', os, ' | conditions: ', os.conditions.all())
-        # #             for o in os.options.all():
-        # #                 print('\t\t\t\toption: ', o)
-
-        # return Response(data={}, status=HTTP_200_OK)
