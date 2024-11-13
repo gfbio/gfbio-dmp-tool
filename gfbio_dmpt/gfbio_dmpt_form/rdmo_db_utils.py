@@ -59,22 +59,30 @@ def get_mandatory_form_fields(sections):
 
 def build_form_content(sections, dmpt_project):
     form_data = {}
+    print('\n+++++++++++++++++++++++++++++++++\nBUILD_FORM_CONTENT')
     for section_index in range(0, len(sections)):
-        for question_set in sections[section_index].questionsets.all():
-            for question in question_set.questions.all():
+        print('section_index', section_index)
+        for page in sections[section_index].elements:
+            print('\tpage (in section): ', page)
+            for question in page.elements:
+                print('\t\tquestion (in page): ', question)
                 related_values = dmpt_project.rdmo_project.values.filter(attribute=question.attribute)
+                print('\t\trelated values: ', )
                 if len(related_values):
+                    for value in related_values:
+                        print('\t\t\tvalue: ', value.__dict__)
+                    print('\t\t-----------------')
                     if question.widget_type == 'select':
                         for val in related_values.exclude(option=None):
-                            form_data[f'optionset-{val.option.optionset.id}____{question.key}____{question.id}'] = str(
+                            form_data[f'select-option-{val.option.id}____page-{page.id}____{question.id}'] = str(
                                 val.option.id)
                     elif question.widget_type == 'checkbox':
                         for val in related_values.exclude(option=None):
-                            form_data[f'option-{val.option.id}____{question.key}____{question.id}'] = str(val.option.id)
+                            form_data[f'option-{val.option.id}____page-{page.id}____{question.id}'] = str(val.option.id)
                     elif question.widget_type == 'radio':
                         val = related_values.first()
-                        form_data[f'optionset-{val.option.optionset.id}____{question.key}____{question.id}'] = str(
+                        form_data[f'optionset-{val.option.optionset.id}____page-{page.id}____{question.id}'] = str(
                             val.option.id)
                     else:
-                        form_data[f'{question.key}____{question.id}'] = related_values.first().text
+                        form_data[f'page-{page.id}____{question.id}'] = related_values.first().text
     return form_data

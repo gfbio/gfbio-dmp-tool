@@ -270,7 +270,7 @@ class TestDmptProjectDetailView(TestCase):
         response = self.client_2.get("/dmp/dmptprojects/{}/".format(dp.pk))
         self.assertEqual(403, response.status_code)
 
-    @skip("DASS-2204: refacting to rdmo 2. this part tests for assembling json with values for details view, that is not yet refacted")
+    # @skip("DASS-2204: refacting to rdmo 2. this part tests for assembling json with values for details view, that is not yet refacted")
     def test_form_data_content(self):
         self._post_values()
         rdmo_project = Project.objects.get(title="Le Title")
