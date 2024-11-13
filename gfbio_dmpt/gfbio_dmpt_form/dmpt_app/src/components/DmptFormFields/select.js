@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 function Select(props) {
     const { question, handleChange, inputs } = props;
+    console.log('SELECT question ', question);
     const optionSetFields = question.optionsets.map((optionSet) => {
-        const selectFieldName = `optionset-${optionSet.id}____${question.key}____${question.id}`;
+        const selectFieldName = `optionset-${optionSet.id}____${question.attribute.key}____${question.id}`;
         let initialOptionId = '';
         if (selectFieldName in inputs) {
             initialOptionId = inputs[selectFieldName];
@@ -37,7 +38,7 @@ function Select(props) {
         );
     });
     return (
-        <div id={`question-${question.id}`} name={question.key}>
+        <div id={`question-${question.id}`} name={question.attribute.key}>
             {optionSetFields}
         </div>
     );

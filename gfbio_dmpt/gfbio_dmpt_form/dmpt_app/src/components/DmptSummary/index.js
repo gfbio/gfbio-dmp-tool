@@ -7,6 +7,7 @@ import PdfExport from './pdf';
 import RdmoContext from '../RdmoContext';
 
 import postDmptProject from '../api/dmptProjects';
+
 const saveDmpHanlder = (token, userId, rdmoProjectId, setPostResult) => {
     setPostResult({ processing: true, posted: false, result: {} });
     postDmptProject(token, userId, rdmoProjectId).then((res) => {
@@ -28,31 +29,31 @@ function DmptSummary(props) {
     const saveDmp =
         dmptProjectId < 0 &&
         rdmoContext.backend_context.isLoggedIn !== 'false' ? (
-            <div className="row mt-3 justify-content-center">
-                <div className="col-10">
-                    <SaveDmpt
-                        rdmoProjectId={rdmoProjectId}
-                        onSave={saveDmpHanlder}
-                        postResult={postResult}
-                        setPostResult={setPostResult}
-                    />
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <SaveDmpt
+                            rdmoProjectId={rdmoProjectId}
+                            onSave={saveDmpHanlder}
+                            postResult={postResult}
+                            setPostResult={setPostResult}
+                        />
+                    </div>
                 </div>
-            </div>
-        ) : (
-            <></>
-        );
+            ) : (
+                <></>
+            );
 
     let discardAndExit =
         dmptProjectId < 0 &&
         rdmoContext.backend_context.isLoggedIn !== 'false' ? (
-            <div className="row mt-3 justify-content-center">
-                <div className="col-10">
-                    <DiscardAndExit resetRdmoProjectId={resetRdmoProjectId} />
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <DiscardAndExit resetRdmoProjectId={resetRdmoProjectId} />
+                    </div>
                 </div>
-            </div>
-        ) : (
-            <></>
-        );
+            ) : (
+                <></>
+            );
 
     /* NOTE:  <02-06-22, claas> This hides away the discard and exit when
      * the dmp is successfully saved */

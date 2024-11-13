@@ -22,14 +22,14 @@ const getMandatoryMessage = (isOptional, language) => {
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
         props;
-    console.log('DmptFormFiields | index.js | nach props');
-    console.log('section from props');
-    console.log(section.title);
+    // console.log('DmptFormFiields | index.js | nach props');
+    // console.log('section from props');
+    // console.log(section.title);
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
     const inputFields = section.pages.map((page) => {
-        console.log('\n\n **** map pages -> page ', page);
+        // console.log('\n\n **** map pages -> page ', page);
         return (
             <div className="col-12 mb-3" id={`page-${page.id}`}>
                 <div className="questionHelp">
@@ -39,10 +39,10 @@ function DmptFormFields(props) {
                 {/*  ------------------------------------------    */}
 
                 {page.pagequestions.map((question) => {
-                    console.log(
-                        '*********** map pagequestions -> question ',
-                        question
-                    );
+                    // console.log(
+                    //     '*********** map pagequestions -> question ',
+                    //     question
+                    // );
 
                     // TODO: DASS-2204: moved to function, adapt for language code
                     // const mandatoryMessage = question.is_optional ? (
@@ -65,8 +65,8 @@ function DmptFormFields(props) {
                     // This not the best way, but increases readability of data in requests
                     // FIXME: DASS-2204: .key no longer exists in rdmo 2
                     // const fieldName = `${question.key}____${question.id}`;
-                    const fieldName = `page-${page.id}____question-${question.id}`;
-                    console.log('fieldName', fieldName);
+                    const fieldName = `${question.attribute.key}____question-${question.id}`;
+                    // console.log('fieldName', fieldName);
                     let initialTextValue = '';
                     if (inputs[fieldName] !== undefined) {
                         initialTextValue = inputs[fieldName];
@@ -126,7 +126,7 @@ function DmptFormFields(props) {
                     ) {
                         if (
                             Object.keys(validationErrors).filter((k) =>
-                                k.startsWith(question.key)
+                                k.startsWith(question.attribute.key)
                             ).length > 0
                         ) {
                             validationMessage =

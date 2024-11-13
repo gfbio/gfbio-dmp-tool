@@ -14,7 +14,7 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
     useEffect(() => {
         async function prepareDmptSection() {
             setProcessing(true);
-            console.log('\n\n+++++++++++++++++++++ DmptSection | index.js | useDMptSetcion | prepareDmptSection | sectionIndex: ', sectionIndex);
+            // console.log('\n\n+++++++++++++++++++++ DmptSection | index.js | useDMptSetcion | prepareDmptSection | sectionIndex: ', sectionIndex);
             try {
                 const result = await axios.get(
                     `${SECTION_ROOT}${catalogId}/${sectionIndex}`,
@@ -24,10 +24,10 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
                         },
                     }
                 );
-                console.log('result.data ');
-                console.log(result.data);
+                // console.log('result.data ');
+                // console.log(result.data);
                 setSection(result.data);
-                console.log('+++++++++++++++++++++++++++++++++++++++++\n\n');
+                // console.log('+++++++++++++++++++++++++++++++++++++++++\n\n');
                 setProcessing(false);
                 window.scrollTo({top:0, behavior:"smooth"});
             } catch (error) {

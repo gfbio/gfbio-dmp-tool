@@ -63,26 +63,30 @@ def build_form_content(sections, dmpt_project):
     for section_index in range(0, len(sections)):
         print('section_index', section_index)
         for page in sections[section_index].elements:
-            print('\tpage (in section): ', page)
+            # print('\tpage (in section): ', page)
             for question in page.elements:
-                print('\t\tquestion (in page): ', question)
+                # print('\t\tquestion (in page): ', question.__dict__)
                 related_values = dmpt_project.rdmo_project.values.filter(attribute=question.attribute)
-                print('\t\trelated values: ', )
+                # print('\t\trelated values: ', )
                 if len(related_values):
-                    for value in related_values:
-                        print('\t\t\tvalue: ', value.__dict__)
-                    print('\t\t-----------------')
+                    # for value in related_values:
+                    #     print('\tvalue: ', )
+                    #     for d in value.__dict__:
+                    #         print('\t\t', d, ' : ', value.__dict__[d])
+                    #     if value.option:
+                    #         print('VALUE OPTION: ', value.option.optionsets.all())
+                    #         print('VALUE OPTION: ', value.option.optionsets.first().id)
+                    #         print('question OPTION: ', question.optionsets.all())
+                    # print('\t\t-----------------')
                     if question.widget_type == 'select':
                         for val in related_values.exclude(option=None):
-                            form_data[f'select-option-{val.option.id}____page-{page.id}____{question.id}'] = str(
-                                val.option.id)
+                            form_data[f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(val.option.id)
                     elif question.widget_type == 'checkbox':
                         for val in related_values.exclude(option=None):
-                            form_data[f'option-{val.option.id}____page-{page.id}____{question.id}'] = str(val.option.id)
+                            form_data[f'option-{val.option.id}____{question.attribute.key}____{question.id}'] = str(val.option.id)
                     elif question.widget_type == 'radio':
                         val = related_values.first()
-                        form_data[f'optionset-{val.option.optionset.id}____page-{page.id}____{question.id}'] = str(
-                            val.option.id)
+                        form_data[f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(val.option.id)
                     else:
-                        form_data[f'page-{page.id}____{question.id}'] = related_values.first().text
+                        form_data[f'{question.attribute.key}____{question.id}'] = related_values.first().text
     return form_data

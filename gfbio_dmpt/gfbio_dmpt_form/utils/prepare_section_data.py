@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from rdmo.domain.serializers.v1 import AttributeSerializer
 from rdmo.options.serializers.v1 import OptionSetSerializer, OptionSerializer
 from rdmo.questions.serializers.v1 import PageSerializer, QuestionSerializer, SectionSerializer
 
@@ -7,6 +8,9 @@ def get_questions_and_options(questions):
     question_list = []
     for q in questions:
         question_data = QuestionSerializer(q).data
+        # print('\nget_questions_and_options | question.attribute ', q.attribute)
+        # print(AttributeSerializer(q.attribute).data)
+        question_data['attribute'] = AttributeSerializer(q.attribute).data
         optionsets_list = []
         optionsets = q.optionsets.all()
         if len(optionsets):

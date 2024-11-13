@@ -5,7 +5,7 @@ function TextArea(props) {
     const { question, handleChange, initialValue } = props;
 
     // This not the best way, but increases readability of data in requests
-    const fieldName = `${question.key}____${question.id}`;
+    const fieldName = `${question.attribute.key}____${question.id}`;
     return (
         <textarea
             className="form-control"
