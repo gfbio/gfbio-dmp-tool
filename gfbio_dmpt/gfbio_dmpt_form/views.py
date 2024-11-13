@@ -75,8 +75,6 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
 
         }
 
-        print(f"Context passed to template: {context['backend']}")
-
         return self.render_to_response(context)
 
     def _create_anonymous_user(self):
@@ -102,12 +100,9 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
                 project = DmptProject.objects.get(id=id)
                 rdmo_project = Project.objects.get(id=project.rdmo_project_id)
                 catalog_id = rdmo_project.catalog_id
-                print(f"Project ID: {id}, Catalog ID: {catalog_id}")
             except DmptProject.DoesNotExist:
-                print(f"DmptProject with ID {id} does not exist.")
                 return HttpResponse("Project not found", status=404)
             except Project.DoesNotExist:
-                print(f"RDMO Project with ID {project.rdmo_project_id} does not exist.")
                 return HttpResponse("RDMO Project not found", status=404)
         else:
             catalog_id = self._get_default_catalog_id()
@@ -119,11 +114,9 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
         default_selected_catalog = DmptCatalog.objects.filter(active=True).first()
         if default_selected_catalog:
             catalog_id = default_selected_catalog.catalog.id
-            print(f"Default selected catalog ID: {catalog_id}")
         else:
             first_catalog = Catalog.objects.first()
             catalog_id = first_catalog.id if first_catalog else None
-            print(f"Fallback catalog ID: {catalog_id}")
         return catalog_id
 
 
@@ -211,10 +204,8 @@ class DmptProjectDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
             catalog_id = (
                 None if not obj.rdmo_project.catalog else obj.rdmo_project.catalog.id
             )
-            # catalog = get_catalog_with_sections(catalog_id)
-            # FIXME: redundant call & fetching of complete catalog, see line 340
             catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
-            form_data = build_form_content(catalog.sections.all(), obj)
+            form_data = build_form_content(catalog.elements, obj)
         except Catalog.DoesNotExist as e:
             pass
         response.data["form_data"] = form_data
@@ -334,20 +325,14 @@ class DmptSectionListView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id):
-        # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
         try:
-            # catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
-            # FIXME: redundant call & fetching of complete catalog, see line 214
-            # FIXME: reduce to section information only, why mandatory fields  here ?
             catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
-
-        # TODO: testing other access to sections, DASS-2203 vs DASS-2204
-        # sections = catalog.sections.all()
         sections = catalog.elements
         mandatory = get_mandatory_form_fields(sections)
-        # FIXME: brute-force fetch, basically everthing ...
+        # FIXME: brute force,basically getting everything. Is there a way to reduce
+        #   amount of data and database querying ?
         serializer = SectionSerializer(sections, many=True)
         data = {
             'sections': serializer.data,
@@ -367,10 +352,7 @@ class DmptSectionDetailView(generics.GenericAPIView):
     )
 
     def get(self, request, catalog_id, section_index, format="json"):
-        # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
         try:
-            # catalog = get_catalog_with_sections(catalog_id)
-            # FIXME: redundant call & fetching of complete catalog, see line 340
             catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
