@@ -71,18 +71,27 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     });
 };
 
-const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
+const mandatoryValidationErrorsAsList = (mandatoryFieldErrors, sectionList, setSectionIndex) => {
     let validation = <></>;
-    const validationElements = Object.values(mandatoryFieldErrors).map(
-        (mandatoryQuestion) => {
-            return (
-                <li>
-                    {mandatoryQuestion.text} (in &quot;
-                    {mandatoryQuestion.section_name}&quot;)
-                </li>
-            );
-        }
-    );
+    const validationElements = Object.values(mandatoryFieldErrors).map((mandatoryQuestion) => {
+        const sectionIndex = sectionList.findIndex(
+            (section) => section.title === mandatoryQuestion.section_name
+        );
+
+        return (
+            <li key={mandatoryQuestion.id}>
+                {mandatoryQuestion.text} (in&nbsp;
+                <button
+                    type="button"
+                    className="btn btn-link inline-button"
+                    onClick={() => setSectionIndex(sectionIndex)}
+                >
+                    {mandatoryQuestion.section_name}
+                </button>
+                )
+            </li>
+        );
+    });
     if (validationElements.length > 0) {
         validation = (
             <div className="row">
@@ -153,7 +162,9 @@ function DmptSectionNavigation(props) {
     }, [sectionList, sectionIndex]);
 
     const mandatoryValidation = mandatoryValidationErrorsAsList(
-        mandatoryValidationErrors
+        mandatoryValidationErrors,
+        sectionList,
+        setSectionIndex
     );
 
     const sectionsLength = sectionList.length;
