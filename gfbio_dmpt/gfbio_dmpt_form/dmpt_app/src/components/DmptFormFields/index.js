@@ -22,14 +22,10 @@ const getMandatoryMessage = (isOptional, language) => {
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
         props;
-    // console.log('DmptFormFiields | index.js | nach props');
-    // console.log('section from props');
-    // console.log(section.title);
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
     const inputFields = section.pages.map((page) => {
-        // console.log('\n\n **** map pages -> page ', page);
         return (
             <div className="col-12 mb-3" id={`page-${page.id}`}>
                 <div className="questionHelp">
@@ -39,35 +35,15 @@ function DmptFormFields(props) {
                 {/*  ------------------------------------------    */}
 
                 {page.pagequestions.map((question) => {
-                    // console.log(
-                    //     '*********** map pagequestions -> question ',
-                    //     question
-                    // );
 
-                    // TODO: DASS-2204: moved to function, adapt for language code
-                    // const mandatoryMessage = question.is_optional ? (
-                    //     <span />
-                    // ) : language?.shortCode === 'DE' ? (
-                    //     <span className="mandatory">
-                    //         (Dieses Feld ist erforderlich)
-                    //     </span>
-                    // ) : (
-                    //     <span className="mandatory">
-                    //         (This field is mandatory)
-                    //     </span>
-                    // );
                     const mandatoryMessage = getMandatoryMessage(
                         question.is_optional,
                         language
                     );
-                    // ----------------------------------------
 
                     // This not the best way, but increases readability of data in requests
                     // FIXME: DASS-2204: .key no longer exists in rdmo 2
-                    // const fieldName = `${question.key}____${question.id}`;
                     const fieldName = `${question.attribute.key}____${question.id}`;
-                    console.log('\n------\n  fieldName', fieldName);
-                    console.log('inputs ', inputs);
                     let initialTextValue = '';
                     if (inputs[fieldName] !== undefined) {
                         initialTextValue = inputs[fieldName];

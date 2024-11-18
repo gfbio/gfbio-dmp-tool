@@ -4,7 +4,6 @@ import PinnableTooltip from './pinnableTooltip'
 
 function Radio(props) {
     const { question, handleChange, inputs } = props;
-    // console.log('RADIO question ', question);
     const optionSetFields = question.optionsets.map((optionSet) => {
         const radioFieldName = `optionset-${optionSet.id}____${question.attribute.key}____${question.id}`;
         let initialOptionId = '';

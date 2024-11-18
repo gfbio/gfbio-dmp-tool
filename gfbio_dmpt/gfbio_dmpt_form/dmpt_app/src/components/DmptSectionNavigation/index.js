@@ -31,10 +31,6 @@ const useDmptSectionNavigation = (
                         },
                     }
                 );
-                // console.log(
-                //     'DmptSectionNavigation | index.js | useDmptSectionNavigation | result.data '
-                // );
-                // console.log(result.data);
                 setSectionList(result.data.sections);
                 // setMandatoryFields(result.data.mandatory_fields);
                 setProcessing(false);

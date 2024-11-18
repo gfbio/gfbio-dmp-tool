@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 function TextInput(props) {
     const { question, handleChange, initialValue, validationErrors } = props;
-    console.log('\nTextInput question ', question);
-    console.log('inizial_val', initialValue);
     // This not the best way, but increases readability of data in requests
     const fieldName = `${question.attribute.key}____${question.id}`;
     return (

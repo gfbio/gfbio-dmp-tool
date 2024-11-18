@@ -25,68 +25,49 @@ def get_catalog_with_sections(catalog_id):
     return catalog
 
 
+def get_field_data(mandatory_fields, mandatory_question, section):
+    if mandatory_question.widget_type in ['select', 'checkbox', 'radio']:
+        mandatory_field_key = f'option-based_{mandatory_question.attribute.key}____{mandatory_question.id}'
+    else:
+        mandatory_field_key = f'{mandatory_question.attribute.key}____{mandatory_question.id}'
+    serializer = QuestionSerializer(mandatory_question)
+    data = serializer.data
+    data['section_name'] = section.title
+    return mandatory_field_key, data
+
+
 def get_mandatory_form_fields(sections):
-    print('GET_MANDATORY_FORM_FIELDS')
     mandatory_fields = {}
     # FIXME: DASS-2203: deactivated due to import errors with rdmo 2 vs 1 serializers
     for section in sections:
-        # question_sets = section.questionsets.all()
         for page in section.pages.all():
             for mandatory_question in page.questions.filter(is_optional=False):
-                pass
-        # for qs in question_sets:
-        #     mandatory_questions = qs.questions.filter(is_optional=False)
-        #     for mandatory_question in mandatory_questions:
-        #         # print('\n\nrdmo_db_utils | get_mandatory_form_fields | complete mandatory_question ',)
-        #
-                if mandatory_question.widget_type == 'select' or \
-                    mandatory_question.widget_type == 'checkbox' or \
-                    mandatory_question.widget_type == 'radio':
-                    mandatory_field_key = f'option-based_{mandatory_question.attribute.key}____{mandatory_question.id}'
-                else:
-                    mandatory_field_key = f'{mandatory_question.attribute.key}____{mandatory_question.id}'
-
-                serializer = QuestionSerializer(mandatory_question)
-
-                # json = JSONRenderer().render(serializer.data)
-                # print(json)
-
-                data = serializer.data
-                data['section_name'] = section.title
-                mandatory_fields[mandatory_field_key] = data
+                field_key, data = get_field_data(mandatory_fields, mandatory_question, section)
+                mandatory_fields[field_key] = data
     return mandatory_fields
 
 
 def build_form_content(sections, dmpt_project):
     form_data = {}
-    print('\n+++++++++++++++++++++++++++++++++\nBUILD_FORM_CONTENT')
     for section_index in range(0, len(sections)):
-        print('section_index', section_index)
         for page in sections[section_index].elements:
-            # print('\tpage (in section): ', page)
             for question in page.elements:
-                # print('\t\tquestion (in page): ', question.__dict__)
                 related_values = dmpt_project.rdmo_project.values.filter(attribute=question.attribute)
-                # print('\t\trelated values: ', )
                 if len(related_values):
-                    # for value in related_values:
-                    #     print('\tvalue: ', )
-                    #     for d in value.__dict__:
-                    #         print('\t\t', d, ' : ', value.__dict__[d])
-                    #     if value.option:
-                    #         print('VALUE OPTION: ', value.option.optionsets.all())
-                    #         print('VALUE OPTION: ', value.option.optionsets.first().id)
-                    #         print('question OPTION: ', question.optionsets.all())
-                    # print('\t\t-----------------')
                     if question.widget_type == 'select':
                         for val in related_values.exclude(option=None):
-                            form_data[f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(val.option.id)
+                            form_data[
+                                f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
+                                val.option.id)
                     elif question.widget_type == 'checkbox':
                         for val in related_values.exclude(option=None):
-                            form_data[f'option-{val.option.id}____{question.attribute.key}____{question.id}'] = str(val.option.id)
+                            form_data[f'option-{val.option.id}____{question.attribute.key}____{question.id}'] = str(
+                                val.option.id)
                     elif question.widget_type == 'radio':
                         val = related_values.first()
-                        form_data[f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(val.option.id)
+                        form_data[
+                            f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
+                            val.option.id)
                     else:
                         form_data[f'{question.attribute.key}____{question.id}'] = related_values.first().text
     return form_data
