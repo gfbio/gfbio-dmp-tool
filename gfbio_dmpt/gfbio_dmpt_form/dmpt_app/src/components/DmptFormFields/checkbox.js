@@ -4,7 +4,7 @@ import PinnableTooltip from './pinnableTooltip';
 
 function CheckBox(props) {
     const { question, handleChange, inputs } = props;
-    console.log('CHECKBOX question ', question);
+    // console.log('CHECKBOX question ', question);
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             const checkBoxFieldName = `option-${optionSetOption.id}____${question.attribute.key}____${question.id}`;

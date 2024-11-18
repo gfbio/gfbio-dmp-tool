@@ -65,8 +65,9 @@ function DmptFormFields(props) {
                     // This not the best way, but increases readability of data in requests
                     // FIXME: DASS-2204: .key no longer exists in rdmo 2
                     // const fieldName = `${question.key}____${question.id}`;
-                    const fieldName = `${question.attribute.key}____question-${question.id}`;
-                    // console.log('fieldName', fieldName);
+                    const fieldName = `${question.attribute.key}____${question.id}`;
+                    console.log('\n------\n  fieldName', fieldName);
+                    console.log('inputs ', inputs);
                     let initialTextValue = '';
                     if (inputs[fieldName] !== undefined) {
                         initialTextValue = inputs[fieldName];
