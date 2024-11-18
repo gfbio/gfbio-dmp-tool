@@ -95,7 +95,7 @@ function DmptSummary(props) {
                 <div className="col-md-6 mb-4">
                     <div className="card shadow-sm">
                         <div className="card-body">
-                            <h5 className="card-title mb-3">Actions</h5>
+                            <h5 className="card-title mb-3">Other Actions</h5>
                             <div className="mb-3">
                                 {saveDmp}
                             </div>

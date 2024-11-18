@@ -55,7 +55,7 @@ function SupportRequest(props) {
             <div>
                 <h6 className="sidebar-list-item">
                     <i className="mdi mdi-account-voice align-middle" />
-                    Request Support
+                    Request DMP Support
                 </h6>
                 <h5>Your request was received</h5>
                 <p>You will soon be contacted by our helpdesk staff.</p>
@@ -73,7 +73,7 @@ function SupportRequest(props) {
             <div>
                 <h6 className="sidebar-list-item">
                     <i className="mdi mdi-account-voice align-middle" />
-                    Request Support
+                    Request DMP Support
                 </h6>
                 <h5>You have already send a request for Support !</h5>
                 <p>
@@ -100,7 +100,7 @@ function SupportRequest(props) {
                         aria-controls="collapseSupport"
                     >
                         <i className="mdi mdi-account-voice align-middle me-2"/>
-                        Request Support
+                        Request DMP Support
                     </button>
                 </h2>
                 <div
