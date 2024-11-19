@@ -203,16 +203,20 @@ function DmptSectionNavigation(props) {
             </div>
             <div className="row" id="section-content">
                 {mandatoryValidation}
-                    <DmptSection
-                        token={token}
-                        catalogId={catalogId}
-                        sectionIndex={sectionIndex}
-                        handleInputChange={handleInputChange}
-                        handleSubmit={handleSubmit}
-                        inputs={inputs}
-                        validationErrors={validationErrors}
-                        language={language}
-                    />
+                <DmptSection
+                    token={token}
+                    catalogId={catalogId}
+                    sectionIndex={sectionIndex}
+                    handleInputChange={handleInputChange}
+                    handleSubmit={handleSubmit}
+                    inputs={inputs}
+                    validationErrors={validationErrors}
+                    language={language}
+                />
+            </div>
+            <div className="row">
+                {Object.keys(mandatoryValidationErrors).length > 0 &&
+                    <h5 className="mandatory text-end">Errors found: Please fill all required fields correctly!</h5>}
             </div>
             <div className="row">
                 <SectionButtons
