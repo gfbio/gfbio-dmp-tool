@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from inspect import Attribute
+from pprint import pprint
 from unittest import skip
 
 from django.test import TestCase
@@ -279,14 +280,15 @@ class TestDmptProjectDetailView(TestCase):
         )
         response = self.client_1.get("/dmp/dmptprojects/{}/".format(dmpt_project.pk))
         content = json.loads(response.content)
+        pprint(content['form_data'])
         self.assertEqual(200, response.status_code)
         self.assertDictEqual(
             {'project_name____487': 'Project Title',
-             'optionset-54____categoryType____488': '317',
-             'option-247____is_data_reproducible____489': '247',
-             'option-248____is_data_reproducible____489': '248',
-             'PersonName____493': 'Contact for data',
-             'optionset-55____principal_investigators____496': '325'},
+             'optionset-54____research_category_type____488': '317',
+             'option-247____research_data_reproducible____489': '247',
+             'option-248____research_data_reproducible____489': '248',
+             'contact_person_name____493': 'Contact for data',
+             'optionset-55____name____496': '325'},
             content.get("form_data", {}),
         )
 
