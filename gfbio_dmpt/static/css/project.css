@@ -11943,3 +11943,7 @@ h4.social, .social.h4 {
 #id_agree_terms, #id_agree_privacy {
   margin-right: 0.5rem;
 }
+
+.icon-green {
+  color: #80b148;
+}
