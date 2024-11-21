@@ -112,6 +112,27 @@ const mandatoryValidationErrorsAsList = (mandatoryFieldErrors, sectionList, setS
     return validation;
 };
 
+const renderMandatorySectionLinks = (mandatoryFieldErrors, sectionList, setSectionIndex) => {
+    return Object.values(mandatoryFieldErrors).map((mandatoryQuestion, index, array) => {
+        const sectionIndex = sectionList.findIndex(
+            (section) => section.title === mandatoryQuestion.section_name
+        );
+
+        return (
+            <span key={mandatoryQuestion.id}>
+                <button
+                    type="button"
+                    className="btn btn-link inline-button"
+                    onClick={() => setSectionIndex(sectionIndex)}
+                >
+                    {mandatoryQuestion.section_name}
+                </button>
+                {index < array.length - 1 && ', '}
+            </span>
+        );
+    });
+};
+
 function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
@@ -214,9 +235,15 @@ function DmptSectionNavigation(props) {
                     language={language}
                 />
             </div>
-            <div className="row">
-                {Object.keys(mandatoryValidationErrors).length > 0 &&
-                    <h5 className="mandatory text-end">Errors found: Please fill all required fields correctly!</h5>}
+            <div className="row text-end">
+                {Object.keys(mandatoryValidationErrors).length > 0 && (
+                    <h5 className="mandatory">
+                        Please correct the errors in the sections:&nbsp;
+                        {renderMandatorySectionLinks(
+                            mandatoryValidationErrors, sectionList,
+                            setSectionIndex)}
+                    </h5>
+                )}
             </div>
             <div className="row">
                 <SectionButtons
