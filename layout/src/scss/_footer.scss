@@ -10,9 +10,10 @@ footer {
   font-weight: 300;
   padding-top: 3rem;
 
-  h3, h4 {
+  h3, h4, h5 {
     @include sans-serif-font;
     font-weight: 300;
+    color: $white;
   }
 
   h3 {
@@ -178,4 +179,3 @@ footer {
 
 
 }
-

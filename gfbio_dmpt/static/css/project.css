@@ -12425,9 +12425,10 @@ footer {
   font-weight: 300;
   padding-top: 3rem;
 }
-footer h3, footer .h3, footer h4, footer .h4 {
+footer h3, footer .h3, footer h4, footer .h4, footer h5, footer .h5 {
   font-family: "Open Sans", Arial, sans-serif;
   font-weight: 300;
+  color: #fff;
 }
 footer h3, footer .h3 {
   margin-bottom: 0.65rem;
