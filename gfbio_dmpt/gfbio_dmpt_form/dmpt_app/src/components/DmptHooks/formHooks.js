@@ -81,6 +81,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
 
     const handleInputChange = (event, fieldType) => {
         event.persist();
+        console.log('----- formhooks handleInputChange');
         if (event.target.type === 'checkbox' && event.target.name in inputs) {
             const inputData = inputs;
             delete inputData[event.target.name];

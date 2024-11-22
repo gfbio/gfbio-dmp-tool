@@ -20,7 +20,7 @@ function Radio(props) {
                         name={radioFieldName}
                         id={`option-${optionSetOption.id}`}
                         value={optionSetOption.id}
-                        onChange={(e) => handleChange(e)}
+                        onChange={(e) => handleChange(e, optionSetOption.id, question.attribute.key)}
                         checked={`${optionSetOption.id}` === initialOptionId}
                     />
                     <label
