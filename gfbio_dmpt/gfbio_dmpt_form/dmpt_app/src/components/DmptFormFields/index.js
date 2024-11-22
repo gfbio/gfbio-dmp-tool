@@ -113,15 +113,16 @@ function DmptFormFields(props) {
                             <label
                                 aria-label={question.text}
                                 htmlFor="username"
-                                className="form-label"
+                                className="form-label d-inline-flex align-items-center"
                             >
                                 {question.text}
                                 <PinnableTooltip helptext={question.help} />
                             </label>
-                            {input}
-                            <small className="form-text text-muted validation-field ">
+                            <small
+                                className="form-text text-muted validation-field ms-2">
                                 {mandatoryMessage} {validationMessage}
                             </small>
+                            {input}
                         </div>
                     );
                 })}
