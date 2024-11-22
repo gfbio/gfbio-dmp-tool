@@ -6,6 +6,220 @@ span.mandatory {
   color: $contrast-1;
 }
 
+// Form section styling
+.questionHelp {
+  margin-bottom: $spacing-lg;
+  border-bottom: 1px solid $gray-light-2;
+  padding-bottom: $spacing-md;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+
+  h5 {
+    color: $gfbio-blue;
+    font-size: $font-size-xl;
+    margin-bottom: 0;
+    flex: 1;
+  }
+
+  .pinnable-tooltip {
+    margin-top: $spacing-xs;
+  }
+}
+
+// Form fields container
+.form-label {
+  color: $gray-dark;
+  font-weight: 500;
+  margin-bottom: $spacing-sm;
+  font-size: $font-size-md;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+
+  .pinnable-tooltip {
+    margin-top: $spacing-xs;
+    
+    .tooltip-icon {
+      width: $tooltip-icon-size;
+      height: $tooltip-icon-size;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// Input fields styling
+input, textarea, select {
+  color: $gray-darker;
+  font-size: $font-size-md;
+  height: $input-height;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $gray-light-2;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  background-color: $white;
+
+  &::placeholder {
+    color: $gray-light-1;
+    font-size: $font-size-sm;
+  }
+
+  &:hover {
+    border-color: $gfbio-green-0-6;
+  }
+
+  &:focus {
+    border-color: $gfbio-green;
+    box-shadow: 0 0 0 3px $gfbio-green-0-1;
+    outline: none;
+  }
+}
+
+textarea {
+  min-height: 6rem;
+  resize: vertical;
+  padding: $spacing-sm $spacing-md;
+}
+
+// Form Element Base Sizes
+$form-element-line-height: 1.5;
+$checkbox-border-width: 1.5px;
+
+// Checkbox and Radio styling
+.form-check {
+  margin-bottom: $spacing-md;
+  padding-left: calc(#{$spacing-xl} + #{$spacing-xs});
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  min-height: $checkbox-size;
+
+  .form-check-input {
+    width: $checkbox-size;
+    height: $checkbox-size;
+    margin-left: calc(-#{$spacing-xl} - #{$spacing-xs});
+    margin-top: calc((#{$font-size-md} * #{$form-element-line-height} - #{$checkbox-size}) / 2);
+    margin-right: 0;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    border: $checkbox-border-width solid $gray-light-2;
+    background-color: $white;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    padding: 0;
+    
+    &[type="radio"] {
+      border-radius: 50%;
+      
+      &:checked {
+        background-color: $gfbio-green;
+        border-color: $gfbio-green;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: calc(#{$checkbox-size} * 0.4);
+          height: calc(#{$checkbox-size} * 0.4);
+          border-radius: 50%;
+          background-color: white;
+        }
+      }
+    }
+
+    &[type="checkbox"] {
+      border-radius: 4px;
+      
+      &:checked {
+        background-size: calc(#{$checkbox-size} * 0.65);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+      }
+    }
+    
+    &:checked {
+      background-color: $gfbio-green;
+      border-color: $gfbio-green;
+    }
+
+    &:hover {
+      border-color: $gfbio-green-0-6;
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 3px $gfbio-green-0-1;
+      border-color: $gfbio-green;
+    }
+  }
+
+  .form-check-label {
+    color: $gray-darker;
+    font-size: $font-size-md;
+    line-height: $form-element-line-height;
+    padding-top: calc((#{$checkbox-size} - #{$font-size-md} * #{$form-element-line-height}) / 2);
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .pinnable-tooltip {
+    margin-top: calc((#{$checkbox-size} - #{$tooltip-icon-size}) / 2);
+  }
+}
+
+// Validation and help text
+.form-text {
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $gray-dark;
+}
+
+// Mandatory field indicator
+.mandatory {
+  color: $contrast-2;
+  font-size: $font-size-md;
+  margin-left: calc(#{$spacing-xs} / 2);
+  margin-right: $spacing-xs;
+  font-weight: bold;
+}
+
+// Question groups spacing
+#question-group {
+  margin-bottom: $spacing-xl;
+  padding: $spacing-xl;
+  background-color: $white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Option groups
+.option-set {
+  margin-bottom: $spacing-md;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.checkbox-group {
+  padding-top: $spacing-xs;
+}
 
 input, textarea {
 
