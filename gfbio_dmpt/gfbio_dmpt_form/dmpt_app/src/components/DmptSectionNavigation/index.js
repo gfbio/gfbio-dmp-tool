@@ -113,24 +113,34 @@ const mandatoryValidationErrorsAsList = (mandatoryFieldErrors, sectionList, setS
 };
 
 const renderMandatorySectionLinks = (mandatoryFieldErrors, sectionList, setSectionIndex) => {
-    return Object.values(mandatoryFieldErrors).map((mandatoryQuestion, index, array) => {
-        const sectionIndex = sectionList.findIndex(
-            (section) => section.title === mandatoryQuestion.section_name
-        );
+    const renderedSections = new Set();
 
-        return (
-            <span key={mandatoryQuestion.id}>
-                <button
-                    type="button"
-                    className="btn btn-link inline-button"
-                    onClick={() => setSectionIndex(sectionIndex)}
-                >
-                    {mandatoryQuestion.section_name}
-                </button>
-                {index < array.length - 1 && ', '}
-            </span>
-        );
-    });
+    return Object.values(mandatoryFieldErrors)
+        .filter(mandatoryQuestion => {
+            if (renderedSections.has(mandatoryQuestion.section_name)) {
+                return false;
+            }
+            renderedSections.add(mandatoryQuestion.section_name);
+            return true;
+        })
+        .map((mandatoryQuestion, index, array) => {
+            const sectionIndex = sectionList.findIndex(
+                (section) => section.title === mandatoryQuestion.section_name
+            );
+
+            return (
+                <span key={mandatoryQuestion.id}>
+                    <button
+                        type="button"
+                        className="btn btn-link inline-button"
+                        onClick={() => setSectionIndex(sectionIndex)}
+                    >
+                        {mandatoryQuestion.section_name}
+                    </button>
+                    {index < array.length - 1 && ', '}
+                </span>
+            );
+        });
 };
 
 function DmptSectionNavigation(props) {
