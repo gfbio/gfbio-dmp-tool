@@ -33,6 +33,11 @@ function DmptFormFields(props) {
     const inputFields = section.pages.map((page) => {
         // console.log('------------- PAGE -----------------------------');
         // console.log(page)
+        // TODO: if a question has to be hidden due to a condition (e.g. physical object)
+        //  the current order of html-elements and layout, makes it neccessary to hide
+        //  the page that contains the question (to also hide header +  texts etc.).
+        //  If hiding a whole page of a section is causing problems, the consequence
+        //  would be to re-arrange elements or at least ids to hide on question level.
         return (
             <div className="col-12 mb-3" id={`page-${page.id}`}>
                 <div className="questionHelp">
@@ -59,9 +64,9 @@ function DmptFormFields(props) {
                             // otherwise it makes no sense anyways. TARGETING condition.element_keys
                         }
                         // element-to-affect
-                        condition.element_keys.forEach(element_key => {
-                            if (element_key === question.attribute.key) {
-                                console.log(question.attribute.key, ' is element to affect by ', condition.source_key);
+                        condition.elements.forEach(element => {
+                            if (element.element_key === question.attribute.key) {
+                                console.log(question.attribute.key, ' (contained in page', element.page_id, ') is element to affect by ', condition.source_key);
                             }
                         });
                         // question.optionsets.forEach(optionset => {
