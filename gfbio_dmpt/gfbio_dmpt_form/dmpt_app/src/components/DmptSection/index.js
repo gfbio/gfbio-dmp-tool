@@ -25,6 +25,9 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
                 );
                 setSection(result.data);
                 setProcessing(false);
+                // console.log('prepareDmptSection ');
+                // console.log(result.data);
+                // console.log('---------------------------');
                 window.scrollTo({top:0, behavior:"smooth"});
             } catch (error) {
                 console.error(error);

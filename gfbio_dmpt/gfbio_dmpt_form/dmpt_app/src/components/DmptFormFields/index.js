@@ -25,7 +25,14 @@ function DmptFormFields(props) {
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
+    console.log(
+        '------------- DmptFormFields | SECTION -----------------------------'
+    );
+    console.log(section);
+    console.log('---------------------------');
     const inputFields = section.pages.map((page) => {
+        // console.log('------------- PAGE -----------------------------');
+        // console.log(page)
         return (
             <div className="col-12 mb-3" id={`page-${page.id}`}>
                 <div className="questionHelp">
@@ -35,11 +42,41 @@ function DmptFormFields(props) {
                 {/*  ------------------------------------------    */}
 
                 {page.pagequestions.map((question) => {
-
                     const mandatoryMessage = getMandatoryMessage(
                         question.is_optional,
                         language
                     );
+
+                    // ------------------------condition prototyping------------------------------
+                    section.conditions.forEach(condition => {
+                        // console.log('condition ', condition);
+                        // source
+                        if (condition.source_key === question.attribute.key) {
+                            console.log(question.attribute.key, ' is source ');
+                            console.log('condition:', condition);
+                            console.log('------------------------------');
+                            // once source confirmed, it can be assumed that targetoption is part of this questions options
+                            // otherwise it makes no sense anyways. TARGETING condition.element_keys
+                        }
+                        // element-to-affect
+                        condition.element_keys.forEach(element_key => {
+                            if (element_key === question.attribute.key) {
+                                console.log(question.attribute.key, ' is element to affect by ', condition.source_key);
+                            }
+                        });
+                        // question.optionsets.forEach(optionset => {
+                        //     // console.log('optionset ', optionset);
+                        //     optionset.options.forEach(option => {
+                        //         // console.log('\toption', option.id, ' ', condition.target_option_id);
+                        //         if (condition.target_option_id === option.id) {
+                        //             console.log(question.attribute.key, ' has option ', option.text , ' that is a target | ', option.id)
+                        //         }
+                        //     });
+                        // });
+
+                    });
+
+                    // ------------------------------------------------------
 
                     // This not the best way, but increases readability of data in requests
                     // FIXME: DASS-2204: .key no longer exists in rdmo 2
