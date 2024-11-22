@@ -1,26 +1,32 @@
 # -*- coding: utf-8 -*-
+
 from rdmo.domain.serializers.v1 import AttributeSerializer
 from rdmo.options.serializers.v1 import OptionSetSerializer, OptionSerializer
 from rdmo.questions.serializers.v1 import PageSerializer, QuestionSerializer, SectionSerializer
 
 
+def get_option_data(option, optionsets_list):
+    optionset_data = OptionSetSerializer(option).data
+    options = option.options.all()
+    optionset_data['options'] = OptionSerializer(options, many=True).data
+    optionsets_list.append(optionset_data)
+
+
+def get_question_data(question):
+    question_data = QuestionSerializer(question).data
+    question_data['attribute'] = AttributeSerializer(question.attribute).data
+    optionsets_list = []
+    optionsets = question.optionsets.all()
+    for o in optionsets:
+        get_option_data(o, optionsets_list)
+    question_data['optionsets'] = optionsets_list
+    return question_data
+
+
 def get_questions_and_options(questions):
     question_list = []
     for q in questions:
-        question_data = QuestionSerializer(q).data
-        # print('\nget_questions_and_options | question.attribute ', q.attribute)
-        # print(AttributeSerializer(q.attribute).data)
-        question_data['attribute'] = AttributeSerializer(q.attribute).data
-        optionsets_list = []
-        optionsets = q.optionsets.all()
-        if len(optionsets):
-            for o in optionsets:
-                optionset_data = OptionSetSerializer(o).data
-                options = o.options.all()
-                optionset_data['options'] = OptionSerializer(options, many=True).data
-                optionsets_list.append(optionset_data)
-            question_data['optionsets'] = optionsets_list
-        question_list.append(question_data)
+        question_list.append(get_question_data(q))
     return question_list
 
 
@@ -30,10 +36,17 @@ def get_section_data(section):
     serializer = SectionSerializer(section)
     data = serializer.data
     data['pages'] = []
+    data['conditions'] = []
     pages = section.elements
     for page in pages:
+        for c in page.conditions.all():
+            data['conditions'].append(
+                {
+                    'source_key': c.source.key, 'target_option_id': c.target_option.id,
+                    'element_keys': [e.attribute.key for e in page.elements]
+                }
+            )
         page_data = PageSerializer(page).data
-        question_list = get_questions_and_options(page.questions.all())
-        page_data['pagequestions'] = question_list
+        page_data['pagequestions'] = get_questions_and_options(page.questions.all())
         data['pages'].append(page_data)
     return data

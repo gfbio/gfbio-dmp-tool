@@ -47,27 +47,44 @@ def get_mandatory_form_fields(sections):
     return mandatory_fields
 
 
+def get_radio_form_content(form_data, question, related_values):
+    val = related_values.first()
+    if val is not None:
+        form_data[
+            f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
+            val.option.id)
+
+
+def get_checkbox_form_content(form_data, question, related_values):
+    for val in related_values.exclude(option=None):
+        form_data[f'option-{val.option.id}____{question.attribute.key}____{question.id}'] = str(
+            val.option.id)
+
+
+def get_select_form_content(form_data, question, related_values):
+    for val in related_values.exclude(option=None):
+        form_data[
+            f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
+            val.option.id)
+
+
+def get_form_content_from_values(dmpt_project, form_data, question):
+    related_values = dmpt_project.rdmo_project.values.filter(attribute=question.attribute)
+    if question.widget_type == 'select':
+        get_select_form_content(form_data, question, related_values)
+    elif question.widget_type == 'checkbox':
+        get_checkbox_form_content(form_data, question, related_values)
+    elif question.widget_type == 'radio':
+        get_radio_form_content(form_data, question, related_values)
+    else:
+        if len(related_values):
+            form_data[f'{question.attribute.key}____{question.id}'] = related_values.first().text
+
+
 def build_form_content(sections, dmpt_project):
     form_data = {}
     for section_index in range(0, len(sections)):
         for page in sections[section_index].elements:
             for question in page.elements:
-                related_values = dmpt_project.rdmo_project.values.filter(attribute=question.attribute)
-                if len(related_values):
-                    if question.widget_type == 'select':
-                        for val in related_values.exclude(option=None):
-                            form_data[
-                                f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
-                                val.option.id)
-                    elif question.widget_type == 'checkbox':
-                        for val in related_values.exclude(option=None):
-                            form_data[f'option-{val.option.id}____{question.attribute.key}____{question.id}'] = str(
-                                val.option.id)
-                    elif question.widget_type == 'radio':
-                        val = related_values.first()
-                        form_data[
-                            f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
-                            val.option.id)
-                    else:
-                        form_data[f'{question.attribute.key}____{question.id}'] = related_values.first().text
+                get_form_content_from_values(dmpt_project, form_data, question)
     return form_data
