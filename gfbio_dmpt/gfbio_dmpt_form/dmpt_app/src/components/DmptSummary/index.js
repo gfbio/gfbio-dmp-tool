@@ -28,8 +28,8 @@ function DmptSummary(props) {
     const saveDmp =
         dmptProjectId < 0 &&
         rdmoContext.backend_context.isLoggedIn !== 'false' ? (
-            <div className="row mt-3">
-                <div className="col-12">
+            <div className="row mt-3 justify-content-center">
+                <div className="col-10">
                     <SaveDmpt
                         rdmoProjectId={rdmoProjectId}
                         onSave={saveDmpHanlder}
@@ -45,8 +45,8 @@ function DmptSummary(props) {
     let discardAndExit =
         dmptProjectId < 0 &&
         rdmoContext.backend_context.isLoggedIn !== 'false' ? (
-            <div className="row mt-3">
-                <div className="col-12">
+            <div className="row mt-3 justify-content-center">
+                <div className="col-10">
                     <DiscardAndExit resetRdmoProjectId={resetRdmoProjectId} />
                 </div>
             </div>
@@ -65,7 +65,7 @@ function DmptSummary(props) {
     const saveInfo =
         rdmoContext.backend_context.isLoggedIn === 'false' ? (
             <div className="row mt-5">
-                <div className="col-12">
+                <div className="col-md-10 offset-md-1">
                     <h6>Saving your DMP</h6>
                     <p>
                         To save your Data Management Plan, you need to login
@@ -84,30 +84,41 @@ function DmptSummary(props) {
         );
 
     return (
-        <div id={`summary-${rdmoProjectId}`} className="text-center">
+        <div id={`summary-${rdmoProjectId}`}>
+            <header className="text-center mb-4">
+                <h1 className="display-5">Finalize DMP</h1>
+            </header>
             <div className="row">
-                <div className="col-12">
-                    <h1>Finalize DMP</h1>
+                <div className="col-md-6 offset-md-3 mb-4">
+                    {saveInfo}
                 </div>
             </div>
             <div className="row">
-                <div className="col-6">
-                    {saveDmp}
-                    <div className="row mt-3">
-                        <div className="col-12">
-                            <PdfExport rdmoProjectId={rdmoProjectId} />
-                        </div>
-                    </div>
-                    {discardAndExit}
-                    {saveInfo}
+                <div className="col-md-6 offset-md-3 mb-4">
+                    <SupportRequest
+                        rdmoProjectId={rdmoProjectId}
+                        issueKey={issueKey}
+                    />
                 </div>
-                <div className="col-6">
-                    <div className="row">
-                        <div className="col-12 ps-5 ms-5">
-                            <SupportRequest
-                                rdmoProjectId={rdmoProjectId}
-                                issueKey={issueKey}
-                            />
+                <div className="col-md-3 mb-4 justify-content-center">
+                    <div className="card shadow-sm w-100">
+                        <div className="card-body">
+                            <h6 className="card-title sidebar-list-item text-left">Other Actions</h6>
+                            <div className="mb-3">
+                                {saveDmp}
+                            </div>
+                            <div className="mb-3">
+                                <div
+                                    className="row mt-3 justify-content-center">
+                                    <div className="col-10">
+                                        <PdfExport
+                                            rdmoProjectId={rdmoProjectId}/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                {discardAndExit}
+                            </div>
                         </div>
                     </div>
                 </div>

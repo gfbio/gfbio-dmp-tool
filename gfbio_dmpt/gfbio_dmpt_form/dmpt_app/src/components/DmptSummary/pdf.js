@@ -15,8 +15,8 @@ function PdfExport(props) {
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                <h6 className="sidebar-list-item">
-                    <i className="mdi mdi-file-pdf-box align-middle" />
+                <h6 className="sidebar-list-item align-items-center">
+                    <i className="mdi mdi-file-pdf-box align-middle icon-green" />
                     Export to PDF
                 </h6>
             </a>
