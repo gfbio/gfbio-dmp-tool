@@ -88,7 +88,9 @@ function DmptFormFields(props) {
                                 <PinnableTooltip helptext={question.help} />
                             </label>
                             {input}
-                            {validationMessage}
+                            <small className="form-text text-muted validation-field">
+                                {mandatoryMessage} {validationMessage}
+                            </small>
                         </div>
                     );
                 })}
