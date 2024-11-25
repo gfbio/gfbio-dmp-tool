@@ -1,11 +1,44 @@
+// Typography Scale
+$font-size-base: 1rem;
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-md: 1rem;       // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+
+// Spacing Scale
+$spacing-xs: 0.25rem;      // 4px
+$spacing-sm: 0.5rem;       // 8px
+$spacing-md: 1rem;         // 16px
+$spacing-lg: 1.5rem;       // 24px
+$spacing-xl: 2rem;         // 32px
+
+// Form Element Sizes
+$input-height: 2.75rem;    // 44px
+$checkbox-size: 1.125rem;  // 18px
+$radio-size: 1.125rem;     // 18px
+$tooltip-icon-size: 1rem;  // 16px
+
 body, html {
   @include sans-serif-font;
   overflow-x: hidden;
   color: $gray-dark;
+  font-size: $font-size-md;
+  line-height: 1.5;
 }
 
 h1, h2, h3, h4, h5, h6 {
   @include header-sans-serif-font;
+  margin-bottom: $spacing-md;
+  color: $gfbio-blue;
+  
+  &.section-title {
+    font-size: $font-size-2xl;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-md;
+    border-bottom: 2px solid $gfbio-green-0-3;
+  }
 }
 
 a {
@@ -44,4 +77,15 @@ section {
 
 .min-height {
   min-height: 97vh;
+}
+
+// Form page layout
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  
+  @media (min-width: $min-width) {
+    padding: 3rem 2rem;
+  }
 }

@@ -1,6 +1,6 @@
 /*!
     * GFBio Layout - GFBio DMP v0.0.1 (https://dmp.gfbio.dev)
-    * Copyright 2021-2023 GFBio e.V.
+    * Copyright 2021-2024 GFBio e.V.
     * Licensed under MIT
     */
     // Toggle menu

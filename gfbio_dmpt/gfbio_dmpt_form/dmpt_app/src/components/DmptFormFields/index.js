@@ -11,34 +11,19 @@ function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language} = props;
     const inputFields = section.questionsets.map((questionset) => {
         return (
-            <div className="col-12 mb-3" id={`questionset-${questionset.id}`}>
+            <div className="col-12 mb-4" id={`questionset-${questionset.id}`}>
                 <div className="questionHelp">
                     <h5>{questionset.title}</h5>
                     <PinnableTooltip helptext={questionset.help} />
                 </div>
 
                 {questionset.questions.map((question) => {
-                    const mandatoryMessage = question.is_optional ? (
-                        <span />
-                    ) : (
-                        language?.shortCode === "DE" ? (
-                            <span className="mandatory">
-                                (Dieses Feld ist erforderlich)
-                            </span>
-                        ) : (
-                            <span className="mandatory">
-                                (This field is mandatory)
-                            </span>
-                        )
+                    const mandatoryIndicator = question.is_optional ? null : (
+                        <span className="mandatory" aria-label="Required field">*</span>
                     );
 
-                    // This not the best way, but increases readability of data in requests
                     const fieldName = `${question.key}____${question.id}`;
-                    let initialTextValue = '';
-                    if (inputs[fieldName] !== undefined) {
-                        initialTextValue = inputs[fieldName];
-                    }
-                    // TODO: add a way to do this for option based fields, like radio, select, checkbox
+                    let initialTextValue = inputs[fieldName] !== undefined ? inputs[fieldName] : '';
 
                     let input = (
                         <TextInput
@@ -47,6 +32,7 @@ function DmptFormFields(props) {
                             initialValue={initialTextValue}
                         />
                     );
+
                     if (question.widget_type === 'textarea') {
                         input = (
                             <TextArea
@@ -81,55 +67,42 @@ function DmptFormFields(props) {
                         );
                     }
 
-                    let validationMessage = <span />;
-
-                    // TODO: <09-05-22, claas> //
-                    // extract the array into a static variable. These could
-                    // also be passed later from the backend
-                    if (
-                        ['email', 'url', 'phone', 'integer', 'float'].includes(
-                            question.value_type
-                        )
-                    ) {
-                        if (
-                            Object.keys(validationErrors).filter((k) =>
-                                k.startsWith(question.key)
-                            ).length > 0
-                        ) {
-                            validationMessage = (language?.shortCode === "DE") ? (
-                                <span className="mandatory">
-                                    (kein valider {question.value_type})
-                                </span>
-                            ) : (
-                                <span className="mandatory">
-                                    (not a valid {question.value_type})
-                                </span>
-                            );
-                        }
-                    }
+                    const validationMessage = ['email', 'url', 'phone', 'integer', 'float'].includes(question.value_type) &&
+                        Object.keys(validationErrors).some(k => k.startsWith(question.key)) ? (
+                            <span className="mandatory">
+                                {language?.shortCode === "DE"
+                                    ? `(kein valider ${question.value_type})`
+                                    : `(not a valid ${question.value_type})`}
+                            </span>
+                        ) : null;
 
                     return (
-                        <div className="col-12">
+                        <div className="col-12 mb-4">
                             <label
                                 aria-label={question.text}
-                                htmlFor="username"
-                                className="form-label d-inline-flex align-items-center"
+                                htmlFor={fieldName}
+                                className="form-label"
                             >
                                 {question.text}
+                                {mandatoryIndicator}
                                 <PinnableTooltip helptext={question.help} />
                             </label>
-                            <small
-                                className="form-text text-muted validation-field ms-2">
+                            {input}
+                            <small className="form-text text-muted validation-field">
                                 {mandatoryMessage} {validationMessage}
                             </small>
-                            {input}
                         </div>
                     );
                 })}
             </div>
         );
     });
-    return <div className="row g-3">{inputFields}</div>;
+
+    return (
+        <div className="row">
+            {inputFields}
+        </div>
+    );
 }
 
 DmptFormFields.propTypes = {

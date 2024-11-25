@@ -39,10 +39,9 @@
     "chokidar": "^3.5.2",
     "clean-css-cli": "^5.4.2",
     "concurrently": "^6.4.0",
-    "node-sass": "^6.0.1",
     "postcss": "^8.4.4",
     "prettier": "^2.5.0",
-    "sass": "^1.44.0",
+    "sass": "^1.80.6",
     "shelljs": "^0.8.4",
     "upath": "^2.0.1"
   }
