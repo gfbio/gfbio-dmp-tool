@@ -124,19 +124,6 @@ def render_to_format(request, export_format, title, template_src, context):
         content_disposition = 'attachment; filename="%s.%s"' % (title, export_format)
 
         if export_format == "pdf":
-            # check pandoc version (the pdf arg changed to version 2)
-            if get_pandoc_main_version() == 1:
-                pandoc_args = [
-                    arg.replace("--pdf-engine=pdflatex", "--latex-engine=pdflatex")
-                    for arg in pandoc_args
-                ]
-
-            pandoc_args = [
-                arg.replace("--pdf-engine=xelatex", "--pdf-engine=pdflatex")
-                for arg in pandoc_args
-            ]
-
-            # display pdf in browser
             content_disposition = 'filename="%s.%s"' % (title, export_format)
 
         # use reference document for certain file formats

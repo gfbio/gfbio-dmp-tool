@@ -330,6 +330,7 @@
 \RequirePackage{calc}
 \RequirePackage{xifthen}  
 \RequirePackage{ifluatex} 
+\RequirePackage{iftex}
 \RequirePackage{datatool} 
 \RequirePackage{suffix}
 
@@ -392,13 +393,23 @@
 %%% Color options %%%
 %%%-------------------------------------------------%%%
 
-\ifost@cmyk%
-  \RequirePackage[svgnames, cmyk, pdftex, tables]{xcolor}  
-\fi%
+\ifXeTeX
+  \ifost@cmyk%
+    \RequirePackage[svgnames, cmyk, tables]{xcolor}  
+  \fi%
 
-\ifost@rgb%
-  \RequirePackage[svgnames, rgb, pdftex, tables]{xcolor} 
-\fi% 
+  \ifost@rgb%
+    \RequirePackage[svgnames, rgb, tables]{xcolor} 
+  \fi% 
+\else
+  \ifost@cmyk%
+    \RequirePackage[svgnames, cmyk, pdftex, tables]{xcolor}  
+  \fi%
+
+  \ifost@rgb%
+    \RequirePackage[svgnames, rgb, pdftex, tables]{xcolor} 
+  \fi% 
+\fi
 
 \colorlet{ostColorGlsLinkColor}{black}
 
@@ -2287,23 +2298,28 @@
    babel=true,%
    spacing=false]{microtype}     
 \else%
-   % \RequirePackage[protrusion=true,%
-   % expansion=true,%
-   % babel=true,%
-   % final,%
-   % tracking=true,% 
-   % kerning=true,%
-   % spacing=false]{microtype}     
-   \RequirePackage[final, tracking=true]{microtype}
-   \DeclareMicrotypeSet*[tracking]{my}% 
-	  {font = */*/*/sc/*}% 
-   \SetTracking{encoding = *, shape = sc}{40}
-
-  % protusion for superscript numbers
-  % \SetProtrusion{encoding={*},family={bch},series={*},size={6,7}}
-		% {1={ ,750},2={ ,500},3={ ,500},4={ ,500},5={ ,500},
-		 % 6={ ,500},7={ ,600},8={ ,500},9={ ,500},0={ ,500}}
-
+   \ifXeTeX
+      \RequirePackage[final]{microtype}
+      \DeclareMicrotypeSet*{my}% 
+      {font = */*/*/sc/*}% 
+   \else
+      % \RequirePackage[protrusion=true,%
+      % expansion=true,%
+      % babel=true,%
+      % final,%
+      % tracking=true,% 
+      % kerning=true,%
+      % spacing=false]{microtype}     
+      \RequirePackage[final, tracking=true]{microtype}
+      \DeclareMicrotypeSet*[tracking]{my}% 
+   	  {font = */*/*/sc/*}% 
+      \SetTracking{encoding = *, shape = sc}{40}
+   
+     % protusion for superscript numbers
+     % \SetProtrusion{encoding={*},family={bch},series={*},size={6,7}}
+   		% {1={ ,750},2={ ,500},3={ ,500},4={ ,500},5={ ,500},
+   		 % 6={ ,500},7={ ,600},8={ ,500},9={ ,500},0={ ,500}}
+   \fi
 \fi
 
 % \RequirePackage[activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true,factor=1100,stretch=10,shrink=10]{microtype}
