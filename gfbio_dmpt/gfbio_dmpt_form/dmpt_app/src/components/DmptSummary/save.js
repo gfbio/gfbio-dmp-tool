@@ -43,8 +43,8 @@ function SaveDmpt(props) {
                 }
                 disabled={postResult.processing || postResult.posted}
             >
-                <h6 className="sidebar-list-item">
-                    <i className="mdi mdi-content-save-all-outline align-middle" />
+                <h6 className="sidebar-list-item align-items-center">
+                    <i className="mdi mdi-content-save-all-outline align-middle icon-green" />
                     {buttonText}
                 </h6>
             </button>

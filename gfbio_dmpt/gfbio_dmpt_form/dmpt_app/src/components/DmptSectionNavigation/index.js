@@ -71,18 +71,27 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
     });
 };
 
-const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
+const mandatoryValidationErrorsAsList = (mandatoryFieldErrors, sectionList, setSectionIndex) => {
     let validation = <></>;
-    const validationElements = Object.values(mandatoryFieldErrors).map(
-        (mandatoryQuestion) => {
-            return (
-                <li>
-                    {mandatoryQuestion.text} (in &quot;
-                    {mandatoryQuestion.section_name}&quot;)
-                </li>
-            );
-        }
-    );
+    const validationElements = Object.values(mandatoryFieldErrors).map((mandatoryQuestion) => {
+        const sectionIndex = sectionList.findIndex(
+            (section) => section.title === mandatoryQuestion.section_name
+        );
+
+        return (
+            <li key={mandatoryQuestion.id}>
+                {mandatoryQuestion.text} (in&nbsp;
+                <button
+                    type="button"
+                    className="btn btn-link inline-button"
+                    onClick={() => setSectionIndex(sectionIndex)}
+                >
+                    {mandatoryQuestion.section_name}
+                </button>
+                )
+            </li>
+        );
+    });
     if (validationElements.length > 0) {
         validation = (
             <div className="row">
@@ -101,6 +110,37 @@ const mandatoryValidationErrorsAsList = (mandatoryFieldErrors) => {
         );
     }
     return validation;
+};
+
+const renderMandatorySectionLinks = (mandatoryFieldErrors, sectionList, setSectionIndex) => {
+    const renderedSections = new Set();
+
+    return Object.values(mandatoryFieldErrors)
+        .filter(mandatoryQuestion => {
+            if (renderedSections.has(mandatoryQuestion.section_name)) {
+                return false;
+            }
+            renderedSections.add(mandatoryQuestion.section_name);
+            return true;
+        })
+        .map((mandatoryQuestion, index, array) => {
+            const sectionIndex = sectionList.findIndex(
+                (section) => section.title === mandatoryQuestion.section_name
+            );
+
+            return (
+                <span key={mandatoryQuestion.id}>
+                    <button
+                        type="button"
+                        className="btn btn-link inline-button"
+                        onClick={() => setSectionIndex(sectionIndex)}
+                    >
+                        {mandatoryQuestion.section_name}
+                    </button>
+                    {index < array.length - 1 && ', '}
+                </span>
+            );
+        });
 };
 
 function DmptSectionNavigation(props) {
@@ -153,7 +193,9 @@ function DmptSectionNavigation(props) {
     }, [sectionList, sectionIndex]);
 
     const mandatoryValidation = mandatoryValidationErrorsAsList(
-        mandatoryValidationErrors
+        mandatoryValidationErrors,
+        sectionList,
+        setSectionIndex
     );
 
     const sectionsLength = sectionList.length;
@@ -192,16 +234,26 @@ function DmptSectionNavigation(props) {
             </div>
             <div className="row" id="section-content">
                 {mandatoryValidation}
-                    <DmptSection
-                        token={token}
-                        catalogId={catalogId}
-                        sectionIndex={sectionIndex}
-                        handleInputChange={handleInputChange}
-                        handleSubmit={handleSubmit}
-                        inputs={inputs}
-                        validationErrors={validationErrors}
-                        language={language}
-                    />
+                <DmptSection
+                    token={token}
+                    catalogId={catalogId}
+                    sectionIndex={sectionIndex}
+                    handleInputChange={handleInputChange}
+                    handleSubmit={handleSubmit}
+                    inputs={inputs}
+                    validationErrors={validationErrors}
+                    language={language}
+                />
+            </div>
+            <div className="row text-end">
+                {Object.keys(mandatoryValidationErrors).length > 0 && (
+                    <h5 className="mandatory">
+                        Please correct the errors in the sections:&nbsp;
+                        {renderMandatorySectionLinks(
+                            mandatoryValidationErrors, sectionList,
+                            setSectionIndex)}
+                    </h5>
+                )}
             </div>
             <div className="row">
                 <SectionButtons

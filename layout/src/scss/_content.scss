@@ -20,6 +20,13 @@ section.page-title {
 section.content {
   min-height: 90vh;
 
+  label {
+    font-size: 1rem;
+    font-weight: 300;
+    color: $standard-dark;
+    margin-bottom: 0.4rem;
+  }
+
   .blue-stroke {
     -webkit-text-stroke-color: $gfbio-blue;
   }
@@ -47,7 +54,7 @@ section.content {
     font-size: 6rem;
     font-weight: 400;
     color: white;
-    text-shadow: 
+    text-shadow:
       -1px -1px 0 $gfbio-green-0-7,
       1px -1px 0 $gfbio-green-0-7,
       -1px 1px 0 $gfbio-green-0-7,
@@ -117,7 +124,7 @@ section.content {
   .helpicon-pin {
     font-size: 0.9rem;
   }
-  
+
   .validation-field {
     display: inline-block;
     line-height: 1rem;
@@ -154,7 +161,7 @@ section.content {
     font-weight: 400;
     letter-spacing: 2px;
     color: $standard-dark;
-    margin-bottom: 1.6rem;
+    margin-bottom: 0.4rem;
   }
 
   /* H6 --------------------------------------------------------------------- */

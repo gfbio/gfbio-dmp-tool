@@ -21,7 +21,7 @@ function DiscardAndExit(props) {
             onClick={() => setConfirm(true)}
         >
             <h6 className="sidebar-list-item">
-                <i className="mdi mdi-trash-can-outline align-middle" />
+                <i className="mdi mdi-trash-can-outline align-middle icon-green" />
                 Discard & Exit
             </h6>
         </button>
@@ -30,25 +30,25 @@ function DiscardAndExit(props) {
     if (confirm) {
         button = (
             <div>
-                <h5>Are you sure ?</h5>
                 <h6 className="sidebar-list-item">
-                    <i className="mdi mdi-trash-can-outline align-middle" />
+                    <i className="mdi mdi-trash-can-outline align-middle icon-green" />
                     Discard & Exit
                 </h6>
                 <div className="d-grid gap-2 d-md-block">
+                    <h5>Are you sure?</h5>
                     <button
                         className="btn btn-outline-success"
                         type="button"
-                        onClick={() => setConfirm(false)}
+                        onClick={() => setDiscard(true)}
                     >
-                        Cancel
+                        Confirm!
                     </button>
                     <button
                         className="btn btn-outline-danger"
                         type="button"
-                        onClick={() => setDiscard(true)}
+                        onClick={() => setConfirm(false)}
                     >
-                        Confirm !
+                        Cancel
                     </button>
                 </div>
             </div>
