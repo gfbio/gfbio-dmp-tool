@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import TextInput from './textinput';
 import TextArea from './textarea';
@@ -13,12 +13,6 @@ function DmptFormFields(props) {
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
-    console.log(
-        '------------- DmptFormFields | SECTION -----------------------------'
-    );
-    console.log(section);
-    console.log('---------------------------');
-
     const getMandatoryMessage = (isOptional, lang) => {
         if (isOptional) {
             return <span />;
@@ -33,36 +27,8 @@ function DmptFormFields(props) {
         return <span className="mandatory">(This field is mandatory)</span>;
     };
 
-
-
-    const setConditions = (question) => {
-        section.conditions.forEach((condition) => {
-            // console.log('condition ', condition);
-            // source
-            if (condition.source_key === question.attribute.key) {
-                console.log(question.attribute.key, ' is source ');
-                console.log('condition:', condition);
-                console.log('------------------------------');
-                // once source confirmed, it can be assumed that targetoption is part of this questions options
-                // otherwise it makes no sense anyways. TARGETING condition.element_keys
-            }
-            // element-to-affect
-            condition.elements.forEach((element) => {
-                if (element.element_key === question.attribute.key) {
-                    console.log(
-                        question.attribute.key,
-                        ' (contained in page',
-                        element.page_id,
-                        ') is element to affect by ',
-                        condition.source_key
-                    );
-                }
-            });
-        });
-    };
-
     const getHiddenPageIdsFromConditionals = (_section) => {
-        let hiddenIds = [];
+        const hiddenIds = [];
         _section.conditions.forEach((condition) => {
             condition.elements.forEach((element) => {
                 hiddenIds.push(element.page_id);
@@ -71,52 +37,49 @@ function DmptFormFields(props) {
         return hiddenIds;
     };
 
-    const [hiddenPageIds, setHiddenPageIds] = useState(getHiddenPageIdsFromConditionals(section));
+    const [hiddenPageIds, setHiddenPageIds] = useState(
+        getHiddenPageIdsFromConditionals(section)
+    );
+
+    const setPageVisibility = (condition, questionAttributeKey, optionId) => {
+        if (
+            condition.source_key === questionAttributeKey &&
+            condition.target_option_id === optionId
+        ) {
+            const ids = hiddenPageIds;
+            condition.elements.forEach((element) => {
+                ids.splice(ids.indexOf(element.page_id), 1);
+            });
+            setHiddenPageIds(ids);
+        } else if (
+            condition.source_key === questionAttributeKey &&
+            condition.target_option_id !== optionId
+        ) {
+            const ids = hiddenPageIds;
+            condition.elements.forEach((element) => {
+                if (!ids.includes(element.page_id)) {
+                    ids.push(element.page_id);
+                }
+            });
+            setHiddenPageIds(ids);
+        }
+    };
 
     const ExtendedHandleInputChange = (e, optionId, questionAttributeKey) => {
-        console.log('MY --- __handleInputChange, trigger also regular inputchange ', optionId);
         section.conditions.forEach((condition) => {
-            if (condition.source_key === questionAttributeKey && condition.target_option_id === optionId) {
-                console.log('REMOVE PAGE ID FROM HIDDEN');
-                const ids = hiddenPageIds;
-                condition.elements.forEach((element) => {
-                    console.log('remove element of condition ', condition);
-                    const removed = ids.splice(ids.indexOf(element.page_id), 1);
-                    // ids.pop(element.page_id);
-                });
-                setHiddenPageIds(ids);
-            }
-            else if (condition.source_key === questionAttributeKey && condition.target_option_id !== optionId) {
-                console.log('ADD PAGE ID TO HIDDEN');
-                const ids = hiddenPageIds;
-                condition.elements.forEach((element) => {
-                    if (!ids.includes(element.page_id)) {
-                        ids.push(element.page_id);
-                        console.log('add element of condition ', condition);
-                    }
-                });
-                setHiddenPageIds(ids);
-            }
+            setPageVisibility(condition, questionAttributeKey, optionId);
         });
         handleInputChange(e);
     };
 
-
     const inputFields = section.pages.map((page) => {
-        console.log('------------- PAGE -----------------------------');
-        console.log(page.id);
-        console.log('hiddePageIds ', hiddenPageIds);
         // TODO: if a question has to be hidden due to a condition (e.g. physical object)
         //  the current order of html-elements and layout, makes it neccessary to hide
         //  the page that contains the question (to also hide header +  texts etc.).
         //  If hiding a whole page of a section is causing problems, the consequence
         //  would be to re-arrange elements or at least ids to hide on question level.
         if (hiddenPageIds.includes(page.id)) {
-            return (
-                <div>
-                    <h4>hidden pageid: {page.id}</h4>
-                </div>
-            );
+            return <div id={`page-${page.id}-hidden`} />;
         }
         return (
             <div className="col-12 mb-3" id={`page-${page.id}`}>
@@ -124,7 +87,6 @@ function DmptFormFields(props) {
                     <h5>{page.title}</h5>
                     <PinnableTooltip helptext={page.help} />
                 </div>
-                {/*  ------------------------------------------    */}
 
                 {page.pagequestions.map((question) => {
                     const mandatoryMessage = getMandatoryMessage(
@@ -132,13 +94,7 @@ function DmptFormFields(props) {
                         language
                     );
 
-                    // ------------------------condition prototyping------------------------------
-                    // setConditions(question);
-
-                    // ------------------------------------------------------
-
                     // This not the best way, but increases readability of data in requests
-                    // FIXME: DASS-2204: .key no longer exists in rdmo 2
                     const fieldName = `${question.attribute.key}____${question.id}`;
                     let initialTextValue = '';
                     if (inputs[fieldName] !== undefined) {

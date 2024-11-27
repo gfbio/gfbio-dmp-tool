@@ -45,7 +45,7 @@ const useDmptSectionNavigation = (
 };
 
 const fakeSubmit = () => {
-    console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
+    // console.log('DmptSectionNavigation | fakeSubmit | inputs: ');
 };
 
 const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
