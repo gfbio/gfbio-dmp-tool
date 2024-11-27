@@ -10,6 +10,8 @@ import PinnableTooltip from './pinnableTooltip';
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
         props;
+    console.log('DmptFormFields ------------------------------');
+    console.log('inputs: ', inputs);
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
@@ -27,18 +29,35 @@ function DmptFormFields(props) {
         return <span className="mandatory">(This field is mandatory)</span>;
     };
 
-    const getHiddenPageIdsFromConditionals = (_section) => {
+    const isTargetOptionInInputs = (_inputs, condition) => {
+        return Object.entries(_inputs).map((entry) => {
+            let res = false;
+            if (entry[1] === `${condition.target_option_id}`) {
+                res = true;
+            }
+            return res;
+        });
+    };
+
+    const getHiddenPageIdsFromConditionals = (_section, _inputs) => {
         const hiddenIds = [];
+        console.log('getHiddenPageIdsFromConditionals ');
         _section.conditions.forEach((condition) => {
             condition.elements.forEach((element) => {
-                hiddenIds.push(element.page_id);
+                console.log(
+                    '\tadd to hidden | element | parent- conditione : ',
+                    condition
+                );
+                if (!isTargetOptionInInputs(_inputs, condition)) {
+                    hiddenIds.push(element.page_id);
+                }
             });
         });
         return hiddenIds;
     };
 
     const [hiddenPageIds, setHiddenPageIds] = useState(
-        getHiddenPageIdsFromConditionals(section)
+        getHiddenPageIdsFromConditionals(section, inputs)
     );
 
     const setPageVisibility = (condition, questionAttributeKey, optionId) => {
