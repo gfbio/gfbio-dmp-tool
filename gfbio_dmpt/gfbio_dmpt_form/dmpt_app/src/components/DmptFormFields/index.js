@@ -11,7 +11,7 @@ function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
         props;
     console.log('DmptFormFields ------------------------------');
-    console.log('inputs: ', inputs);
+    // console.log('inputs: ', inputs);
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
@@ -30,25 +30,25 @@ function DmptFormFields(props) {
     };
 
     const isTargetOptionInInputs = (_inputs, condition) => {
-        return Object.entries(_inputs).map((entry) => {
-            let res = false;
-            if (entry[1] === `${condition.target_option_id}`) {
-                res = true;
+        let result = false;
+        Object.keys(_inputs).forEach((key)=>{
+            if (_inputs[key] === `${condition.target_option_id}`) {
+                result = true;
             }
-            return res;
         });
+        return result;
     };
 
-    const getHiddenPageIdsFromConditionals = (_section, _inputs) => {
+    const getHiddenPageIdsFromConditionals = (_section, _inputs, checkForInitialData=false) => {
         const hiddenIds = [];
-        console.log('getHiddenPageIdsFromConditionals ');
         _section.conditions.forEach((condition) => {
             condition.elements.forEach((element) => {
-                console.log(
-                    '\tadd to hidden | element | parent- conditione : ',
-                    condition
-                );
-                if (!isTargetOptionInInputs(_inputs, condition)) {
+                if (checkForInitialData) {
+                    if (isTargetOptionInInputs(_inputs, condition) === false) {
+                        hiddenIds.push(element.page_id);
+                    }
+                }
+                else {
                     hiddenIds.push(element.page_id);
                 }
             });
@@ -57,7 +57,11 @@ function DmptFormFields(props) {
     };
 
     const [hiddenPageIds, setHiddenPageIds] = useState(
-        getHiddenPageIdsFromConditionals(section, inputs)
+        getHiddenPageIdsFromConditionals(section, inputs, true)
+    );
+
+    const [initialHiddenPageIds, setInitialHiddenPageIds] = useState(
+        getHiddenPageIdsFromConditionals(section, inputs, false)
     );
 
     const setPageVisibility = (condition, questionAttributeKey, optionId) => {
@@ -67,16 +71,24 @@ function DmptFormFields(props) {
         ) {
             const ids = hiddenPageIds;
             condition.elements.forEach((element) => {
-                ids.splice(ids.indexOf(element.page_id), 1);
+                let indexInHidden =ids.indexOf(element.page_id);
+                // let indexInInitial = initialHiddenPageIds.indexOf(element.page_id);
+                // console.log('REMOVE ', element.page_id, ' index in hidden ', indexInHidden, ' | index in initial ', indexInInitial);
+                ids.splice(indexInHidden, 1);
             });
             setHiddenPageIds(ids);
         } else if (
             condition.source_key === questionAttributeKey &&
             condition.target_option_id !== optionId
         ) {
-            const ids = hiddenPageIds;
+            let ids = hiddenPageIds;
             condition.elements.forEach((element) => {
                 if (!ids.includes(element.page_id)) {
+                    // let indexInHidden =ids.indexOf(element.page_id);
+                    // let indexInInitial = initialHiddenPageIds.indexOf(element.page_id);
+                    // console.log('ADD ', element.page_id, ' index in hidden ', indexInHidden, ' | index in initial ', indexInInitial);
+                    // console.log('\tcombined ', initialHiddenPageIds.slice(indexInInitial, initialHiddenPageIds.length));
+                    // ids = initialHiddenPageIds.slice(indexInInitial, initialHiddenPageIds.length);
                     ids.push(element.page_id);
                 }
             });
@@ -97,6 +109,8 @@ function DmptFormFields(props) {
         //  the page that contains the question (to also hide header +  texts etc.).
         //  If hiding a whole page of a section is causing problems, the consequence
         //  would be to re-arrange elements or at least ids to hide on question level.
+        // console.log('\n---------------\nhidden page ids ', hiddenPageIds);
+        // console.log('Initialhidden page ids ', initialHiddenPageIds);
         if (hiddenPageIds.includes(page.id)) {
             return <div id={`page-${page.id}-hidden`} />;
         }
