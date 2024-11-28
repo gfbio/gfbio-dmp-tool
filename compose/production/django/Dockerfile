@@ -50,6 +50,7 @@ RUN addgroup --system django \
 # Please keep that as it enables pandoc to find the logo and extra style for dmp export
 RUN mkdir -p /static/images
 COPY ./gfbio_dmpt/static/images/gfbio_logo.png /static/images/
+COPY ./gfbio_dmpt/static/fonts/lato/* /usr/share/fonts/truetype/lato/
 COPY ./gfbio_dmpt/static/export_config/template.latex /static/export_config/
 COPY ./gfbio_dmpt/static/export_config/ost.cls /static/export_config/
 

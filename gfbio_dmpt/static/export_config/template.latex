@@ -37,6 +37,17 @@ $for(classoption)$
 $endfor$
 pagelayout=oneside
 ]{/static/export_config/ost}
+
+\xdefinecolor{gfbioblue}{RGB}{62,102,173}
+\ostSetColor{Title}{gfbioblue}
+\ostSetColor{Subtitle}{gfbioblue}
+\ostSetColor{ChapterHeader}{gfbioblue}
+\ostSetColor{SectionHeader}{gfbioblue}
+\ostSetColor{SubsectionHeader}{gfbioblue}
+\ostSetColor{SubSubsectionHeader}{gfbioblue}
+\ostSetColor{ParagraphHeader}{gfbioblue}
+\ostSetColor{CaptionLabel}{gfbioblue}
+
 $if(beamer)$
 $if(background-image)$
 \usebackgroundtemplate{%

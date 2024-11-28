@@ -49,7 +49,7 @@ class RdmoProjectSerializer(serializers.ModelSerializer):
 
 class RdmoProjectValuesSerializer(serializers.Serializer):
     catalog = serializers.IntegerField(required=True)
-    title = serializers.CharField(required=True)
+    title = serializers.CharField(required=True, max_length=255)
     form_data = serializers.JSONField(required=True)
 
     class Meta:
@@ -64,7 +64,7 @@ class RdmoProjectValuesSerializer(serializers.Serializer):
 
 class RdmoProjectValuesUpdateSerializer(serializers.Serializer):
     dmpt_project = serializers.IntegerField(required=True)
-    title = serializers.CharField(required=True)
+    title = serializers.CharField(required=True, max_length=255)
     form_data = serializers.JSONField(required=True)
 
     class Meta:
