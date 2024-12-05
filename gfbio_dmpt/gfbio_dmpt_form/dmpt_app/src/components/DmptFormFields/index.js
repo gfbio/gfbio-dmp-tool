@@ -10,11 +10,11 @@ import PinnableTooltip from './pinnableTooltip';
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
         props;
-    console.log('DmptFormFields ------------------------------');
-    // console.log('inputs: ', inputs);
+
     // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
+
     const getMandatoryMessage = (isOptional, lang) => {
         if (isOptional) {
             return <span />;
@@ -31,8 +31,7 @@ function DmptFormFields(props) {
 
     const isTargetOptionInInputs = (_inputs, condition) => {
         let result = false;
-        Object.keys(_inputs).forEach((key)=>{
-            // console.log('\tisTargetOptionInInputs key ', key, ' val ', _inputs[key]);
+        Object.keys(_inputs).forEach((key) => {
             if (_inputs[key] === `${condition.target_option_id}`) {
                 result = true;
             }
@@ -40,7 +39,11 @@ function DmptFormFields(props) {
         return result;
     };
 
-    const getHiddenPageIdsFromConditionals = (_section, _inputs, checkForInitialData=false) => {
+    const getHiddenPageIdsFromConditionals = (
+        _section,
+        _inputs,
+        checkForInitialData = false
+    ) => {
         const hiddenIds = [];
         _section.conditions.forEach((condition) => {
             condition.elements.forEach((element) => {
@@ -48,8 +51,7 @@ function DmptFormFields(props) {
                     if (isTargetOptionInInputs(_inputs, condition) === false) {
                         hiddenIds.push(element.page_id);
                     }
-                }
-                else {
+                } else {
                     hiddenIds.push(element.page_id);
                 }
             });
@@ -65,6 +67,22 @@ function DmptFormFields(props) {
         getHiddenPageIdsFromConditionals(section, inputs, false)
     );
 
+    const getVisiblePageIdsFromInputData = (ids) => {
+        const remove = [];
+        ids.forEach((id) => {
+            section.conditions.forEach((condition) => {
+                condition.elements.forEach((element) => {
+                    if (
+                        element.page_id === id &&
+                        isTargetOptionInInputs(inputs, condition)
+                    ) {
+                        remove.push(element.page_id);
+                    }
+                });
+            });
+        });
+        return remove;
+    };
     const setPageVisibility = (condition, questionAttributeKey, optionId) => {
         if (
             condition.source_key === questionAttributeKey &&
@@ -72,43 +90,12 @@ function DmptFormFields(props) {
         ) {
             const ids = hiddenPageIds;
             condition.elements.forEach((element) => {
-
-                // TODO: this and other below does the trick in genaral
-                //  but it takes not into consideration that if values are already set in options,
-                //  according to conditions, it will not act to already set values
-
-                let indexInHidden =ids.indexOf(element.page_id);
-                let indexInInitial = initialHiddenPageIds.indexOf(element.page_id);
-                console.log('REMOVE ', element.page_id, ' index in hidden ', indexInHidden, ' | index in initial ', indexInInitial);
-                ids.splice(indexInHidden, 1);
-                console.log('NEW ids ', ids);
-                console.log('curent hidden ', hiddenPageIds);
-                console.log('inputs ', inputs);
-                console.log('condition ', condition);
-                let additionalRemovals = [];
-                ids.forEach((id) => {
-                    console.log('\tid (new/hidden): ', id);
-                    section.conditions.forEach((condition) => {
-                        console.log('\t\tchecking condition ', condition);
-                        condition.elements.forEach((element) => {
-                            if (element.page_id === id) {
-                                console.log('\t\t\tthis one is hidden ', element);
-                                console.log('\t\t\tisTargetOptionInInputs ', isTargetOptionInInputs(inputs, condition));
-                                if (isTargetOptionInInputs(inputs, condition)) {
-                                    additionalRemovals.push(element.page_id);
-                                }
-                            }
-                        });
-                    });
+                ids.splice(ids.indexOf(element.page_id), 1);
+                const visibleAccordingToInputValues =
+                    getVisiblePageIdsFromInputData(ids);
+                visibleAccordingToInputValues.forEach((remove) => {
+                    ids.splice(ids.indexOf(remove), 1);
                 });
-                console.log('REMOVE ALSO ', additionalRemovals);
-                additionalRemovals.forEach((remove)=>{
-                    ids.splice(ids.indexOf(remove));
-                });
-
-                // console.log('isTargetOptionInInputs ', isTargetOptionInInputs(inputs, condition));
-                // console.log('getHiddenPageIdsFromConditionals ', getHiddenPageIdsFromConditionals(section, inputs, true));
-
             });
             setHiddenPageIds(ids);
         } else if (
@@ -118,12 +105,10 @@ function DmptFormFields(props) {
             let ids = hiddenPageIds;
             condition.elements.forEach((element) => {
                 if (!ids.includes(element.page_id)) {
-                    let indexInHidden =ids.indexOf(element.page_id);
-                    let indexInInitial = initialHiddenPageIds.indexOf(element.page_id);
-                    console.log('ADD ', element.page_id, ' index in hidden ', indexInHidden, ' | index in initial ', indexInInitial);
-                    console.log('\tcombined ', initialHiddenPageIds.slice(indexInInitial, initialHiddenPageIds.length));
-                    ids = initialHiddenPageIds.slice(indexInInitial, initialHiddenPageIds.length);
-                    // ids.push(element.page_id);
+                    ids = initialHiddenPageIds.slice(
+                        initialHiddenPageIds.indexOf(element.page_id),
+                        initialHiddenPageIds.length
+                    );
                 }
             });
             setHiddenPageIds(ids);
@@ -135,17 +120,9 @@ function DmptFormFields(props) {
         section.conditions.forEach((condition) => {
             setPageVisibility(condition, questionAttributeKey, optionId);
         });
-        // handleInputChange(e);
     };
 
     const inputFields = section.pages.map((page) => {
-        // TODO: if a question has to be hidden due to a condition (e.g. physical object)
-        //  the current order of html-elements and layout, makes it neccessary to hide
-        //  the page that contains the question (to also hide header +  texts etc.).
-        //  If hiding a whole page of a section is causing problems, the consequence
-        //  would be to re-arrange elements or at least ids to hide on question level.
-        console.log('\n---------------\nhidden page ids ', hiddenPageIds);
-        console.log('Initialhidden page ids ', initialHiddenPageIds);
         if (hiddenPageIds.includes(page.id)) {
             return <div id={`page-${page.id}-hidden`} />;
         }
@@ -256,8 +233,6 @@ function DmptFormFields(props) {
                         </div>
                     );
                 })}
-
-                {/*  ------------------------------------------    */}
             </div>
         );
     });
