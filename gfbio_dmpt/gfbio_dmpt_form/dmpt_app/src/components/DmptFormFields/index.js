@@ -6,6 +6,9 @@ import Select from './select';
 import Radio from './radio';
 import CheckBox from './checkbox';
 import PinnableTooltip from './pinnableTooltip';
+import getMandatoryMessage from './getMandatoryMessage';
+import getHiddenPageIdsFromConditionals from './getHiddenPageIdsFromConditionals';
+import getVisiblePageIdsFromInputData from './getVisiblePageIdsFromInputData';
 
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
@@ -15,50 +18,6 @@ function DmptFormFields(props) {
     //  although questionsets still exist, the import of the gfbio catalog put
     //  everything that was formerly a questionset into a page
 
-    const getMandatoryMessage = (isOptional, lang) => {
-        if (isOptional) {
-            return <span />;
-        }
-        if (lang?.shortCode === 'DE') {
-            return (
-                <span className="mandatory">
-                    (Dieses Feld ist erforderlich)
-                </span>
-            );
-        }
-        return <span className="mandatory">(This field is mandatory)</span>;
-    };
-
-    const isTargetOptionInInputs = (_inputs, condition) => {
-        let result = false;
-        Object.keys(_inputs).forEach((key) => {
-            if (_inputs[key] === `${condition.target_option_id}`) {
-                result = true;
-            }
-        });
-        return result;
-    };
-
-    const getHiddenPageIdsFromConditionals = (
-        _section,
-        _inputs,
-        checkForInitialData = false
-    ) => {
-        const hiddenIds = [];
-        _section.conditions.forEach((condition) => {
-            condition.elements.forEach((element) => {
-                if (checkForInitialData) {
-                    if (isTargetOptionInInputs(_inputs, condition) === false) {
-                        hiddenIds.push(element.page_id);
-                    }
-                } else {
-                    hiddenIds.push(element.page_id);
-                }
-            });
-        });
-        return hiddenIds;
-    };
-
     const [hiddenPageIds, setHiddenPageIds] = useState(
         getHiddenPageIdsFromConditionals(section, inputs, true)
     );
@@ -67,22 +26,6 @@ function DmptFormFields(props) {
         getHiddenPageIdsFromConditionals(section, inputs, false)
     );
 
-    const getVisiblePageIdsFromInputData = (ids) => {
-        const remove = [];
-        ids.forEach((id) => {
-            section.conditions.forEach((condition) => {
-                condition.elements.forEach((element) => {
-                    if (
-                        element.page_id === id &&
-                        isTargetOptionInInputs(inputs, condition)
-                    ) {
-                        remove.push(element.page_id);
-                    }
-                });
-            });
-        });
-        return remove;
-    };
     const setPageVisibility = (condition, questionAttributeKey, optionId) => {
         if (
             condition.source_key === questionAttributeKey &&
@@ -92,7 +35,7 @@ function DmptFormFields(props) {
             condition.elements.forEach((element) => {
                 ids.splice(ids.indexOf(element.page_id), 1);
                 const visibleAccordingToInputValues =
-                    getVisiblePageIdsFromInputData(ids);
+                    getVisiblePageIdsFromInputData(ids, section, inputs);
                 visibleAccordingToInputValues.forEach((remove) => {
                     ids.splice(ids.indexOf(remove), 1);
                 });
