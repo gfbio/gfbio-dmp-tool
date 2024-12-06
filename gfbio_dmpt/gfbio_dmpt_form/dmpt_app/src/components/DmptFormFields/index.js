@@ -70,7 +70,11 @@ function DmptFormFields(props) {
             return <div id={`page-${page.id}-hidden`} />;
         }
         return (
-            <div className="col-12 mb-3" id={`page-${page.id}`}>
+            // FIXME: latest change to rdmo2  uses pages instead of questionsets, to make
+            //  things obvious and readable "page" was included in the id of the div
+            //  but latest css changes were refering to "questionset" in div id as css-selector
+            // <div className="col-12 mb-3" id={`page-${page.id}`}>
+            <div className="col-12 mb-3" id={`questionset-${page.id}`}>
                 <div className="questionHelp">
                     <h5>{page.title}</h5>
                     <PinnableTooltip helptext={page.help} />
