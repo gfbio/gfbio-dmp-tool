@@ -1,6 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PinnableTooltip from './pinnableTooltip'
+import PinnableTooltip from './pinnableTooltip';
+
+// TODO: DASS-2324: a quick hack to escape html entities in options
+//  but this entities are coming from the catalog data. This is in general not needed
+//  THE ERROR IS IN THE CATALOG OPTION DATA !
+function decodeHTMLEntities(text) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+}
 
 function Radio(props) {
     const { question, handleChange, inputs } = props;
@@ -20,18 +29,22 @@ function Radio(props) {
                         name={radioFieldName}
                         id={`option-${optionSetOption.id}`}
                         value={optionSetOption.id}
-                        onChange={(e) => handleChange(e, optionSetOption.id, question.attribute.key)}
+                        onChange={(e) =>
+                            handleChange(
+                                e,
+                                optionSetOption.id,
+                                question.attribute.key
+                            )
+                        }
                         checked={`${optionSetOption.id}` === initialOptionId}
                     />
                     <label
                         className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}
                     >
-                        {optionSetOption.text}
+                        {decodeHTMLEntities(optionSetOption.text)}
                     </label>
-                    <PinnableTooltip
-                        helptext={optionSetOption.comment}
-                    />
+                    <PinnableTooltip helptext={optionSetOption.comment} />
                 </div>
             );
         });
