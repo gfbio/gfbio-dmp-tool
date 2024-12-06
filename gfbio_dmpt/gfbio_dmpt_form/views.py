@@ -69,9 +69,10 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_id": str(user.id),
             "user_name": str(user.username),
             "user_email": str(user.email),
-            # "catalog_id": catalog_id,
+            "catalog_id": catalog_id,
             # TODO: remove after testing
-            "catalog_id": 18,
+            # TODO: locally its this id, from dump
+            # "catalog_id": 18,
 
         }
 
