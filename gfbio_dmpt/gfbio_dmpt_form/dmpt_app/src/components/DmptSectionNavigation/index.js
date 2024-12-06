@@ -32,7 +32,7 @@ const useDmptSectionNavigation = (
                     }
                 );
                 setSectionList(result.data.sections);
-                // setMandatoryFields(result.data.mandatory_fields);
+                setMandatoryFields(result.data.mandatory_fields);
                 setProcessing(false);
             } catch (error) {
                 console.error(error);
