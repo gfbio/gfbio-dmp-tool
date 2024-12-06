@@ -4,14 +4,7 @@ from django.db import models
 from django.db.models import CharField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.db import models
-from django.db import IntegrityError
-from django.utils.timezone import now
-
-from gfbio_dmpt.generic.models import TimeStampedModel
-
-# FIXME: @cpfaff this resolves a very strange dependency in one of the fixtures. why import here ?
-from gfbio_dmpt.generic.fields import AutoCreatedField, AutoLastModifiedField
+from model_utils.models import TimeStampedModel
 
 
 class User(AbstractUser, TimeStampedModel):
@@ -19,6 +12,7 @@ class User(AbstractUser, TimeStampedModel):
 
     #: First and last name do not cover name patterns around the globe
     name = CharField(_("Name of User"), blank=True, max_length=255)
+
     # first_name = None  # type: ignore
     # last_name = None  # type: ignore
 
@@ -48,8 +42,6 @@ class User(AbstractUser, TimeStampedModel):
             return (None, False)
 
 
-# FIXME: @cpfaff this is not needed we have a lib installed for TimeStampedModel. remove this please
-#   and add the proper TimeStampedModel
 class ExternalUserId(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     external_id = CharField(

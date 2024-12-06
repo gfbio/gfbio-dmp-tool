@@ -18,7 +18,7 @@ const useDmptSection = (catalogId, sectionIndex, token, language) => {
                 const result = await axios.get(
                     `${SECTION_ROOT}${catalogId}/${sectionIndex}`,
                     {
-                        headers: { 
+                        headers: {
                             Authorization: `Token ${token}`
                         },
                     }

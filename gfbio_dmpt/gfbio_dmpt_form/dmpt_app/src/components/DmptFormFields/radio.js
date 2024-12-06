@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PinnableTooltip from './pinnableTooltip'
+import PinnableTooltip from './pinnableTooltip';
+
+// TODO: DASS-2324: a quick hack to escape html entities in options
+//  but this entities are coming from the catalog data. This is in general not needed
+//  THE ERROR IS IN THE CATALOG OPTION DATA !
+function decodeHTMLEntities(text) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+}
 
 function Radio(props) {
     const { question, handleChange, inputs } = props;
     const optionSetFields = question.optionsets.map((optionSet) => {
-        const radioFieldName = `optionset-${optionSet.id}____${question.key}____${question.id}`;
+        const radioFieldName = `optionset-${optionSet.id}____${question.attribute.key}____${question.id}`;
         let initialOptionId = '';
         if (radioFieldName in inputs) {
             initialOptionId = inputs[radioFieldName];
@@ -20,18 +29,22 @@ function Radio(props) {
                         name={radioFieldName}
                         id={`option-${optionSetOption.id}`}
                         value={optionSetOption.id}
-                        onChange={(e) => handleChange(e)}
+                        onChange={(e) =>
+                            handleChange(
+                                e,
+                                optionSetOption.id,
+                                question.attribute.key
+                            )
+                        }
                         checked={`${optionSetOption.id}` === initialOptionId}
                     />
                     <label
                         className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}
                     >
-                        {optionSetOption.text}
+                        {decodeHTMLEntities(optionSetOption.text)}
                     </label>
-                    <PinnableTooltip
-                        helptext={optionSetOption.comment}
-                    />
+                    <PinnableTooltip helptext={optionSetOption.comment} />
                 </div>
             );
         });
@@ -43,7 +56,7 @@ function Radio(props) {
         );
     });
     return (
-        <div id={`question-${question.id}`} name={question.key}>
+        <div id={`question-${question.id}`} name={question.attribute.key}>
             {optionSetFields}
         </div>
     );

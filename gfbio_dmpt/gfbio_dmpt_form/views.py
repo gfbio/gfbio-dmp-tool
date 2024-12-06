@@ -6,7 +6,7 @@ import string
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -16,6 +16,7 @@ from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
 from rdmo.questions.models import Question
 from rdmo.questions.models.catalog import Catalog
+from rdmo.questions.serializers.v1 import SectionSerializer
 from rest_framework import generics, permissions, mixins
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
@@ -29,16 +30,13 @@ from .forms import DmptSupportForm
 from .jira_utils import create_support_issue_in_view
 from .models import DmptProject, DmptCatalog
 from .permissions import IsOwner
-from .rdmo_db_utils import get_catalog_with_sections, build_form_content, get_mandatory_form_fields
+from .rdmo_db_utils import build_form_content, get_mandatory_form_fields
 from .serializers.dmpt_serializers import (
     DmptProjectSerializer,
     RdmoProjectSerializer,
     RdmoProjectValuesSerializer, RdmoProjectValuesUpdateSerializer,
 )
-from .serializers.extended_serializers import (
-    DmptSectionNestedSerializer,
-    DmptSectionSerializer,
-)
+from .utils.prepare_section_data import get_section_data
 
 
 class CSRFViewMixin(View):
@@ -71,10 +69,11 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
             "user_id": str(user.id),
             "user_name": str(user.username),
             "user_email": str(user.email),
-            "catalog_id": catalog_id,
-        }
+            # "catalog_id": catalog_id,
+            # TODO: remove after testing
+            "catalog_id": 18,
 
-        print(f"Context passed to template: {context['backend']}")
+        }
 
         return self.render_to_response(context)
 
@@ -101,27 +100,26 @@ class DmptFrontendView(CSRFViewMixin, TemplateView):
                 project = DmptProject.objects.get(id=id)
                 rdmo_project = Project.objects.get(id=project.rdmo_project_id)
                 catalog_id = rdmo_project.catalog_id
-                print(f"Project ID: {id}, Catalog ID: {catalog_id}")
             except DmptProject.DoesNotExist:
-                print(f"DmptProject with ID {id} does not exist.")
                 return HttpResponse("Project not found", status=404)
             except Project.DoesNotExist:
-                print(f"RDMO Project with ID {project.rdmo_project_id} does not exist.")
                 return HttpResponse("RDMO Project not found", status=404)
         else:
             catalog_id = self._get_default_catalog_id()
         return catalog_id
 
+    # FIXME: DASS-2203 broken due to update to rdmo 2
+    # TODO: discuss approach in general, is this part of the versioning workflow for jimena ?
     def _get_default_catalog_id(self):
-        default_selected_catalog = DmptCatalog.objects.filter(active = True).first()
+        default_selected_catalog = DmptCatalog.objects.filter(active=True).first()
         if default_selected_catalog:
             catalog_id = default_selected_catalog.catalog.id
-            print(f"Default selected catalog ID: {catalog_id}")
         else:
             first_catalog = Catalog.objects.first()
             catalog_id = first_catalog.id if first_catalog else None
-            print(f"Fallback catalog ID: {catalog_id}")
         return catalog_id
+
+
 # This exports a GFBio branded DMP PDF
 class DmpExportView(ProjectAnswersView):
     template_name = "gfbio_dmpt_export/dmp_export.html"
@@ -206,8 +204,8 @@ class DmptProjectDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
             catalog_id = (
                 None if not obj.rdmo_project.catalog else obj.rdmo_project.catalog.id
             )
-            catalog = get_catalog_with_sections(catalog_id)
-            form_data = build_form_content(catalog.sections.all(), obj)
+            catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
+            form_data = build_form_content(catalog.elements, obj)
         except Catalog.DoesNotExist as e:
             pass
         response.data["form_data"] = form_data
@@ -328,25 +326,20 @@ class DmptSectionListView(generics.GenericAPIView):
 
     def get(self, request, catalog_id):
         try:
-            catalog = Catalog.objects.prefetch_related("sections").get(id=catalog_id)
+            catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
-        sections = catalog.sections.all()
+        sections = catalog.elements
         mandatory = get_mandatory_form_fields(sections)
-        serializer = DmptSectionSerializer(sections, many=True)
+        # FIXME: brute force,basically getting everything. Is there a way to reduce
+        #   amount of data and database querying ?
+        serializer = SectionSerializer(sections, many=True)
         data = {
             'sections': serializer.data,
             'mandatory_fields': mandatory,
         }
         return Response(data=data, status=HTTP_200_OK)
 
-
-# class DmptProjectFormDataView(generics.GenericAPIView):
-#     authentication_classes = (TokenAuthentication, BasicAuthentication)
-#     permission_classes = (
-#         permissions.IsAuthenticated,
-#         IsOwner,
-#     )
 
 # TODO: maybe it is better to access section directly via id, since we now work with section tab navi in react app
 class DmptSectionDetailView(generics.GenericAPIView):
@@ -360,77 +353,17 @@ class DmptSectionDetailView(generics.GenericAPIView):
 
     def get(self, request, catalog_id, section_index, format="json"):
         try:
-            catalog = get_catalog_with_sections(catalog_id)
+            catalog = Catalog.objects.prefetch_elements().get(id=catalog_id)
         except Catalog.DoesNotExist as e:
             return Response(data=f"{e}", status=HTTP_400_BAD_REQUEST)
 
-        sections = catalog.sections.all()
+        sections = catalog.elements
         if section_index >= len(sections):
             return Response(
                 data=f"faulty index: {section_index}", status=HTTP_400_BAD_REQUEST
             )
 
-        serializer = DmptSectionNestedSerializer(sections[section_index])
-        return Response(data=serializer.data, status=HTTP_200_OK)
+        section = sections[section_index]
+        data = get_section_data(section)
 
-        # prototyping below ------------------------------
-        # # print(Catalog.objects.all())
-        # # for c in Catalog.objects.all():
-        # #     print(c, ' ', c.id)
-        # catalog_id = 18
-        # catalog = Catalog.objects.prefetch_related(
-        #     'sections',
-        #     Prefetch('sections__questionsets', queryset=QuestionSet.objects.filter(questionset=None).prefetch_related(
-        #         'conditions',
-        #         'questions',
-        #         'questions__attribute',
-        #         'questions__optionsets',
-        #         'questionsets',
-        #         'questions__optionsets__options',
-        #     ))
-        # ).get(id=catalog_id)
-        # print(catalog)
-        # # print(catalog.sections.all())
-        # first_section = catalog.sections.all()[3]
-        # # for s in catalog.sections.all():
-        #
-        # # TODO: for project detail view
-        # project = Project.objects.first()
-        # print('project available ', project)
-        # v = Value.objects.filter(project=project).first()
-        # print('first value for project ', v, ' | text: ', v.text, ' | attribute: ', v.attribute)
-        # serializer = ProjectSerializer(project)
-        # # print('p serializer ', serializer.data)
-        # print('\nfirst section', first_section)
-        #
-        # # questions.v1.serializer
-        # # s_data = SectionSerializer(first_section).data
-        # # ns_data = SectionNestedSerializer(first_section).data
-        # # print('section serializer data: ', s_data)
-        # # print('nested section serializer data: ', ns_data)
-        # # print('\n as json \n', JSONRenderer().render(ns_data))
-        # data = DmptSectionNestedSerializer(first_section).data
-        # print('custom serializer data: ', )
-        # print(JSONRenderer().render(data))
-        #
-        # # for qs in first_section.questionsets.all():
-        # #     print('\n\tquestion_set: ', qs, ' |  attribute: ', qs.attribute)
-        # #     # questions.v1.serializer
-        # #     # qs_data = QuestionSetSerializer(qs).data
-        # #     # print('\tqs serializer: ', qs_data)
-        # #     nqs_data = QuestionSetNestedSerializer(qs).data
-        # #     # print('\tnested qs serializer: ', nqs_data)
-        # #     for c in qs.conditions.all():
-        # #         print('\t\tcondition: ', c, ' |  source (attribute): ', c.source)
-        # #     for q in qs.questions.all():
-        # #         # TODO: for value, when requesting specific project, add manager to get singel val and catch exceptions
-        # #         # TODO: value.text for generic and text area, value.option for radio, select and checkbox
-        # #         print('\t\tquestion: ', q, ' |  widget_type: ', q.widget_type, ' |  attribute: ', q.attribute,
-        # #               ' | value available (for project): ',
-        # #               Value.objects.filter(project=project, attribute=q.attribute))
-        # #         for os in q.optionsets.all():
-        # #             print('\t\t\toption_set: ', os, ' | conditions: ', os.conditions.all())
-        # #             for o in os.options.all():
-        # #                 print('\t\t\t\toption: ', o)
-
-        # return Response(data={}, status=HTTP_200_OK)
+        return Response(data=data, status=HTTP_200_OK)

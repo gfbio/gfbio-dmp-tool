@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import logging
 
-import celery
-
+# import celery
+from config.celery_app import app
 from .jira_utils import get_issue_reporter, create_support_issue, get_rdmo_project_for_project_id
 from .models import DmptProject
 
 logger = logging.getLogger(__name__)
 
 
-@celery.task(name='tasks.delete_temporary_rdmo_projects_task')
+@app.task(name='tasks.delete_temporary_rdmo_projects_task')
 def delete_temporary_rdmo_projects_task():
     logger.info('tasks.py | delete_temporary_rdmo_projects_task | '
                 'start deleting temporary rdmo projects')
@@ -18,7 +18,7 @@ def delete_temporary_rdmo_projects_task():
                 'objects deleted={0}'.format(number))
 
 
-@celery.task(name='tasks.create_support_issue_task')
+@app.task(name='tasks.create_support_issue_task')
 def create_support_issue_task(form_data={}):
     logger.info(
         f'tasks.py | create_support_issue_task | '

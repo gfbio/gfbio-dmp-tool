@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 from inspect import Attribute
+from pprint import pprint
+from unittest import skip
 
 from django.test import TestCase
 from rdmo.domain.models import Attribute
@@ -14,7 +16,7 @@ from gfbio_dmpt.users.models import User
 
 
 class TestDmptFormDataView(TestCase):
-    fixtures = ["dumps/rdmo_testinstance_dump.json"]
+    fixtures = ["dumps/local_dump_with_2.2.2.json"]
 
     @staticmethod
     def _prepareData():
@@ -40,6 +42,8 @@ class TestDmptFormDataView(TestCase):
         cls.std_client = client
         cls._prepareData()
 
+
+
     def test_get(self):
         catalog_id = 18
         section_index = 0
@@ -49,12 +53,10 @@ class TestDmptFormDataView(TestCase):
     def test_get_content(self):
         catalog_id = 18  # ???
         section_index = 0
-        # TODO: single section or all sections for app ?
-        #  or a get section view e.g. [{title: '', sectionId: 23}, ...]
         response = self.std_client.get(f"/dmp/section/{catalog_id}/{section_index}/")
         content = json.loads(response.content)
-        self.assertIn("questionsets", content.keys())
-        self.assertIn("questions", content.get("questionsets", []).pop().keys())
+        self.assertIn("pages", content.keys())
+        self.assertIn("pagequestions", content.get("pages", []).pop().keys())
 
     def test_get_section_list(self):
         catalog_id = 18  # ???
@@ -186,7 +188,7 @@ class TestDmptFormDataView(TestCase):
 
 
 class TestDmptProjectDetailView(TestCase):
-    fixtures = ["dumps/rdmo_testinstance_dump.json"]
+    fixtures = ["dumps/local_dump_with_2.2.2.json"]
 
     @classmethod
     def setUpTestData(cls):
@@ -237,7 +239,8 @@ class TestDmptProjectDetailView(TestCase):
         self.client_1.post("/dmp/projects/values/", data, format="json")
 
     def test_db_content(self):
-        self.assertEqual(2, len(Project.objects.all()))
+        # assuming 115 projects in database dump fixture
+        self.assertEqual(117, len(Project.objects.all()))
         self.assertEqual(2, len(DmptProject.objects.all()))
 
     def test_unauthorized_get(self):
@@ -268,6 +271,7 @@ class TestDmptProjectDetailView(TestCase):
         response = self.client_2.get("/dmp/dmptprojects/{}/".format(dp.pk))
         self.assertEqual(403, response.status_code)
 
+    # @skip("DASS-2204: refacting to rdmo 2. this part tests for assembling json with values for details view, that is not yet refacted")
     def test_form_data_content(self):
         self._post_values()
         rdmo_project = Project.objects.get(title="Le Title")
@@ -276,14 +280,15 @@ class TestDmptProjectDetailView(TestCase):
         )
         response = self.client_1.get("/dmp/dmptprojects/{}/".format(dmpt_project.pk))
         content = json.loads(response.content)
+        pprint(content['form_data'])
         self.assertEqual(200, response.status_code)
         self.assertDictEqual(
             {'project_name____487': 'Project Title',
-             'optionset-54____categoryType____488': '317',
-             'option-247____is_data_reproducible____489': '247',
-             'option-248____is_data_reproducible____489': '248',
-             'PersonName____493': 'Contact for data',
-             'optionset-55____principal_investigators____496': '325'},
+             'optionset-54____research_category_type____488': '317',
+             'option-247____research_data_reproducible____489': '247',
+             'option-248____research_data_reproducible____489': '248',
+             'contact_person_name____493': 'Contact for data',
+             'optionset-55____name____496': '325'},
             content.get("form_data", {}),
         )
 
