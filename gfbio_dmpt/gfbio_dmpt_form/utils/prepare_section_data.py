@@ -39,9 +39,7 @@ def get_section_data(section):
     data['conditions'] = []
     pages = section.elements
     for page in pages:
-        print('get_section_data | conditions on page: ', page)
         for c in page.conditions.all():
-            print('like elements, but parent-page of element related : ', )
             data['conditions'].append(
                 {
                     'source_key': c.source.key, 'target_option_id': c.target_option.id,
