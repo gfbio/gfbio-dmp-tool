@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url
 from django.urls import path
 from django.urls import re_path
 
@@ -8,7 +7,7 @@ from . import views
 app_name = "gfbio_dmpt_form"
 urlpatterns = [
     re_path(r'^create(/(?P<id>\d+))?/$', views.DmptFrontendView.as_view(), name='create_dmp'),
-    url("create/new", views.DmptFrontendView.as_view(), name="create_dmp_new"),
+    path("create/new", views.DmptFrontendView.as_view(), name="create_dmp_new"),
     path("dmptprojects/", views.DmptProjectListView.as_view(), name="dmpt_projects"),
     path(
         "dmptprojects/<int:pk>/",
@@ -29,6 +28,8 @@ urlpatterns = [
         views.DmptSectionDetailView.as_view(),
         name="dmpt_section_detail",
     ),
+    # FIXME: from us, not the rdmo equivalent
+    # FIXME: rdmo /project/create not working because of update, conflict with rmdo url (which is supposed to be under /rdmo/)
     path("projects/", views.RdmoProjectCreateView.as_view(), name="dmpt_rdmo_projects"),
     path(
         "projects/values/",

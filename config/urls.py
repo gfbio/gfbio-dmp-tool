@@ -19,6 +19,14 @@ urlpatterns = [
     path("rdmo/", staff_member_required(home), name="home_rdmo"),
     path("rdmo/about/", staff_member_required(about), name="about_rdmo"),
     path("rdmo/", include("rdmo.core.urls")),
+
+    # FIXME: DASS-2203 try to adapt to hardwired urls in rdmo ui
+    path('account/', include('rdmo.accounts.urls')),
+    path('management/', include('rdmo.management.urls')),
+    path('overlays/', include('rdmo.overlays.urls')),
+    path('projects/', include('rdmo.projects.urls')),
+    path('services/', include('rdmo.services.urls')),
+
     path("api/v1/", include("rdmo.core.urls.v1")),
     path("api/v1/", include("rdmo.core.urls.swagger")),
 

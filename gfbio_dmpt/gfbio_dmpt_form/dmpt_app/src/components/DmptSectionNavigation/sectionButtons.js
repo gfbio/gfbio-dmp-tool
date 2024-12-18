@@ -102,11 +102,7 @@ function SectionButtons(props) {
             }`}
             onClick={() => backHandler(sectionIndex, setSectionIndex)}
         >
-            <h6
-                className={`sidebar-list-item ${
-                    disabled ? 'text-muted' : ''
-                }`}
-            >
+            <h6 className={`sidebar-list-item ${disabled ? 'text-muted' : ''}`}>
                 <i className="mdi mdi-chevron-double-left align-middle" />
                 <br />
                 Previous Section
@@ -132,7 +128,9 @@ function SectionButtons(props) {
     );
 
     if (sectionIndex == 0) {
-        previousButton = <div className="list-group-item list-group-item-action disabled list-item-placeholder"></div>;
+        previousButton = (
+            <div className="list-group-item list-group-item-action disabled list-item-placeholder"></div>
+        );
     }
     if (sectionIndex === sectionsLength - 1) {
         continueButton = (

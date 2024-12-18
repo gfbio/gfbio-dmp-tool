@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import RdmoContext from '../RdmoContext';
@@ -13,6 +13,7 @@ function SaveDmpt(props) {
     if (postResult.processing) {
         buttonText = '... sending data';
     } else if (postResult.result !== {}) {
+        // TODO: better error and retry handling
         if (postResult.result.status === 201) {
             buttonText = 'Your project has been saved';
             messageSection = (

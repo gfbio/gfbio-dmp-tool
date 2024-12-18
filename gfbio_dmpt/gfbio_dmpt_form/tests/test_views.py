@@ -30,11 +30,12 @@ def _get_jira_issue_response():
         return json.load(data_file)
 
 
+# FIXME: Catalog is now different, no key
 class TestDmptFrontendView(TestCase):
     @classmethod
     def setUpTestData(cls):
         Group.objects.create(name="api")
-        Catalog.objects.create(key="GFBio", title_lang1="GFBio test catalog")
+        Catalog.objects.create(uri_path="GFBio", title_lang1="GFBio test catalog")
         cls.std_user = User.objects.create_user(
             username="john",
             email="john@doe.de",
@@ -55,11 +56,12 @@ class TestDmptFrontendView(TestCase):
         self.assertIn(b"{'isLoggedIn': 'true', 'token':", response.content)
 
 
+# FIXME: Catalog is now different, no key
 class TestDmpExportView(TestCase):
     @classmethod
     def setUpTestData(cls):
         Group.objects.create(name="api")
-        Catalog.objects.create(key="GFBio", title_lang1="GFBio test catalog")
+        Catalog.objects.create(uri_path="GFBio", title_lang1="GFBio test catalog")
         cls.std_user = User.objects.create_user(
             username="john",
             email="john@doe.de",
@@ -87,7 +89,7 @@ class TestDmpExportView(TestCase):
     def test_that_anonymous_rabbit_can_download_its_dmp(self):
         user = User.objects.get(username="anonymous-rabbit")
 
-        catalog = Catalog.objects.create(key="rabbitcatalogue")
+        catalog = Catalog.objects.create(uri_path="rabbitcatalogue")
         project = Project.objects.create(title="rabbitproject", catalog=catalog)
         user.projects.add(project)
         response = self.client.get(
@@ -97,8 +99,9 @@ class TestDmpExportView(TestCase):
         self.assertEqual(response["content-type"], "application/pdf")
 
     def test_that_anonymous_rabbit_two_can_not_download_others_dmp(self):
-        catalog = Catalog.objects.create(key="rabbitcatalogue")
-        site = Site.objects.create(name="rabbithole", domain="rabbithole.carrot.dev")
+        catalog = Catalog.objects.create(uri_path="rabbitcatalogue")
+        # site = Site.objects.create(name="rabbithole-x", domain="rabbithole.carrot.org")
+        site = Site.objects.first()
         project = Project.objects.create(
             title="rabbitproject",
             catalog=catalog,
@@ -110,6 +113,7 @@ class TestDmpExportView(TestCase):
         response = self.client.get(
             f"/dmp/export/{project.pk}/pdf?username={user_two.username}"
         )
+        # FIXME: code ok, but access like above throws an exception which has to be catched or silenced
         self.assertEqual(403, response.status_code)
 
 

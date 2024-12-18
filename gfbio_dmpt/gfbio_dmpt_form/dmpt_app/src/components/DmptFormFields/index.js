@@ -1,30 +1,99 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import TextInput from './textinput';
 import TextArea from './textarea';
 import Select from './select';
 import Radio from './radio';
 import CheckBox from './checkbox';
-import PinnableTooltip from './pinnableTooltip'
+import PinnableTooltip from './pinnableTooltip';
+import getMandatoryMessage from './getMandatoryMessage';
+import getHiddenPageIdsFromConditionals from './getHiddenPageIdsFromConditionals';
+import getVisiblePageIdsFromInputData from './getVisiblePageIdsFromInputData';
 
 function DmptFormFields(props) {
-    const { section, handleInputChange, inputs, validationErrors, language} = props;
-    const inputFields = section.questionsets.map((questionset) => {
+    const { section, handleInputChange, inputs, validationErrors, language } =
+        props;
+
+    // TODO: page seems to be in rdmo 2 what quesitionset was in rdmo 1
+    //  although questionsets still exist, the import of the gfbio catalog put
+    //  everything that was formerly a questionset into a page
+
+    const [hiddenPageIds, setHiddenPageIds] = useState(
+        getHiddenPageIdsFromConditionals(section, inputs, true)
+    );
+
+    const [initialHiddenPageIds, setInitialHiddenPageIds] = useState(
+        getHiddenPageIdsFromConditionals(section, inputs, false)
+    );
+
+    const setPageVisibility = (condition, questionAttributeKey, optionId) => {
+        if (
+            condition.source_key === questionAttributeKey &&
+            condition.target_option_id === optionId
+        ) {
+            const ids = hiddenPageIds;
+            condition.elements.forEach((element) => {
+                ids.splice(ids.indexOf(element.page_id), 1);
+                const visibleAccordingToInputValues =
+                    getVisiblePageIdsFromInputData(ids, section, inputs);
+                visibleAccordingToInputValues.forEach((remove) => {
+                    ids.splice(ids.indexOf(remove), 1);
+                });
+            });
+            setHiddenPageIds(ids);
+        } else if (
+            condition.source_key === questionAttributeKey &&
+            condition.target_option_id !== optionId
+        ) {
+            let ids = hiddenPageIds;
+            condition.elements.forEach((element) => {
+                if (!ids.includes(element.page_id)) {
+                    ids = initialHiddenPageIds.slice(
+                        initialHiddenPageIds.indexOf(element.page_id),
+                        initialHiddenPageIds.length
+                    );
+                }
+            });
+            setHiddenPageIds(ids);
+        }
+    };
+
+    const ExtendedHandleInputChange = (e, optionId, questionAttributeKey) => {
+        handleInputChange(e);
+        section.conditions.forEach((condition) => {
+            setPageVisibility(condition, questionAttributeKey, optionId);
+        });
+    };
+
+    const inputFields = section.pages.map((page) => {
+        if (hiddenPageIds.includes(page.id)) {
+            return <div id={`page-${page.id}-hidden`} />;
+        }
         return (
-            <div className="col-12 mb-4" id={`questionset-${questionset.id}`}>
+            // FIXME: latest change to rdmo2  uses pages instead of questionsets, to make
+            //  things obvious and readable "page" was included in the id of the div
+            //  but latest css changes were refering to "questionset" in div id as css-selector
+            // <div className="col-12 mb-3" id={`page-${page.id}`}>
+            <div className="col-12 mb-3" id={`questionset-${page.id}`}>
                 <div className="questionHelp">
-                    <h5>{questionset.title}</h5>
-                    <PinnableTooltip helptext={questionset.help} />
+                    <h5>{page.title}</h5>
+                    <PinnableTooltip helptext={page.help} />
                 </div>
 
-                {questionset.questions.map((question) => {
-                    const mandatoryIndicator = question.is_optional ? null : (
-                        <span className="mandatory" aria-label="Required field">*</span>
+                {page.pagequestions.map((question) => {
+                    const mandatoryMessage = getMandatoryMessage(
+                        question.is_optional,
+                        language
                     );
 
-                    const fieldName = `${question.key}____${question.id}`;
-                    let initialTextValue = inputs[fieldName] !== undefined ? inputs[fieldName] : '';
+                    // This not the best way, but increases readability of data in requests
+                    const fieldName = `${question.attribute.key}____${question.id}`;
+                    let initialTextValue = '';
+                    if (inputs[fieldName] !== undefined) {
+                        initialTextValue = inputs[fieldName];
+                    }
 
+                    // TODO: add a way to do this for option based fields, like radio, select, checkbox
                     let input = (
                         <TextInput
                             question={question}
@@ -32,7 +101,6 @@ function DmptFormFields(props) {
                             initialValue={initialTextValue}
                         />
                     );
-
                     if (question.widget_type === 'textarea') {
                         input = (
                             <TextArea
@@ -53,7 +121,7 @@ function DmptFormFields(props) {
                         input = (
                             <Radio
                                 question={question}
-                                handleChange={handleInputChange}
+                                handleChange={ExtendedHandleInputChange}
                                 inputs={inputs}
                             />
                         );
@@ -67,28 +135,46 @@ function DmptFormFields(props) {
                         );
                     }
 
-                    const validationMessage = ['email', 'url', 'phone', 'integer', 'float'].includes(question.value_type) &&
-                        Object.keys(validationErrors).some(k => k.startsWith(question.key)) ? (
-                            <span className="mandatory">
-                                {language?.shortCode === "DE"
-                                    ? `(kein valider ${question.value_type})`
-                                    : `(not a valid ${question.value_type})`}
-                            </span>
-                        ) : null;
+                    let validationMessage = <span />;
+
+                    // TODO: <09-05-22, claas>
+                    //   extract the array into a static variable. These could
+                    //   also be passed later from the backend
+                    if (
+                        ['email', 'url', 'phone', 'integer', 'float'].includes(
+                            question.value_type
+                        )
+                    ) {
+                        if (
+                            Object.keys(validationErrors).filter((k) =>
+                                k.startsWith(question.attribute.key)
+                            ).length > 0
+                        ) {
+                            validationMessage =
+                                language?.shortCode === 'DE' ? (
+                                    <span className="mandatory">
+                                        (kein valider {question.value_type})
+                                    </span>
+                                ) : (
+                                    <span className="mandatory">
+                                        (not a valid {question.value_type})
+                                    </span>
+                                );
+                        }
+                    }
 
                     return (
-                        <div className="col-12 mb-4">
+                        <div className="col-12">
                             <label
                                 aria-label={question.text}
-                                htmlFor={fieldName}
+                                htmlFor="username"
                                 className="form-label"
                             >
                                 {question.text}
-                                {mandatoryIndicator}
                                 <PinnableTooltip helptext={question.help} />
                             </label>
                             {input}
-                            <small className="form-text text-muted validation-field">
+                            <small className="form-text text-muted validation-field ">
                                 {mandatoryMessage} {validationMessage}
                             </small>
                         </div>
@@ -98,11 +184,7 @@ function DmptFormFields(props) {
         );
     });
 
-    return (
-        <div className="row">
-            {inputFields}
-        </div>
-    );
+    return <div className="row g-3">{inputFields}</div>;
 }
 
 DmptFormFields.propTypes = {
