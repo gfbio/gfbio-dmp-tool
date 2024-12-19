@@ -5,6 +5,7 @@ function TextInput(props) {
     const { question, handleChange, initialValue, validationErrors } = props;
     // This not the best way, but increases readability of data in requests
     const fieldName = `${question.attribute.key}____${question.id}`;
+
     return (
         <input
             type="text"
@@ -12,9 +13,8 @@ function TextInput(props) {
             id={`question-${question.id}`}
             name={fieldName}
             value={initialValue}
-            onChange={(event) =>
-                handleChange(event, question.value_type, question.is_optional)
-            }
+            onChange={(e) => handleChange(e)}
+            maxLength={255}
         />
     );
 }
