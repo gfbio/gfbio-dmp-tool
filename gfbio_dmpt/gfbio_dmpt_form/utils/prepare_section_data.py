@@ -5,9 +5,10 @@ from rdmo.options.serializers.v1 import OptionSetSerializer, OptionSerializer
 from rdmo.questions.serializers.v1 import PageSerializer, QuestionSerializer, SectionSerializer
 
 
-def get_option_data(option, optionsets_list):
-    optionset_data = OptionSetSerializer(option).data
-    options = option.options.all()
+def get_option_data(option_set, optionsets_list):
+    optionset_data = OptionSetSerializer(option_set).data
+    # options = option.options.all()
+    options = option_set.elements
     optionset_data['options'] = OptionSerializer(options, many=True).data
     optionsets_list.append(optionset_data)
 
