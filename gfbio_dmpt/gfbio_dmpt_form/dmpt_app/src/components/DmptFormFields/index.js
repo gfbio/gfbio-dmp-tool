@@ -65,6 +65,11 @@ function DmptFormFields(props) {
         });
     };
 
+    // const TextLengthHandleInputChange = (e) => {
+    //     console.log('TextLengthHandleInputChange ***', e);
+    //     handleInputChange(e);
+    // };
+
     const inputFields = section.pages.map((page) => {
         if (hiddenPageIds.includes(page.id)) {
             return <div id={`page-${page.id}-hidden`} />;
@@ -105,6 +110,7 @@ function DmptFormFields(props) {
                         input = (
                             <TextArea
                                 question={question}
+                                // handleChange={TextLengthHandleInputChange}
                                 handleChange={handleInputChange}
                                 initialValue={initialTextValue}
                             />
