@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import SaveDmpt from './save';
-import DiscardAndExit from './discard';
-import SupportRequest from './support';
-import PdfExport from './pdf';
+import React, { useContext, useState } from 'react';
 import RdmoContext from '../RdmoContext';
+import DiscardAndExit from './discard';
+import PdfExport from './pdf';
+import SaveDmpt from './save';
+import SupportRequest from './support';
 
 import postDmptProject from '../api/dmptProjects';
 
@@ -72,7 +72,7 @@ function DmptSummary(props) {
                         To save your Data Management Plan, you need to login
                         first. To login or sign up, visit this link:{' '}
                         <a
-                            href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
+                            href="/oidc/authenticate/"
                             className="btn btn-secondary btn-green"
                         >
                             Sign In
