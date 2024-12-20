@@ -152,21 +152,21 @@ function DmptFormFields(props) {
                         )
                     ) {
                         if (
-                            Object.keys(validationErrors).filter((k) =>
-                                k.startsWith(question.attribute.key)
-                            ).length > 0
-                        ) {
-                            validationMessage =
-                                language?.shortCode === 'DE' ? (
-                                    <span className="mandatory">
-                                        (kein valider {question.value_type})
-                                    </span>
-                                ) : (
-                                    <span className="mandatory">
-                                        (not a valid {question.value_type})
-                                    </span>
-                                );
-                        }
+                        Object.keys(validationErrors).filter((k) =>
+                            k.startsWith(question.attribute.key)
+                        ).length > 0
+                    ) {
+                        validationMessage =
+                            language?.shortCode === 'DE' ? (
+                                <span className="mandatory">
+                                    (kein valider {question.value_type})
+                                </span>
+                            ) : (
+                                <span className="mandatory">
+                                    (not a valid {question.value_type})
+                                </span>
+                            );
+                    }
                     }
 
                     return (
@@ -177,11 +177,12 @@ function DmptFormFields(props) {
                                 className="form-label"
                             >
                                 {question.text}
+                                {!question.is_optional && <span className="mandatory">*</span>}
                                 <PinnableTooltip helptext={question.help} />
                             </label>
                             {input}
                             <small className="form-text text-muted validation-field ">
-                                {mandatoryMessage} {validationMessage}
+                                {validationMessage}
                             </small>
                         </div>
                     );

@@ -251,6 +251,7 @@ $checkbox-border-width: 1.5px;
   margin-left: calc(#{$spacing-xs} / 2);
   margin-right: $spacing-xs;
   font-weight: bold;
+  display: inline-block;
 }
 
 // Question groups spacing

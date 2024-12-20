@@ -38,7 +38,7 @@ class DmptCatalog(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.catalog.key
+        return str(self.catalog.uri) if self.catalog.uri else f'Catalog {self.catalog.id}'
 
     class Meta:
         app_label = 'gfbio_dmpt_form'
