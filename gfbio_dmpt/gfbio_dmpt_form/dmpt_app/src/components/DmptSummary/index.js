@@ -72,7 +72,7 @@ function DmptSummary(props) {
                         To save your Data Management Plan, you need to login
                         first. To login or sign up, visit this link:{' '}
                         <a
-                            href="https://dmp.gfbio.dev/oidc/authenticate/"
+                            href="/oidc/authenticate/"
                             className="btn btn-secondary btn-green"
                         >
                             Sign In
