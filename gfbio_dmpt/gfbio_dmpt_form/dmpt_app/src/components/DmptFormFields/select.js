@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { stripHtml } from './htmlUtils';
 
 function Select(props) {
     const { question, handleChange, inputs } = props;
@@ -19,7 +20,7 @@ function Select(props) {
                     value={optionSetOption.id}
                     selected={`${optionSetOption.id}` === initialOptionId}
                 >
-                    {optionSetOption.text}
+                    {stripHtml(optionSetOption.text)}
                 </option>
             );
         });

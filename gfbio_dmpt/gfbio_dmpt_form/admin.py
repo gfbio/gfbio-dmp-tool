@@ -14,8 +14,8 @@ class DmptProjectAdmin(admin.ModelAdmin):
 class DmptCatalogAdmin(admin.ModelAdmin):
     list_display = ('catalog', 'active')
     list_filter = ('active',)
-    search_fields = ('catalog__key',)
-    ordering = ('catalog__key',)
+    search_fields = ('catalog__uri',)
+    ordering = ('catalog__uri',)
     fieldsets = (
         (None, {
             'fields': ('catalog', 'active'),

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PinnableTooltip from './pinnableTooltip';
+import { stripHtml } from './htmlUtils';
 
 function CheckBox(props) {
     const { question, handleChange, inputs } = props;
@@ -29,7 +30,7 @@ function CheckBox(props) {
                         className="form-check-label"
                         htmlFor={`option-${optionSetOption.id}`}
                     >
-                        {optionSetOption.text}
+                        {stripHtml(optionSetOption.text)}
                     </label>
                     {optionSetOption.comment && (
                         <PinnableTooltip
