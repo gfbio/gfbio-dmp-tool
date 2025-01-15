@@ -12523,6 +12523,12 @@ section.content .language-chooser a.click-link:hover {
   color: #b3d18f;
 }
 
+.login_background {
+  display: inline-block;
+  background: url("../assets/img/gfbio_logo.smaller.svg") no-repeat center center;
+  padding: 53px 107px 0 0 !important;
+}
+
 #account .gfbio_login, #account .gfbio_signup {
   margin-bottom: 5rem;
 }
