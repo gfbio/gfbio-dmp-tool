@@ -1,4 +1,7 @@
 {% load static %}
+{% load core_tags %}
+{% load projects_tags %}
+{% load view_tags %}
 
 <img src="{% static "images/gfbio_logo.png" %}" alt="GFBio logo" height="0" class="float-right d-none"/>
 
@@ -7,53 +10,79 @@
     <h1>Data Management Plan</h1>
 
     <h2>Title</h2>
-
-    {{ project.title }}
-
-    {% load view_tags %}
-
-    {% for section in project.catalog.sections.all %}
-
-        <h2>{{ section.title }}</h2>
-
-        {% for questionset in section.questionsets.all %}
-
-            <h3>{{ questionset.title }}</h3>
-
-            {% for question in questionset.questions.all %}
-
-                <p><strong>{{ question.text }}</strong></p>
-
-                {% if questionset.is_collection %}
-
-                    {% get_set questionset.attribute.uri project=project_wrapper as sets  %}
-                    {% for set in sets %}
-                        {% if question.is_collection %}
-                            <p><em>{{ set.value }}:</em></p>
-                            <ul>
-                                {% render_set_value_list set question.attribute.uri project=project_wrapper %}
-                            </ul>
-                        {% else %}
-                            <p><em>{{ set.value }}:</em> {% render_set_value set question.attribute.uri project=project_wrapper %}</p>
-                        {% endif%}
-                    {% endfor %}
-
+    {% with values|get:'http://example.com/terms/domain/gfbio/general/project_name' as title_values %}
+        {% if title_values %}
+            {% with title_values.0 as value %}
+                {% if value.text %}
+                    <p>{{ value.text }}</p>
                 {% else %}
-
-                    {% if question.is_collection %}
-                        <ul>
-                            {% render_value_list question.attribute.uri project=project_wrapper %}
-                        </ul>
-                    {% else %}
-                        <p>
-                            {% render_value question.attribute.uri project=project_wrapper  %}
-                        </p>
-                    {% endif%}
-
+                    <p>Not provided</p>
                 {% endif %}
+            {% endwith %}
+        {% else %}
+            <p>Not provided</p>
+        {% endif %}
+    {% endwith %}
 
+    {% if project.catalog %}
+        {% for section in sections %}
+            <h2>{{ section.title_lang1 }}</h2>
+            {% for page in section.pages.all %}
+                {% if page.title_lang1 %}
+                    <h3>{{ page.title_lang1 }}</h3>
+                {% endif %}
+                {% for question in page.questions.all %}
+                    {% if question.text %}
+                        <p><strong>{{ question.text }}</strong></p>
+                        {% if question.attribute %}
+                            {% with values|get:question.attribute.uri as values_list %}
+                                {% if values_list %}
+                                    {% if values_list|length > 1 %}
+                                        <ul>
+                                        {% for value in values_list %}
+                                            <li>
+                                            {% if value.option %}
+                                                {{ value.option.text }}
+                                            {% elif value.text %}
+                                                {{ value.text }}
+                                            {% elif value.is_true %}
+                                                Yes
+                                            {% elif value.is_false %}
+                                                No
+                                            {% else %}
+                                                Not provided
+                                            {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        {% with values_list.0 as value %}
+                                            <p>
+                                            {% if value.option %}
+                                                {{ value.option.text }}
+                                            {% elif value.text %}
+                                                {{ value.text }}
+                                            {% elif value.is_true %}
+                                                Yes
+                                            {% elif value.is_false %}
+                                                No
+                                            {% else %}
+                                                Not provided
+                                            {% endif %}
+                                            </p>
+                                        {% endwith %}
+                                    {% endif %}
+                                {% else %}
+                                    <p>Not provided</p>
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
-
         {% endfor %}
-    {% endfor %}
+    {% else %}
+        <p>No catalog found in project.</p>
+    {% endif %}
+
 {% endblock %}
