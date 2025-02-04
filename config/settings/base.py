@@ -232,6 +232,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "gfbio_dmpt.utils.context_processors.settings_context",
                 "gfbio_dmpt.utils.context_processors.prod_env",
+                "gfbio_dmpt.utils.context_processors.matomo_settings",
             ],
             "libraries": {
                 "staticfiles": "django.templatetags.static",

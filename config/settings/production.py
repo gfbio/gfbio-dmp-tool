@@ -275,3 +275,5 @@ sentry_sdk.init(
 #     COMPRESS_OFFLINE = True
 # COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 # COMPRESS_URL = STATIC_URL
+
+MATOMO_SITE_ID = env("MATOMO_SITE_ID", default=6)
