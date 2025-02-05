@@ -9,21 +9,6 @@
 
     <h1>Data Management Plan</h1>
 
-    <h2>Title</h2>
-    {% with values|get:'http://example.com/terms/domain/gfbio/general/project_name' as title_values %}
-        {% if title_values %}
-            {% with title_values.0 as value %}
-                {% if value.text %}
-                    <p>{{ value.text }}</p>
-                {% else %}
-                    <p>Not provided</p>
-                {% endif %}
-            {% endwith %}
-        {% else %}
-            <p>Not provided</p>
-        {% endif %}
-    {% endwith %}
-
     {% if project.catalog %}
         {% for section in sections %}
             <h2>{{ section.title_lang1 }}</h2>
