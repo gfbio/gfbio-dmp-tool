@@ -1,3 +1,9 @@
+.login_background {
+  display: inline-block;
+  background: url('../assets/img/gfbio_logo.smaller.svg') no-repeat center center;
+  padding: 53px 107px 0 0 !important;
+}
+
 #account {
 
   //h4 {
@@ -25,7 +31,7 @@
 
       .login_background {
         display: inline-block;
-        background: url('../assets/img/gfbio_logo.dark.svg') no-repeat center center;
+        background: url('../assets/img/gfbio_logo.smaller.svg') no-repeat center center;
         padding: 53px 107px 0 0 !important;
       }
 
@@ -42,11 +48,11 @@
           color: $gfbio-light-blue;
         }
 
-        .login_background {
-          display: inline-block;
-          background: url('../assets/img/gfbio_logo.smaller.svg') no-repeat center center;
-          padding: 53px 107px 0 0 !important;
-        }
+        //.login_background {
+        //  display: inline-block;
+        //  background: url('../assets/img/gfbio_logo.smaller.svg') no-repeat center center;
+        //  padding: 53px 107px 0 0 !important;
+        //}
 
         .localLoginLink {
           border-color: $gfbio-light-blue;

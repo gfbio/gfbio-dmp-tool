@@ -1,5 +1,5 @@
 {% extends "account/base.html" %}
-
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 {% load crispy_forms_tags %}
@@ -7,43 +7,61 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block inner %}
+  <div class="text-center">
+    <a href="{% url 'home' %}" class="text-center account-logo">
+      <img src="{% static 'images/gfbio_logo.svg' %}">
+    </a>
+    <h4 class="mt-3">
+      {% trans "Sign in to GFBio DMP Service" %}
+    </h4>
+  </div>
 
-<h1>{% trans "Sign In" %}</h1>
+  <div class="boxed">
 
-{% get_providers as socialaccount_providers %}
+    <div class="text-center gfbio_login">
+      <a
+        href="{% url 'oidc_authentication_init' %}">
+        <p class="text-center">
+          Click here to sign in with your GFBio account.
+          <small></small>
+        </p>
+        <button class="btn btn-sm btn-block btn-light localLoginLink p-3">
+          <span class="align-bottom login_background"></span>
+          <span class="align-bottom">Single Sign On</span>
+        </button>
+      </a>
+    </div>
 
-{% if socialaccount_providers %}
-<p>{% blocktrans with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+    {% get_providers as socialaccount_providers %}
+    {% if socialaccount_providers %}
 
-<div class="socialaccount_ballot">
+      <div class="text-center socialaccount_ballot">
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
+        <p class="text-center mb-3">
+          If you have no account <a href="{{ signup_url }}">sign
+          up here</a>, or sign in with one of your existing third pary
+          accounts.
+        </p>
 
-  <div class="login-or">{% trans 'or' %}</div>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-{% endif %}
-
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-  <a class = "btn btn-primary text-white" href="{% url 'oidc_authentication_init' %}">GFBio SSO Login</a>
-</form>
+        <ul class="list-inline socialaccount_providers">
+          {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+        </ul>
 
 
+      </div>
+
+      {% include "socialaccount/snippets/login_extra.html" %}
+
+    {% else %}
+      <p class="text-center my-4">{% blocktrans %}If you have not
+        created an account yet, then
+        please
+        <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
+          sign up</a> first.{% endblocktrans %}
+      </p>
+    {% endif %}
+
+
+  </div>
 {% endblock %}
+
