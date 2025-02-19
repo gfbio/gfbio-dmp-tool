@@ -14,7 +14,7 @@ from django.views.generic import TemplateView
 from rdmo.options.models import Option
 from rdmo.projects.models import Project, Value, Membership
 from rdmo.projects.views import ProjectAnswersView
-from rdmo.questions.models import Question
+from rdmo.questions.models import Question, Section
 from rdmo.questions.models.catalog import Catalog
 from rdmo.questions.serializers.v1 import SectionSerializer
 from rest_framework import generics, permissions, mixins
@@ -37,7 +37,7 @@ from .serializers.dmpt_serializers import (
     RdmoProjectValuesSerializer, RdmoProjectValuesUpdateSerializer,
 )
 from .utils.prepare_section_data import get_section_data
-
+from django.db.models import Prefetch
 
 class CSRFViewMixin(View):
     @method_decorator(ensure_csrf_cookie)
@@ -140,6 +140,103 @@ class DmpExportView(ProjectAnswersView):
             except:
                 return redirect("/")
         return super(DmpExportView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        import logging
+        from rdmo.questions.models import Section
+        from rdmo.projects.models import Value
+        from rdmo.domain.models import Attribute
+        logger = logging.getLogger(__name__)
+        context = super().get_context_data(**kwargs)
+        project = context.get('project')
+        
+        if project:
+            # Add project to context for template tags
+            context['project'] = project
+            
+            # Patch the project object with methods needed by RDMO template tags
+            if not hasattr(project, '_get_values'):
+                def _get_values(self, attribute_uri, set_prefix=None, set_index=None, index=None):
+                    logger.debug(f'Getting values for {attribute_uri} (set_prefix={set_prefix}, set_index={set_index}, index={index})')
+                    
+                    try:
+                        # Get values from project's Value set
+                        values = Value.objects.filter(
+                            project=project,
+                            attribute__uri=attribute_uri
+                        ).select_related('option', 'attribute')
+                        
+                        if set_prefix:
+                            values = values.filter(set_prefix=set_prefix)
+                        if set_index is not None:
+                            values = values.filter(set_index=set_index)
+                        if index is not None:
+                            values = values.filter(collection_index=index)
+                        
+                        # Convert values to dictionary format
+                        result = []
+                        for value in values:
+                            val_dict = {
+                                'text': value.text,
+                                'option': value.option,
+                                'value': value.value,
+                                'value_and_unit': value.value_and_unit,
+                                'is_true': value.is_true,
+                                'is_false': value.is_false
+                            }
+                            result.append(val_dict)
+                            
+                        # Log the values being returned for debugging
+                        logger.info("=============================================================================================")
+                        logger.info(f'Found values for {attribute_uri}: {[(v["text"], v["option"].text if v["option"] else None) for v in result]}')
+                        logger.info("=============================================================================================")
+                        
+                        return result if result else []
+                        
+                    except Exception as e:
+                        logger.error(f'Error getting values for {attribute_uri}: {str(e)}')
+                        return []
+                
+                # Bind the method to the project instance
+                import types
+                project._get_values = types.MethodType(_get_values, project)
+                logger.info('Patched _get_values method onto project instance')
+
+            # Get sections from the project's catalog
+            if project.catalog:
+                # Get sections with their related pages and questions
+                sections = project.catalog.sections.all()
+                context['sections'] = sections
+                
+                # Pre-fetch all values for this project for better performance
+                values = Value.objects.filter(
+                    project=project
+                ).select_related('attribute', 'option')
+                
+                # Store values in context for easy lookup
+                values_dict = {}
+                for value in values:
+                    uri = value.attribute.uri
+                    if uri not in values_dict:
+                        values_dict[uri] = []
+                    values_dict[uri].append(value)
+                context['values'] = values_dict
+                
+                logger.info('DmpExportView: project id %s, found %d sections from catalog %s', 
+                          project.id, sections.count(), project.catalog)
+                
+                # Log some sample values for debugging
+                logger.info('Sample values for project:')
+                for uri, value_list in list(context['values'].items())[:5]:
+                    logger.info(f'URI: {uri}, Values: {[v.text for v in value_list]}')
+            else:
+                context['sections'] = []
+                logger.warning('DmpExportView: project id %s has no catalog', project.id)
+        else:
+            context['sections'] = []
+            logger.info('DmpExportView: No project found in context')
+        
+        return context
 
     def render_to_response(self, context, **response_kwargs):
         return render_to_format(

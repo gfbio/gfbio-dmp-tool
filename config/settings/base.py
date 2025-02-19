@@ -74,6 +74,9 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    # "allauth.socialaccount.providers.github",
+    # "allauth.socialaccount.providers.orcid",
+    # "allauth.socialaccount.providers.google",
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
@@ -86,6 +89,7 @@ THIRD_PARTY_APPS = [
     "rules",
     # openapi specification tools
     "rest_framework_swagger",
+    "mozilla_django_oidc",
 ]
 
 RDMO_CORE_APPS = [
@@ -142,6 +146,10 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
+
+# FIXME: some artefact from a changeset from Claas. Check if this deviation from the std settings has any impact.
+# LOGIN_URL = "/accounts/login/"
+# LOGOUT_URL = "/accounts/logout/"
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -232,6 +240,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "gfbio_dmpt.utils.context_processors.settings_context",
                 "gfbio_dmpt.utils.context_processors.prod_env",
+                "gfbio_dmpt.utils.context_processors.matomo_settings",
             ],
             "libraries": {
                 "staticfiles": "django.templatetags.static",
@@ -293,7 +302,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+                      "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
@@ -364,7 +373,6 @@ REST_FRAMEWORK = {
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
-
 
 # Your stuff...
 # ------------------------------------------------------------------------------
@@ -626,10 +634,6 @@ LANGUAGES = (
     ("en", _("English")),
     ("de", _("German")),
 )
-
-LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_URL = "/accounts/logout/"
 
 MULTISITE = False
 PROFILE_UPDATE = True
