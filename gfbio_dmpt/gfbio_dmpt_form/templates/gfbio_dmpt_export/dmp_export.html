@@ -12,11 +12,11 @@
     {% if project.catalog %}
         {% for section in sections %}
             <h2>{{ section.title_lang1 }}</h2>
-            {% for page in section.pages.all %}
+            {% for page in section.ordered_pages %}
                 {% if page.title_lang1 %}
                     <h3>{{ page.title_lang1 }}</h3>
                 {% endif %}
-                {% for question in page.questions.all %}
+                {% for question in page.ordered_questions %}
                     {% if question.text %}
                         <p><strong>{{ question.text }}</strong></p>
                         {% if question.attribute %}

@@ -156,9 +156,14 @@ def render_to_format(request, export_format, title, template_src, context):
 
         # convert the file using pandoc
         log.info("Export %s document using args %s.", export_format, pandoc_args)
+        
+        # For PDF, we need to use 'latex' as the output format
+        # since pdf-engine xelatex is not compatible with output format pdf
+        actual_format = "latex" if export_format == "pdf" else export_format
+        
         pypandoc.convert_text(
             html,
-            export_format,
+            actual_format,
             format="html",
             outputfile=tmp_filename,
             extra_args=pandoc_args,

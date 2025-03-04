@@ -154,6 +154,48 @@ class DmpExportView(ProjectAnswersView):
             # Add project to context for template tags
             context['project'] = project
             
+            # Log initial section information
+            catalog = project.catalog
+            
+            # Get sections through catalog_section relationship and order by the CatalogSection order field
+            sections = Section.objects.filter(
+                catalogs=catalog
+            ).prefetch_related(
+                'pages', 
+                'pages__questions'
+            ).order_by(
+                'section_catalogs__order'  # This joins through CatalogSection to get the proper order
+            )
+            
+            logger.info(f"DmpExportView: project id {project.id}, found {sections.count()} sections from catalog {catalog.uri}")
+            
+            # Log detailed section information
+            logger.info("Section ordering details:")
+            for section in sections:
+                logger.info(f"Section: {section.uri}")
+                logger.info(f"  Order in Catalog: {section.section_catalogs.get(catalog=catalog).order}")
+                logger.info(f"  Title: {section.title_lang1}")
+                
+                # Get pages for this section (through section_pages)
+                for page in section.pages.all():
+                    # Get questions for this page
+                    for question in page.questions.all():
+                        if hasattr(question, 'attribute'):
+                            # Get values for this question's attribute
+                            values = Value.objects.filter(
+                                project=project,
+                                attribute=question.attribute
+                            ).select_related('attribute', 'option').order_by('set_index', 'collection_index')
+                            
+                            value_texts = [
+                                v.text or getattr(v.option, 'text', '') 
+                                for v in values
+                            ]
+                            logger.info(f"  Question: {question.attribute.uri if hasattr(question, 'attribute') else 'N/A'}")
+                            logger.info(f"    Values: {value_texts}")
+                            if values:
+                                logger.info(f"    First Value Details: set_index={values[0].set_index}, collection_index={values[0].collection_index}")
+            
             # Patch the project object with methods needed by RDMO template tags
             if not hasattr(project, '_get_values'):
                 def _get_values(self, attribute_uri, set_prefix=None, set_index=None, index=None):
@@ -164,14 +206,20 @@ class DmpExportView(ProjectAnswersView):
                         values = Value.objects.filter(
                             project=project,
                             attribute__uri=attribute_uri
-                        ).select_related('option', 'attribute')
+                        ).select_related('option', 'attribute', 'attribute__section')
                         
                         if set_prefix:
                             values = values.filter(set_prefix=set_prefix)
-                        if set_index is not None:
-                            values = values.filter(set_index=set_index)
-                        if index is not None:
-                            values = values.filter(collection_index=index)
+                        
+                        logger.info(f"Processing values for {attribute_uri}")
+                        
+                        # Use consistent RDMO-style ordering regardless of set_index presence
+                        values = values.order_by('set_index', 'collection_index')
+                        
+                        # Log ordering details for troubleshooting
+                        for val in values:
+                            logger.info(f"Value {val.id} - Set: {val.set_index}, Collection: {val.collection_index}, "
+                                      f"URI: {val.attribute.uri}")
                         
                         # Convert values to dictionary format
                         result = []
@@ -204,14 +252,60 @@ class DmpExportView(ProjectAnswersView):
 
             # Get sections from the project's catalog
             if project.catalog:
-                # Get sections with their related pages and questions
-                sections = project.catalog.sections.all()
-                context['sections'] = sections
+                # Get sections with their related pages and questions, properly ordered
+                sections = project.catalog.sections.all().order_by('section_catalogs__order')
+                
+                # Create a structure that ensures proper ordering of sections, pages, and questions
+                ordered_sections = []
+                for section in sections:
+                    logger.info(f'Section: {section.uri}')
+                    logger.info(f'  Title: {section.title_lang1}')
+                    logger.info(f'  Order in Catalog: {section.section_catalogs.get(catalog=project.catalog).order}')
+                    
+                    # Get pages ordered through the section_pages relation (using SectionPage model's 'order' field)
+                    section_pages = section.section_pages.all().order_by('order')
+                    ordered_pages = [sp.page for sp in section_pages]
+                    
+                    logger.info(f'  Pages count: {len(ordered_pages)}')
+                    
+                    for page in ordered_pages:
+                        logger.info(f'  Page: {page.uri}')
+                        logger.info(f'    Title: {page.title_lang1}')
+                        
+                        # Get questions ordered through the page_questions relation (using PageQuestion model's 'order' field)
+                        page_questions = page.page_questions.all().order_by('order')
+                        ordered_questions = [pq.question for pq in page_questions]
+                        
+                        logger.info(f'    Questions count: {len(ordered_questions)}')
+                        
+                        # Add ordered questions to this page
+                        page.ordered_questions = ordered_questions
+                    
+                    # Add ordered pages to this section
+                    section.ordered_pages = ordered_pages
+                    ordered_sections.append(section)
+                
+                # Store the ordered structure in the context
+                context['sections'] = ordered_sections
+                
+                # Log section, page, and question ordering for debugging
+                logger.info('Ordered structure details:')
+                for section in ordered_sections:
+                    logger.info(f'Section: {section.uri}')
+                    logger.info(f'  Title: {section.title_lang1}')
+                    
+                    for page in section.ordered_pages:
+                        logger.info(f'  Page: {page.uri}')
+                        logger.info(f'    Title: {page.title_lang1}')
+                        
+                        for question in page.ordered_questions:
+                            logger.info(f'  Question: {question.attribute.uri if hasattr(question, "attribute") else "N/A"}')
+                            logger.info(f'    Text: {question.text}')
                 
                 # Pre-fetch all values for this project for better performance
                 values = Value.objects.filter(
                     project=project
-                ).select_related('attribute', 'option')
+                ).select_related('attribute', 'option').order_by('set_index', 'collection_index')
                 
                 # Store values in context for easy lookup
                 values_dict = {}
