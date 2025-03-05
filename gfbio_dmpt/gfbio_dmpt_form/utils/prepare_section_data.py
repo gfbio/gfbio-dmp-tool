@@ -38,6 +38,7 @@ def get_section_data(section):
     data = serializer.data
     data['pages'] = []
     data['conditions'] = []
+    # Get pages in the correct order using section.elements
     pages = section.elements
     for page in pages:
         for c in page.conditions.all():
@@ -48,6 +49,7 @@ def get_section_data(section):
                 }
             )
         page_data = PageSerializer(page).data
-        page_data['pagequestions'] = get_questions_and_options(page.questions.all())
+        # Use page.elements to get questions in the correct order
+        page_data['pagequestions'] = get_questions_and_options(page.elements)
         data['pages'].append(page_data)
     return data
