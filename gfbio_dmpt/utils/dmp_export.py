@@ -99,7 +99,7 @@ def save_metadata(metadata):
     with open(tmp_metadata_file, "w") as f:
         json.dump(metadata, f)
     f = open(tmp_metadata_file)
-    log.info("Save metadata file %s %s", tmp_metadata_file, str(metadata))
+    log.debug("Save metadata file %s %s", tmp_metadata_file, str(metadata))
     return tmp_metadata_file
 
 
@@ -155,10 +155,15 @@ def render_to_format(request, export_format, title, template_src, context):
         pandoc_args.append("--template=" + template_file)
 
         # convert the file using pandoc
-        log.info("Export %s document using args %s.", export_format, pandoc_args)
+        log.debug("Export %s document using args %s.", export_format, pandoc_args)
+
+        # For PDF, we need to use 'latex' as the output format
+        # since pdf-engine xelatex is not compatible with output format pdf
+        actual_format = "latex" if export_format == "pdf" else export_format
+
         pypandoc.convert_text(
             html,
-            export_format,
+            actual_format,
             format="html",
             outputfile=tmp_filename,
             extra_args=pandoc_args,

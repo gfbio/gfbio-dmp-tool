@@ -149,30 +149,78 @@ class DmpExportView(ProjectAnswersView):
         logger = logging.getLogger(__name__)
         context = super().get_context_data(**kwargs)
         project = context.get('project')
-        
+
         if project:
             # Add project to context for template tags
             context['project'] = project
-            
+
+            # Log initial section information
+            catalog = project.catalog
+
+            # Get sections through catalog_section relationship and order by the CatalogSection order field
+            sections = Section.objects.filter(
+                catalogs=catalog
+            ).prefetch_related(
+                'pages',
+                'pages__questions'
+            ).order_by(
+                'section_catalogs__order'  # This joins through CatalogSection to get the proper order
+            )
+
+            logger.debug(f"DmpExportView: project id {project.id}, found {sections.count()} sections from catalog {catalog.uri}")
+
+            # Log detailed section information
+            logger.debug("Section ordering details:")
+            for section in sections:
+                logger.debug(f"Section: {section.uri}")
+                logger.debug(f"  Order in Catalog: {section.section_catalogs.get(catalog=catalog).order}")
+                logger.debug(f"  Title: {section.title_lang1}")
+
+                # Get pages for this section (through section_pages)
+                for page in section.pages.all():
+                    # Get questions for this page
+                    for question in page.questions.all():
+                        if hasattr(question, 'attribute'):
+                            # Get values for this question's attribute
+                            values = Value.objects.filter(
+                                project=project,
+                                attribute=question.attribute
+                            ).select_related('attribute', 'option').order_by('set_index', 'collection_index')
+
+                            value_texts = [
+                                v.text or getattr(v.option, 'text', '')
+                                for v in values
+                            ]
+                            logger.debug(f"  Question: {question.attribute.uri if hasattr(question, 'attribute') else 'N/A'}")
+                            logger.debug(f"    Values: {value_texts}")
+                            if values:
+                                logger.debug(f"    First Value Details: set_index={values[0].set_index}, collection_index={values[0].collection_index}")
+
             # Patch the project object with methods needed by RDMO template tags
             if not hasattr(project, '_get_values'):
                 def _get_values(self, attribute_uri, set_prefix=None, set_index=None, index=None):
                     logger.debug(f'Getting values for {attribute_uri} (set_prefix={set_prefix}, set_index={set_index}, index={index})')
-                    
+
                     try:
                         # Get values from project's Value set
                         values = Value.objects.filter(
                             project=project,
                             attribute__uri=attribute_uri
-                        ).select_related('option', 'attribute')
-                        
+                        ).select_related('option', 'attribute', 'attribute__section')
+
                         if set_prefix:
                             values = values.filter(set_prefix=set_prefix)
-                        if set_index is not None:
-                            values = values.filter(set_index=set_index)
-                        if index is not None:
-                            values = values.filter(collection_index=index)
-                        
+
+                        logger.debug(f"Processing values for {attribute_uri}")
+
+                        # Use consistent RDMO-style ordering regardless of set_index presence
+                        values = values.order_by('set_index', 'collection_index')
+
+                        # Log ordering details for troubleshooting
+                        for val in values:
+                            logger.debug(f"Value {val.id} - Set: {val.set_index}, Collection: {val.collection_index}, "
+                                      f"URI: {val.attribute.uri}")
+
                         # Convert values to dictionary format
                         result = []
                         for value in values:
@@ -185,34 +233,80 @@ class DmpExportView(ProjectAnswersView):
                                 'is_false': value.is_false
                             }
                             result.append(val_dict)
-                            
+
                         # Log the values being returned for debugging
-                        logger.info("=============================================================================================")
-                        logger.info(f'Found values for {attribute_uri}: {[(v["text"], v["option"].text if v["option"] else None) for v in result]}')
-                        logger.info("=============================================================================================")
-                        
+                        logger.debug("=============================================================================================")
+                        logger.debug(f'Found values for {attribute_uri}: {[(v["text"], v["option"].text if v["option"] else None) for v in result]}')
+                        logger.debug("=============================================================================================")
+
                         return result if result else []
-                        
+
                     except Exception as e:
                         logger.error(f'Error getting values for {attribute_uri}: {str(e)}')
                         return []
-                
+
                 # Bind the method to the project instance
                 import types
                 project._get_values = types.MethodType(_get_values, project)
-                logger.info('Patched _get_values method onto project instance')
+                logger.debug('Patched _get_values method onto project instance')
 
             # Get sections from the project's catalog
             if project.catalog:
-                # Get sections with their related pages and questions
-                sections = project.catalog.sections.all()
-                context['sections'] = sections
-                
+                # Get sections with their related pages and questions, properly ordered
+                sections = project.catalog.sections.all().order_by('section_catalogs__order')
+
+                # Create a structure that ensures proper ordering of sections, pages, and questions
+                ordered_sections = []
+                for section in sections:
+                    logger.debug(f'Section: {section.uri}')
+                    logger.debug(f'  Title: {section.title_lang1}')
+                    logger.debug(f'  Order in Catalog: {section.section_catalogs.get(catalog=project.catalog).order}')
+
+                    # Get pages ordered through the section_pages relation (using SectionPage model's 'order' field)
+                    section_pages = section.section_pages.all().order_by('order')
+                    ordered_pages = [sp.page for sp in section_pages]
+
+                    logger.debug(f'  Pages count: {len(ordered_pages)}')
+
+                    for page in ordered_pages:
+                        logger.debug(f'  Page: {page.uri}')
+                        logger.debug(f'    Title: {page.title_lang1}')
+
+                        # Get questions ordered through the page_questions relation (using PageQuestion model's 'order' field)
+                        page_questions = page.page_questions.all().order_by('order')
+                        ordered_questions = [pq.question for pq in page_questions]
+
+                        logger.debug(f'    Questions count: {len(ordered_questions)}')
+
+                        # Add ordered questions to this page
+                        page.ordered_questions = ordered_questions
+
+                    # Add ordered pages to this section
+                    section.ordered_pages = ordered_pages
+                    ordered_sections.append(section)
+
+                # Store the ordered structure in the context
+                context['sections'] = ordered_sections
+
+                # Log section, page, and question ordering for debugging
+                logger.debug('Ordered structure details:')
+                for section in ordered_sections:
+                    logger.debug(f'Section: {section.uri}')
+                    logger.debug(f'  Title: {section.title_lang1}')
+
+                    for page in section.ordered_pages:
+                        logger.debug(f'  Page: {page.uri}')
+                        logger.debug(f'    Title: {page.title_lang1}')
+
+                        for question in page.ordered_questions:
+                            logger.debug(f'  Question: {question.attribute.uri if hasattr(question, "attribute") else "N/A"}')
+                            logger.debug(f'    Text: {question.text}')
+
                 # Pre-fetch all values for this project for better performance
                 values = Value.objects.filter(
                     project=project
-                ).select_related('attribute', 'option')
-                
+                ).select_related('attribute', 'option').order_by('set_index', 'collection_index')
+
                 # Store values in context for easy lookup
                 values_dict = {}
                 for value in values:
@@ -221,21 +315,21 @@ class DmpExportView(ProjectAnswersView):
                         values_dict[uri] = []
                     values_dict[uri].append(value)
                 context['values'] = values_dict
-                
-                logger.info('DmpExportView: project id %s, found %d sections from catalog %s', 
+
+                logger.debug('DmpExportView: project id %s, found %d sections from catalog %s',
                           project.id, sections.count(), project.catalog)
-                
+
                 # Log some sample values for debugging
-                logger.info('Sample values for project:')
+                logger.debug('Sample values for project:')
                 for uri, value_list in list(context['values'].items())[:5]:
-                    logger.info(f'URI: {uri}, Values: {[v.text for v in value_list]}')
+                    logger.debug(f'URI: {uri}, Values: {[v.text for v in value_list]}')
             else:
                 context['sections'] = []
                 logger.warning('DmpExportView: project id %s has no catalog', project.id)
         else:
             context['sections'] = []
-            logger.info('DmpExportView: No project found in context')
-        
+            logger.debug('DmpExportView: No project found in context')
+
         return context
 
     def render_to_response(self, context, **response_kwargs):
