@@ -83,7 +83,7 @@ THIRD_PARTY_APPS = [
     "widget_tweaks",
     "markdown",
     "django_cleanup",
-    'django_extensions',
+    "django_extensions",
     "django_filters",
     "mathfilters",
     "mptt",
@@ -94,34 +94,19 @@ THIRD_PARTY_APPS = [
 ]
 
 RDMO_CORE_APPS = [
-    # rdmo modules
-    # "rdmo",
-    # "rdmo.core",
-    # "rdmo.accounts",
-    # "rdmo.services",
-    # "rdmo.domain",
-    # "rdmo.options",
-    # "rdmo.conditions",
-    # "rdmo.questions",
-    # "rdmo.tasks",
-    # "rdmo.views",
-    # "rdmo.projects",
-    # "rdmo.management",
-    # "rdmo.overlays",
-    # rdmo modules
-    'rdmo',
-    'rdmo.core',
-    'rdmo.overlays',
-    'rdmo.accounts',
-    'rdmo.services',
-    'rdmo.domain',
-    'rdmo.options',
-    'rdmo.conditions',
-    'rdmo.questions',
-    'rdmo.tasks',
-    'rdmo.views',
-    'rdmo.projects',
-    'rdmo.management',
+    "rdmo",
+    "rdmo.core",
+    "rdmo.overlays",
+    "rdmo.accounts",
+    "rdmo.services",
+    "rdmo.domain",
+    "rdmo.options",
+    "rdmo.conditions",
+    "rdmo.questions",
+    "rdmo.tasks",
+    "rdmo.views",
+    "rdmo.projects",
+    "rdmo.management",
 ]
 
 LOCAL_APPS = [
@@ -259,7 +244,6 @@ TEMPLATES = [
             ],
             "libraries": {
                 "staticfiles": "django.templatetags.static",
-                # "get_set_prefixes": "rdmo.views.templatetags.view_tags",
             },
         },
     }
@@ -421,11 +405,11 @@ OIDC_OP_USER_ENDPOINT = (
 PROJECT_DIR = ROOT_DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 # TODO: better add app specific templates as usual for django, recommended by rdmo developers
-# THEME_DIR = os.path.join(ROOT_DIR, 'theme')
+# THEME_DIR = os.path.join(ROOT_DIR, "theme")
 # VENDOR_CDN = True
 # update STATICFILES_DIRS for the vendor directory
 # STATICFILES_DIRS += [
-#     os.path.join(ROOT_DIR, 'vendor/')
+#     os.path.join(ROOT_DIR, "vendor/")
 # ]
 
 CSRF_COOKIE_HTTPONLY = False
@@ -433,39 +417,27 @@ CSRF_COOKIE_HTTPONLY = False
 USER_API = True
 
 OVERLAYS = {
-    # "projects": ["projects-table", "create-project", "import-project"],
-    # "project": [
-    #     "project-questions",
-    #     "project-catalog",
-    #     "project-issues",
-    #     "project-views",
-    #     "project-memberships",
-    #     "project-snapshots",
-    #     "export-project",
-    #     "import-project",
-    # ],
-    # "issue_send": ["issue-message", "issue-attachments"],
-    'projects': [
-        'projects-table',
-        'create-project',
-        'import-project',
-        'support-info'
+    "projects": [
+        "projects-table",
+        "create-project",
+        "import-project",
+        "support-info"
     ],
-    'project': [
-        'project-questions',
-        'project-catalog',
-        'project-issues',
-        'project-views',
-        'project-memberships',
-        'project-snapshots',
-        'export-project',
-        'import-project',
-        'support-info'
+    "project": [
+        "project-questions",
+        "project-catalog",
+        "project-issues",
+        "project-views",
+        "project-memberships",
+        "project-snapshots",
+        "export-project",
+        "import-project",
+        "support-info"
     ],
-    'issue_send': [
-        'issue-message',
-        'issue-attachments',
-        'support-info'
+    "issue_send": [
+        "issue-message",
+        "issue-attachments",
+        "support-info"
     ]
 }
 
@@ -495,17 +467,10 @@ PROJECT_ISSUES = True
 PROJECT_VIEWS = True
 
 PROJECT_EXPORTS = [
-    # ("xml", _("RDMO XML"), "rdmo.projects.exports.RDMOXMLExport"),
-    # ("csvcomma", _("CSV comma separated"), "rdmo.projects.exports.CSVCommaExport"),
-    # (
-    #     "csvsemicolon",
-    #     _("CSV semicolon separated"),
-    #     "rdmo.projects.exports.CSVSemicolonExport",
-    # ),
-    ('xml', _('RDMO XML'), 'rdmo.projects.exports.RDMOXMLExport'),
-    ('csvcomma', _('CSV (comma separated)'), 'rdmo.projects.exports.CSVCommaExport'),
-    ('csvsemicolon', _('CSV (semicolon separated)'), 'rdmo.projects.exports.CSVSemicolonExport'),
-    ('json', _('JSON'), 'rdmo.projects.exports.JSONExport'),
+    ("xml", _("RDMO XML"), "rdmo.projects.exports.RDMOXMLExport"),
+    ("csvcomma", _("CSV (comma separated)"), "rdmo.projects.exports.CSVCommaExport"),
+    ("csvsemicolon", _("CSV (semicolon separated)"), "rdmo.projects.exports.CSVSemicolonExport"),
+    ("json", _("JSON"), "rdmo.projects.exports.JSONExport"),
 ]
 
 PROJECT_IMPORTS = [
