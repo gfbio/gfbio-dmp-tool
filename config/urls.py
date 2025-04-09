@@ -26,6 +26,7 @@ urlpatterns = [
     path('overlays/', include('rdmo.overlays.urls')),
     path('projects/', include('rdmo.projects.urls')),
     path('services/', include('rdmo.services.urls')),
+    # path('views/', include('rdmo.views.urls.v1')),
 
     path("api/v1/", include("rdmo.core.urls.v1")),
     path("api/v1/", include("rdmo.core.urls.swagger")),

@@ -12,7 +12,8 @@ mozilla-django-oidc==4.0.1 # https://github.com/mozilla/mozilla-django-oidc
 
 # Django
 # ------------------------------------------------------------------------------
-django~=4.2.16  # pyup: < 4.1  # https://www.djangoproject.com/
+# django~=4.2.16  # pyup: < 4.1  # https://www.djangoproject.com/
+django>=4.2,<5.0
 django-environ==0.11.2  # https://github.com/joke2k/django-environ
 django-model-utils==5.0.0  # https://github.com/jazzband/django-model-utils
 
@@ -23,13 +24,13 @@ PyJWT==2.10.1
 django-crispy-forms==2.3  # https://github.com/django-crispy-forms/django-crispy-forms
 crispy-bootstrap4==2024.10  # https://github.com/django-crispy-forms/crispy-bootstrap4
 
-django-compressor==4.5.1 # https://github.com/django-compressor/django-compressor
+# django-compressor==4.5.1 # https://github.com/django-compressor/django-compressor
 
 django-redis==5.4.0  # https://github.com/jazzband/django-redis
 
 # Django REST Framework
 # ------------------------------------------------------------------------------
-djangorestframework==3.15.2  # https://github.com/encode/django-rest-framework
+# djangorestframework==3.15.2  # https://github.com/encode/django-rest-framework
 django-cors-headers==4.5.0 # https://github.com/adamchainz/django-cors-headers
 
 # Jira
@@ -38,52 +39,27 @@ jira==3.8.0
 
 # RDMO
 # ------------------------------------------------------------------------------
-
-#defusedcsv~=2.0.0
-#defusedxml~=0.7.1
-#django-cleanup~=6.0.0
-#django-extensions~=3.2.0
-#django-filter~=21.1.0
-#django-libsass==0.9
-#django-mathfilters~=1.0.0
-#django-mptt~=0.13.4
-#django-rest-swagger~=2.2.0
-#django-settings-export~=1.2.1
-#django-widget-tweaks~=1.4.12
-#drf-extensions~=0.7.1
-#iso8601~=1.0.2
-#jsonfield~=3.1.0
-#Markdown~=3.3.7
-#pypandoc==1.8.1
-#pytest-cov~=2.12.1
-#pytest-dotenv~=0.5.2
-#pytest-mock~=3.6.1
-#pytest-pythonpath~=0.7.4
-#rules==3.3
-
-#rdmo~=1.9
-defusedcsv~=2.0
-defusedxml~=0.7.1
-#django>=4.2,<5.0,
-django-cleanup~=8.0
-#django-compressor>=4.4,<5.0,
-django-extensions~=3.2
-django-filter~=23.2
-django-libsass~=0.9
-django-mathfilters~=1.0
+defusedcsv>=2.0,<3.0
+defusedxml>=0.7.1,<1.0
+django-cleanup>=8.0,<9.0
+django-compressor>=4.4,<5.0
+django-extensions>=3.2,<4.0
+django-filter>=23.2,<25.0
+django-libsass>=0.9,<1.0
+django-mathfilters>=1.0,<2.0
 django-mptt==0.14.0  # pinned, 0.15 requires Python >= 3.9
-django-rest-swagger~=2.2
-django-settings-export~=1.2
-django-split-settings~=1.2
-django-widget-tweaks~=1.5
-#djangorestframework>=3.15
-drf-extensions~=0.7.1
+django-rest-swagger>=2.2,<3.0
+django-settings-export>=1.2,<2.0
+django-split-settings>=1.2,<2.0
+django-widget-tweaks>=1.5,<2.0
+djangorestframework>=3.15,<4.0
+drf-extensions>=0.7.1,<1.0
 importlib_metadata<8.5.0  # upstrem problem, see https://github.com/python/importlib_metadata/issues/506
-iso8601~=2.0
-markdown~=3.4
-packaging~=23.2
-pypandoc~=1.11
-requests-toolbelt~=1.0
-rules~=3.4
+iso8601>=2.0,<3.0
+markdown>=3.4,<4.0
+packaging>=23.2,<25.0
+pypandoc>=1.11,<2.0
+requests-toolbelt>=1.0,<2.0
+rules>=3.4,<4.0
 
 rdmo~=2.2.2
