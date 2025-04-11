@@ -23,7 +23,7 @@
     {% endfor %}
 {#  {% endcompress %}#}
 
-  {% compress js %}
+{#  {% compress js %}#}
     <script type="text/javascript" src="{% static 'core/js/core.js' %}"></script>
     <script type="text/javascript" src="{% static 'projects/js/project_questions/app.js' %}"></script>
     <script type="text/javascript" src="{% static 'projects/js/project_questions/directives.js' %}"></script>
@@ -35,7 +35,7 @@
         <script type="text/javascript" src="{% static js_file %}"></script>
       {% endfor %}
     {% endfor %}
-  {% endcompress %}
+{#  {% endcompress %}#}
 {% endblock %}
 
 {% block bodyattr %} ng-app="project_questions" ng-controller="QuestionsController" ng-init="service.init(
