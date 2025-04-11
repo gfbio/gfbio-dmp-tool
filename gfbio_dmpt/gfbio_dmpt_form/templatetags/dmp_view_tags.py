@@ -1,8 +1,4 @@
 from django import template
-from django.utils.translation import gettext_lazy as _
-
-from rdmo.core.constants import VALUE_TYPE_DATETIME, VALUE_TYPE_INTEGER, VALUE_TYPE_TEXT
-from rdmo.projects.models import Value
 
 register = template.Library()
 
