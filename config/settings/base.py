@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "widget_tweaks",
     "markdown",
     "django_cleanup",
+    "django_extensions",
     "django_filters",
     "mathfilters",
     "mptt",
@@ -93,9 +94,9 @@ THIRD_PARTY_APPS = [
 ]
 
 RDMO_CORE_APPS = [
-    # rdmo modules
     "rdmo",
     "rdmo.core",
+    "rdmo.overlays",
     "rdmo.accounts",
     "rdmo.services",
     "rdmo.domain",
@@ -106,7 +107,6 @@ RDMO_CORE_APPS = [
     "rdmo.views",
     "rdmo.projects",
     "rdmo.management",
-    "rdmo.overlays",
 ]
 
 LOCAL_APPS = [
@@ -117,7 +117,7 @@ LOCAL_APPS = [
     "gfbio_dmpt.basic_rdmo.apps.BasicRdmoConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + RDMO_CORE_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + RDMO_CORE_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
@@ -405,11 +405,11 @@ OIDC_OP_USER_ENDPOINT = (
 PROJECT_DIR = ROOT_DIR
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 # TODO: better add app specific templates as usual for django, recommended by rdmo developers
-# THEME_DIR = os.path.join(ROOT_DIR, 'theme')
-VENDOR_CDN = True
+# THEME_DIR = os.path.join(ROOT_DIR, "theme")
+# VENDOR_CDN = True
 # update STATICFILES_DIRS for the vendor directory
 # STATICFILES_DIRS += [
-#     os.path.join(ROOT_DIR, 'vendor/')
+#     os.path.join(ROOT_DIR, "vendor/")
 # ]
 
 CSRF_COOKIE_HTTPONLY = False
@@ -417,7 +417,12 @@ CSRF_COOKIE_HTTPONLY = False
 USER_API = True
 
 OVERLAYS = {
-    "projects": ["projects-table", "create-project", "import-project"],
+    "projects": [
+        "projects-table",
+        "create-project",
+        "import-project",
+        "support-info"
+    ],
     "project": [
         "project-questions",
         "project-catalog",
@@ -427,8 +432,13 @@ OVERLAYS = {
         "project-snapshots",
         "export-project",
         "import-project",
+        "support-info"
     ],
-    "issue_send": ["issue-message", "issue-attachments"],
+    "issue_send": [
+        "issue-message",
+        "issue-attachments",
+        "support-info"
+    ]
 }
 
 EXPORT_FORMATS = (
@@ -458,12 +468,9 @@ PROJECT_VIEWS = True
 
 PROJECT_EXPORTS = [
     ("xml", _("RDMO XML"), "rdmo.projects.exports.RDMOXMLExport"),
-    ("csvcomma", _("CSV comma separated"), "rdmo.projects.exports.CSVCommaExport"),
-    (
-        "csvsemicolon",
-        _("CSV semicolon separated"),
-        "rdmo.projects.exports.CSVSemicolonExport",
-    ),
+    ("csvcomma", _("CSV (comma separated)"), "rdmo.projects.exports.CSVCommaExport"),
+    ("csvsemicolon", _("CSV (semicolon separated)"), "rdmo.projects.exports.CSVSemicolonExport"),
+    ("json", _("JSON"), "rdmo.projects.exports.JSONExport"),
 ]
 
 PROJECT_IMPORTS = [
@@ -503,117 +510,163 @@ DEFAULT_URI_PREFIX = "http://example.com/terms"
 
 VENDOR_CDN = True
 
-VENDOR = {
-    "jquery": {
-        "url": "https://code.jquery.com/",
-        "js": [
-            {
-                "path": "jquery-3.4.1.min.js",
-                "sri": "sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh",
-            }
-        ],
-    },
-    "bootstrap": {
-        "url": "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/",
-        "js": [
-            {
-                "path": "js/bootstrap.min.js",
-                "sri": "sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd",
-            }
-        ],
-        "css": [
-            {
-                "path": "css/bootstrap.min.css",
-                "sri": "sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu",
-            }
-        ],
-    },
-    "bootstrap-datepicker": {
-        "url": "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/",
-        "css": [{"path": "css/bootstrap-datepicker.min.css"}],
-        "js": [{"path": "js/bootstrap-datepicker.min.js"}],
-    },
-    "font-awesome": {
-        "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/",
-        "css": [{"path": "css/font-awesome.min.css"}],
-        "font": [
-            {"path": "fonts/fontawesome-webfont.eot"},
-            {"path": "fonts/fontawesome-webfont.woff2"},
-            {"path": "fonts/fontawesome-webfont.woff"},
-            {"path": "fonts/fontawesome-webfont.ttf"},
-            {"path": "fonts/fontawesome-webfont.svg"},
-        ],
-    },
-    "angular": {
-        "url": "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/",
-        "js": [{"path": "angular.min.js"}, {"path": "angular-resource.min.js"}],
-    },
-    "select2": {
-        "url": "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/",
-        "js": [
-            {
-                "path": "js/select2.min.js",
-                "sri": "sha256-HNkbndPiWM5EIRgahc3hWiuGD6CtwFgMfEU0o3zeabo=",
-            }
-        ],
-        "css": [
-            {
-                "path": "css/select2.min.css",
-                "sri": "sha256-EQA4j7+ZbrewCQvwJzNmVxiKMwGRspXMGgt7I6AAiqs=",
-            }
-        ],
-    },
-    "select2-bootstrap-theme": {
-        "url": "https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/",
-        "css": [
-            {
-                "path": "select2-bootstrap.min.css",
-                "sri": "sha256-nbyata2PJRjImhByQzik2ot6gSHSU4Cqdz5bNYL2zcU=",
-            }
-        ],
-    },
-    "moment": {
-        "url": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/",
-        "js": [
-            {
-                "path": "moment.min.js",
-                "sri": "sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=",
-            }
-        ],
-    },
-    "codemirror": {
-        "url": "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/",
-        "js": [
-            {
-                "path": "codemirror.min.js",
-                "sri": "sha256-0LRLvWWVXwt0eH0/Bzd0PHICg/bSMDIe5sXgaDSpZaA=",
-            },
-            {
-                "path": "addon/mode/overlay.min.js",
-                "sri": "sha256-ffWkw3Pn4ieMygm1vwdRKcMtBJ6E6kuBi8GlVVPXWEs=",
-            },
-            {
-                "path": "mode/django/django.min.js",
-                "sri": "sha256-6hO1TjC+3W73p+kXnCqcHVjfRa4KMdG7hvWencnu0XM=",
-            },
-        ],
-        "css": [
-            {
-                "path": "codemirror.min.css",
-                "sri": "sha256-wluO/w4cnorJpS0JmcdTSYzwdb5E6u045qa4Ervfb1k=",
-            }
-        ],
-    },
-    "fuse": {
-        "url": "https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.6/",
-        "js": [
-            {
-                "path": "fuse.min.js",
-                "sri": "sha512-FwWaT/y9ajd/+J06KL9Fko1jELonJNHMUTR4nGP9MSIq4ZdU2w9/OiLxn16p/zEOZkryHi3wKYsnWPuADD328Q==",
-            }
-        ],
-    },
-}
+# VENDOR = {
+#     'jquery': {
+#         'url': 'https://code.jquery.com/',
+#         'js': [
+#             {
+#                 'path': 'jquery-3.4.1.min.js',
+#                 'sri': 'sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh',
+#             }
+#         ]
+#     },
+#     'bootstrap': {
+#         'url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/',
+#         'js': [
+#             {
+#                 'path': 'js/bootstrap.min.js',
+#                 'sri': 'sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd',
+#             }
+#         ],
+#         'css': [
+#             {
+#                 'path': 'css/bootstrap.min.css',
+#                 'sri': 'sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu',
+#             }
+#         ],
+#         'font': [
+#             {
+#                 'path': 'fonts/glyphicons-halflings-regular.eot'
+#             },
+#             {
+#                 'path': 'fonts/glyphicons-halflings-regular.woff'
+#             },
+#             {
+#                 'path': 'fonts/glyphicons-halflings-regular.woff2'
+#             },
+#             {
+#                 'path': 'fonts/glyphicons-halflings-regular.ttf'
+#             },
+#             {
+#                 'path': 'fonts/glyphicons-halflings-regular.svg'
+#             }
+#         ]
+#     },
+#     'bootstrap-datepicker': {
+#         'url': 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/',
+#         'css': [
+#             {
+#                 'path': 'css/bootstrap-datepicker.min.css'
+#             }
+#         ],
+#         'js': [
+#             {
+#                 'path': 'js/bootstrap-datepicker.min.js'
+#             }
+#         ]
+#     },
+#     'font-awesome': {
+#         'url': 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/',
+#         'css': [
+#             {
+#                 'path': 'css/font-awesome.min.css'
+#             }
+#         ],
+#         'font': [
+#             {
+#                 'path': 'fonts/fontawesome-webfont.eot'
+#             },
+#             {
+#                 'path': 'fonts/fontawesome-webfont.woff2'
+#             },
+#             {
+#                 'path': 'fonts/fontawesome-webfont.woff'
+#             },
+#             {
+#                 'path': 'fonts/fontawesome-webfont.ttf'
+#             },
+#             {
+#                 'path': 'fonts/fontawesome-webfont.svg'
+#             }
+#         ]
+#     },
+#     'angular': {
+#         'url': 'https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/',
+#         'js': [
+#             {
+#                 'path': 'angular.min.js'
+#             },
+#             {
+#                 'path': 'angular-resource.min.js'
+#             }
+#         ]
+#     },
+#     'select2': {
+#         'url': 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/',
+#         'js': [
+#             {
+#                 'path': 'js/select2.min.js',
+#                 'sri': 'sha256-HNkbndPiWM5EIRgahc3hWiuGD6CtwFgMfEU0o3zeabo='
+#             }
+#         ],
+#         'css': [
+#             {
+#                 'path': 'css/select2.min.css',
+#                 'sri': 'sha256-EQA4j7+ZbrewCQvwJzNmVxiKMwGRspXMGgt7I6AAiqs='
+#             }
+#         ]
+#     },
+#     'select2-bootstrap-theme': {
+#         'url': 'https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/',
+#         'css': [
+#             {
+#                 'path': 'select2-bootstrap.min.css',
+#                 'sri': 'sha256-nbyata2PJRjImhByQzik2ot6gSHSU4Cqdz5bNYL2zcU='
+#             }
+#         ]
+#     },
+#     'moment': {
+#         'url': 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/',
+#         'js': [
+#             {
+#                 'path': 'moment.min.js',
+#                 'sri': 'sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg='
+#             }
+#         ]
+#     },
+#     'codemirror': {
+#         'url': 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/',
+#         'js': [
+#             {
+#                 'path': 'codemirror.min.js',
+#                 'sri': 'sha256-0LRLvWWVXwt0eH0/Bzd0PHICg/bSMDIe5sXgaDSpZaA='
+#             },
+#             {
+#                 'path': 'addon/mode/overlay.min.js',
+#                 'sri': 'sha256-ffWkw3Pn4ieMygm1vwdRKcMtBJ6E6kuBi8GlVVPXWEs='
+#             },
+#             {
+#                 'path': 'mode/django/django.min.js',
+#                 'sri': 'sha256-6hO1TjC+3W73p+kXnCqcHVjfRa4KMdG7hvWencnu0XM='
+#             }
+#         ],
+#         'css': [
+#             {
+#                 'path': 'codemirror.min.css',
+#                 'sri': 'sha256-wluO/w4cnorJpS0JmcdTSYzwdb5E6u045qa4Ervfb1k='
+#             }
+#         ]
+#     },
+#     'fuse': {
+#         'url': 'https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.6/',
+#         'js': [
+#             {
+#                 'path': 'fuse.min.js',
+#                 'sri': 'sha512-FwWaT/y9ajd/+J06KL9Fko1jELonJNHMUTR4nGP9MSIq4ZdU2w9/OiLxn16p/zEOZkryHi3wKYsnWPuADD328Q=='
+#             }
+#         ]
+#     }
+# }
 
 # necessary since django 3.2, explicitly set primary key type to avaoid warnings
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
