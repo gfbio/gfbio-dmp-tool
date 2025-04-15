@@ -1,7 +1,6 @@
 {% load static %}
 {% load core_tags %}
 {% load projects_tags %}
-{% load view_tags %}
 
 <img src="{% static "images/gfbio_logo.png" %}" alt="GFBio logo" height="0" class="float-right d-none"/>
 
@@ -20,7 +19,7 @@
                     {% if question.text %}
                         <p><strong>{{ question.text }}</strong></p>
                         {% if question.attribute %}
-                            {% with values|get:question.attribute.uri as values_list %}
+                            {% with question.processed_values as values_list %}
                                 {% if values_list %}
                                     {% if values_list|length > 1 %}
                                         <ul>
