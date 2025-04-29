@@ -316,6 +316,19 @@ class DmpExportView(ProjectAnswersView):
                     values_dict[uri].append(value)
                 context['values'] = values_dict
 
+                # Process values for each question in the sections to eliminate need for template filter
+                for section in ordered_sections:
+                    for page in section.ordered_pages:
+                        for question in page.ordered_questions:
+                            if hasattr(question, 'attribute') and question.attribute:
+                                # Get the attribute URI
+                                attribute_uri = question.attribute.uri
+                                # Pre-process the values for this question
+                                if attribute_uri in values_dict:
+                                    question.processed_values = values_dict[attribute_uri]
+                                else:
+                                    question.processed_values = []
+
                 logger.debug('DmpExportView: project id %s, found %d sections from catalog %s',
                           project.id, sections.count(), project.catalog)
 
