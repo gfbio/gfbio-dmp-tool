@@ -429,7 +429,7 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
             pass
 
     @staticmethod
-    def _create_option_value(option_value, project_id, question_id):
+    def _create_option_value(option_value, project_id, question_id, text_value):
         try:
             question = Question.objects.get(id=question_id)
             option = Option.objects.get(id=int(option_value))
@@ -439,6 +439,7 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
                 option=option,
                 value_type=question.value_type,
                 unit=question.unit,
+                text=text_value,
             )
         except Question.DoesNotExist as e:
             pass
@@ -455,7 +456,14 @@ class DmptRdmoProjectCreateView(generics.GenericAPIView):
                 # sub_fields = form_field.split(separator)
                 # if len(sub_fields) == 3:
                 question_id = sub_fields[2]
-                self._create_option_value(form_data[form_field], project_id, question_id)
+                additional_text_value = ""
+
+                additional_text_value_field_name = "additional-input-" + form_field
+                if form_field.startswith("optionset"):
+                    additional_text_value_field_name = "additional-input-option-" + form_data[form_field] + "-" + form_field
+                if additional_text_value_field_name in form_data:
+                    additional_text_value = form_data[additional_text_value_field_name]                
+                self._create_option_value(form_data[form_field], project_id, question_id, additional_text_value)
                 continue
             elif len(sub_fields) == 2:
                 question_id = sub_fields[1]

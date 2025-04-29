@@ -28,6 +28,9 @@
                                             <li>
                                             {% if value.option %}
                                                 {{ value.option.text }}
+                                                {% if value.text %}
+                                                    - {{ value.text }}
+                                                {% endif %}
                                             {% elif value.text %}
                                                 {{ value.text }}
                                             {% elif value.is_true %}
@@ -45,6 +48,9 @@
                                             <p>
                                             {% if value.option %}
                                                 {{ value.option.text }}
+                                                {% if value.text %}
+                                                    - {{ value.text }}
+                                                {% endif %}
                                             {% elif value.text %}
                                                 {{ value.text }}
                                             {% elif value.is_true %}
