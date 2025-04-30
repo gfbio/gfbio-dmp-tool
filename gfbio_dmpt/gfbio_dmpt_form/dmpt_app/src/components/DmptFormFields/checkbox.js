@@ -8,34 +8,64 @@ function CheckBox(props) {
     const optionSetFields = question.optionsets.map((optionSet) => {
         const optionSetOptions = optionSet.options.map((optionSetOption) => {
             const checkBoxFieldName = `option-${optionSetOption.id}____${question.attribute.key}____${question.id}`;
+            const additionalInputFieldName = `additional-input-${checkBoxFieldName}`
             let initialOptionId = '';
+            let additionalInputFieldValue = '';
             if (checkBoxFieldName in inputs) {
                 initialOptionId = inputs[checkBoxFieldName];
+                if (initialOptionId && additionalInputFieldName in inputs) {
+                    additionalInputFieldValue = inputs[additionalInputFieldName];
+                }
             }
+            
             return (
                 <div className="form-check" key={`option-${optionSetOption.id}`}>
-                    <input
-                        type="checkbox"
-                        className="form-check-input"
-                        value={optionSetOption.id}
-                        // name is the key in the form, it has to be unique but we need the question.key for
-                        // assigning the value to the right question/project
-                        name={checkBoxFieldName}
-                        id={`option-${optionSetOption.id}`}
-                        onChange={(e) => handleChange(e)}
-                        checked={`${optionSetOption.id}` === initialOptionId}
-                    />
-
-                    <label
-                        className="form-check-label"
-                        htmlFor={`option-${optionSetOption.id}`}
-                    >
-                        {stripHtml(optionSetOption.text)}
-                    </label>
-                    {optionSetOption.comment && (
-                        <PinnableTooltip
-                            helptext={optionSetOption.comment}
+                    <div className="form-check-row">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            value={optionSetOption.id}
+                            // name is the key in the form, it has to be unique but we need the question.key for
+                            // assigning the value to the right question/project
+                            name={checkBoxFieldName}
+                            id={`option-${optionSetOption.id}`}
+                            onChange={(e) => handleChange(e)}
+                            checked={`${optionSetOption.id}` === initialOptionId}
                         />
+
+                        <label
+                            className="form-check-label"
+                            htmlFor={`option-${optionSetOption.id}`}
+                        >
+                            {stripHtml(optionSetOption.text)}
+                        </label>
+                        {optionSetOption.comment && (
+                            <PinnableTooltip
+                                helptext={optionSetOption.comment}
+                            />
+                        )}
+                    </div>
+                    {`${optionSetOption.id}` === initialOptionId && optionSetOption.additional_input && (
+                        <div className="form-check-row-additional-input">
+                            {optionSetOption.additional_input == "text" && (
+                                <input
+                                    type="text"
+                                    id={`option-${optionSetOption.id}-additional-input`}
+                                    onChange={(e) => handleChange(e)}
+                                    name={additionalInputFieldName}
+                                    value={additionalInputFieldValue}
+                                />
+                            )}
+                            {optionSetOption.additional_input == "textarea" && (
+                                <textarea
+                                    type="text"
+                                    id={`option-${optionSetOption.id}-additional-input`}
+                                    onChange={(e) => handleChange(e)}
+                                    name={additionalInputFieldName}
+                                    value={additionalInputFieldValue}
+                                />
+                            )}
+                        </div>
                     )}
                 </div>
             );
