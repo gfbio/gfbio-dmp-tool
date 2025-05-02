@@ -95,8 +95,17 @@ $checkbox-border-width: 1.5px;
 .form-check {
   margin-bottom: $spacing-xs;
   padding-left: calc(#{$spacing-xl} + #{$spacing-xs});
-  display: flex;
-  align-items: flex-start;
+  
+  .form-check-row {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .form-check-row-additional-input {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.2rem;
+  }
 
   .form-check-label-group {
     display: flex;
@@ -184,6 +193,12 @@ $checkbox-border-width: 1.5px;
     cursor: pointer;
     margin-right: calc(#{$spacing-xs} / 2);
     padding-left: 0.5rem;
+  }
+
+  .form-check-row:has(+.form-check-row-additional-input) {
+    .form-check-label {
+      margin-bottom: 0.2rem;
+    }
   }
 
   .pinnable-tooltip {

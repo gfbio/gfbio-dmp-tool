@@ -50,15 +50,20 @@ def get_mandatory_form_fields(sections):
 def get_radio_form_content(form_data, question, related_values):
     val = related_values.first()
     if val is not None:
-        form_data[
-            f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'] = str(
-            val.option.id)
+        id = f'optionset-{val.option.optionsets.first().id}____{question.attribute.key}____{question.id}'
+        form_data[id] = str(val.option.id)
+
+        if val.text:
+            form_data[f'additional-input-option-{val.option.id}-{id}'] = str(val.text)
 
 
 def get_checkbox_form_content(form_data, question, related_values):
     for val in related_values.exclude(option=None):
-        form_data[f'option-{val.option.id}____{question.attribute.key}____{question.id}'] = str(
-            val.option.id)
+        id = f'option-{val.option.id}____{question.attribute.key}____{question.id}'
+        form_data[id] = str(val.option.id)
+
+        if val.text:
+            form_data[f'additional-input-{id}'] = str(val.text)
 
 
 def get_select_form_content(form_data, question, related_values):
