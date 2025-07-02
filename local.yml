@@ -15,6 +15,7 @@ services:
       dockerfile: ./compose/local/django/Dockerfile
     image: gfbio_dmpt_local_django
     container_name: dmp_django
+    restart: unless-stopped
     depends_on:
       - postgres
     volumes:
@@ -34,6 +35,7 @@ services:
       dockerfile: ./compose/production/postgres/Dockerfile
     image: gfbio_dmpt_production_postgres
     container_name: dpm_postgres
+    restart: unless-stopped
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z
       - local_postgres_data_backups:/backups:z
@@ -47,6 +49,7 @@ services:
   docs:
     image: gfbio_dmpt_local_docs
     container_name: dpm_docs
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./compose/local/docs/Dockerfile
@@ -65,11 +68,13 @@ services:
   redis:
     image: redis:5.0
     container_name: dmp_redis
+    restart: unless-stopped
 
   celeryworker:
     <<: *django
     image: gfbio_dmpt_local_celeryworker
     container_name: dpm_celeryworker
+    restart: unless-stopped
     depends_on:
       - redis
       - postgres
@@ -82,6 +87,7 @@ services:
     <<: *django
     image: gfbio_dmpt_local_celerybeat
     container_name: dmp_celerybeat
+    restart: unless-stopped
     depends_on:
       - redis
       - postgres
@@ -94,6 +100,7 @@ services:
     <<: *django
     image: gfbio_dmpt_local_flower
     container_name: dmp_flower
+    restart: unless-stopped
     #    networks:
     #      - local_default
     ports:

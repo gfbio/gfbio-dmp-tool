@@ -17,6 +17,7 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     image: gfbio_dmpt_production_django
+    restart: unless-stopped
     depends_on:
       - postgres
       - redis
@@ -32,6 +33,7 @@ services:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: gfbio_dmpt_production_postgres
+    restart: unless-stopped
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
       - production_postgres_data_backups:/backups:z
@@ -43,6 +45,7 @@ services:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
     image: gfbio_dmpt_production_traefik
+    restart: unless-stopped
     networks:
       - default
     depends_on:
@@ -56,18 +59,22 @@ services:
 
   redis:
     image: redis:5.0
+    restart: unless-stopped
 
   celeryworker:
     <<: *django
     image: gfbio_dmpt_production_celeryworker
+    restart: unless-stopped
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
     image: gfbio_dmpt_production_celerybeat
+    restart: unless-stopped
     command: /start-celerybeat
 
   flower:
     <<: *django
     image: gfbio_dmpt_production_flower
+    restart: unless-stopped
     command: /start-flower
