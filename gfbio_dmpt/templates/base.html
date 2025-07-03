@@ -46,6 +46,9 @@
     <script src="/static/js/bootstrap.bundle.min.js"></script>
 
     <!-- Your stuff: Third-party javascript libraries go here -->
+    {% if active_banners %}
+      <script src="{% static 'js/banners.js' %}"></script>
+    {% endif %}
 
 
     <!-- place project specific Javascript in this file -->
@@ -212,6 +215,11 @@
 
     <section class="compensate-nav content">
       <div class="container">
+        <!-- ======= Banners ======= -->
+        {% if active_banners %}
+          {% include "utils/banners.html" %}
+        {% endif %}
+        <!-- ======= End Banners ======= -->
 
         <!-- ======= Block-Content ======= -->
         {% block content %}
