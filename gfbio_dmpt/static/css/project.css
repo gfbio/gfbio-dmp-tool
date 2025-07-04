@@ -124,8 +124,8 @@
   --bs-focus-ring-width: 0.25rem;
   --bs-focus-ring-opacity: 0.25;
   --bs-focus-ring-color: rgba(129, 178, 72, 0.25);
-  --bs-form-valid-color: #198754;
-  --bs-form-valid-border-color: #198754;
+  --bs-form-valid-color: #81B248;
+  --bs-form-valid-border-color: #81B248;
   --bs-form-invalid-color: #dc3545;
   --bs-form-invalid-border-color: #dc3545;
 }
@@ -2782,7 +2782,7 @@ textarea.form-control-lg {
 .was-validated .form-control:valid, .form-control.is-valid {
   border-color: var(--bs-form-valid-border-color);
   padding-right: calc(1.5em + 0.75rem);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2381B248' d='M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right calc(0.375em + 0.1875rem) center;
   background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
@@ -12764,7 +12764,7 @@ textarea {
 [id^=questionset-] .questionHelp .pinnable-tooltip {
   margin-top: calc(1.25rem * 0.15);
 }
-[id^=questionset-] .col-12:not(:last-child) {
+[id^=questionset-] .col-12:not(:last-child), [id^=questionset-] .question-wrapper.MuiCollapse-entered:not(:last-child) {
   margin-bottom: 1.5rem;
 }
 
@@ -13328,4 +13328,38 @@ h4.social, .social.h4 {
 
 #id_agree_terms, #id_agree_privacy {
   margin-right: 0.5rem;
+}
+
+.listings-form-field .listing-item {
+  background-color: #f8fcfd;
+  border: #3cace4 1px solid;
+  border-radius: 5px;
+  padding: .375rem .75rem .375rem .85rem;
+}
+
+.listings-form-field .listing-item .title {
+  color: #3cace4;
+}
+
+.listings-form-field .listing-item .delete-button {
+  width: auto !important;
+  color: #ff6339;
+  font-size: .75rem;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.listings-form-field .listing-item .delete-button:hover {
+  font-weight: 700;
+}
+
+.hide-box:has(> div) {
+  min-height: 80px;
+  opacity: 100%;
+}
+
+.hide-box {
+  transition: opacity 0.2s 0.2s, min-height 0.3s 0s;
+  min-height: 0px;
+  opacity: 0%;
 }

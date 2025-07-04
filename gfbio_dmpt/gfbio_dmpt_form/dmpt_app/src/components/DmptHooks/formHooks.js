@@ -81,7 +81,7 @@ const useDmptSectionForm = (callback, initialInputValues) => {
 
     const handleInputChange = (event, fieldType) => {
         event.persist();
-        if (event.target.type === 'checkbox' && event.target.name in inputs) {
+        if ((event.target.type === 'checkbox' || event.target.type === 'autocomplete') && event.target.name in inputs) {
             const inputData = inputs;
             delete inputData[event.target.name];
             setInputs(inputData);

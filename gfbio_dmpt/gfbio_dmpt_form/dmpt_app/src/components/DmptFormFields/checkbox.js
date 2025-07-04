@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PinnableTooltip from './pinnableTooltip';
 import { stripHtml } from './htmlUtils';
+import { Collapse } from '@material-ui/core';
 
 function CheckBox(props) {
     const { question, handleChange, inputs } = props;
@@ -45,26 +46,28 @@ function CheckBox(props) {
                             />
                         )}
                     </div>
-                    {`${optionSetOption.id}` === initialOptionId && optionSetOption.additional_input && (
+                    {optionSetOption.additional_input && (
                         <div className="form-check-row-additional-input">
-                            {optionSetOption.additional_input == "text" && (
-                                <input
-                                    type="text"
-                                    id={`option-${optionSetOption.id}-additional-input`}
-                                    onChange={(e) => handleChange(e)}
-                                    name={additionalInputFieldName}
-                                    value={additionalInputFieldValue}
-                                />
-                            )}
-                            {optionSetOption.additional_input == "textarea" && (
-                                <textarea
-                                    type="text"
-                                    id={`option-${optionSetOption.id}-additional-input`}
-                                    onChange={(e) => handleChange(e)}
-                                    name={additionalInputFieldName}
-                                    value={additionalInputFieldValue}
-                                />
-                            )}
+                            <Collapse in={`${optionSetOption.id}` === initialOptionId} className='w-100'>
+                                {optionSetOption.additional_input == "text" && (
+                                    <input
+                                        type="text"
+                                        id={`option-${optionSetOption.id}-additional-input`}
+                                        onChange={(e) => handleChange(e)}
+                                        name={additionalInputFieldName}
+                                        value={additionalInputFieldValue}
+                                    />
+                                )}
+                                {optionSetOption.additional_input == "textarea" && (
+                                    <textarea
+                                        type="text"
+                                        id={`option-${optionSetOption.id}-additional-input`}
+                                        onChange={(e) => handleChange(e)}
+                                        name={additionalInputFieldName}
+                                        value={additionalInputFieldValue}
+                                    />
+                                )}
+                            </Collapse>
                         </div>
                     )}
                 </div>

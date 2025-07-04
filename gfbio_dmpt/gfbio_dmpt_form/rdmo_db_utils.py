@@ -73,6 +73,12 @@ def get_select_form_content(form_data, question, related_values):
             val.option.id)
 
 
+def get_autocomplete_form_content(form_data, question, related_values):
+    for val in related_values.exclude(option=None):
+        id = f'option-{val.option.id}____{question.attribute.key}____{question.id}'
+        form_data[id] = str(val.option.id)
+
+
 def get_form_content_from_values(dmpt_project, form_data, question):
     related_values = dmpt_project.rdmo_project.values.filter(attribute=question.attribute)
     if question.widget_type == 'select':
@@ -81,6 +87,8 @@ def get_form_content_from_values(dmpt_project, form_data, question):
         get_checkbox_form_content(form_data, question, related_values)
     elif question.widget_type == 'radio':
         get_radio_form_content(form_data, question, related_values)
+    elif question.widget_type == 'autocomplete':
+        get_autocomplete_form_content(form_data, question, related_values)
     else:
         if len(related_values):
             form_data[f'{question.attribute.key}____{question.id}'] = related_values.first().text
