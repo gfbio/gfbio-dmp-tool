@@ -3,6 +3,8 @@
 from rdmo.domain.serializers.v1 import AttributeSerializer
 from rdmo.options.serializers.v1 import OptionSetSerializer, OptionSerializer
 from rdmo.questions.serializers.v1 import PageSerializer, QuestionSerializer, SectionSerializer
+from rdmo.questions.models import Question
+
 
 
 def get_option_data(option_set, optionsets_list):
@@ -16,6 +18,20 @@ def get_option_data(option_set, optionsets_list):
 def get_question_data(question):
     question_data = QuestionSerializer(question).data
     question_data['attribute'] = AttributeSerializer(question.attribute).data
+    question_data['question_conditions'] = []
+    if question.conditions.all():
+        for condition in question.conditions.all():
+            related_question = Question.objects.get(attribute__id = condition.source.id)
+            question_data['question_conditions'].append(
+                {
+                    'source_key': condition.source.key,
+                    'source_id': related_question.id,
+                    'target_option_id': condition.target_option_id,
+                    'attribute_id': question.attribute_id,
+                    'relation': condition.relation,
+                    'target_text': condition.target_text
+                }
+            )
     optionsets_list = []
     optionsets = question.optionsets.all()
     for o in optionsets:
