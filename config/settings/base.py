@@ -91,6 +91,7 @@ THIRD_PARTY_APPS = [
     # openapi specification tools
     "rest_framework_swagger",
     "mozilla_django_oidc",
+    "gfbio_django_utilities",
 ]
 
 RDMO_CORE_APPS = [
@@ -241,6 +242,7 @@ TEMPLATES = [
                 "gfbio_dmpt.utils.context_processors.settings_context",
                 "gfbio_dmpt.utils.context_processors.prod_env",
                 "gfbio_dmpt.utils.context_processors.matomo_settings",
+                "gfbio_django_utilities.context_processors.active_banners",
             ],
             "libraries": {
                 "staticfiles": "django.templatetags.static",

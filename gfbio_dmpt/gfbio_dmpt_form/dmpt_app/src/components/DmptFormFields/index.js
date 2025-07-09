@@ -5,10 +5,12 @@ import TextArea from './textarea';
 import Select from './select';
 import Radio from './radio';
 import CheckBox from './checkbox';
+import AutoComplete from './autocomplete'
 import PinnableTooltip from './pinnableTooltip';
 import getMandatoryMessage from './getMandatoryMessage';
 import getHiddenPageIdsFromConditionals from './getHiddenPageIdsFromConditionals';
 import getVisiblePageIdsFromInputData from './getVisiblePageIdsFromInputData';
+import { Collapse } from '@material-ui/core';
 
 function DmptFormFields(props) {
     const { section, handleInputChange, inputs, validationErrors, language } =
@@ -70,6 +72,106 @@ function DmptFormFields(props) {
     //     handleInputChange(e);
     // };
 
+    function getQuestionInputField(question, inputs, handleInputChange) {
+        // This not the best way, but increases readability of data in requests
+        const fieldName = `${question.attribute.key}____${question.id}`;
+        let initialTextValue = '';
+        if (inputs[fieldName] !== undefined) {
+            initialTextValue = inputs[fieldName];
+        }
+
+        // TODO: add a way to do this for option based fields, like radio, select, checkbox
+        let input = (
+            <TextInput
+                question={question}
+                handleChange={handleInputChange}
+                initialValue={initialTextValue}
+            />
+        );
+        if (question.widget_type === 'textarea') {
+            input = (
+                <TextArea
+                    question={question}
+                    // handleChange={TextLengthHandleInputChange}
+                    handleChange={handleInputChange}
+                    initialValue={initialTextValue}
+                />
+            );
+        } else if (question.widget_type === 'select') {
+            input = (
+                <Select
+                    question={question}
+                    handleChange={handleInputChange}
+                    inputs={inputs}
+                />
+            );
+        } else if (question.widget_type === 'radio') {
+            input = (
+                <Radio
+                    question={question}
+                    handleChange={ExtendedHandleInputChange}
+                    inputs={inputs}
+                />
+            );
+        } else if (question.widget_type === 'checkbox') {
+            input = (
+                <CheckBox
+                    question={question}
+                    handleChange={handleInputChange}
+                    inputs={inputs}
+                />
+            );
+        } else if (question.widget_type === 'autocomplete') {
+            input = (
+                <AutoComplete
+                    question={question}
+                    handleChange={handleInputChange}
+                    inputs={inputs}
+                />
+            );
+        }
+        
+        return input;
+    }
+
+    function getValidationMessage(question) {
+        let validationMessage = <span />;
+
+        // TODO: <09-05-22, claas>
+        //   extract the array into a static variable. These could
+        //   also be passed later from the backend
+        if (['email', 'url', 'phone', 'integer', 'float'].includes(
+            question.value_type
+        )) {
+            if (Object.keys(validationErrors).filter((k) => k.startsWith(question.attribute.key)
+            ).length > 0) {
+                validationMessage =
+                    language?.shortCode === 'DE' ? (
+                        <span className="mandatory">
+                            (kein valider {question.value_type})
+                        </span>
+                    ) : (
+                        <span className="mandatory">
+                            (not a valid {question.value_type})
+                        </span>
+                    );
+            }
+        }
+        return validationMessage;
+    }
+
+    function shouldQuestionBeHidden(question, inputs) {
+        return question.question_conditions.some(condition => {
+            if (Object.keys(inputs).some(key => { 
+                var theKey = "option-" + condition.target_option_id + "____" + condition.source_key + "____" + condition.source_id;
+                return key == theKey;
+            })) {
+                return false;
+            }
+            return true;
+        })
+    }
+
     const inputFields = section.pages.map((page) => {
         if (hiddenPageIds.includes(page.id)) {
             return <div id={`page-${page.id}-hidden`} />;
@@ -85,108 +187,39 @@ function DmptFormFields(props) {
                     <PinnableTooltip helptext={page.help} />
                 </div>
 
-                {page.pagequestions.map((question) => {
-                    const mandatoryMessage = getMandatoryMessage(
-                        question.is_optional,
-                        language
-                    );
+                {
+                    page.pagequestions.map((question) => {
 
-                    // This not the best way, but increases readability of data in requests
-                    const fieldName = `${question.attribute.key}____${question.id}`;
-                    let initialTextValue = '';
-                    if (inputs[fieldName] !== undefined) {
-                        initialTextValue = inputs[fieldName];
-                    }
+                        const input = getQuestionInputField(question, inputs, handleInputChange);
+                        const validationMessage = getValidationMessage(question);
 
-                    // TODO: add a way to do this for option based fields, like radio, select, checkbox
-                    let input = (
-                        <TextInput
-                            question={question}
-                            handleChange={handleInputChange}
-                            initialValue={initialTextValue}
-                        />
-                    );
-                    if (question.widget_type === 'textarea') {
-                        input = (
-                            <TextArea
-                                question={question}
-                                // handleChange={TextLengthHandleInputChange}
-                                handleChange={handleInputChange}
-                                initialValue={initialTextValue}
-                            />
+                        let question_block = (
+                            <div className="col-12">
+                                <label
+                                    aria-label={question.text}
+                                    htmlFor="username"
+                                    className="form-label"
+                                >
+                                    {question.text}
+                                    {!question.is_optional && <span className="mandatory">*</span>}
+                                    <PinnableTooltip helptext={question.help} />
+                                </label>
+                                {input}
+                                <small className="form-text text-muted validation-field ">
+                                    {validationMessage}
+                                </small>
+                            </div>
                         );
-                    } else if (question.widget_type === 'select') {
-                        input = (
-                            <Select
-                                question={question}
-                                handleChange={handleInputChange}
-                                inputs={inputs}
-                            />
-                        );
-                    } else if (question.widget_type === 'radio') {
-                        input = (
-                            <Radio
-                                question={question}
-                                handleChange={ExtendedHandleInputChange}
-                                inputs={inputs}
-                            />
-                        );
-                    } else if (question.widget_type === 'checkbox') {
-                        input = (
-                            <CheckBox
-                                question={question}
-                                handleChange={handleInputChange}
-                                inputs={inputs}
-                            />
-                        );
-                    }
-
-                    let validationMessage = <span />;
-
-                    // TODO: <09-05-22, claas>
-                    //   extract the array into a static variable. These could
-                    //   also be passed later from the backend
-                    if (
-                        ['email', 'url', 'phone', 'integer', 'float'].includes(
-                            question.value_type
-                        )
-                    ) {
-                        if (
-                        Object.keys(validationErrors).filter((k) =>
-                            k.startsWith(question.attribute.key)
-                        ).length > 0
-                    ) {
-                        validationMessage =
-                            language?.shortCode === 'DE' ? (
-                                <span className="mandatory">
-                                    (kein valider {question.value_type})
-                                </span>
-                            ) : (
-                                <span className="mandatory">
-                                    (not a valid {question.value_type})
-                                </span>
-                            );
-                    }
-                    }
-
-                    return (
-                        <div className="col-12">
-                            <label
-                                aria-label={question.text}
-                                htmlFor="username"
-                                className="form-label"
-                            >
-                                {question.text}
-                                {!question.is_optional && <span className="mandatory">*</span>}
-                                <PinnableTooltip helptext={question.help} />
-                            </label>
-                            {input}
-                            <small className="form-text text-muted validation-field ">
-                                {validationMessage}
-                            </small>
-                        </div>
-                    );
-                })}
+                        if (question.question_conditions && question.question_conditions.some(() => true)) {
+                            return <Collapse in={!shouldQuestionBeHidden(question, inputs)} className="question-wrapper">
+                                {question_block}
+                            </Collapse>
+                        }
+                        else {
+                            return question_block;
+                        }
+                    })
+                }
             </div>
         );
     });

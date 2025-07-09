@@ -15,7 +15,6 @@ function TextArea(props) {
             onChange={(event) =>
                 handleChange(event, question.value_type, question.is_optional)
             }
-            maxLength={255}
         >
             {initialValue}
         </textarea>
