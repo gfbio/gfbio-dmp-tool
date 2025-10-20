@@ -1,5 +1,5 @@
 # image version as variable
-ARG PYTHON_VERSION=3.9-slim-buster
+ARG PYTHON_VERSION=3.9-slim-bullseye
 
 # alias for image 
 FROM python:${PYTHON_VERSION} as python
@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # rdmo export dependencies
   pandoc \
   texlive \
-  texlive-generic-extra \
+  texlive-plain-generic \
   texlive-xetex \
   lmodern \
   librsvg2-bin \
