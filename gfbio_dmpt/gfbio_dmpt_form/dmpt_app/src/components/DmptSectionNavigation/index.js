@@ -10,6 +10,7 @@ import DmptSummary from '../DmptSummary';
 import DmptLanguageChooser from '../DmptLanguageChooser';
 import { getCookie, setCookie } from '../api/cookie';
 import availableLanguages from '../DmptLanguageChooser/availableLanguages';
+import {Button, Collapse} from '@material-ui/core'
 
 const useDmptSectionNavigation = (
     catalogId,
@@ -151,7 +152,22 @@ const renderMandatorySectionLinks = (mandatoryFieldErrors, sectionList, setSecti
 function DmptSectionNavigation(props) {
     const { catalogId, token, dmptProjectData } = props;
     const dmptProjectId = dmptProjectData.id;
+    //const [dataLoadedFromSession, setDataLoadedFromSession] = useState(false);
+    var dataLoadedFromSession = false;
 
+    console.log("dmptProjectData:", JSON.stringify(dmptProjectData))
+    console.log("dmptProjectId:", dmptProjectId)
+    if (dmptProjectId == -1) {
+        var restoredInputsString = window.sessionStorage.getItem("stored-input-data");
+        console.log("Loaded stored-input-data to ", restoredInputs);
+        if (restoredInputsString) {
+            var restoredInputs = JSON.parse(restoredInputsString);
+            dmptProjectData.form_data = restoredInputs;
+            dataLoadedFromSession = true;
+        }
+    }
+
+        
     const [language, setLanguage] = useState(availableLanguages.english);
     const setLanguageCookie = function(newLanguage) {
         if (newLanguage.shortCode !== getCookie("django_language")) {
@@ -165,6 +181,7 @@ function DmptSectionNavigation(props) {
     setLanguageCookie(language);
 
     const [sectionList, setSectionList] = useState([]);
+    const [bannerCollapsed, setBannerCollapsed] = useState(false);
     const [mandatoryFields, setMandatoryFields] = useState([]);
     const [processing] = useDmptSectionNavigation(
         catalogId,
@@ -226,12 +243,33 @@ function DmptSectionNavigation(props) {
         );
     }
 
+    const clearData = () => {
+        window.sessionStorage.setItem("stored-input-data", "");
+        window.location.reload();
+    }
+
+
     return (
         <div id="section-navigation">
             <DmptLanguageChooser
                 language={language}
                 setLanguage={setLanguageAndCookie}
             />
+            {
+                dataLoadedFromSession && (
+                    <div className="interview-banner-space">
+                        <Collapse in={!bannerCollapsed}>
+                            <div className="banner-body">
+                                <Button onClick={()=>{setBannerCollapsed(true);}}>
+                                    Hide
+                                </Button>
+                                Your unsaved data was restored from your session-storage.
+                                If you rather want a fresh start just click <a class="clear-all-inputs-link" onClick={clearData}>clear all inputs</a>.
+                            </div>
+                        </Collapse>
+                    </div>
+                )
+            }
             <div className="row">
                 <div className="col-12">
                     <ul className="nav nav-tabs sub-navi">{sections}</ul>
