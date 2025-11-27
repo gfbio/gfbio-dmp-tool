@@ -96,10 +96,10 @@
   <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-shrink navbar-shrink-content"
        id="mainNavContent">
     <div class="container">
-      <a class="navbar-brand " href="/">
+      <a id="nav-item-home-logo" class="navbar-brand " href="/">
         <h1></h1>
       </a>
-      <button class="navbar-toggler" type="button"
+      <button id="nav-toggler" class="navbar-toggler" type="button"
               data-bs-toggle="collapse"
               data-bs-target="#navbarResponsive"
               aria-controls="navbarResponsive" aria-expanded="false"
@@ -113,18 +113,18 @@
 
           {% url 'home' as url %}
           <li class="nav-item {% if request.path == url %}active{% endif %}">
-            <a class="nav-link" href="{{ url }}">Home</a>
+            <a id="nav-item-home" class="nav-link" href="{{ url }}">Home</a>
           </li>
 
           <li class="nav-item {% if request.path == url %}active{% endif %}">
-            <a class="nav-link" href="https://gfbio.org/services/" target="_blank"
+            <a id="nav-item-gfbio-services" class="nav-link" href="https://gfbio.org/services/" target="_blank"
                      rel="noopener noreferrer">GFBio Services</a>
           </li>
 
           {% if request.user.is_authenticated %}
             {% url 'dmpt:create_dmp' as url %}
             <li class="nav-item {% if request.path == '/dmpt/app/' %}active{% endif %}">
-              <a class="nav-link" href="{{ url }}">My DMPs</a>
+              <a id="nav-item-my-dmps" class="nav-link" href="{{ url }}">My DMPs</a>
             </li>
           {% endif %}
 
@@ -132,7 +132,7 @@
             {% if request.user.is_staff %}
               {% url 'home_rdmo' as url %}
               <li class="nav-item {% if request.path == url %}active{% endif %}">
-                <a class="nav-link" href="{{ url }}">RDMO</a>
+                <a id="nav-item-rdmo" class="nav-link" href="{{ url }}">RDMO</a>
               </li>
             {% endif %}
 
@@ -151,7 +151,7 @@
               <ul class="dropdown-menu mt-3"
                   aria-labelledby="userDropdown">
                 {# URL provided by django-allauth/account/urls.py #}
-                <li><a class="dropdown-item"
+                <li><a id="nav-item-sign-out" class="dropdown-item"
                        href="{% url 'account_logout' %}">Sign
                   Out</a>
               </ul>
@@ -160,7 +160,7 @@
           {% else %}
             <li class="nav-item">
               {# URL provided by django-allauth/account/urls.py #}
-              <a class="nav-link"
+              <a id="nav-item-sign-up" class="nav-link"
                  href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
                 {#                               href="{% url 'account_signup' %}"#}
               >
@@ -169,7 +169,7 @@
             </li>
             <li class="nav-item">
               {# URL provided by django-allauth/account/urls.py #}
-              <a class="nav-link"
+              <a id="nav-item-sign-in" class="nav-link"
                  href="{% url 'account_login' %}">
                 Sign In
               </a>
@@ -310,7 +310,7 @@
               </p>
               <br>
               <p>
-                <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
+                <a id="footer-sign-up" href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php"
                    class="btn btn-primary btn-footer">Create
                   an account
                   !</a>

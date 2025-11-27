@@ -19,7 +19,7 @@
   <div class="boxed">
 
     <div class="text-center gfbio_login">
-      <a
+      <a id="login-page-sign-in" 
         href="{% url 'oidc_authentication_init' %}">
         <p class="text-center">
           Click here to sign in with your GFBio account.
@@ -38,7 +38,7 @@
       <div class="text-center socialaccount_ballot">
 
         <p class="text-center mb-3">
-          If you have no account <a href="{{ signup_url }}">sign
+          If you have no account <a id="login-page-sign-up" href="{{ signup_url }}">sign
           up here</a>, or sign in with one of your existing third pary
           accounts.
         </p>
@@ -56,7 +56,7 @@
       <p class="text-center my-4">{% blocktrans %}If you have not
         created an account yet, then
         please
-        <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
+        <a id="login-page-sign-up" href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
           sign up</a> first.{% endblocktrans %}
       </p>
     {% endif %}

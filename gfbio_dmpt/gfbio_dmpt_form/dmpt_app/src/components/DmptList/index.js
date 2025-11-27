@@ -110,6 +110,7 @@ function DmptList(props) {
                     <div className="col-12">
                         <div className="d-grid gap-2">
                             <Link
+                                id="dmp-list-create-dmp-button"
                                 className="btn btn-secondary btn-green new-dmp"
                                 to="new"
                             >

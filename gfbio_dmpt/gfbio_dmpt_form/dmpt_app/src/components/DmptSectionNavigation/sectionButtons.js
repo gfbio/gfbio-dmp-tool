@@ -98,6 +98,7 @@ function SectionButtons(props) {
 
     let previousButton = (
         <button
+            id={`section-button-sec-${sectionIndex}-previous`}
             type="button"
             className={`list-group-item list-group-item-action text-start ${
                 disabled ? 'disabled' : ''
@@ -114,6 +115,7 @@ function SectionButtons(props) {
 
     let continueButton = (
         <button
+            id={`section-button-sec-${sectionIndex}-next`}
             type="button"
             className={`list-group-item list-group-item-action text-end ${
                 disabled ? 'disabled' : ''
@@ -137,6 +139,7 @@ function SectionButtons(props) {
     if (sectionIndex === sectionsLength - 1) {
         continueButton = (
             <button
+                id={`section-button-finalize`}
                 type="button"
                 className={`list-group-item list-group-item-action text-end ${
                     disabled ? 'disabled' : ''

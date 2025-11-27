@@ -59,6 +59,7 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
 
         let link = (
             <button
+                id={`section-${title.replaceAll(" ", "-")}`}
                 className="btn btn-link nav-link"
                 type="button"
                 onClick={() => handleClick(index)}
@@ -68,7 +69,7 @@ const sectionsAsListElements = (sectionList, sectionIndex, handleClick) => {
         );
         if (index === sectionIndex) {
             link = (
-                <button className="btn btn-link nav-link active" type="button">
+                <button id={`section-${title.replaceAll(" ", "-")}`} className="btn btn-link nav-link active" type="button">
                     {`${index + 1}. ${title}`}
                 </button>
             );
