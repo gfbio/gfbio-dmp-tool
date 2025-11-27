@@ -20,7 +20,7 @@
       <div class="d-grid gap-2">
 
         {% url 'dmpt:create_dmp_new' as url %}
-        <a class="btn btn-secondary btn-green btn-lg" href="{{ url }}">
+        <a id="home-create-dmp-button" class="btn btn-secondary btn-green btn-lg" href="{{ url }}">
           Create a Data Management Plan
         </a>
 
@@ -32,7 +32,7 @@
   {% if not request.user.is_authenticated %}
     <div class="row mb-3">
       <h5 class="text-center">
-        <a href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
+        <a id="home-page-sign-up-link" href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
           Get a free GFBio account to save your dynamic DMP</a></h5>
     </div>
   {% endif %}
