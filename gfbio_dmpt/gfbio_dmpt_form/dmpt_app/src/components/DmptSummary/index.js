@@ -73,7 +73,7 @@ function DmptSummary(props) {
                         first. To login or sign up, visit this link:{' '}
                         <a
                             id="sign-in-to-safe-link"
-                            href="/oidc/authenticate/"
+                            href="/oidc/authenticate/?next=%2Fdmp%2Fcreate%2Fnew"
                             className="btn btn-secondary btn-green"
                         >
                             Sign In

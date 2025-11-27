@@ -68,8 +68,10 @@ const submitProjectData = (
         if (dmptProjectId > -1) {
             putProject(token, dmptProjectId, inputs).then((res) => {
                 callBack(res.rdmoProjectId);
+                window.sessionStorage.setItem("stored-input-data", "");
             });
         } else {
+            window.sessionStorage.setItem("stored-input-data", JSON.stringify(inputs));
             postProject(token, catalogId, inputs).then((res) => {
                 callBack(res.rdmoProjectId);
             });

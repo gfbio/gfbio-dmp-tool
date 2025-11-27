@@ -258,4 +258,39 @@ section.content {
       }
     }
   }
+
+  .interview-banner-space {
+    margin-bottom: 1.5rem;
+    color: white;
+
+    .banner-body {
+      background-color: #0760ae;
+      border-radius: 0.75rem;
+      position: relative;
+      padding: 1rem;
+      padding-right: 4rem;
+    }
+
+
+    .clear-all-inputs-link {
+      color: white;
+      text-decoration: underline !important;
+
+      &:hover {
+        cursor: pointer;
+        font-weight: bolder;
+        color: white;
+      }
+    }
+
+    .MuiButtonBase-root {
+      position: absolute;
+      right: 0;
+      top: 0;
+        
+      .MuiButton-label {
+        color: white;
+      }
+    }
+  }
 }
