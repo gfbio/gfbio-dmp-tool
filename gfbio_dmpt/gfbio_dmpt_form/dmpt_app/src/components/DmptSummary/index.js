@@ -72,7 +72,8 @@ function DmptSummary(props) {
                         To save your Data Management Plan, you need to login
                         first. To login or sign up, visit this link:{' '}
                         <a
-                            href="/oidc/authenticate/"
+                            id="sign-in-to-safe-link"
+                            href="/oidc/authenticate/?next=%2Fdmp%2Fcreate%2Fnew"
                             className="btn btn-secondary btn-green"
                         >
                             Sign In

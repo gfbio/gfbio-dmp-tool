@@ -68,8 +68,10 @@ const submitProjectData = (
         if (dmptProjectId > -1) {
             putProject(token, dmptProjectId, inputs).then((res) => {
                 callBack(res.rdmoProjectId);
+                window.sessionStorage.setItem("stored-input-data", "");
             });
         } else {
+            window.sessionStorage.setItem("stored-input-data", JSON.stringify(inputs));
             postProject(token, catalogId, inputs).then((res) => {
                 callBack(res.rdmoProjectId);
             });
@@ -96,6 +98,7 @@ function SectionButtons(props) {
 
     let previousButton = (
         <button
+            id={`section-button-sec-${sectionIndex}-previous`}
             type="button"
             className={`list-group-item list-group-item-action text-start ${
                 disabled ? 'disabled' : ''
@@ -112,6 +115,7 @@ function SectionButtons(props) {
 
     let continueButton = (
         <button
+            id={`section-button-sec-${sectionIndex}-next`}
             type="button"
             className={`list-group-item list-group-item-action text-end ${
                 disabled ? 'disabled' : ''
@@ -135,6 +139,7 @@ function SectionButtons(props) {
     if (sectionIndex === sectionsLength - 1) {
         continueButton = (
             <button
+                id={`section-button-finalize`}
                 type="button"
                 className={`list-group-item list-group-item-action text-end ${
                     disabled ? 'disabled' : ''
