@@ -49,8 +49,10 @@ RUN addgroup --system django \
 # NOTE:  <06-10-21, Claas> # 
 # Please keep that as it enables pandoc to find the logo and extra style for dmp export
 RUN mkdir -p /static/images
+RUN mkdir -p /usr/share/fonts/truetype/lato
 COPY ./gfbio_dmpt/static/images/gfbio_logo.png /static/images/
-COPY ./gfbio_dmpt/static/fonts/lato/* /usr/share/fonts/truetype/lato/
+# Copy only .ttf files for LaTeX (XeLaTeX cannot use .woff2 files)
+COPY ./gfbio_dmpt/static/fonts/lato/*.ttf /usr/share/fonts/truetype/lato/
 COPY ./gfbio_dmpt/static/export_config/template.latex /static/export_config/
 COPY ./gfbio_dmpt/static/export_config/ost.cls /static/export_config/
 
