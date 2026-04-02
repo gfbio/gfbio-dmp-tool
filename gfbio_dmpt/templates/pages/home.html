@@ -6,12 +6,7 @@
     <div class="col-12">
       <h1 class="outline green-stroke text-center"
           style="font-size: 4.2rem;">GFBio Data
-        Management Plan</h1>
-      <h5 class="text-center">Basic questions about data
-        management in one place</h5>
-      <h5 class="text-center">Dynamic data management plan
-        creation</h5>
-      <h5 class="text-center">Personal support</h5>
+        Management Plan Tool (DMPT)</h1>
     </div>
   </div>
 
@@ -32,7 +27,9 @@
   {% if not request.user.is_authenticated %}
     <div class="row mb-3">
       <h5 class="text-center">
-        <a id="home-page-sign-up-link" href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
+        <a id="home-page-sign-up-link" 
+           href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php" 
+           class="btn btn-outline-secondary btn-lg">
           Get a free GFBio account to save your dynamic DMP</a></h5>
     </div>
   {% endif %}
