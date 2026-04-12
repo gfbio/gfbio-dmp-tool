@@ -20,19 +20,8 @@
         </a>
 
       </div>
-
     </div>
   </div>
-
-  {% if not request.user.is_authenticated %}
-    <div class="row mb-3">
-      <h5 class="text-center">
-        <a id="home-page-sign-up-link" 
-           href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php" 
-           class="btn btn-outline-secondary btn-lg">
-          Get a free GFBio account to save your dynamic DMP</a></h5>
-    </div>
-  {% endif %}
 
   {#  TODO: for notification use banner below  #}
   {#  <div class="row mb-3">#}
@@ -59,29 +48,20 @@
 
   <div class="row pt-4 mb-4">
     <div class="col-6">
-      <h6>WHAT TO EXPECT OF THE DMPT</h6>
+      <h6>WHAT YOU CAN DO WITH OUR DMP TOOL</h6>
       <ul>
-        <li>Answer important questions about the data management of your project</li>
+        <li>Describe the data management of your project in detail</li>
         <li>Download your entries as a structured PDF file</li>
-        <li>Request free personal <a
-          href="https://www.gfbio.org/plan">DMP
-          support</a> from our experts
-        </li>
-        <li>Save your entries to your personal account and revise it
-          whenever needed
-        </li>
+        <li><a href="https://dmp.gfbio.org/accounts/login/">Log in</a> to save your entries and edit them later</li>
       </ul>
     </div>
     <div class="col-6">
-      <h6>WHAT TO KNOW BEFORE STARTING A DMP REQUEST</h6>
+      <h6>WHAT OUR DMP SERVICE OFFERS</h6>
       <ul>
-        <li>All general answers about the service can be found in our <a href="https://kb.gfbio.org/label/KB/dmp">FAQs</a>
-        </li>
-        <li>For registered users: Save your entries to your personal account and revise them whenever you want</li>
+        <li>You can request personal <a href="https://www.gfbio.org/plan">DMP support</a> from our experts free of charge</li>
+        <li>With our help your DMP will get more detailed and precise, similar to <a href="https://doi.org/10.25625/W3YEEQ/PTBF8A">this example</a></li>
         <li>Want to know more? 
-          <a href="https://gfbio.org/plan/">Click here for more detailed information</a> 
-          and 
-          <a href="https://gfbio.org/training/">training</a>
+          Check out the <a href="https://www.gfbio.org/plan/">detailed service description</a> and our <a href="https://kb.gfbio.org/label/KB/dmp">FAQ and How-To articles</a>
         </li>
       </ul>
     </div>
