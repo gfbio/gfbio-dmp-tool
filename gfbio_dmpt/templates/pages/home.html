@@ -6,12 +6,7 @@
     <div class="col-12">
       <h1 class="outline green-stroke text-center"
           style="font-size: 4.2rem;">GFBio Data
-        Management Plan</h1>
-      <h5 class="text-center">Basic questions about data
-        management in one place</h5>
-      <h5 class="text-center">Dynamic data management plan
-        creation</h5>
-      <h5 class="text-center">Personal support</h5>
+        Management Plan Tool (DMPT)</h1>
     </div>
   </div>
 
@@ -25,17 +20,8 @@
         </a>
 
       </div>
-
     </div>
   </div>
-
-  {% if not request.user.is_authenticated %}
-    <div class="row mb-3">
-      <h5 class="text-center">
-        <a id="home-page-sign-up-link" href="https://sso.gfbio.org/simplesaml/module.php/accountui/register.php">
-          Get a free GFBio account to save your dynamic DMP</a></h5>
-    </div>
-  {% endif %}
 
   {#  TODO: for notification use banner below  #}
   {#  <div class="row mb-3">#}
@@ -62,41 +48,22 @@
 
   <div class="row pt-4 mb-4">
     <div class="col-6">
-      <h6>Registered Users</h6>
+      <h6>WHAT YOU CAN DO WITH OUR DMP TOOL</h6>
       <ul>
-        <li>Answer important questions about the data management of your
-          project
-        </li>
+        <li>Describe the data management of your project in detail</li>
         <li>Download your entries as a structured PDF file</li>
-        <li>Request free personal <a
-          href="https://www.gfbio.org/plan">DMP
-          support</a> from our experts
-        </li>
-        <li>Save your entries to your personal account and revise it
-          whenever needed
-        </li>
+        <li><a href="https://dmp.gfbio.org/accounts/login/">Log in</a> to save your entries and edit them later</li>
       </ul>
     </div>
     <div class="col-6">
-      <h6>Unregistered Users</h6>
+      <h6>WHAT OUR DMP SERVICE OFFERS</h6>
       <ul>
-        <li>Answer important questions about the data management of your
-          project
-        </li>
-        <li>Download your entries as a structured PDF file</li>
-        <li>Request free personal <a
-          href="https://www.gfbio.org/plan">DMP
-          support</a> from our experts
+        <li>You can request personal <a href="https://www.gfbio.org/plan">DMP support</a> from our experts free of charge</li>
+        <li>With our help your DMP will get more detailed and precise, similar to <a href="https://doi.org/10.25625/W3YEEQ/PTBF8A">this example</a></li>
+        <li>Want to know more? 
+          Check out the <a href="https://www.gfbio.org/plan/">detailed service description</a> and our <a href="https://kb.gfbio.org/label/KB/dmp">FAQ and How-To articles</a>
         </li>
       </ul>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-12">
-      <h5 class="text-center">
-        <a class="text-black" href="https://gfbio.org/plan/">
-          Click here for more detailed information and training</a></h5>
     </div>
   </div>
 {% endblock content %}
