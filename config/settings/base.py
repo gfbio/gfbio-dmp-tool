@@ -24,6 +24,7 @@ if READ_DOT_ENV_FILE:
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
+ENV = env("ENV", default="production")
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -134,6 +135,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
     #  "mozilla_django_oidc.auth.OIDCAuthenticationBackend",
     "gfbio_dmpt.authentication.auth_backends.GFBioAuthenticationBackend",
+    "gfbio_dmpt.authentication.auth_backends.Login4BioAuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 # because of rdmo
@@ -399,6 +401,24 @@ OIDC_OP_USER_ENDPOINT = (
     "https://keycloak.sso.gwdg.de/auth/realms/GFBio/protocol/openid-connect/userinfo"
 )
 
+# 4bio SSO
+# ------------------------------------------------------------------------------
+OIDC_4BIO_RP_CLIENT_ID = env("OIDC_4BIO_RP_CLIENT_ID", default="n4b-dmp-dev")
+OIDC_4BIO_AUTHENTICATION_CALLBACK_URL = env("OIDC_4BIO_REDIRECT", default="https://dmp.gfbio.dev/auth/4biologin/callback")
+OIDC_4BIO_RP_CLIENT_SECRET = env("OIDC_4BIO_RP_CLIENT_SECRET", default="no_oidc_cl_secret")
+OIDC_4BIO_RP_SIGN_ALGO = env("OIDC_4BIO_RP_SIGN_ALGO", default="RS256")
+OIDC_4BIO_OP_JWKS_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/nfdi4biodiversity-stage/protocol/openid-connect/certs"
+)
+OIDC_4BIO_OP_AUTHORIZATION_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/nfdi4biodiversity-stage/protocol/openid-connect/auth"
+)
+OIDC_4BIO_OP_TOKEN_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/nfdi4biodiversity-stage/protocol/openid-connect/token"
+)
+OIDC_4BIO_OP_USER_ENDPOINT = (
+    "https://keycloak.sso.gwdg.de/auth/realms/nfdi4biodiversity-stage/protocol/openid-connect/userinfo"
+)
 # rdmo
 # ------------------------------------------------------------------------------
 # TODO: keep in mind that all rdmo settings are imported above: from rdmo.core.settings import *
