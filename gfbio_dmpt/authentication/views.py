@@ -90,7 +90,7 @@ class OIDC4BioAuthenticationCallbackView(View):
             # redirect to authorize again if the session refresh has
             # expired.
             if request.user.is_authenticated:
-                self.auth.logout(request)
+                auth.logout(request)
             assert not request.user.is_authenticated
         elif "code" in request.GET and "state" in request.GET:
             # Check instead of "oidc_state" check if the "oidc_states" session key exists!

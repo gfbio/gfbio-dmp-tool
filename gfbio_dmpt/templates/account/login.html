@@ -32,18 +32,20 @@
       </a>
     </div>
 
-    <div class="text-center gfbio_login">
-      <a id="login-page-sign-in-4BioLogin" 
-        href="/4biologin/authenticate">
-        <p class="text-center">
-          Click here to sign in with your 4BioLogin.
-          <small></small>
-        </p>
-        <button class="btn btn-sm btn-block btn-light localLoginLink p-3">
-          <span class="align-bottom">Single Sign On with 4BioLogin</span>
-        </button>
-      </a>
-    </div>
+    {% if request.get_host == "dmp.gfbio.dev" or request.get_host == "127.0.0.1:8000" %}
+      <div class="text-center gfbio_login">
+        <a id="login-page-sign-in-4BioLogin" 
+          href="/4biologin/authenticate">
+          <p class="text-center">
+            Click here to sign in with your 4BioLogin.
+            <small></small>
+          </p>
+          <button class="btn btn-sm btn-block btn-light localLoginLink p-3">
+            <span class="align-bottom">Single Sign On with 4BioLogin</span>
+          </button>
+        </a>
+      </div>
+    {% endif %}
 
     {% get_providers as socialaccount_providers %}
     {% if socialaccount_providers %}
