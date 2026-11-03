@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from gfbio_dmpt.authentication.views import OIDC4BioAuthenticationCallbackView, OIDC4BioAuthenticationRequestView, OIDC4BioLogoutView
 from rdmo.core.views import home, about
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -43,6 +44,7 @@ urlpatterns = [
     path("dmp/", include("gfbio_dmpt.gfbio_dmpt_form.urls", namespace="dmpt")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
 # API URLS
 urlpatterns += [
     # API base url
@@ -50,6 +52,17 @@ urlpatterns += [
     # DRF auth token
     path("auth-token/", obtain_auth_token),
 ]
+
+if settings.ENV == "staging":
+    urlpatterns += [
+        path("auth/4biologin/callback/", OIDC4BioAuthenticationCallbackView.as_view(), name="oidc_4bio_authentication_callback"),
+        path(
+            "4biologin/authenticate/",
+            OIDC4BioAuthenticationRequestView.as_view(),
+            name="oidc_4bio_authentication_init",
+        ),
+        path("4biologin/logout/", OIDC4BioLogoutView.as_view(), name="oidc_4bio_logout"),
+    ]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit

@@ -1,5 +1,5 @@
 # image version as variable
-ARG PYTHON_VERSION=3.9-slim-bullseye
+ARG PYTHON_VERSION=3.9-slim-bookworm
 
 # alias for image 
 FROM python:${PYTHON_VERSION} as python
