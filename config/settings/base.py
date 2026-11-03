@@ -400,6 +400,9 @@ OIDC_OP_TOKEN_ENDPOINT = (
 OIDC_OP_USER_ENDPOINT = (
     "https://keycloak.sso.gwdg.de/auth/realms/GFBio/protocol/openid-connect/userinfo"
 )
+OIDC_OP_ISSUER = (
+    "https://keycloak.sso.gwdg.de/auth/realms/GFBio"
+)
 
 # 4bio SSO
 # ------------------------------------------------------------------------------
@@ -419,6 +422,10 @@ OIDC_4BIO_OP_TOKEN_ENDPOINT = (
 OIDC_4BIO_OP_USER_ENDPOINT = (
     "https://keycloak.sso.gwdg.de/auth/realms/nfdi4biodiversity-stage/protocol/openid-connect/userinfo"
 )
+OIDC_4BIO_OP_ISSUER = (
+    "https://keycloak.sso.gwdg.de/auth/realms/nfdi4biodiversity-stage"
+)
+
 # rdmo
 # ------------------------------------------------------------------------------
 # TODO: keep in mind that all rdmo settings are imported above: from rdmo.core.settings import *
