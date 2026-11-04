@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 class GFBioAuthenticationBackend(OIDCAuthenticationBackend):
+    def __init__(self):
+        super(GFBioAuthenticationBackend, self).__init__()
+        self.OIDC_OP_ISSUER = self.get_settings("OIDC_OP_ISSUER")
+
     def verify_claims(self, claims):
         verified = super(GFBioAuthenticationBackend, self).verify_claims(claims)
         logger.info(
@@ -92,12 +96,30 @@ class GFBioAuthenticationBackend(OIDCAuthenticationBackend):
             "".format(claims.get("email", "NO_EMAIL_IN_CLAIM"))
         )
         return user
+    
+    def authenticate(self, request, **kwargs):
+        """Authenticates a user based on the OIDC code flow."""
+
+        self.request = request
+        if not self.request:
+            return None
+
+        iss = self.request.GET.get("iss")
+        
+        if iss and iss != self.OIDC_OP_ISSUER:
+            return None
+
+        return super(GFBioAuthenticationBackend, self).authenticate(request, **kwargs)
 
 
 class Login4BioAuthenticationBackend(OIDCAuthenticationBackend):
     @staticmethod
     def get_settings(attr, *args):
         return OIDCAuthenticationBackend.get_settings(attr.replace("OIDC_", "OIDC_4BIO_"), *args)
+    
+    def __init__(self):
+        super(Login4BioAuthenticationBackend, self).__init__()
+        self.OIDC_OP_ISSUER = self.get_settings("OIDC_OP_ISSUER")
 
     def verify_claims(self, claims):
         verified = super(Login4BioAuthenticationBackend, self).verify_claims(claims)
@@ -188,10 +210,14 @@ class Login4BioAuthenticationBackend(OIDCAuthenticationBackend):
 
         state = self.request.GET.get("state")
         code = self.request.GET.get("code")
+        iss = self.request.GET.get("iss")
         nonce = kwargs.pop("nonce", None)
         code_verifier = kwargs.pop("code_verifier", None)
 
-        if not code or not state:
+        if not code or not state or not iss:
+            return None
+        
+        if iss != self.OIDC_OP_ISSUER:
             return None
 
         oidc_authentication_callback = self.get_settings(
